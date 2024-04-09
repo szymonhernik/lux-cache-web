@@ -291,11 +291,13 @@ const manageSubscriptionStatusChange = async (
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
   if (createAction && subscription.default_payment_method && uuid)
-    //@ts-ignore
-    await copyBillingDetailsToCustomer(
-      uuid,
-      subscription.default_payment_method as Stripe.PaymentMethod
-    );
+    console.log('↓↓↓ Webhook fired ');
+
+  //@ts-ignore
+  await copyBillingDetailsToCustomer(
+    uuid,
+    subscription.default_payment_method as Stripe.PaymentMethod
+  );
 };
 
 export {
