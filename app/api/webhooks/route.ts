@@ -21,7 +21,13 @@ const relevantEvents = new Set([
   'customer.subscription.deleted'
 ]);
 
+export async function GET(req: Request, res: Response) {
+  console.log('hello');
+  return new Response(JSON.stringify({ received: true }));
+}
+
 export async function POST(req: Request) {
+  console.log('Webhook endpoint hit');
   const body = await req.text();
   const sig = req.headers.get('stripe-signature') as string;
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -48,6 +54,7 @@ export async function POST(req: Request) {
         case 'price.updated':
           await upsertPriceRecord(event.data.object as Stripe.Price);
           break;
+        case 'invoice.payment_succeeded':
         case 'price.deleted':
           await deletePriceRecord(event.data.object as Stripe.Price);
           break;

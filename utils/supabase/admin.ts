@@ -280,9 +280,10 @@ const manageSubscriptionStatusChange = async (
   console.log(
     `TEST Inserted/updated subscription [${subscription.id}] for user [${uuid}]. `
   );
-  console.dir(`Subscription [${subscription}]`, { depth: 3 });
-  console.log(
-    `Default payment method [${subscription.default_payment_method}]`
+  console.dir(`Subscription [${subscription}]`, { depth: null });
+  console.dir(
+    `Default payment method [${subscription.default_payment_method}]`,
+    { depth: null }
   );
   console.log(`subscriptionData [${subscriptionData}]`);
 
