@@ -278,8 +278,13 @@ const manageSubscriptionStatusChange = async (
   //   `Inserted/updated subscription [${subscription.id}] for user [${uuid}]`
   // );
   console.log(
-    `TEST Inserted/updated subscription [${subscription.id}] for user [${uuid}]. Subscription [${subscription}]`
+    `TEST Inserted/updated subscription [${subscription.id}] for user [${uuid}]. `
   );
+  console.dir(`Subscription [${subscription}]`, { depth: 3 });
+  console.log(
+    `Default payment method [${subscription.default_payment_method}]`
+  );
+  console.log(`subscriptionData [${subscriptionData}]`);
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
