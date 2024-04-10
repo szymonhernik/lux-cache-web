@@ -5,6 +5,12 @@ import NameForm from '@/components/ui/AccountForms/NameForm';
 import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
+import { stripe } from '@/utils/stripe/config';
+import { retrieveCustomerInStripe } from '@/utils/supabase/admin';
+import BillingInfoFetch from '@/components/ui/AccountForms/BillingInfoFetch';
+import BillingInfoSupabase from '@/components/ui/AccountForms/BillingInfoSupabase';
+import { Suspense } from 'react';
+import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoScheleton';
 
 export default async function Account() {
   const supabase = createClient();
@@ -46,11 +52,12 @@ export default async function Account() {
       </div>
       <div className="p-4">
         <CustomerPortalForm subscription={subscription} />
-        <BillingInfo
-          // subscription={subscription}
+        <Suspense fallback={<BillingInfoScheleton />}>
+          <BillingInfoFetch subscription={subscription} />
+        </Suspense>
+        {/* <BillingInfoSupabase
           userDefaultPaymentMethod={userDetails?.payment_method}
-          // userDefaultPaymentMethod={userDetails?.payment_method}
-        />
+        /> */}
         <NameForm userName={userDetails?.full_name ?? ''} userId={user?.id} />
         <EmailForm userEmail={user.email} />
       </div>

@@ -23,32 +23,24 @@ interface Props {
   userDefaultPaymentMethod: any;
 }
 
-export default function BillingInfo({ userDefaultPaymentMethod }: Props) {
-  // Ensure `userDefaultPaymentMethod` is defined and has a `card` property before trying to access nested properties
-  const cardDetails: PaymentMethodDetails | null =
-    userDefaultPaymentMethod?.card
-      ? {
-          last4: userDefaultPaymentMethod.card.last4,
-          display_brand: userDefaultPaymentMethod.card.display_brand,
-          exp_year: userDefaultPaymentMethod.card.exp_year,
-          exp_month: userDefaultPaymentMethod.card.exp_month
-        }
-      : null;
-
+export default function BillingInfoSupabase({
+  userDefaultPaymentMethod
+}: Props) {
   return (
     <Card
       title="Billing information"
       description={`Your billing information from Stripe`}
     >
       <div className="mt-8 mb-4 text-base">
-        {cardDetails ? (
+        {userDefaultPaymentMethod ? (
           <p className="font-semibold">
             Card on file:{' '}
-            <span className="font-normal ">
-              <span className="uppercase">{cardDetails.display_brand} </span>
+            <span className="font-normal capitalize">
+              {userDefaultPaymentMethod.display_brand}{' '}
               <span className="align-top text-xs">**** **** ****</span>{' '}
-              {cardDetails.last4} (expires {cardDetails.exp_month}/
-              {cardDetails.exp_year})
+              {userDefaultPaymentMethod.last4} (expires{' '}
+              {userDefaultPaymentMethod.exp_month}/
+              {userDefaultPaymentMethod.exp_year})
             </span>
           </p>
         ) : (

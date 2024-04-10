@@ -301,11 +301,51 @@ const manageSubscriptionStatusChange = async (
   );
 };
 
+// Retrieve customer id
+const retrieveCustomerInStripe = async ({
+  email,
+  uuid
+}: {
+  email: string;
+  uuid: string;
+}) => {
+  const { data: existingSupabaseCustomer, error: queryError } =
+    await supabaseAdmin
+      .from('customers')
+      .select('*')
+      .eq('id', uuid)
+      .maybeSingle();
+
+  if (queryError) {
+    throw new Error(`Supabase customer lookup failed: ${queryError.message}`);
+  }
+  // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
+  let stripeCustomerId: string | undefined;
+  if (existingSupabaseCustomer?.stripe_customer_id) {
+    const existingStripeCustomer = await stripe.customers.retrieve(
+      existingSupabaseCustomer.stripe_customer_id
+    );
+    stripeCustomerId = existingStripeCustomer.id;
+    // console.log('existingStripeCustomer', existingStripeCustomer);
+  } else {
+    // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
+    const stripeCustomers = await stripe.customers.list({ email: email });
+    stripeCustomerId =
+      stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
+  }
+  if (stripeCustomerId) {
+    return stripeCustomerId;
+  } else {
+    throw new Error('Supabase customer record couldnt be accessed.');
+  }
+};
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
   deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  retrieveCustomerInStripe
 };
