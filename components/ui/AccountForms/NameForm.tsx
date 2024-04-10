@@ -7,7 +7,13 @@ import { handleRequest } from '@/utils/auth-helpers/client';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function NameForm({ userName }: { userName: string }) {
+export default function NameForm({
+  userName,
+  userId
+}: {
+  userName: string;
+  userId: string;
+}) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -25,7 +31,7 @@ export default function NameForm({ userName }: { userName: string }) {
 
   return (
     <Card
-      title="Your Name"
+      title="Name"
       description="Please enter your full name, or a display name you are comfortable with."
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
@@ -43,6 +49,7 @@ export default function NameForm({ userName }: { userName: string }) {
     >
       <div className="mt-8 mb-4 text-xl font-semibold">
         <form id="nameForm" onSubmit={(e) => handleSubmit(e)}>
+          <input type="hidden" name="userId" value={userId} />
           <input
             type="text"
             name="fullName"
