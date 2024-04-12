@@ -21,6 +21,7 @@ interface Props {
 export default async function BillingInfoFetch({ subscription }: Props) {
   //retrieve payment method for stripe customer from stripe
   let defaultPaymentMethodData;
+  let stripeCustomerId;
   try {
     // Retrieve the subscription ID from Supabase, ensuring it exists
     const subscriptionId = subscription?.id;
@@ -43,6 +44,7 @@ export default async function BillingInfoFetch({ subscription }: Props) {
       );
     }
     defaultPaymentMethodData = existingSubscription.default_payment_method;
+    stripeCustomerId = existingSubscription.customer;
 
     if (!defaultPaymentMethodData) {
       console.log(
@@ -51,6 +53,7 @@ export default async function BillingInfoFetch({ subscription }: Props) {
     } else {
       // Process the default payment method data
       // console.log('defaultPaymentMethodData', defaultPaymentMethodData);
+      // console.log('Correctly retrieved the default payment method data.');
     }
   } catch (error) {
     console.error(
@@ -59,7 +62,12 @@ export default async function BillingInfoFetch({ subscription }: Props) {
       error.message
     );
   }
-  return <BillingInfo userDefaultPaymentMethod={defaultPaymentMethodData} />;
+  return (
+    <BillingInfo
+      userDefaultPaymentMethod={defaultPaymentMethodData}
+      stripeCustomerId={stripeCustomerId}
+    />
+  );
 }
 
 //retrieve payment method for stripe customer from stripe

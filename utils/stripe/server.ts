@@ -18,6 +18,18 @@ type CheckoutResponse = {
   sessionId?: string;
 };
 
+export async function retrievePaymentMethods(customerId: string) {
+  try {
+    const paymentMethods =
+      await stripe.customers.listPaymentMethods(customerId);
+    console.log('Payment methods from server stripe', paymentMethods);
+    return paymentMethods.data;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Could not retrieve payment methods.');
+  }
+}
+
 export async function checkoutWithStripe(
   price: Price,
   redirectPath: string = '/account'

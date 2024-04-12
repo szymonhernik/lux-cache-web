@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';
-import { retrieveCustomerInStripe } from '@/utils/supabase/admin';
 import BillingInfoFetch from '@/components/ui/AccountForms/BillingInfoFetch';
 import BillingInfoSupabase from '@/components/ui/AccountForms/BillingInfoSupabase';
 import { Suspense } from 'react';
