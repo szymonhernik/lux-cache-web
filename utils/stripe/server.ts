@@ -7,7 +7,8 @@ import { createOrRetrieveCustomer } from '@/utils/supabase/admin';
 import {
   getURL,
   getErrorRedirect,
-  calculateTrialEndUnixTimestamp
+  calculateTrialEndUnixTimestamp,
+  getStatusRedirect
 } from '@/utils/helpers';
 import { Tables } from '@/types_db';
 
@@ -32,26 +33,60 @@ export async function retrievePaymentMethods(customerId: string) {
 
 export async function updateSubscriptionDefaultPaymentMethod(
   defaultPaymentMethodId: string,
-  subscriptionId: string
+  subscriptionId: string,
+  redirectPath: string = '/account'
 ) {
   // Create a checkout session in Stripe
-  let newSubscriptionPaymentMethod;
   try {
-    newSubscriptionPaymentMethod = await stripe.subscriptions.update(
-      subscriptionId,
-      {
-        default_payment_method: defaultPaymentMethodId
-      }
-    );
-  } catch (err) {
-    console.error(err);
-    throw new Error('Unable to create checkout session.');
-  }
-  // Instead of returning a Response, just return the data or error.
-  if (newSubscriptionPaymentMethod) {
-    return;
-  } else {
-    throw new Error('Unable to create checkout session.');
+    let newSubscriptionPaymentMethod;
+    try {
+      console.log('subscriptionId', subscriptionId);
+
+      newSubscriptionPaymentMethod = await stripe.subscriptions.update(
+        subscriptionId,
+        {
+          default_payment_method: defaultPaymentMethodId
+        }
+      );
+    } catch (err) {
+      console.error(err);
+      throw new Error(
+        'Unable to update the payment method for your subscription.'
+      );
+    }
+    if (newSubscriptionPaymentMethod) {
+      // return true;
+      return getStatusRedirect(
+        redirectPath,
+        'Success!',
+        'Your payment method has been correctly updated.'
+      );
+      // console.log('redirectPath', redirectPath);
+    } else {
+      // throw new Error(
+      //   'Unable to update the payment method for your subscription.'
+      // );
+      return getErrorRedirect(
+        '/account',
+        'Unable to update the payment method for your subscription.',
+        'Please try again later or contact a system administrator.'
+      );
+    }
+    console.log('redirectPath', redirectPath);
+  } catch (error) {
+    if (error instanceof Error) {
+      return getErrorRedirect(
+        redirectPath,
+        error.message,
+        'Please try again later or contact a system administrator.'
+      );
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'An unknown error occurred.',
+        'Please try again later or contact a system administrator.'
+      );
+    }
   }
 }
 

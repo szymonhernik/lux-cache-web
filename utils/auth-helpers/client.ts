@@ -19,7 +19,32 @@ export async function handleRequest(
 
   if (router) {
     // If client-side router is provided, use it to redirect
+    router.refresh();
     return router.push(redirectUrl);
+  } else {
+    // Otherwise, redirect server-side
+    return await redirectToPath(redirectUrl);
+  }
+}
+// @ts-ignore
+export async function handlePaymentMethodChange(data, requestFunc, router) {
+  const { paymentMethodId, subscriptionId, currentPath } = data; // Destruct
+
+  console.log('subscriptionId in handlePaymentMethodChange', subscriptionId);
+
+  // console.log('redirectUrl in handlePaymentMethodChange', redirectUrl);
+  const redirectUrl = await requestFunc(
+    paymentMethodId,
+    subscriptionId,
+    currentPath
+  );
+
+  if (router) {
+    // return await redirectToPath(redirectUrl);
+    router.push(redirectUrl);
+    router.refresh();
+    // router.refresh();
+    // window.history.pushState(null, '', redirectUrl);
   } else {
     // Otherwise, redirect server-side
     return await redirectToPath(redirectUrl);

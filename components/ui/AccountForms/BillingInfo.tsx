@@ -38,6 +38,8 @@ interface Props {
   subscriptionId: any;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default function BillingInfo({
   userDefaultPaymentMethod,
   stripeCustomerId,

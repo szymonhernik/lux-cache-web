@@ -1,5 +1,10 @@
 import Button from '@/components/ui/Button';
+import {
+  handlePaymentMethodChange,
+  handleRequest
+} from '@/utils/auth-helpers/client';
 import { updateSubscriptionDefaultPaymentMethod } from '@/utils/stripe/server';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function DisplayPaymentData({
@@ -15,24 +20,27 @@ export default function DisplayPaymentData({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethodIdLoading, setPaymentMethodIdLoading] =
     useState<string>();
+  const router = useRouter();
+  const currentPath = usePathname();
 
   const handleSetNewDefaultPaymentMethod = async (paymentMethodId: string) => {
     setIsSubmitting(true);
     setPaymentMethodIdLoading(paymentMethodId);
 
     // Call the function to set the new default payment method
-    const newSubscriptionPaymentMethod =
-      await updateSubscriptionDefaultPaymentMethod(
-        paymentMethodId,
-        subscriptionId
-      );
-    // TO DO: Handle better errors and success
 
-    if (newSubscriptionPaymentMethod !== undefined) {
-      console.log('Successfully set new default payment method');
-    } else {
-      console.error('Error setting new default payment method');
-    }
+    // await updateSubscriptionDefaultPaymentMethod(
+    //   paymentMethodId,
+    //   subscriptionId,
+    //   currentPath
+    // );
+
+    await handlePaymentMethodChange(
+      { paymentMethodId, subscriptionId, currentPath },
+      updateSubscriptionDefaultPaymentMethod,
+      router
+    );
+
     setPaymentMethodIdLoading(undefined);
     setIsSubmitting(false);
 
