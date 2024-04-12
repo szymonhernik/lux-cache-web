@@ -83,7 +83,7 @@ export default function BillingInfo({
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <p className="pb-4 sm:pb-0">Change your billing method.</p>
           <Dialog>
-            <DialogTrigger>
+            <DialogTrigger asChild>
               <Button
                 variant="slim"
                 loading={isSubmitting}
