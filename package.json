@@ -24,6 +24,7 @@
     "supabase:pull": "npx supabase pull"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-toast": "^1.1.5",
     "@stripe/stripe-js": "2.4.0",
     "@supabase/ssr": "^0.1.0",
@@ -33,6 +34,7 @@
     "clsx": "^2.1.0",
     "lucide-react": "0.330.0",
     "next": "14.1.0",
+    "next-themes": "^0.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-merge-refs": "^2.1.1",
