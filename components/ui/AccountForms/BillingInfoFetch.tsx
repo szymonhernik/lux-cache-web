@@ -22,9 +22,10 @@ export default async function BillingInfoFetch({ subscription }: Props) {
   //retrieve payment method for stripe customer from stripe
   let defaultPaymentMethodData;
   let stripeCustomerId;
+  let subscriptionId;
   try {
     // Retrieve the subscription ID from Supabase, ensuring it exists
-    const subscriptionId = subscription?.id;
+    subscriptionId = subscription?.id;
     if (!subscriptionId) {
       throw new Error('Subscription ID not found.');
     }
@@ -66,6 +67,7 @@ export default async function BillingInfoFetch({ subscription }: Props) {
     <BillingInfo
       userDefaultPaymentMethod={defaultPaymentMethodData}
       stripeCustomerId={stripeCustomerId}
+      subscriptionId={subscriptionId}
     />
   );
 }

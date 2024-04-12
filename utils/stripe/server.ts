@@ -30,6 +30,31 @@ export async function retrievePaymentMethods(customerId: string) {
   }
 }
 
+export async function updateSubscriptionDefaultPaymentMethod(
+  defaultPaymentMethodId: string,
+  subscriptionId: string
+) {
+  // Create a checkout session in Stripe
+  let newSubscriptionPaymentMethod;
+  try {
+    newSubscriptionPaymentMethod = await stripe.subscriptions.update(
+      subscriptionId,
+      {
+        default_payment_method: defaultPaymentMethodId
+      }
+    );
+  } catch (err) {
+    console.error(err);
+    throw new Error('Unable to create checkout session.');
+  }
+  // Instead of returning a Response, just return the data or error.
+  if (newSubscriptionPaymentMethod) {
+    return;
+  } else {
+    throw new Error('Unable to create checkout session.');
+  }
+}
+
 export async function checkoutWithStripe(
   price: Price,
   redirectPath: string = '/account'

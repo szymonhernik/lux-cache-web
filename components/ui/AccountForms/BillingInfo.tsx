@@ -35,11 +35,13 @@ interface Props {
   //   userDefaultPaymentMethod: PaymentMethodDetails | null;
   userDefaultPaymentMethod: any;
   stripeCustomerId: any;
+  subscriptionId: any;
 }
 
 export default function BillingInfo({
   userDefaultPaymentMethod,
-  stripeCustomerId
+  stripeCustomerId,
+  subscriptionId
 }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState([]); // State to store payment methods
@@ -47,7 +49,7 @@ export default function BillingInfo({
   // Ensure `userDefaultPaymentMethod` is defined and has a `card` property before trying to access nested properties
   // console.log(`stripeCustomerId`, stripeCustomerId);
 
-  console.log(`userDefaultPaymentMethod`, userDefaultPaymentMethod);
+  // console.log(`userDefaultPaymentMethod`, userDefaultPaymentMethod);
 
   const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod?.id;
   const cardDetails: PaymentMethodDetails | null =
@@ -95,6 +97,7 @@ export default function BillingInfo({
                 <DialogTitle>Edit cards</DialogTitle>
                 <DialogDescription>
                   <DisplayPaymentData
+                    subscriptionId={subscriptionId}
                     paymentMethods={paymentMethods}
                     subscriptionDefaultPaymentMethodId={
                       subscriptionDefaultPaymentMethodId

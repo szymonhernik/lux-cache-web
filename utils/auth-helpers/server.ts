@@ -347,7 +347,7 @@ export async function updateName(formData: FormData) {
     .select('full_name')
     .single();
 
-  console.log('data', data);
+  // console.log('data', data);
 
   if (error) {
     return getErrorRedirect(
