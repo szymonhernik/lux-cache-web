@@ -45,8 +45,11 @@ export default function BillingInfo({
   const [paymentMethods, setPaymentMethods] = useState([]); // State to store payment methods
 
   // Ensure `userDefaultPaymentMethod` is defined and has a `card` property before trying to access nested properties
-  console.log(`stripeCustomerId`, stripeCustomerId);
+  // console.log(`stripeCustomerId`, stripeCustomerId);
 
+  console.log(`userDefaultPaymentMethod`, userDefaultPaymentMethod);
+
+  const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod?.id;
   const cardDetails: PaymentMethodDetails | null =
     userDefaultPaymentMethod?.card
       ? {
@@ -91,7 +94,12 @@ export default function BillingInfo({
               <DialogHeader>
                 <DialogTitle>Edit cards</DialogTitle>
                 <DialogDescription>
-                  <DisplayPaymentData paymentMethods={paymentMethods} />
+                  <DisplayPaymentData
+                    paymentMethods={paymentMethods}
+                    subscriptionDefaultPaymentMethodId={
+                      subscriptionDefaultPaymentMethodId
+                    }
+                  />
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter className="sm:justify-start">
