@@ -1,8 +1,5 @@
 import Button from '@/components/ui/Button';
-import {
-  handlePaymentMethodChange,
-  handleRequest
-} from '@/utils/auth-helpers/client';
+
 import { updateSubscriptionDefaultPaymentMethod } from '@/utils/stripe/server';
 import { ListPaymentMethodSchema } from '@/utils/zod/types';
 import { usePathname, useRouter } from 'next/navigation';
@@ -32,21 +29,26 @@ export default function DisplayPaymentData({
     setPaymentMethodIdLoading(paymentMethodId);
 
     // Call the function to set the new default payment method
+    // let redirectUrl: string;
+    try {
+      const redirectUrl: string = await updateSubscriptionDefaultPaymentMethod(
+        paymentMethodId,
+        subscriptionId,
+        currentPath
+      );
+      router.push(redirectUrl);
+      router.refresh();
+      setPaymentMethodIdLoading(undefined);
+      setIsSubmitting(false);
+    } catch (error) {
+      return;
+    }
 
-    // await updateSubscriptionDefaultPaymentMethod(
-    //   paymentMethodId,
-    //   subscriptionId,
-    //   currentPath
+    // await handlePaymentMethodChange(
+    //   { paymentMethodId, subscriptionId, currentPath },
+    //   updateSubscriptionDefaultPaymentMethod,
+    //   router
     // );
-
-    await handlePaymentMethodChange(
-      { paymentMethodId, subscriptionId, currentPath },
-      updateSubscriptionDefaultPaymentMethod,
-      router
-    );
-
-    setPaymentMethodIdLoading(undefined);
-    setIsSubmitting(false);
 
     console.log('Setting new default payment method with id:', paymentMethodId);
   };

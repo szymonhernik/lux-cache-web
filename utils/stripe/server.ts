@@ -38,22 +38,13 @@ export async function updateSubscriptionDefaultPaymentMethod(
 ) {
   // Create a checkout session in Stripe
   try {
-    let newSubscriptionPaymentMethod;
-    try {
-      console.log('subscriptionId', subscriptionId);
+    const newSubscriptionPaymentMethod = await stripe.subscriptions.update(
+      subscriptionId,
+      {
+        default_payment_method: defaultPaymentMethodId
+      }
+    );
 
-      newSubscriptionPaymentMethod = await stripe.subscriptions.update(
-        subscriptionId,
-        {
-          default_payment_method: defaultPaymentMethodId
-        }
-      );
-    } catch (err) {
-      console.error(err);
-      throw new Error(
-        'Unable to update the payment method for your subscription.'
-      );
-    }
     if (newSubscriptionPaymentMethod) {
       // return true;
       return getStatusRedirect(
@@ -67,12 +58,11 @@ export async function updateSubscriptionDefaultPaymentMethod(
       //   'Unable to update the payment method for your subscription.'
       // );
       return getErrorRedirect(
-        '/account',
+        redirectPath,
         'Unable to update the payment method for your subscription.',
         'Please try again later or contact a system administrator.'
       );
     }
-    console.log('redirectPath', redirectPath);
   } catch (error) {
     if (error instanceof Error) {
       return getErrorRedirect(
