@@ -11,3 +11,5 @@ export const PaymentMethodSchema = z.object({
   id: z.string(),
   card: CardDetailsSchema
 });
+
+export const ListPaymentMethodSchema = z.array(PaymentMethodSchema);

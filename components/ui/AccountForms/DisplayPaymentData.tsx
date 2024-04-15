@@ -4,15 +4,19 @@ import {
   handleRequest
 } from '@/utils/auth-helpers/client';
 import { updateSubscriptionDefaultPaymentMethod } from '@/utils/stripe/server';
+import { ListPaymentMethodSchema } from '@/utils/zod/types';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { z } from 'zod';
+
+type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>;
 
 export default function DisplayPaymentData({
   paymentMethods,
   subscriptionDefaultPaymentMethodId,
   subscriptionId
 }: {
-  paymentMethods: any;
+  paymentMethods: ListPaymentMethodSchemaType;
   subscriptionDefaultPaymentMethodId: string | null;
   subscriptionId: string;
 }) {
@@ -50,7 +54,6 @@ export default function DisplayPaymentData({
     <>
       {paymentMethods.length > 0 ? (
         <ul className="*:p-4 *:border *:border-zinc-600 *:my-2 *:rounded *:text-white">
-          {/* @ts-ignore */}
           {paymentMethods.map((paymentMethod, index) => (
             <li
               key={`paymentMethod-${index}`}
@@ -58,7 +61,7 @@ export default function DisplayPaymentData({
             >
               <div>
                 <p className="uppercase font-semibold">
-                  {paymentMethod.card.display_brand}
+                  {paymentMethod.card.brand}
                 </p>
                 <p className="text-xs">
                   <span className="align-top text-[10px]">****</span>{' '}

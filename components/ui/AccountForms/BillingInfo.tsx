@@ -22,7 +22,10 @@ import {
 } from '@/components/ui/dialog';
 import DisplayPaymentData from './DisplayPaymentData';
 import { z } from 'zod';
-import { PaymentMethodSchema } from '@/utils/zod/types';
+import {
+  ListPaymentMethodSchema,
+  PaymentMethodSchema
+} from '@/utils/zod/types';
 
 interface Props {
   userDefaultPaymentMethod: UserDefaultPaymentMethodType;
@@ -32,6 +35,8 @@ interface Props {
 
 type UserDefaultPaymentMethodType = z.infer<typeof PaymentMethodSchema>;
 
+type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>;
+
 export const dynamic = 'force-dynamic';
 
 export default function BillingInfo({
@@ -40,9 +45,8 @@ export default function BillingInfo({
   subscriptionId
 }: Props) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethods, setPaymentMethods] = useState([]); // State to store payment methods
-
-  console.log('userDefaultPaymentMethod', userDefaultPaymentMethod);
+  const [paymentMethods, setPaymentMethods] =
+    useState<ListPaymentMethodSchemaType>([]);
 
   const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod.id;
 
@@ -56,17 +60,20 @@ export default function BillingInfo({
   const handleDisplayPaymentMethods = async () => {
     // safely fetch data from stripe (retrievePaymentMethods is server action)
     try {
-      if (stripeCustomerId) {
-        const data = await retrievePaymentMethods(stripeCustomerId);
-        if (data.length > 0) {
-          // @ts-ignore
-          setPaymentMethods(data);
-        } else {
-          throw new Error('No payment methods found.');
-        }
+      const data = await retrievePaymentMethods(stripeCustomerId);
+      const validatedData = ListPaymentMethodSchema.safeParse(data);
+      if (!validatedData.success) {
+        console.error(validatedData.error.issues);
+        return;
       } else {
-        throw new Error('Stripe customer ID not found.');
+        setPaymentMethods(validatedData.data);
       }
+
+      // if (data.length > 0) {
+      //   setPaymentMethods(data);
+      // } else {
+      //   throw new Error('No payment methods found.');
+      // }
     } catch (error) {
       console.error('Failed to retrieve payment methods:', error);
     }
@@ -93,7 +100,7 @@ export default function BillingInfo({
               <DialogContent className="border-zinc-800 bg-zinc-950">
                 <DialogHeader>
                   <DialogTitle>Edit cards</DialogTitle>
-                  <DialogDescription>
+                  <div>
                     <DisplayPaymentData
                       subscriptionId={subscriptionId}
                       paymentMethods={paymentMethods}
@@ -101,7 +108,7 @@ export default function BillingInfo({
                         subscriptionDefaultPaymentMethodId
                       }
                     />
-                  </DialogDescription>
+                  </div>
                 </DialogHeader>
                 <DialogFooter className="sm:justify-start">
                   <DialogClose asChild>
