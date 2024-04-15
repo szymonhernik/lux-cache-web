@@ -10,6 +10,7 @@ import BillingInfoFetch from '@/components/ui/AccountForms/BillingInfoFetch';
 import BillingInfoSupabase from '@/components/ui/AccountForms/BillingInfoSupabase';
 import { Suspense } from 'react';
 import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoScheleton';
+import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod';
 
 export default async function Account() {
   const supabase = createClient();
@@ -52,7 +53,8 @@ export default async function Account() {
       <div className="p-4">
         <CustomerPortalForm subscription={subscription} />
         <Suspense fallback={<BillingInfoScheleton />}>
-          <BillingInfoFetch subscription={subscription} />
+          {/* <BillingInfoFetch subscription={subscription} /> */}
+          <BillingInfoFetchZod subscription={subscription} />
         </Suspense>
         {/* <BillingInfoSupabase
           userDefaultPaymentMethod={userDetails?.payment_method}

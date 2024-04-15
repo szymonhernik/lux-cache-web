@@ -3,6 +3,8 @@ import BillingInfo from './BillingInfo';
 import { stripe } from '@/utils/stripe/config';
 import Stripe from 'stripe';
 
+// import {z} from 'zod';
+
 type Subscription = Tables<'subscriptions'>;
 type Price = Tables<'prices'>;
 type Product = Tables<'products'>;

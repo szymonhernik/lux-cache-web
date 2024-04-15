@@ -21,21 +21,16 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import DisplayPaymentData from './DisplayPaymentData';
-
-interface PaymentMethodDetails {
-  last4?: string;
-  brand?: string;
-  exp_year?: number;
-  exp_month?: number;
-  // Add more specific fields as necessary
-}
-type UserDefaultPaymentMethodType = Stripe.PaymentMethod | string | null;
+import { z } from 'zod';
+import { PaymentMethodSchema } from '@/utils/zod/types';
 
 interface Props {
   userDefaultPaymentMethod: UserDefaultPaymentMethodType;
-  stripeCustomerId: string | null;
-  subscriptionId: string | undefined;
+  stripeCustomerId: string;
+  subscriptionId: string;
 }
+
+type UserDefaultPaymentMethodType = z.infer<typeof PaymentMethodSchema>;
 
 export const dynamic = 'force-dynamic';
 
@@ -47,31 +42,16 @@ export default function BillingInfo({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState([]); // State to store payment methods
 
-  let subscriptionDefaultPaymentMethodId;
-  // typeof userDefaultPaymentMethod is not null or string
-  if (
-    userDefaultPaymentMethod &&
-    typeof userDefaultPaymentMethod !== 'string' &&
-    typeof userDefaultPaymentMethod !== null &&
-    userDefaultPaymentMethod.id
-  ) {
-    subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod.id;
-  } else {
-    subscriptionDefaultPaymentMethodId = null;
-  }
+  console.log('userDefaultPaymentMethod', userDefaultPaymentMethod);
 
-  // const cardDetails: PaymentMethodDetails | null =
-  //   userDefaultPaymentMethod?.card
-  const cardDetails: PaymentMethodDetails | null =
-    typeof userDefaultPaymentMethod === 'object' &&
-    userDefaultPaymentMethod?.card
-      ? {
-          last4: userDefaultPaymentMethod.card.last4,
-          brand: userDefaultPaymentMethod.card.brand,
-          exp_year: userDefaultPaymentMethod.card.exp_year,
-          exp_month: userDefaultPaymentMethod.card.exp_month
-        }
-      : null;
+  const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod.id;
+
+  const cardDetails = {
+    last4: userDefaultPaymentMethod.card.last4,
+    brand: userDefaultPaymentMethod.card.brand,
+    exp_year: userDefaultPaymentMethod.card.exp_year,
+    exp_month: userDefaultPaymentMethod.card.exp_month
+  };
 
   const handleDisplayPaymentMethods = async () => {
     // safely fetch data from stripe (retrievePaymentMethods is server action)
@@ -98,66 +78,59 @@ export default function BillingInfo({
       description={`Your billing information from Stripe`}
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          {stripeCustomerId && subscriptionId ? (
-            <>
-              <p className="pb-4 sm:pb-0">Change your billing method.</p>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="slim"
-                    loading={isSubmitting}
-                    onClick={(e) => handleDisplayPaymentMethods()}
-                  >
-                    Update payment method
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="border-zinc-800 bg-zinc-950">
-                  <DialogHeader>
-                    <DialogTitle>Edit cards</DialogTitle>
-                    <DialogDescription>
-                      <DisplayPaymentData
-                        subscriptionId={subscriptionId}
-                        paymentMethods={paymentMethods}
-                        subscriptionDefaultPaymentMethodId={
-                          subscriptionDefaultPaymentMethodId
-                        }
-                      />
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter className="sm:justify-start">
-                    <DialogClose asChild>
-                      <Button
-                        type="button"
-                        variant="slim"
-                        // onClick={() => {
-                        //   setIsSubmitting(false);
-                        // }}
-                      >
-                        Close
-                      </Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
-            </>
-          ) : null}
+          <>
+            <p className="pb-4 sm:pb-0">Change your billing method.</p>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button
+                  variant="slim"
+                  loading={isSubmitting}
+                  onClick={(e) => handleDisplayPaymentMethods()}
+                >
+                  Update payment method
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="border-zinc-800 bg-zinc-950">
+                <DialogHeader>
+                  <DialogTitle>Edit cards</DialogTitle>
+                  <DialogDescription>
+                    <DisplayPaymentData
+                      subscriptionId={subscriptionId}
+                      paymentMethods={paymentMethods}
+                      subscriptionDefaultPaymentMethodId={
+                        subscriptionDefaultPaymentMethodId
+                      }
+                    />
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter className="sm:justify-start">
+                  <DialogClose asChild>
+                    <Button
+                      type="button"
+                      variant="slim"
+                      // onClick={() => {
+                      //   setIsSubmitting(false);
+                      // }}
+                    >
+                      Close
+                    </Button>
+                  </DialogClose>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </>
         </div>
       }
     >
       <div className="mt-8 mb-4 text-base">
-        {cardDetails ? (
-          <p className="font-semibold">
-            Card on file:{' '}
-            <span className="font-normal ">
-              <span className="uppercase">{cardDetails.brand} </span>
-              <span className="align-top text-xs">****</span>{' '}
-              {cardDetails.last4} (expires {cardDetails.exp_month}/
-              {cardDetails.exp_year})
-            </span>
-          </p>
-        ) : (
-          <p>No card on file</p>
-        )}
+        <p className="font-semibold">
+          Card on file:{' '}
+          <span className="font-normal ">
+            <span className="uppercase">{cardDetails.brand} </span>
+            <span className="align-top text-xs">****</span> {cardDetails.last4}{' '}
+            (expires {cardDetails.exp_month}/{cardDetails.exp_year})
+          </span>
+        </p>
       </div>
     </Card>
   );
