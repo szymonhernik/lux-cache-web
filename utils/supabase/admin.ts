@@ -280,23 +280,23 @@ const manageSubscriptionStatusChange = async (
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]. `
   );
   // console.log(`Subscription [${subscription}]`);
-  console.log(
-    `Default payment method`,
-    JSON.stringify(subscription.default_payment_method, null, 2)
-  );
-  // console.log(`subscriptionData [${subscriptionData}]`);
-  console.log('subscriptionData', JSON.stringify(subscriptionData, null, 2));
+  // console.log(
+  //   `Default payment method`,
+  //   JSON.stringify(subscription.default_payment_method, null, 2)
+  // );
+  // // console.log(`subscriptionData [${subscriptionData}]`);
+  // console.log('subscriptionData', JSON.stringify(subscriptionData, null, 2));
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
   if (createAction && subscription.default_payment_method && uuid)
-    console.log('↓↓↓ Webhook fired ');
+    // console.log('↓↓↓ Webhook fired ');
 
-  //@ts-ignore
-  await copyBillingDetailsToCustomer(
-    uuid,
-    subscription.default_payment_method as Stripe.PaymentMethod
-  );
+    //@ts-ignore
+    await copyBillingDetailsToCustomer(
+      uuid,
+      subscription.default_payment_method as Stripe.PaymentMethod
+    );
 };
 
 // // Retrieve customer id

@@ -1,6 +1,7 @@
 import { Tables } from '@/types_db';
 import BillingInfo from './BillingInfo';
 import { stripe } from '@/utils/stripe/config';
+import Stripe from 'stripe';
 
 type Subscription = Tables<'subscriptions'>;
 type Price = Tables<'prices'>;
@@ -20,9 +21,9 @@ interface Props {
 
 export default async function BillingInfoFetch({ subscription }: Props) {
   //retrieve payment method for stripe customer from stripe
-  let defaultPaymentMethodData;
-  let stripeCustomerId;
-  let subscriptionId;
+  let defaultPaymentMethodData: string | Stripe.PaymentMethod | null = null;
+  let stripeCustomerId: string | null = null;
+  let subscriptionId: string | undefined = undefined;
   try {
     // Retrieve the subscription ID from Supabase, ensuring it exists
     subscriptionId = subscription?.id;
@@ -45,16 +46,21 @@ export default async function BillingInfoFetch({ subscription }: Props) {
       );
     }
     defaultPaymentMethodData = existingSubscription.default_payment_method;
-    stripeCustomerId = existingSubscription.customer;
+
+    // Check the type of the customer property and handle accordingly
+    const customer = existingSubscription.customer;
+    if (typeof customer === 'string') {
+      stripeCustomerId = customer;
+    } else {
+      // Handle deleted or unexpected customer types
+      stripeCustomerId = null;
+      throw new Error('Customer data is missing or in an unexpected format.');
+    }
 
     if (!defaultPaymentMethodData) {
-      console.log(
+      throw new Error(
         'Default payment method not found for the given subscription.'
       );
-    } else {
-      // Process the default payment method data
-      // console.log('defaultPaymentMethodData', defaultPaymentMethodData);
-      // console.log('Correctly retrieved the default payment method data.');
     }
   } catch (error) {
     console.error(

@@ -13,7 +13,7 @@ export default function DisplayPaymentData({
   subscriptionId
 }: {
   paymentMethods: any;
-  subscriptionDefaultPaymentMethodId: string;
+  subscriptionDefaultPaymentMethodId: string | null;
   subscriptionId: string;
 }) {
   // console.log('paymentMethods in new component', paymentMethods);
