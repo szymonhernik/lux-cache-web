@@ -6,7 +6,6 @@ import { createClient } from '@/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';
-import BillingInfoFetch from '@/components/ui/AccountForms/BillingInfoFetch';
 import BillingInfoSupabase from '@/components/ui/AccountForms/BillingInfoSupabase';
 import { Suspense } from 'react';
 import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoScheleton';
@@ -53,7 +52,6 @@ export default async function Account() {
       <div className="p-4">
         <CustomerPortalForm subscription={subscription} />
         <Suspense fallback={<BillingInfoScheleton />}>
-          {/* <BillingInfoFetch subscription={subscription} /> */}
           <BillingInfoFetchZod subscription={subscription} />
         </Suspense>
         {/* <BillingInfoSupabase
