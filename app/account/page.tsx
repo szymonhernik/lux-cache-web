@@ -50,7 +50,7 @@ export default async function Account() {
         </div>
       </div>
       <div className="p-4">
-        <CustomerPortalForm subscription={subscription} />
+        {/* <CustomerPortalForm subscription={subscription} /> */}
         <Suspense fallback={<BillingInfoScheleton />}>
           <BillingInfoFetchZod subscription={subscription} />
         </Suspense>
