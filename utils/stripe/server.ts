@@ -241,3 +241,72 @@ export async function createStripePortal(currentPath: string) {
     }
   }
 }
+type CustomCheckoutResponse = {
+  errorRedirect?: string;
+  clientSecret?: string | null; // Add this line
+};
+export async function updatePaymentMethod(
+  customerId: string,
+  subscriptionId: string,
+  redirectPath: string = '/account'
+): Promise<CustomCheckoutResponse> {
+  // I'll need:
+  // - customer ID
+  // - subscription ID
+
+  let params: Stripe.Checkout.SessionCreateParams = {
+    payment_method_types: ['card'],
+    mode: 'setup',
+    customer: customerId,
+    setup_intent_data: {
+      metadata: {
+        customer_id: customerId,
+        subscription_id: subscriptionId
+      }
+    },
+    // @ts-ignore
+    ui_mode: 'custom',
+    return_url: getURL(redirectPath)
+  };
+
+  try {
+    let session;
+    try {
+      if (customerId && subscriptionId) {
+        session = await stripe.checkout.sessions.create(params);
+      } else {
+        throw new Error(
+          'Unable to create checkout session. Missing customer or subscription data'
+        );
+      }
+    } catch (err) {
+      console.error(err);
+      throw new Error('Unable to create checkout session.');
+    }
+
+    // Instead of returning a Response, just return the data or error.
+    if (session) {
+      return { clientSecret: session.client_secret };
+    } else {
+      throw new Error('Unable to create checkout session.');
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      return {
+        errorRedirect: getErrorRedirect(
+          redirectPath,
+          err.message,
+          'Please try again later or contact a system administrator.'
+        )
+      };
+    } else {
+      return {
+        errorRedirect: getErrorRedirect(
+          redirectPath,
+          'An unknown error occurred.',
+          'Please try again later or contact a system administrator.'
+        )
+      };
+    }
+  }
+}

@@ -8,7 +8,7 @@ import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';
 import BillingInfoSupabase from '@/components/ui/AccountForms/BillingInfoSupabase';
 import { Suspense } from 'react';
-import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoScheleton';
+import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkeleton';
 import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod';
 
 export default async function Account() {

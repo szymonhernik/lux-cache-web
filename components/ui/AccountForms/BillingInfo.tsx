@@ -1,14 +1,21 @@
 'use client';
-
 import Button from '@/components/ui/Button';
-import { useRouter, usePathname } from 'next/navigation';
+import { getErrorRedirect } from '@/utils/helpers';
+import { getStripe } from '@/utils/stripe/client';
+import { updatePaymentMethod } from '@/utils/stripe/server';
+import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Stripe } from '@stripe/stripe-js';
+import {
+  CustomCheckoutProvider,
+  PaymentElement
+} from '@stripe/react-stripe-js';
 import {
   createStripePortal,
   retrievePaymentMethods
 } from '@/utils/stripe/server';
 import Card from '@/components/ui/Card';
-import Stripe from 'stripe';
+// import Stripe from 'stripe';
 
 import {
   Dialog,
@@ -21,11 +28,12 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog';
 import DisplayPaymentData from './DisplayPaymentData';
-import { z } from 'zod';
+import { set, z } from 'zod';
 import {
   ListPaymentMethodSchema,
   PaymentMethodSchema
 } from '@/utils/zod/types';
+import AddNewPaymentMethod from './AddNewPaymentMethod';
 
 interface Props {
   userDefaultPaymentMethod: UserDefaultPaymentMethodType;
@@ -44,9 +52,16 @@ export default function BillingInfo({
   stripeCustomerId,
   subscriptionId
 }: Props) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
+  const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const currentPath = usePathname();
+  const router = useRouter();
   const [paymentMethods, setPaymentMethods] =
     useState<ListPaymentMethodSchemaType>([]);
+
+  const [showPaymentElement, toggleShowPaymentElement] =
+    useState<boolean>(false);
 
   const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod.id;
 
@@ -58,6 +73,8 @@ export default function BillingInfo({
   };
 
   const handleDisplayPaymentMethods = async () => {
+    toggleShowPaymentElement(false);
+
     // safely fetch data from stripe (retrievePaymentMethods is server action)
     try {
       const data = await retrievePaymentMethods(stripeCustomerId);
@@ -68,15 +85,49 @@ export default function BillingInfo({
       } else {
         setPaymentMethods(validatedData.data);
       }
-
-      // if (data.length > 0) {
-      //   setPaymentMethods(data);
-      // } else {
-      //   throw new Error('No payment methods found.');
-      // }
     } catch (error) {
       console.error('Failed to retrieve payment methods:', error);
     }
+  };
+  const handleStripePaymentMethodUpdate = async () => {
+    setIsSubmitting(true);
+    const { errorRedirect, clientSecret } = await updatePaymentMethod(
+      stripeCustomerId,
+      subscriptionId,
+      currentPath
+    );
+    if (errorRedirect) {
+      setIsSubmitting(false);
+      return router.push(errorRedirect);
+    }
+    if (!clientSecret) {
+      setIsSubmitting(false);
+      return router.push(
+        getErrorRedirect(
+          currentPath,
+          'An unknown error occurred.',
+          'Please try again later or contact a system administrator.'
+        )
+      );
+    }
+    let stripe;
+    try {
+      stripe = await getStripe();
+    } catch (error) {
+      setIsSubmitting(false);
+      return router.push(
+        getErrorRedirect(
+          currentPath,
+          'Could not connect to Stripe',
+          'Please try again later or contact a system administrator.'
+        )
+      );
+    }
+
+    setStripeInstance(stripe);
+    setClientSecret(clientSecret);
+    setIsSubmitting(false);
+    toggleShowPaymentElement(!showPaymentElement);
   };
 
   return (
@@ -100,7 +151,10 @@ export default function BillingInfo({
               <DialogContent className="border-zinc-800 bg-zinc-950">
                 <DialogHeader>
                   <DialogTitle>Edit cards</DialogTitle>
-                  <div>
+                </DialogHeader>
+                <div>
+                  {!showPaymentElement ? (
+                    // if !showPaymentElement show DisplayPaymentData
                     <DisplayPaymentData
                       subscriptionId={subscriptionId}
                       paymentMethods={paymentMethods}
@@ -108,20 +162,49 @@ export default function BillingInfo({
                         subscriptionDefaultPaymentMethodId
                       }
                     />
-                  </div>
-                </DialogHeader>
-                <DialogFooter className="sm:justify-start">
-                  <DialogClose asChild>
-                    <Button
-                      type="button"
-                      variant="slim"
-                      // onClick={() => {
-                      //   setIsSubmitting(false);
-                      // }}
+                  ) : stripeCustomerId && clientSecret ? (
+                    //  if showPaymentElement show CustomCheckoutProvider
+                    <CustomCheckoutProvider
+                      stripe={stripeInstance}
+                      options={{ clientSecret }}
                     >
-                      Close
+                      <form>
+                        <PaymentElement />
+                      </form>
+                    </CustomCheckoutProvider>
+                  ) : null}
+                  {/* <AddNewPaymentMethod
+                    customerId={stripeCustomerId}
+                    subscriptionId={subscriptionId}
+                    showPaymentElement={() =>
+                      toggleShowPaymentElement(!showPaymentElement)
+                    }
+                  /> */}
+                </div>
+
+                <DialogFooter className="sm:justify-start">
+                  {!showPaymentElement ? (
+                    <Button
+                      variant="slim"
+                      className="w-fit"
+                      loading={isSubmitting}
+                      onClick={() => {
+                        handleStripePaymentMethodUpdate();
+                      }}
+                    >
+                      Add card
                     </Button>
-                  </DialogClose>
+                  ) : (
+                    <Button
+                      variant="slim"
+                      className="w-fit"
+                      onClick={() => {
+                        toggleShowPaymentElement(!showPaymentElement);
+                      }}
+                    >
+                      Back
+                    </Button>
+                  )}
                 </DialogFooter>
               </DialogContent>
             </Dialog>
