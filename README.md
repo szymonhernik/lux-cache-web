@@ -3,9 +3,7 @@
 ## TODO
 
 - [x] Make it deploy (vercel)
-- [ ]
-
-- [ ] Replace 'use-server' with import 'server-only'
+- [x] Replace 'use-server' with import 'server-only'
 - [ ] Add authentication (w/ supabase)
 - [ ] Set up database (w/ supabase)
 - [ ] Set up Stripe (checkout, api points, webhooks)

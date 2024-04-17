@@ -1,4 +1,4 @@
-'use server';
+import 'server-only';
 
 import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';
