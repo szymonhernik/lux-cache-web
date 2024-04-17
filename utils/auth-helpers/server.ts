@@ -77,6 +77,7 @@ export async function signInWithEmail(formData: FormData) {
       'Please check your email for a magic link. You may now close this tab.',
       true
     );
+    revalidatePath('/');
   } else {
     redirectPath = getErrorRedirect(
       '/signin/email_signin',
