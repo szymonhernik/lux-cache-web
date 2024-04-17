@@ -34,6 +34,7 @@ import {
   PaymentMethodSchema
 } from '@/utils/zod/types';
 import AddNewPaymentMethod from './AddNewPaymentMethod';
+import PaymentMethodSetupForm from './PaymentMethodSetupForm';
 
 interface Props {
   userDefaultPaymentMethod: UserDefaultPaymentMethodType;
@@ -168,9 +169,7 @@ export default function BillingInfo({
                       stripe={stripeInstance}
                       options={{ clientSecret }}
                     >
-                      <form>
-                        <PaymentElement />
-                      </form>
+                      <PaymentMethodSetupForm />
                     </CustomCheckoutProvider>
                   ) : null}
                   {/* <AddNewPaymentMethod

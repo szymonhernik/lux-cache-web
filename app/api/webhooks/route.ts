@@ -81,6 +81,9 @@ export async function POST(req: Request) {
               checkoutSession.customer as string,
               true
             );
+          } else if (checkoutSession.mode === 'setup') {
+            const subscriptionId = checkoutSession.subscription;
+            console.log('data from checkout session', checkoutSession);
           }
           break;
         default:
