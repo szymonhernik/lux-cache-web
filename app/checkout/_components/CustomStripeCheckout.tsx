@@ -3,6 +3,7 @@ import { customCheckoutWithStripe } from '@/utils/stripe/server';
 
 import { redirect } from 'next/navigation';
 import CustomCheckoutProviderWrapper from './CustomCheckoutProviderWrapper';
+import { getErrorRedirect } from '@/utils/helpers';
 
 type Price = Tables<'prices'>;
 type Product = Tables<'products'>;
@@ -17,31 +18,39 @@ export default async function CustomStripeCheckout(props: {
   const { price } = props;
   let clientSecretReceived: string | null = null;
   if (!price) {
-    return <div>Price not found</div>;
+    return redirect(
+      getErrorRedirect(
+        `/`,
+        'Plan not found',
+        'Please choose one of the available plans.'
+      )
+    );
   }
+
   const { errorRedirect, sessionId, clientSecret } =
     await customCheckoutWithStripe(price, '/');
   if (errorRedirect) {
-    return <div>Received Error</div>;
-    // redirect('/')
+    return redirect(errorRedirect);
   }
+  //for custom checkout provider i'll need to receive the clientsecret from checkoutWithStripe
   if (!sessionId && !clientSecret) {
-    return <div>Something went wrong</div>;
+    return redirect(
+      getErrorRedirect(
+        `/`,
+        'Invalid session',
+        "Sorry, we weren't able to connect to Stripe. Please try again."
+      )
+    );
   }
-
   if (clientSecret) {
     clientSecretReceived = clientSecret;
   }
-  // Check if clientSecretReceived is still not set
-  if (!clientSecretReceived) {
-    return <div>Client secret not received</div>;
-  }
-
-  //for custom checkout provider i'll need to receive the clientsecret from checkoutWithStripe
 
   return (
     <div>
-      <CustomCheckoutProviderWrapper clientSecret={clientSecretReceived} />
+      {clientSecretReceived && (
+        <CustomCheckoutProviderWrapper clientSecret={clientSecretReceived} />
+      )}
     </div>
   );
 }

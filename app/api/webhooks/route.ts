@@ -7,6 +7,7 @@ import {
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin';
+import { revalidatePath } from 'next/cache';
 
 const relevantEvents = new Set([
   'product.created',

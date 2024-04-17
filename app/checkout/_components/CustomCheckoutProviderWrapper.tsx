@@ -6,6 +6,8 @@ import {
   PaymentElement
 } from '@stripe/react-stripe-js';
 import CheckoutForm from './CheckoutForm';
+import { getErrorRedirect } from '@/utils/helpers';
+import { redirect } from 'next/navigation';
 
 const stripePromise = getStripe();
 export default function CustomCheckoutProviderWrapper(props: {
@@ -14,7 +16,13 @@ export default function CustomCheckoutProviderWrapper(props: {
   const { clientSecret } = props;
 
   if (!clientSecret || !stripePromise) {
-    return <div>Client secret or stripe instance not found</div>;
+    return redirect(
+      getErrorRedirect(
+        `/`,
+        'Invalid payment connection',
+        "Sorry, we weren't able to connect to Stripe. Please try again or contact the administrator."
+      )
+    );
   }
 
   return (
