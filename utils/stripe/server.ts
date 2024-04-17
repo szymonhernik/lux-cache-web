@@ -1,4 +1,5 @@
-import 'server-only';
+// import 'server-only';
+'use server';
 
 import Stripe from 'stripe';
 import { stripe } from '@/utils/stripe/config';

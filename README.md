@@ -3,7 +3,8 @@
 ## TODO
 
 - [x] Make it deploy (vercel)
-- [x] Replace 'use-server' with import 'server-only'
+- [ ] Add CMS (w/ sanity)
+- [ ] move the necessary queries to a queries file (use import 'server-only')
 - [ ] Add authentication (w/ supabase)
 - [ ] Set up database (w/ supabase)
 - [ ] Set up Stripe (checkout, api points, webhooks)
