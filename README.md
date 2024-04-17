@@ -3,6 +3,7 @@
 ## TODO
 
 - [x] Make it deploy (vercel)
+- [ ] Add Custom Checkout with trial (w/stripe)
 - [ ] Add CMS (w/ sanity)
 - [ ] move the necessary queries to a queries file (use import 'server-only')
 - [ ] Add authentication (w/ supabase)
