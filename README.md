@@ -3,7 +3,9 @@
 ## TODO
 
 - [x] Make it deploy (vercel)
-- [ ] Add Custom Checkout with trial (w/stripe)
+- [x] Add Custom Checkout with trial (w/stripe)
+- [ ] Handle Checkout page errros and actions during and after submitting the payment
+- [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)
 - [ ] move the necessary queries to a queries file (use import 'server-only')
 - [ ] Add authentication (w/ supabase)
