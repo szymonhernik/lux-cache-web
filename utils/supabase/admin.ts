@@ -6,6 +6,9 @@ import type { Database, Tables, TablesInsert } from 'types_db';
 
 type Product = Tables<'products'>;
 type Price = Tables<'prices'>;
+interface ExtendedStripePrice extends Stripe.Price {
+  description?: string | null;
+}
 
 // Change to control trial period length
 const TRIAL_PERIOD_DAYS = 7;
@@ -36,13 +39,15 @@ const upsertProductRecord = async (product: Stripe.Product) => {
 };
 
 const upsertPriceRecord = async (
-  price: Stripe.Price,
+  price: ExtendedStripePrice,
   retryCount = 0,
   maxRetries = 3
 ) => {
   const priceData: Price = {
     id: price.id,
     product_id: typeof price.product === 'string' ? price.product : '',
+    metadata: price.metadata ?? null,
+    description: price.description ?? null,
     active: price.active,
     currency: price.currency,
     type: price.type,

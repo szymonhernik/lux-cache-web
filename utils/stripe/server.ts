@@ -359,7 +359,7 @@ export async function customCheckoutWithStripe(
       ui_mode: 'custom',
       return_url: 'http://localhost:3000/'
     };
-
+    console.log('Price metadata:', price);
     console.log(
       'Trial end:',
       calculateTrialEndUnixTimestamp(price.trial_period_days)

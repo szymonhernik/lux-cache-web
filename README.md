@@ -4,7 +4,9 @@
 
 - [x] Make it deploy (vercel)
 - [x] Add Custom Checkout with trial (w/stripe)
-- [ ] Handle Checkout page errros and actions during and after submitting the payment
+- [x] Handle Checkout page errros and actions during and after submitting the payment
+- [ ] Add trial only on the lowest price
+- [ ] Handle change of plans and the quotes according to the current balance for the subscriber
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)
 - [ ] move the necessary queries to a queries file (use import 'server-only')
