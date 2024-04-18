@@ -4,34 +4,17 @@ import { stripe } from '@/utils/stripe/config';
 import Stripe from 'stripe';
 
 import { z } from 'zod';
-import { CardDetailsSchema, PaymentMethodSchema } from '@/utils/zod/types';
-
-const SubscriptionSchema = z.object({
-  id: z.string(),
-  customer: z.string(),
-  default_payment_method: PaymentMethodSchema
-});
-
-const SubscriptionIdSchema = z.object({
-  id: z.string()
-});
+import {
+  CardDetailsSchema,
+  PaymentMethodSchema,
+  SubscriptionIdSchema,
+  SubscriptionSchema
+} from '@/utils/types/zod/types';
+import { SubscriptionWithPriceAndProduct } from '@/utils/types';
 
 const PropsSchema = z.object({
   subscription: SubscriptionIdSchema
 });
-
-// type Props = z.infer<typeof PropsSchema>;
-type Subscription = Tables<'subscriptions'>;
-type Price = Tables<'prices'>;
-type Product = Tables<'products'>;
-
-type SubscriptionWithPriceAndProduct = Subscription & {
-  prices:
-    | (Price & {
-        products: Product | null;
-      })
-    | null;
-};
 
 interface Props {
   subscription: SubscriptionWithPriceAndProduct | null;

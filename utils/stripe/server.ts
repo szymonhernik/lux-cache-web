@@ -12,13 +12,9 @@ import {
   getStatusRedirect
 } from '@/utils/helpers';
 import { Tables } from '@/types_db';
-
-type Price = Tables<'prices'>;
-
-type CheckoutResponse = {
-  errorRedirect?: string;
-  sessionId?: string;
-};
+import { z } from 'zod';
+import { CheckoutResponse, Price, PriceWithProduct } from '../types';
+import { ProductMetadataSchema } from '../types/zod/types';
 
 export async function retrievePaymentMethods(customerId: string) {
   try {
@@ -314,7 +310,7 @@ export async function updatePaymentMethod(
 }
 
 export async function customCheckoutWithStripe(
-  price: Price,
+  price: PriceWithProduct,
   redirectPath: string = '/'
 ): Promise<CustomCheckoutResponse> {
   try {
@@ -359,25 +355,42 @@ export async function customCheckoutWithStripe(
       ui_mode: 'custom',
       return_url: 'http://localhost:3000/'
     };
-    console.log('Price metadata:', price);
+
     console.log(
       'Trial end:',
       calculateTrialEndUnixTimestamp(price.trial_period_days)
     );
+
+    const readMetadata = ProductMetadataSchema.safeParse(
+      price?.products?.metadata
+    );
+    let canTrial = false;
+    if (readMetadata.success) {
+      canTrial =
+        readMetadata.data.trial_allowed === 'true' &&
+        readMetadata.data.index === '0';
+    }
     if (price.type === 'recurring') {
       params = {
         ...params,
-        mode: 'subscription',
-        subscription_data: {
-          trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
-        }
+        mode: 'subscription'
       };
+      if (canTrial) {
+        params = {
+          ...params,
+          subscription_data: {
+            trial_end: calculateTrialEndUnixTimestamp(price.trial_period_days)
+          }
+        };
+      }
     } else if (price.type === 'one_time') {
       params = {
         ...params,
         mode: 'payment'
       };
     }
+
+    // console.log('Params:', params);
 
     // Create a checkout session in Stripe
     let session;

@@ -32,7 +32,7 @@ import { set, z } from 'zod';
 import {
   ListPaymentMethodSchema,
   PaymentMethodSchema
-} from '@/utils/zod/types';
+} from '@/utils/types/zod/types';
 import AddNewPaymentMethod from './AddNewPaymentMethod';
 import PaymentMethodSetupForm from './PaymentMethodSetupForm';
 

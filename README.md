@@ -3,10 +3,17 @@
 ## TODO
 
 - [x] Make it deploy (vercel)
+
+### Stripe
+
 - [x] Add Custom Checkout with trial (w/stripe)
 - [x] Handle Checkout page errros and actions during and after submitting the payment
-- [ ] Add trial only on the lowest price
+- [x] TS for price.products.metadata?.index and .trial_allowed in server.tsx (validation w/zod)
+- [ ] Checkout Summary
+- [ ] Check that the user can trial only once
+- [x] Add trial only on the lowest price
 - [ ] Handle change of plans and the quotes according to the current balance for the subscriber
+
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)
 - [ ] move the necessary queries to a queries file (use import 'server-only')

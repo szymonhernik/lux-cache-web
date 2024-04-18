@@ -71,6 +71,7 @@ export default async function CheckoutPage({
   if (priceFetchError) {
     return redirect('/');
   }
+  // console.log('Price:', price);
 
   // if the price is found and all the checks passed we can render the custom checkout page
 

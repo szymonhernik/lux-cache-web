@@ -12,16 +12,35 @@ import Link from 'next/link';
 import { getStatusRedirect } from '@/utils/helpers';
 import Button from '@/components/ui/Button';
 
-export default function CheckoutForm() {
+export default function CheckoutForm(props: {
+  canTrial: boolean;
+  daysTrial: number | null;
+}) {
   const { confirm, canConfirm, confirmationRequirements, lineItems, currency } =
     useCustomCheckout();
-
+  const { canTrial, daysTrial } = props;
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [messageBody, setMessageBody] = useState('');
 
   console.log('lineItems', lineItems);
+  console.log('canTrial', canTrial);
+
+  // date 7 days from now
+  let trialEndDate;
+  if (daysTrial) {
+    const currentDate = new Date(); // Get today's date
+    currentDate.setDate(currentDate.getDate() + daysTrial); // Add the trial days
+
+    // Format the date
+    // const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    trialEndDate = currentDate.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  }
 
   //   const priceString = new Intl.NumberFormat('en-US', {
   //     style: 'currency',
@@ -58,8 +77,19 @@ export default function CheckoutForm() {
         <>
           <div className="mb-8">
             <h1 className="font-bold text-xl mb-4">Order Summary</h1>
-            <div className="bg-zinc-900 rounded p-4  w-3/4">
-              <p>{lineItems[0]?.name}</p>
+
+            <div className="bg-zinc-900 rounded p-4 w-3/4 gap-4 flex flex-col">
+              <div>
+                <p className="font-semibold text-xl">
+                  Plan: {lineItems[0]?.name}
+                </p>
+              </div>
+              {trialEndDate && (
+                <div>
+                  <p className="font-semibold text-xl">Billed after trial</p>
+                  <p>({trialEndDate})</p>
+                </div>
+              )}
 
               <div className="font-bold flex justify-between"></div>
             </div>

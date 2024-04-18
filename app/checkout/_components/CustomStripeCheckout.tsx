@@ -4,6 +4,8 @@ import { customCheckoutWithStripe } from '@/utils/stripe/server';
 import { redirect } from 'next/navigation';
 import CustomCheckoutProviderWrapper from './CustomCheckoutProviderWrapper';
 import { getErrorRedirect } from '@/utils/helpers';
+import { z } from 'zod';
+import { ProductMetadataSchema } from '@/utils/types/zod/types';
 
 type Price = Tables<'prices'>;
 type Product = Tables<'products'>;
@@ -27,6 +29,25 @@ export default async function CustomStripeCheckout(props: {
     );
   }
 
+  // console.log('price', price);
+
+  const readMetadata = ProductMetadataSchema.safeParse(
+    price?.products?.metadata
+  );
+  let canTrial: boolean = false;
+  let daysTrial: number | null = null;
+  if (readMetadata.success) {
+    // console.log('readMetadata', readMetadata.data);
+    canTrial =
+      readMetadata.data.trial_allowed === 'true' &&
+      readMetadata.data.index === '0';
+
+    daysTrial = price.trial_period_days;
+  }
+
+  // const readMetadata = price?.products?.metadata;
+  // console.log('trialPrice ', trialPrice);
+
   const { errorRedirect, sessionId, clientSecret } =
     await customCheckoutWithStripe(price, '/');
   if (errorRedirect) {
@@ -49,7 +70,11 @@ export default async function CustomStripeCheckout(props: {
   return (
     <div>
       {clientSecretReceived && (
-        <CustomCheckoutProviderWrapper clientSecret={clientSecretReceived} />
+        <CustomCheckoutProviderWrapper
+          clientSecret={clientSecretReceived}
+          canTrial={canTrial}
+          daysTrial={daysTrial}
+        />
       )}
     </div>
   );

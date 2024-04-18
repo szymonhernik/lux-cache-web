@@ -1,7 +1,7 @@
 import Button from '@/components/ui/Button';
 
 import { updateSubscriptionDefaultPaymentMethod } from '@/utils/stripe/server';
-import { ListPaymentMethodSchema } from '@/utils/zod/types';
+import { ListPaymentMethodSchema } from '@/utils/types/zod/types';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z } from 'zod';
