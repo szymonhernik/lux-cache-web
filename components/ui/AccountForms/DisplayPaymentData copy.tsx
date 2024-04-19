@@ -24,38 +24,53 @@ export default function DisplayPaymentData({
 }) {
   // console.log('paymentMethods in new component', paymentMethods);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // const [paymentMethodIdLoading, setPaymentMethodIdLoading] =
-  //   useState<string>();
-  const [activeButtonState, setActiveButtonState] = useState({
-    id: '',
-    action: ''
-  });
-
+  const [paymentMethodIdLoading, setPaymentMethodIdLoading] =
+    useState<string>();
   const router = useRouter();
   const currentPath = usePathname();
 
-  const handleAction = async (
-    paymentMethodId: string,
-    action: 'detach' | 'setDefault'
-  ) => {
-    setActiveButtonState({ id: paymentMethodId, action });
+  const handleStripePaymentMethodDetach = async (paymentMethodId: string) => {
+    // TODO: Check if there is only one payment method left and show a message that the user needs to have at least one payment method
+
+    console.log('Deleting payment method with id:', paymentMethodId);
+    setIsSubmitting(true);
+    setPaymentMethodIdLoading(paymentMethodId);
     try {
-      let redirectUrl: string = '';
-      if (action === 'detach') {
-        redirectUrl = await detachPaymentMethod(paymentMethodId);
-      } else if (action === 'setDefault') {
-        redirectUrl = await updateSubscriptionDefaultPaymentMethod(
-          paymentMethodId,
-          subscriptionId
-        );
-      }
-      onCardsUpdate();
+      const redirectUrl: string = await detachPaymentMethod(
+        paymentMethodId,
+        currentPath
+      );
+      setPaymentMethodIdLoading(undefined);
+      setIsSubmitting(false);
+
       router.push(redirectUrl);
+      // router.refresh();
+      onCardsUpdate();
     } catch (error) {
-      console.error('Error processing payment method action:', error);
-    } finally {
-      setActiveButtonState({ id: '', action: '' });
+      console.error('Error deleting payment method', error);
     }
+  };
+
+  const handleSetNewDefaultPaymentMethod = async (paymentMethodId: string) => {
+    setIsSubmitting(true);
+    setPaymentMethodIdLoading(paymentMethodId);
+
+    // Call the function to set the new default payment method
+    // let redirectUrl: string;
+    try {
+      const redirectUrl: string = await updateSubscriptionDefaultPaymentMethod(
+        paymentMethodId,
+        subscriptionId,
+        currentPath
+      );
+      router.push(redirectUrl);
+      router.refresh();
+      setPaymentMethodIdLoading(undefined);
+      setIsSubmitting(false);
+    } catch (error) {
+      return;
+    }
+    console.log('New default payment method set.');
   };
   return (
     <>
@@ -86,11 +101,12 @@ export default function DisplayPaymentData({
                       type="submit"
                       className="!py-0 !px-4"
                       onClick={() =>
-                        handleAction(paymentMethod.id, 'setDefault')
+                        handleSetNewDefaultPaymentMethod(paymentMethod.id)
                       }
+                      // loading={isSubmitting}
                       loading={
-                        activeButtonState.id === paymentMethod.id &&
-                        activeButtonState.action === 'setDefault'
+                        paymentMethodIdLoading === paymentMethod.id &&
+                        isSubmitting
                       }
                     >
                       Set as default
@@ -98,12 +114,15 @@ export default function DisplayPaymentData({
                     <Button
                       variant="slim"
                       type="submit"
-                      className="!py-0 !px-4"
-                      onClick={() => handleAction(paymentMethod.id, 'detach')}
+                      className="!py-0 !px-4 "
                       loading={
-                        activeButtonState.id === paymentMethod.id &&
-                        activeButtonState.action === 'detach'
+                        paymentMethodIdLoading === paymentMethod.id &&
+                        isSubmitting
                       }
+                      onClick={() =>
+                        handleStripePaymentMethodDetach(paymentMethod.id)
+                      }
+                      // loading={isSubmitting}
                     >
                       Remove
                     </Button>

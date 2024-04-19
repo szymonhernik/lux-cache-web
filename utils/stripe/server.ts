@@ -27,6 +27,44 @@ export async function retrievePaymentMethods(customerId: string) {
     throw new Error('Could not retrieve payment methods.');
   }
 }
+export async function detachPaymentMethod(
+  paymentMethodId: string,
+  redirectPath: string = '/account'
+) {
+  try {
+    const detach = await stripe.paymentMethods.detach(paymentMethodId);
+    // TODO: Check if this is enough to be sure the payment method was detached
+    if (detach) {
+      console.log('Detach returns: ', detach);
+
+      return getStatusRedirect(
+        redirectPath,
+        'Success!',
+        'Your card has been removed.'
+      );
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'Unable to detach payment method.',
+        'Please try again later or contact a system administrator.'
+      );
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      return getErrorRedirect(
+        redirectPath,
+        error.message,
+        'Please try again later or contact a system administrator.'
+      );
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'An unknown error occurred.',
+        'Please try again later or contact a system administrator.'
+      );
+    }
+  }
+}
 
 export async function updateSubscriptionDefaultPaymentMethod(
   defaultPaymentMethodId: string,

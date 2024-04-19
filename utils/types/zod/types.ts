@@ -9,7 +9,8 @@ const CardDetailsSchema = z.object({
 
 const PaymentMethodSchema = z.object({
   id: z.string(),
-  card: CardDetailsSchema
+  card: CardDetailsSchema,
+  created: z.number()
 });
 const SubscriptionSchema = z.object({
   id: z.string(),
@@ -27,6 +28,11 @@ const CustomerIdSchema = z.object({
 
 const ListPaymentMethodSchema = z.array(PaymentMethodSchema);
 
+const LinkedPaymentMethodsSchema = z.object({
+  object: z.string(),
+  data: ListPaymentMethodSchema
+});
+
 const ProductMetadataSchema = z.object({
   index: z.string(),
   trial_allowed: z.string()
@@ -42,6 +48,7 @@ const CustomerDataSchema = z.object({
 export {
   CardDetailsSchema,
   PaymentMethodSchema,
+  LinkedPaymentMethodsSchema,
   CustomerDataSchema,
   CustomerIdSchema,
   SubscriptionSchema,

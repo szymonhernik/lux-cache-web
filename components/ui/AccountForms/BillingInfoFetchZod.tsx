@@ -38,8 +38,8 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
     // use validateSubscription from now on
     if (!validatedSubscription.success) {
       console.error(
-        'Couldnt validate subscription.',
-        validatedSubscription.error.issues
+        'Couldnt validate subscription.'
+        // validatedSubscription.error.issues
       );
       return;
     }
@@ -62,8 +62,8 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
 
         if (!validatedData.success) {
           console.error(
-            'Couldnt retrieve information about subscription from stripe. ',
-            validatedData.error.issues
+            'Couldnt retrieve information about subscription from stripe. '
+            // validatedData.error.issues
           );
 
           // if by any chance there is no default payment method, we need to retrieve the customer's default payment method which will be the payment method used for the subscription payments
@@ -77,8 +77,8 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
               CustomerDataSchema.safeParse(stripeCustomerData);
             if (!validatedStripeCustomerData.success) {
               console.error(
-                'Couldnt retrieve information about customer from stripe. ',
-                validatedStripeCustomerData.error.issues
+                'Couldnt retrieve information about customer from stripe. '
+                // validatedStripeCustomerData.error.issues
               );
               return;
             }
@@ -89,26 +89,26 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
                 validatedStripeCustomerData.data.invoice_settings
                   .default_payment_method
               );
-            console.log(
-              'retrieveBackupPaymentMethod',
-              retrieveBackupPaymentMethod
-            );
+            // console.log(
+            //   'retrieveBackupPaymentMethod',
+            //   retrieveBackupPaymentMethod
+            // );
 
             const validateRetrievedPaymentMethodData =
               PaymentMethodSchema.safeParse(retrieveBackupPaymentMethod);
             if (!validateRetrievedPaymentMethodData.success) {
               console.error(
-                'Couldnt retrieve information about payment method from stripe. ',
-                validateRetrievedPaymentMethodData.error.issues
+                'Couldnt retrieve information about payment method from stripe. '
+                // validateRetrievedPaymentMethodData.error.issues
               );
               return;
             } else
               defaultPaymentMethodData =
                 validateRetrievedPaymentMethodData.data;
-            console.log(
-              'validateRetrievedPaymentMethodData',
-              validateRetrievedPaymentMethodData
-            );
+            // console.log(
+            //   'validateRetrievedPaymentMethodData',
+            //   validateRetrievedPaymentMethodData
+            // );
           }
         } else if (validatedData.success) {
           stripeCustomerId = validatedData.data.customer;

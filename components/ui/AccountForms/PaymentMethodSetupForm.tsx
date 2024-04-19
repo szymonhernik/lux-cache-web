@@ -1,6 +1,8 @@
 import { PaymentElement, useCustomCheckout } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
+import { redirect, usePathname, useRouter } from 'next/navigation';
+import { getStatusRedirect } from '@/utils/helpers';
 
 export default function PaymentMethodSetupForm(props: {
   onConfirmNewCard: () => void;
@@ -11,28 +13,40 @@ export default function PaymentMethodSetupForm(props: {
   const [isSuccess, setIsSuccess] = useState(false);
   const [messageBody, setMessageBody] = useState('');
 
+  const router = useRouter();
+  const currentPath = usePathname();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission
-    if (!canConfirm) {
-      e.preventDefault();
-      setIsSubmitting(false);
-      return;
-    }
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    //  confirm() method returns a Promise that resolves to an object with one of the following types
-    //  { session: CheckoutSession }
-    //  { error: StripeError }
-    confirm().then((result) => {
-      setIsSubmitting(false);
-      if (result.session) {
-        setIsSuccess(true);
-        onConfirmNewCard();
-      } else {
-        setMessageBody(result.error.message || 'An error occurred');
+    try {
+      if (!canConfirm) {
+        e.preventDefault();
+        setIsSubmitting(false);
+        return;
       }
-    });
+      e.preventDefault();
+      setIsSubmitting(true);
+
+      //  confirm() method returns a Promise that resolves to an object with one of the following types
+      //  { session: CheckoutSession }
+      //  { error: StripeError }
+      confirm().then((result) => {
+        setIsSubmitting(false);
+        if (result.session) {
+          onConfirmNewCard();
+          router.push(
+            getStatusRedirect(currentPath, 'Success!', 'Card added.')
+          );
+          router.refresh();
+          // setIsSuccess(true);
+        } else {
+          setMessageBody(result.error.message || 'An error occurred');
+          return;
+        }
+      });
+    } catch (error) {
+      console.error('Error confirming payment');
+    } finally {
+    }
   };
 
   return (

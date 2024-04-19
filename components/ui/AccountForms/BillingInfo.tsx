@@ -77,11 +77,14 @@ export default function BillingInfo({
 
   const handleDisplayPaymentMethods = async () => {
     toggleShowPaymentElement(false);
+    console.log('handleDisplayMethod');
+
     //if the user hasn't confirmed payment method, return and don't fetch new data from stripe
-    if (!confirmedNewCard && sessionOpen) {
-      return;
-    }
-    setSessionOpen(true);
+    // if (!confirmedNewCard && sessionOpen) {
+    //   return;
+    // }
+    // console.log(' fetch new data');
+    // setSessionOpen(true);
     // if the user has confirmed payment method, we need to fetch the updated payment methods
 
     // safely fetch data from stripe (retrievePaymentMethods is server action)
@@ -93,12 +96,12 @@ export default function BillingInfo({
         return;
       } else {
         setPaymentMethods(validatedData.data);
-        console.log('Payment methods data:', validatedData.data);
       }
     } catch (error) {
       console.error('Failed to retrieve payment methods:', error);
     }
   };
+
   const handleStripePaymentMethodUpdate = async () => {
     setIsSubmitting(true);
     const { errorRedirect, clientSecret } = await updatePaymentMethod(
@@ -172,6 +175,7 @@ export default function BillingInfo({
                       subscriptionDefaultPaymentMethodId={
                         subscriptionDefaultPaymentMethodId
                       }
+                      onCardsUpdate={() => handleDisplayPaymentMethods()}
                     />
                   ) : stripeCustomerId && clientSecret ? (
                     //  if showPaymentElement show CustomCheckoutProvider
@@ -181,7 +185,10 @@ export default function BillingInfo({
                       options={{ clientSecret }}
                     >
                       <PaymentMethodSetupForm
-                        onConfirmNewCard={() => setConfirmedNewCard(true)}
+                        onConfirmNewCard={() => {
+                          handleDisplayPaymentMethods();
+                          // toggleShowPaymentElement(!showPaymentElement);
+                        }}
                       />
                     </CustomCheckoutProvider>
                   ) : null}

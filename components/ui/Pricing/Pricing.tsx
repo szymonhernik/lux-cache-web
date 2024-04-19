@@ -16,6 +16,8 @@ import {
   ProductWithPrices,
   SubscriptionWithProduct
 } from '@/utils/types';
+import Link from 'next/link';
+import ConditionalWrapper from '../ConditionalWrapper';
 
 interface Props {
   user: User | null | undefined;
@@ -174,18 +176,52 @@ export default function Pricing({ user, products, subscription }: Props) {
                         /{billingInterval}
                       </span>
                     </p>
+
                     <Button
                       variant="slim"
                       type="button"
-                      loading={priceIdLoading === price.id}
-                      onClick={() => {
-                        // <pathname>?sort=asc
-                        router.push('/checkout' + '?priceId=' + price.id);
+                      onClick={(e) => {
+                        {
+                          !subscription && !user
+                            ? router.push('/signin')
+                            : !subscription && user
+                              ? router.push(
+                                  '/checkout' + '?priceId=' + price.id
+                                )
+                              : router.push('/account');
+                        }
                       }}
+                      loading={priceIdLoading === price.id}
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
                       {subscription ? 'Manage' : 'Subscribe'}
                     </Button>
+
+                    {/* {subscription ? (
+                      <Link href="/account">
+                        <Button
+                          variant="slim"
+                          type="button"
+                          loading={priceIdLoading === price.id}
+                          className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
+                        >
+                          Manage
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button
+                        variant="slim"
+                        type="button"
+                        loading={priceIdLoading === price.id}
+                        onClick={() => {
+                          router.push('/checkout' + '?priceId=' + price.id);
+                        }}
+                        className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
+                      >
+                        Subscribe
+                      </Button>
+                    )} */}
+
                     {/* <Button
                       variant="slim"
                       type="button"
