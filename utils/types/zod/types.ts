@@ -21,6 +21,10 @@ const SubscriptionIdSchema = z.object({
   id: z.string()
 });
 
+const CustomerIdSchema = z.object({
+  customer: z.string()
+});
+
 const ListPaymentMethodSchema = z.array(PaymentMethodSchema);
 
 const ProductMetadataSchema = z.object({
@@ -28,9 +32,18 @@ const ProductMetadataSchema = z.object({
   trial_allowed: z.string()
 });
 
+const CustomerDataSchema = z.object({
+  id: z.string(),
+  invoice_settings: z.object({
+    default_payment_method: z.string()
+  })
+});
+
 export {
   CardDetailsSchema,
   PaymentMethodSchema,
+  CustomerDataSchema,
+  CustomerIdSchema,
   SubscriptionSchema,
   SubscriptionIdSchema,
   ListPaymentMethodSchema,

@@ -24,6 +24,9 @@ export default function PasswordSignIn({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true); // Disable the button while the request is being handled
     await handleRequest(e, signInWithPassword, router);
+    if (router) {
+      router.refresh();
+    }
     setIsSubmitting(false);
   };
 

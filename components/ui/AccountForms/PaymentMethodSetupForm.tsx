@@ -2,7 +2,10 @@ import { PaymentElement, useCustomCheckout } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import Button from '@/components/ui/Button';
 
-export default function PaymentMethodSetupForm() {
+export default function PaymentMethodSetupForm(props: {
+  onConfirmNewCard: () => void;
+}) {
+  const { onConfirmNewCard } = props;
   const { confirm, canConfirm } = useCustomCheckout();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -25,6 +28,7 @@ export default function PaymentMethodSetupForm() {
       setIsSubmitting(false);
       if (result.session) {
         setIsSuccess(true);
+        onConfirmNewCard();
       } else {
         setMessageBody(result.error.message || 'An error occurred');
       }
@@ -56,7 +60,7 @@ export default function PaymentMethodSetupForm() {
       ) : (
         <div>
           <h1 className="text-xl font-bold mb-4">Success</h1>
-          <p>Your default card has been updated.</p>
+          <p>You have added a new card.</p>
         </div>
       )}
     </div>

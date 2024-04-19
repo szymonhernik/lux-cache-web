@@ -60,6 +60,8 @@ export default function BillingInfo({
   const router = useRouter();
   const [paymentMethods, setPaymentMethods] =
     useState<ListPaymentMethodSchemaType>([]);
+  const [confirmedNewCard, setConfirmedNewCard] = useState(false);
+  const [sessionOpen, setSessionOpen] = useState(false);
 
   const [showPaymentElement, toggleShowPaymentElement] =
     useState<boolean>(false);
@@ -75,6 +77,12 @@ export default function BillingInfo({
 
   const handleDisplayPaymentMethods = async () => {
     toggleShowPaymentElement(false);
+    //if the user hasn't confirmed payment method, return and don't fetch new data from stripe
+    if (!confirmedNewCard && sessionOpen) {
+      return;
+    }
+    setSessionOpen(true);
+    // if the user has confirmed payment method, we need to fetch the updated payment methods
 
     // safely fetch data from stripe (retrievePaymentMethods is server action)
     try {
@@ -85,6 +93,7 @@ export default function BillingInfo({
         return;
       } else {
         setPaymentMethods(validatedData.data);
+        console.log('Payment methods data:', validatedData.data);
       }
     } catch (error) {
       console.error('Failed to retrieve payment methods:', error);
@@ -156,6 +165,7 @@ export default function BillingInfo({
                 <div>
                   {!showPaymentElement ? (
                     // if !showPaymentElement show DisplayPaymentData
+                    // Display available cards
                     <DisplayPaymentData
                       subscriptionId={subscriptionId}
                       paymentMethods={paymentMethods}
@@ -165,20 +175,16 @@ export default function BillingInfo({
                     />
                   ) : stripeCustomerId && clientSecret ? (
                     //  if showPaymentElement show CustomCheckoutProvider
+                    // Display Stripe Payment Setup Form
                     <CustomCheckoutProvider
                       stripe={stripeInstance}
                       options={{ clientSecret }}
                     >
-                      <PaymentMethodSetupForm />
+                      <PaymentMethodSetupForm
+                        onConfirmNewCard={() => setConfirmedNewCard(true)}
+                      />
                     </CustomCheckoutProvider>
                   ) : null}
-                  {/* <AddNewPaymentMethod
-                    customerId={stripeCustomerId}
-                    subscriptionId={subscriptionId}
-                    showPaymentElement={() =>
-                      toggleShowPaymentElement(!showPaymentElement)
-                    }
-                  /> */}
                 </div>
 
                 <DialogFooter className="sm:justify-start">
@@ -198,7 +204,7 @@ export default function BillingInfo({
                       variant="slim"
                       className="w-fit"
                       onClick={() => {
-                        toggleShowPaymentElement(!showPaymentElement);
+                        handleDisplayPaymentMethods();
                       }}
                     >
                       Back
