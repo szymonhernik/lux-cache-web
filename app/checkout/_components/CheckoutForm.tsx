@@ -11,6 +11,8 @@ import { revalidatePath } from 'next/cache';
 import Link from 'next/link';
 import { getStatusRedirect } from '@/utils/helpers';
 import Button from '@/components/ui/Button';
+import PromotionCodeForm from './PromotionCodeForm';
+import OrderSummary from './OrderSummary';
 
 export default function CheckoutForm(props: {
   canTrial: boolean;
@@ -27,26 +29,6 @@ export default function CheckoutForm(props: {
   console.log('lineItems', lineItems);
   console.log('canTrial', canTrial);
 
-  // date 7 days from now
-  let trialEndDate;
-  if (daysTrial) {
-    const currentDate = new Date(); // Get today's date
-    currentDate.setDate(currentDate.getDate() + daysTrial); // Add the trial days
-
-    // Format the date
-    // const options = { year: 'numeric', month: 'short', day: 'numeric' };
-    trialEndDate = currentDate.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  }
-
-  //   const priceString = new Intl.NumberFormat('en-US', {
-  //     style: 'currency',
-  //     currency: currency!,
-  //     minimumFractionDigits: 0
-  //   }).format((lineItems[0]?.unitAmount || 0) / 100);
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission
     if (!canConfirm) {
@@ -72,43 +54,36 @@ export default function CheckoutForm(props: {
     });
   };
   return (
-    <div className="flex flex-col gap-4 ">
+    <div className="flex flex-col gap-16 ">
       {!isSuccess ? (
         <>
-          <div className="mb-8">
-            <h1 className="font-bold text-xl mb-4">Order Summary</h1>
-
-            <div className="bg-zinc-900 rounded p-4 w-3/4 gap-4 flex flex-col">
-              <div>
-                <p className="font-semibold text-xl">
-                  Plan: {lineItems[0]?.name}
-                </p>
-              </div>
-              {trialEndDate && (
-                <div>
-                  <p className="font-semibold text-xl">Billed after trial</p>
-                  <p>({trialEndDate})</p>
-                </div>
-              )}
-
-              <div className="font-bold flex justify-between"></div>
-            </div>
+          <div className="flex flex-col gap-8">
+            <OrderSummary daysTrial={daysTrial} />
+            <PromotionCodeForm />
           </div>
-          <form onSubmit={(e) => handleSubmit(e)}>
-            <h1 className="text-xl font-bold mb-4">Billing information</h1>
-            <AddressElement options={{ mode: 'billing' }} />
-            <h1 className="text-xl font-bold mt-8 mb-4">Payment information</h1>
-            <PaymentElement />
-            <div
-              id="messages"
-              role="alert"
-              style={messageBody ? { display: 'block' } : {}}
-            >
-              {messageBody}
+          <form
+            onSubmit={(e) => handleSubmit(e)}
+            className="flex flex-col gap-8"
+          >
+            <div>
+              <h1 className="text-xl font-bold mb-4">Billing information</h1>
+              <AddressElement options={{ mode: 'billing' }} />
             </div>
+            <div>
+              <h1 className="text-xl font-bold  mb-4">Payment information</h1>
+              <PaymentElement />
+              <div
+                id="messages"
+                role="alert"
+                style={messageBody ? { display: 'block' } : {}}
+              >
+                {messageBody}
+              </div>
+            </div>
+
             <Button
               variant="slim"
-              className="mt-16"
+              className="w-fit"
               loading={isSubmitting}
               disabled={!canConfirm || isSubmitting}
               type="submit"

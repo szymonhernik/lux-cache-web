@@ -76,7 +76,7 @@ export default async function CheckoutPage({
   // if the price is found and all the checks passed we can render the custom checkout page
 
   return (
-    <div className="max-w-screen-sm mx-auto flex flex-col gap-4">
+    <div className="max-w-screen-sm mx-auto flex flex-col gap-4 py-36">
       <CustomStripeCheckout price={price} />
       {/* <div className=" border-white-2 border p-4">
         <h1 className="text-xl font-semibold">Checkout</h1>
