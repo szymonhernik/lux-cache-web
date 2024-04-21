@@ -16,7 +16,7 @@
 - [x] maintain at least one payment method for that subscription to charge. If they’d like to change their payment method, they’ll need to add a new one before deleting the existing one.
 - [ ] Optional: When removing or updating payment method disable other buttons
 - [x] Add coupon codes
-- [ ] Checkout Summary
+- [x] Checkout Summary
 - [ ] Check that the user can trial only once
 - [ ] Handle change of plans and the quotes according to the current balance for the subscriber
 
