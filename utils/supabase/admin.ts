@@ -204,14 +204,28 @@ const copyBillingDetailsToCustomer = async (
   const customer = payment_method.customer as string;
   const { name, phone, address } = payment_method.billing_details;
   // if (!name || !phone || !address) return;
-  if (!name || !address) return;
+
+  // No matter the state of billing information new subscription marks the user as not eligible for trials in future
+  if (!name || !address) {
+    const { error: updateError } = await supabaseAdmin
+      .from('users')
+      .update({
+        can_trial: false
+      })
+      .eq('id', uuid);
+
+    if (updateError)
+      throw new Error(`Customer update failed: ${updateError.message}`);
+    return;
+  }
   //@ts-ignore
   await stripe.customers.update(customer, { name, phone, address });
   const { error: updateError } = await supabaseAdmin
     .from('users')
     .update({
       billing_address: { ...address },
-      payment_method: { ...payment_method[payment_method.type] }
+      payment_method: { ...payment_method[payment_method.type] },
+      can_trial: false
     })
     .eq('id', uuid);
   if (updateError)

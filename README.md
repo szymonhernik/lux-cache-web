@@ -14,12 +14,18 @@
 - [x] Add trial only on the lowest price
 - [x] Add remove payment method
 - [x] maintain at least one payment method for that subscription to charge. If they’d like to change their payment method, they’ll need to add a new one before deleting the existing one.
-- [ ] Optional: When removing or updating payment method disable other buttons
 - [x] Add coupon codes
 - [x] Checkout Summary
-- [ ] Learn a bit more about stripe payment 3D Secure (3DS) authentication
-- [ ] Check that the user can trial only once
 - [x] Handle change of plans and the quotes according to the current balance for the subscriber
+- [ ] User can trial only once
+
+  - [ ] add columns in users table: first_subscription_date (timestamptz), can_trial (boolean)
+  - [ ] on checkout.session.completed stripe event update users table (as admin)
+
+- [ ] check why there is three coupon@test.com customers in stripe dashboard (doesnt match the supabase data)
+- [ ] Learn a bit more about stripe payment 3D Secure (3DS) authentication
+- [ ] Optional: When removing or updating payment method disable other buttons
+- [ ] Emails from stripe/supabase
 
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)
@@ -33,3 +39,7 @@
 - [ ] Analytics (posthog)
 - [ ] Ratelimiting (upstash)
 - [ ] "infinite scroll"
+
+### Future improvements
+
+- [ ] Make sure a person doesn't open many accounts and subscribes to trials forever
