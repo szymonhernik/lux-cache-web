@@ -10,6 +10,7 @@ import BillingInfoSupabase from '@/components/ui/AccountForms/BillingInfoSupabas
 import { Suspense } from 'react';
 import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkeleton';
 import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod';
+import PremiumPlansPanel from './_components/PremiumPlansPanel';
 
 export default async function Account() {
   const supabase = createClient();
@@ -33,6 +34,14 @@ export default async function Account() {
     .in('status', ['trialing', 'active'])
     .maybeSingle();
 
+  const { data: products } = await supabase
+    .from('products')
+    .select('*, prices(*)')
+    .eq('active', true)
+    .eq('prices.active', true)
+    .order('metadata->index')
+    .order('unit_amount', { referencedTable: 'prices' });
+
   if (error) {
     console.log(error);
   }
@@ -53,6 +62,12 @@ export default async function Account() {
         {/* <CustomerPortalForm subscription={subscription} /> */}
         <Suspense fallback={<BillingInfoScheleton />}>
           <BillingInfoFetchZod subscription={subscription} />
+        </Suspense>
+        <Suspense fallback={<BillingInfoScheleton />}>
+          <PremiumPlansPanel
+            products={products ?? []}
+            subscription={subscription}
+          />
         </Suspense>
         {/* <BillingInfoSupabase
           userDefaultPaymentMethod={userDetails?.payment_method}
