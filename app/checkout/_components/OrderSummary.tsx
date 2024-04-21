@@ -5,6 +5,7 @@ export default function OrderSummary(props: { daysTrial: number | null }) {
   const { confirm, canConfirm, confirmationRequirements, lineItems, currency } =
     useCustomCheckout();
   const { daysTrial } = props;
+
   // date 7 days from now
   function formatPrice(propertyName: string, currency: string) {
     const item = lineItems[0];
@@ -53,12 +54,15 @@ export default function OrderSummary(props: { daysTrial: number | null }) {
 
       <div className="bg-zinc-900 rounded p-4 w-full gap-4 flex flex-col">
         <div>
-          <p className="font-semibold text-xl">Plan: {lineItems[0]?.name}</p>
+          <p className="font-semibold text-2xl">{lineItems[0]?.name}</p>
         </div>
         {trialEndDate && (
-          <div>
-            <p className="font-semibold text-xl">Billed after trial</p>
-            <p>({trialEndDate})</p>
+          <div className="flex justify-between ">
+            <div>
+              <p className="font-semibold text-xl">Billed after trial</p>
+              <p>({trialEndDate})</p>
+            </div>
+            <p className="">{formatPrice('unitAmount', currency)}</p>
           </div>
         )}
         <div className="*:flex *:justify-between ">

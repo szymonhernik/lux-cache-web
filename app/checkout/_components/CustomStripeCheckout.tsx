@@ -29,16 +29,16 @@ export default async function CustomStripeCheckout(props: {
     );
   }
 
-  // console.log('price', price);
+  console.log('price', price);
 
   const readMetadata = ProductMetadataSchema.safeParse(
     price?.products?.metadata
   );
-  let canTrial: boolean = false;
+  let priceWithTrial: boolean = false;
   let daysTrial: number | null = null;
   if (readMetadata.success) {
     // console.log('readMetadata', readMetadata.data);
-    canTrial =
+    priceWithTrial =
       readMetadata.data.trial_allowed === 'true' &&
       readMetadata.data.index === '0';
 
@@ -72,7 +72,7 @@ export default async function CustomStripeCheckout(props: {
       {clientSecretReceived && (
         <CustomCheckoutProviderWrapper
           clientSecret={clientSecretReceived}
-          canTrial={canTrial}
+          priceWithTrial={priceWithTrial}
           daysTrial={daysTrial}
         />
       )}

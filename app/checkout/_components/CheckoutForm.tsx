@@ -15,19 +15,19 @@ import PromotionCodeForm from './PromotionCodeForm';
 import OrderSummary from './OrderSummary';
 
 export default function CheckoutForm(props: {
-  canTrial: boolean;
+  priceWithTrial: boolean;
   daysTrial: number | null;
 }) {
   const { confirm, canConfirm, confirmationRequirements, lineItems, currency } =
     useCustomCheckout();
-  const { canTrial, daysTrial } = props;
+  const { priceWithTrial, daysTrial } = props;
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [messageBody, setMessageBody] = useState('');
 
-  console.log('lineItems', lineItems);
-  console.log('canTrial', canTrial);
+  // console.log('lineItems', lineItems);
+  // console.log('priceWithTrial', priceWithTrial);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission

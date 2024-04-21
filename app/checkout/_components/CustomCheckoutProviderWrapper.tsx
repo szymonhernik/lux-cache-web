@@ -12,11 +12,11 @@ import { redirect } from 'next/navigation';
 const stripePromise = getStripe();
 export default function CustomCheckoutProviderWrapper(props: {
   clientSecret: string;
-  canTrial: boolean;
+  priceWithTrial: boolean;
   daysTrial: number | null;
 }) {
   const { clientSecret } = props;
-  const { canTrial, daysTrial } = props;
+  const { priceWithTrial, daysTrial } = props;
 
   if (!clientSecret || !stripePromise) {
     return redirect(
@@ -30,7 +30,7 @@ export default function CustomCheckoutProviderWrapper(props: {
 
   return (
     <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>
-      <CheckoutForm canTrial={canTrial} daysTrial={daysTrial} />
+      <CheckoutForm priceWithTrial={priceWithTrial} daysTrial={daysTrial} />
     </CustomCheckoutProvider>
   );
 }
