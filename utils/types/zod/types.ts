@@ -22,6 +22,10 @@ const SubscriptionIdSchema = z.object({
   id: z.string()
 });
 
+const SubscriptionItemSchema = z.object({
+  id: z.string()
+});
+
 const CustomerIdSchema = z.object({
   customer: z.string()
 });
@@ -49,6 +53,7 @@ export {
   CardDetailsSchema,
   PaymentMethodSchema,
   LinkedPaymentMethodsSchema,
+  SubscriptionItemSchema,
   CustomerDataSchema,
   CustomerIdSchema,
   SubscriptionSchema,

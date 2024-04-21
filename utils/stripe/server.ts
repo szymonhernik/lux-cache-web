@@ -14,7 +14,10 @@ import {
 import { Tables } from '@/types_db';
 import { z } from 'zod';
 import { CheckoutResponse, Price, PriceWithProduct } from '../types';
-import { ProductMetadataSchema } from '../types/zod/types';
+import {
+  ProductMetadataSchema,
+  SubscriptionItemSchema
+} from '../types/zod/types';
 
 export async function retrievePaymentMethods(customerId: string) {
   try {
@@ -49,6 +52,86 @@ export async function detachPaymentMethod(
         'Please try again later or contact a system administrator.'
       );
     }
+  } catch (error) {
+    if (error instanceof Error) {
+      return getErrorRedirect(
+        redirectPath,
+        error.message,
+        'Please try again later or contact a system administrator.'
+      );
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'An unknown error occurred.',
+        'Please try again later or contact a system administrator.'
+      );
+    }
+  }
+}
+
+export async function updateSubscriptionPlan(
+  subscriptionId: string,
+  newPriceId: string,
+  redirectPath: string = '/account'
+) {
+  try {
+    const existingSubscriptionItems = await stripe.subscriptionItems.list({
+      limit: 3,
+      subscription: subscriptionId
+    });
+
+    const validatedSubscriptionItemId = SubscriptionItemSchema.safeParse(
+      existingSubscriptionItems.data[0]
+    );
+    if (!validatedSubscriptionItemId.success) {
+      // console.error(validatedSubscriptionItemId.error.issues);
+
+      return getErrorRedirect(
+        redirectPath,
+        "We couldn't find the subscription.",
+        'Please try again later or contact a system administrator.'
+      );
+    } else {
+      try {
+        const updatedSubscriptionItem = await stripe.subscriptionItems.update(
+          validatedSubscriptionItemId.data.id,
+          {
+            price: newPriceId,
+            // Always invoice immediately for prorations.
+            proration_behavior: 'always_invoice',
+            // Stripe returns an HTTP 402 status code if a subscription’s invoice cannot be paid
+            payment_behavior: 'error_if_incomplete'
+          }
+        );
+        if (updatedSubscriptionItem) {
+          // console.log(
+          //   'updatedSubscriptionItem return data',
+          //   updatedSubscriptionItem
+          // );
+
+          return getStatusRedirect(
+            redirectPath,
+            'Success!',
+            'Your subscription has been updated.'
+          );
+        }
+      } catch (errors) {
+        console.log('Errors while updating subscription:', errors);
+
+        return getErrorRedirect(
+          redirectPath,
+          "We couldn't update your subscription.",
+          'Check your balance or try again with a different payment method.'
+        );
+      }
+    }
+
+    return console.log('process');
+    // return getStatusRedirect(
+    //   redirectPath,
+    //   'Success!',
+    //   'Your subscription has been updated.'
+    // );
   } catch (error) {
     if (error instanceof Error) {
       return getErrorRedirect(

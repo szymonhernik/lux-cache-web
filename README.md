@@ -17,8 +17,9 @@
 - [ ] Optional: When removing or updating payment method disable other buttons
 - [x] Add coupon codes
 - [x] Checkout Summary
+- [ ] Learn a bit more about stripe payment 3D Secure (3DS) authentication
 - [ ] Check that the user can trial only once
-- [ ] Handle change of plans and the quotes according to the current balance for the subscriber
+- [x] Handle change of plans and the quotes according to the current balance for the subscriber
 
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)
