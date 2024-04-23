@@ -47,12 +47,12 @@ export default function EmailForm({
         </div>
       }
     >
-      <div className="mt-8 mb-4 text-xl font-semibold">
+      <div className="mt-8 mb-4 ">
         <form id="emailForm" onSubmit={(e) => handleSubmit(e)}>
           <input
             type="text"
             name="newEmail"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
+            className="w-1/2 p-3 rounded-md bg-zinc-300"
             defaultValue={userEmail ?? ''}
             placeholder="Your email"
             maxLength={64}

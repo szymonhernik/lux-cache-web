@@ -47,7 +47,7 @@ export default function PremiumPlansPanel(props: Props) {
       <ul className="mt-4">
         {products.map((product) => (
           <li key={product.id} className="mt-4">
-            <h2 className="text-xl">{product.name}</h2>
+            <h2 className="font-semibold">{product.name}</h2>
 
             <div className="w-full flex gap-4">
               {product.prices.map((price) => (

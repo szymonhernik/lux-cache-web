@@ -47,13 +47,13 @@ export default function NameForm({
         </div>
       }
     >
-      <div className="mt-8 mb-4 text-xl font-semibold">
+      <div className="mt-8 mb-4 ">
         <form id="nameForm" onSubmit={(e) => handleSubmit(e)}>
           <input type="hidden" name="userId" value={userId} />
           <input
             type="text"
             name="fullName"
-            className="w-1/2 p-3 rounded-md bg-zinc-800"
+            className="w-1/2 p-3 rounded-md bg-zinc-300"
             defaultValue={userName}
             placeholder="Your name"
             maxLength={64}

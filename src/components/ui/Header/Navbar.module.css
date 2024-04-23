@@ -1,0 +1,34 @@
+.root {
+  @apply sticky top-0 z-40 transition-all duration-150 h-20;
+}
+
+.dropdownMenu {
+  @apply w-full text-xl  border-t border-b border-zinc-500 flex flex-col items-start lg:hidden;
+}
+
+.dropdownMenu > a,
+.dropdownMenu > form {
+  @apply w-full px-6 py-6 border-b border-zinc-400;
+  border-radius: 0;
+}
+
+.dropdownMenu > a:last-child,
+.dropdownMenu > form:last-child {
+  border-bottom: none;
+}
+
+.link {
+  @apply inline-flex items-center leading-6 font-medium transition ease-in-out duration-75 cursor-pointer  rounded-md p-1;
+}
+
+.link:hover {
+  @apply text-zinc-500;
+}
+
+/* .link:focus {
+  @apply outline-none text-zinc-700 ring-2 ring-pink-500 ring-opacity-50;
+} */
+
+.logo {
+  @apply cursor-pointer rounded-full transform duration-100 ease-in-out;
+}

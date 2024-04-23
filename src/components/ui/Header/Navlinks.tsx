@@ -16,13 +16,13 @@ export default function Navlinks({ user }: NavlinksProps) {
   const router = getRedirectMethod() === 'client' ? useRouter() : null;
 
   return (
-    <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
-      <div className="flex items-center flex-1">
+    <div className="relative flex flex-col  py-4  md:py-6">
+      <div className="">
         <Link href="/" className={s.logo} aria-label="Logo">
           <Logo />
         </Link>
-        <nav className="ml-6 space-x-2 lg:block">
-          <Link href="/" className={s.link}>
+        <nav className="flex flex-col ">
+          <Link href="/pricing" className={s.link}>
             Pricing
           </Link>
           {user && (
@@ -32,7 +32,7 @@ export default function Navlinks({ user }: NavlinksProps) {
           )}
         </nav>
       </div>
-      <div className="flex justify-end space-x-8">
+      <div className=" space-x-8">
         {user ? (
           <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
             <input type="hidden" name="pathName" value={usePathname()} />
