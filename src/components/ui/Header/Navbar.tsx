@@ -29,7 +29,7 @@ export default function Navbar({ user }: NavbarProps) {
   const close = () => setIsOpen(false);
 
   return (
-    <div className="w-full sticky top-0 left-0 lg:w-64 lg:static bg-zinc-100 ">
+    <div className="w-full sticky top-0 left-0 lg:w-64 lg:static  bg-zinc-100 ">
       <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around ">
         <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
           <Link
@@ -56,7 +56,7 @@ export default function Navbar({ user }: NavbarProps) {
         </button>
         <div
           className={clsx(
-            'overflow-y-auto lg:static  lg:flex lg:flex-col lg:justify-center lg:h-[calc(100vh-3.5rem)]',
+            'overflow-y-auto lg:static  lg:flex lg:flex-col lg:justify-center lg:h-[calc(100vh-4rem)]',
             {
               'fixed inset-x-0 bottom-0 top-14 mt-px bg-zinc-300 lg:bg-transparent':
                 isOpen,
