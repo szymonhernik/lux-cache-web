@@ -1,6 +1,7 @@
 'use client';
 
 import Button from '@/components/ui/Button';
+import { ButtonShadcn } from '@/components/ui/buttonshadcn';
 import LogoCloud from '@/components/ui/LogoCloud';
 import type { Tables } from '@/types_db';
 import { getStripe } from '@/utils/stripe/client';
@@ -109,6 +110,10 @@ export default function Pricing({
             <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
               Pricing Plans
             </h1>
+            <ButtonShadcn variant="destructive" className="w-fit">
+              {' '}
+              Shadcn{' '}
+            </ButtonShadcn>
             <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
               Start building for free, then add a site plan to go live. Account
               plans unlock additional features.
