@@ -16,8 +16,9 @@ interface PriceWithProduct extends Price {
 
 export default async function CustomStripeCheckout(props: {
   price: PriceWithProduct | null;
+  userDetails: { can_trial: boolean } | null;
 }) {
-  const { price } = props;
+  const { price, userDetails } = props;
   let clientSecretReceived: string | null = null;
   if (!price) {
     return redirect(
@@ -29,7 +30,9 @@ export default async function CustomStripeCheckout(props: {
     );
   }
 
-  console.log('price', price);
+  // If we can't read the user's information about the trial, we default to false
+  // TODO: This case could be handled better (e.g. give the user information why they can't trial)
+  const userCanTrial = userDetails?.can_trial ?? false;
 
   const readMetadata = ProductMetadataSchema.safeParse(
     price?.products?.metadata
@@ -45,11 +48,16 @@ export default async function CustomStripeCheckout(props: {
     daysTrial = price.trial_period_days;
   }
 
-  // const readMetadata = price?.products?.metadata;
-  // console.log('trialPrice ', trialPrice);
+  // check if the user can trial, if not reasign the values to false and null
+  // ! this will not prevent the user from trial
+  // priceWithTrial and daysTrial are used for the order summary in the checkout form
+  // if (userDetails && !userCanTrial) {
+  //   priceWithTrial = false;
+  //   daysTrial = null;
+  // }
 
   const { errorRedirect, sessionId, clientSecret } =
-    await customCheckoutWithStripe(price, '/');
+    await customCheckoutWithStripe(price, '/', userCanTrial);
   if (errorRedirect) {
     return redirect(errorRedirect);
   }
@@ -74,6 +82,7 @@ export default async function CustomStripeCheckout(props: {
           clientSecret={clientSecretReceived}
           priceWithTrial={priceWithTrial}
           daysTrial={daysTrial}
+          userCanTrial={userCanTrial}
         />
       )}
     </div>

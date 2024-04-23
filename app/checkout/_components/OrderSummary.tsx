@@ -1,10 +1,13 @@
 import { useCustomCheckout } from '@stripe/react-stripe-js';
 import { StripeCustomCheckoutLineItem } from '@stripe/stripe-js';
 
-export default function OrderSummary(props: { daysTrial: number | null }) {
+export default function OrderSummary(props: {
+  daysTrial: number | null;
+  userCanTrial: boolean;
+}) {
   const { confirm, canConfirm, confirmationRequirements, lineItems, currency } =
     useCustomCheckout();
-  const { daysTrial } = props;
+  const { daysTrial, userCanTrial } = props;
 
   // date 7 days from now
   function formatPrice(propertyName: string, currency: string) {
@@ -56,7 +59,7 @@ export default function OrderSummary(props: { daysTrial: number | null }) {
         <div>
           <p className="font-semibold text-2xl">{lineItems[0]?.name}</p>
         </div>
-        {trialEndDate && (
+        {trialEndDate && userCanTrial && (
           <div className="flex justify-between ">
             <div>
               <p className="font-semibold text-xl">Billed after trial</p>
@@ -81,8 +84,13 @@ export default function OrderSummary(props: { daysTrial: number | null }) {
             <p>{calculateTotalDueToday()}</p>
           </div>
         </div>
+        {daysTrial && !userCanTrial && (
+          <p className="text-sm text-zinc-200">
+            You are not allowed to trial anymore.
+          </p>
+        )}
 
-        <div className="font-bold flex justify-between"></div>
+        {/* <div className="font-bold flex justify-between"></div> */}
       </div>
     </div>
   );

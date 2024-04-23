@@ -23,9 +23,15 @@ interface Props {
   user: User | null | undefined;
   products: ProductWithPrices[];
   subscription: SubscriptionWithProduct | null;
+  userDetails: { can_trial: boolean } | null;
 }
 
-export default function Pricing({ user, products, subscription }: Props) {
+export default function Pricing({
+  user,
+  products,
+  subscription,
+  userDetails
+}: Props) {
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -148,6 +154,21 @@ export default function Pricing({ user, products, subscription }: Props) {
                 currency: price.currency!,
                 minimumFractionDigits: 0
               }).format((price?.unit_amount || 0) / 100);
+
+              // Determine button text based on trial_allowed in product metadata, user eligibility, and presence of trial_allowed
+              const metadata = product.metadata as { trial_allowed?: boolean };
+              const userCanTrial = userDetails?.can_trial;
+              let buttonText = 'Subscribe'; // Default button text
+
+              // Check if trial_allowed is explicitly mentioned in metadata
+              if (metadata.hasOwnProperty('trial_allowed')) {
+                if (metadata.trial_allowed && userCanTrial) {
+                  buttonText = 'Trial'; // Both product allows trial and user can trial
+                } else {
+                  buttonText = '(trial not available) Subscribe'; // Either product doesn't allow trial or user can't trial
+                }
+              }
+
               return (
                 <div
                   key={product.id}
@@ -194,43 +215,8 @@ export default function Pricing({ user, products, subscription }: Props) {
                       loading={priceIdLoading === price.id}
                       className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
                     >
-                      {subscription ? 'Manage' : 'Subscribe'}
+                      {subscription ? 'Manage' : buttonText}
                     </Button>
-
-                    {/* {subscription ? (
-                      <Link href="/account">
-                        <Button
-                          variant="slim"
-                          type="button"
-                          loading={priceIdLoading === price.id}
-                          className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
-                        >
-                          Manage
-                        </Button>
-                      </Link>
-                    ) : (
-                      <Button
-                        variant="slim"
-                        type="button"
-                        loading={priceIdLoading === price.id}
-                        onClick={() => {
-                          router.push('/checkout' + '?priceId=' + price.id);
-                        }}
-                        className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
-                      >
-                        Subscribe
-                      </Button>
-                    )} */}
-
-                    {/* <Button
-                      variant="slim"
-                      type="button"
-                      loading={priceIdLoading === price.id}
-                      onClick={() => handleStripeCheckout(price)}
-                      className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md hover:bg-zinc-900"
-                    >
-                      {subscription ? 'Manage' : 'Subscribe'}
-                    </Button> */}
                   </div>
                 </div>
               );

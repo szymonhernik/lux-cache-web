@@ -17,10 +17,11 @@ import OrderSummary from './OrderSummary';
 export default function CheckoutForm(props: {
   priceWithTrial: boolean;
   daysTrial: number | null;
+  userCanTrial: boolean;
 }) {
   const { confirm, canConfirm, confirmationRequirements, lineItems, currency } =
     useCustomCheckout();
-  const { priceWithTrial, daysTrial } = props;
+  const { priceWithTrial, daysTrial, userCanTrial } = props;
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -58,7 +59,8 @@ export default function CheckoutForm(props: {
       {!isSuccess ? (
         <>
           <div className="flex flex-col gap-8">
-            <OrderSummary daysTrial={daysTrial} />
+            <OrderSummary daysTrial={daysTrial} userCanTrial={userCanTrial} />
+
             <PromotionCodeForm />
           </div>
           <form

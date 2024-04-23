@@ -17,15 +17,23 @@
 - [x] Add coupon codes
 - [x] Checkout Summary
 - [x] Handle change of plans and the quotes according to the current balance for the subscriber
-- [ ] User can trial only once
+- [x] User can trial only once
 
-  - [ ] add columns in users table: first_subscription_date (timestamptz), can_trial (boolean)
-  - [ ] on checkout.session.completed stripe event update users table (as admin)
+  - [x] add columns in users table: , can_trial (boolean)
+  - [x] on checkout.session.completed stripe event update users table (as admin)
+  - [x] when creating checkout session, don't pass trial option if can_trial is false (read from users table)
 
 - [ ] check why there is three coupon@test.com customers in stripe dashboard (doesnt match the supabase data)
 - [ ] Learn a bit more about stripe payment 3D Secure (3DS) authentication
 - [ ] Optional: When removing or updating payment method disable other buttons
+- [ ] Optional: Find a way to add first_subscription_date (timestamptz) and don't update it ever again in users table
 - [ ] Emails from stripe/supabase
+
+### Front-end
+
+- [ ] Reset styles
+
+### Not assigned yet
 
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)

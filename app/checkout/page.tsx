@@ -71,13 +71,19 @@ export default async function CheckoutPage({
   if (priceFetchError) {
     return redirect('/');
   }
-  // console.log('Price:', price);
+
+  const { data: userDetails } = await supabase
+    .from('users')
+    .select('can_trial')
+    .single();
+
+  // console.log('userCanTrial', userCanTrial);
 
   // if the price is found and all the checks passed we can render the custom checkout page
 
   return (
     <div className="max-w-screen-sm mx-auto flex flex-col gap-4 py-36">
-      <CustomStripeCheckout price={price} />
+      <CustomStripeCheckout price={price} userDetails={userDetails} />
       {/* <div className=" border-white-2 border p-4">
         <h1 className="text-xl font-semibold">Checkout</h1>
         {price?.products?.name && <h2>{price.products.name}</h2>}

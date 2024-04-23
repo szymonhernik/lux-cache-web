@@ -432,7 +432,8 @@ export async function updatePaymentMethod(
 
 export async function customCheckoutWithStripe(
   price: PriceWithProduct,
-  redirectPath: string = '/'
+  redirectPath: string = '/',
+  userCanTrial: boolean
 ): Promise<CustomCheckoutResponse> {
   try {
     // Get the user from Supabase auth
@@ -485,9 +486,9 @@ export async function customCheckoutWithStripe(
     const readMetadata = ProductMetadataSchema.safeParse(
       price?.products?.metadata
     );
-    let canTrial = false;
+    let priceHasTrial = false;
     if (readMetadata.success) {
-      canTrial =
+      priceHasTrial =
         readMetadata.data.trial_allowed === 'true' &&
         readMetadata.data.index === '0';
     }
@@ -496,7 +497,7 @@ export async function customCheckoutWithStripe(
         ...params,
         mode: 'subscription'
       };
-      if (canTrial) {
+      if (priceHasTrial && userCanTrial) {
         params = {
           ...params,
           subscription_data: {
