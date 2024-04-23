@@ -4,8 +4,8 @@
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getURL, getErrorRedirect, getStatusRedirect } from 'utils/helpers';
-import { getAuthTypes } from 'utils/auth-helpers/settings';
+import { getURL, getErrorRedirect, getStatusRedirect } from '@/utils/helpers';
+import { getAuthTypes } from '@/utils/auth-helpers/settings';
 import { revalidatePath } from 'next/cache';
 
 function isValidEmail(email: string) {

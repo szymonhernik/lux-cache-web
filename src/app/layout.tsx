@@ -3,8 +3,9 @@ import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { Toaster } from '@/components/ui/Toasts/toaster';
 import { PropsWithChildren, Suspense } from 'react';
+
+import '@/styles/main.css';
 import { getURL } from '@/utils/helpers';
-import 'styles/main.css';
 
 const meta = {
   title: 'Next.js Subscription Starter',

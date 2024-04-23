@@ -1,4 +1,4 @@
-import { Tables } from '@/types_db';
+import { Tables } from 'types_db';
 
 type Subscription = Tables<'subscriptions'>;
 type Product = Tables<'products'>;

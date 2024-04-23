@@ -1,4 +1,4 @@
-import type { Tables } from '@/types_db';
+import type { Tables } from 'types_db';
 import { customCheckoutWithStripe } from '@/utils/stripe/server';
 
 import { redirect } from 'next/navigation';

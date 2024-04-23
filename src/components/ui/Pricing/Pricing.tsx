@@ -3,7 +3,7 @@
 import Button from '@/components/ui/Button';
 import { ButtonShadcn } from '@/components/ui/buttonshadcn';
 import LogoCloud from '@/components/ui/LogoCloud';
-import type { Tables } from '@/types_db';
+import type { Tables } from 'types_db';
 import { getStripe } from '@/utils/stripe/client';
 import { checkoutWithStripe } from '@/utils/stripe/server';
 import { getErrorRedirect } from '@/utils/helpers';
