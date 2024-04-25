@@ -81,7 +81,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <div className="flex min-h-screen flex-col-reverse lg:flex-row">
           <main
             id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 overflow-auto px-6 pt-6 "
+            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 overflow-auto "
           >
             {children}
           </main>

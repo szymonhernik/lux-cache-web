@@ -15,7 +15,8 @@ interface NavbarProps {
 }
 
 const links = [
-  { name: 'browse', href: '/' },
+  // { name: 'home', href: '/' },
+  { name: 'browse', href: '/browse' },
   { name: 'about', href: '/about' },
   { name: 'pricing', href: '/pricing' },
   { name: 'FAQ', href: '/FAQ' },
@@ -31,20 +32,20 @@ export default function Navbar({ user }: NavbarProps) {
   return (
     <div className="w-full sticky top-0 left-0 lg:w-64 lg:static  bg-zinc-100 ">
       <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around ">
-        <div className="flex h-14 items-center px-4 py-4 lg:h-auto">
+        <div className="flex h-16 items-center px-4 py-4 lg:h-auto">
           <Link
             href="/"
-            className="group flex w-full items-center gap-x-2.5"
+            className="group flex w-full items-center justify-center gap-x-2.5"
             onClick={close}
           >
-            <div className="h-7 w-7 rounded-full border border-white/30 group-hover:border-white/50">
+            <div className="bg-zinc-100 ">
               <Logo />
             </div>
           </Link>
         </div>
         <button
           type="button"
-          className="group absolute right-0 top-0 flex h-14 items-center gap-x-2 px-4 lg:hidden"
+          className="group absolute right-0 top-0 flex h-16 items-center gap-x-2 px-4 lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
         >
           <Hamburger
@@ -56,9 +57,9 @@ export default function Navbar({ user }: NavbarProps) {
         </button>
         <div
           className={clsx(
-            'overflow-y-auto lg:static  lg:flex lg:flex-col lg:justify-center lg:h-[calc(100vh-4rem)]',
+            'overflow-y-auto lg:static  lg:flex lg:flex-col lg:justify-center lg:h-[calc(100vh-8rem)]',
             {
-              'fixed inset-x-0 bottom-0 top-14 mt-px bg-zinc-300 lg:bg-transparent':
+              'fixed inset-x-0 bottom-0 top-[3.4rem] mt-px bg-zinc-300 lg:bg-transparent':
                 isOpen,
               hidden: !isOpen
             }
@@ -72,13 +73,16 @@ export default function Navbar({ user }: NavbarProps) {
                     key={link.name}
                     href={link.href}
                     className={clsx(
-                      'flex  grow items-center text-xl gap-2  text-zinc-500',
+                      'flex  grow items-center text-xl gap-2  ',
                       {
                         'text-black': pathname === link.href
+                      },
+                      {
+                        'text-zinc-500': pathname != link.href
                       }
                     )}
                   >
-                    <p className="">{link.name}</p>
+                    <p className="font-normal">{link.name}</p>
                   </Link>
                 );
               })}
