@@ -33,6 +33,7 @@
 
 - [ ] Reset styles
 - [ ] Horizontal scrolling browse page
+- [ ] Use Swiper for the grid with videos (handles virtual slides, detecting when slides are in view, horizontal scrolling)
 
 ### Not assigned yet
 
@@ -84,6 +85,15 @@ Possibly use for **Infinite Scroll**
 
 - using Swiper library
   - working (grid, horizontal scrolling, draggable) example: https://codesandbox.io/p/devbox/swiper-react-mousewheel-control-forked-hd99tc?file=/src/App.jsx:26,24
+    https://codesandbox.io/p/devbox/swiper-react-virtual-slides-forked-7mgnqq?file=/src/App.jsx:1,1-100,1
 - using React
   - chatgpt solution: https://chat.openai.com/c/883529ad-006c-46d6-afc1-25b695661dbc (using useCallback, scrollLeft, counting e.deltaY)
 - using framer motion ?
+
+### tanstack virtual
+
+https://tanstack.com/virtual/latest
+Virtual, infinite scroll (i believe the height and width can be dynamic to viewport)
+https://codesandbox.io/p/devbox/kind-pascal-xsjqzx?file=/src/main.tsx:96,23
+
+- [ ] Update later to @tanstack/react-query (v5) from react-query (v3)
