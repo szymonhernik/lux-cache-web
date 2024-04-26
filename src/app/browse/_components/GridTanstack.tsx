@@ -17,7 +17,7 @@ async function fetchServerPage(
     .fill(0)
     .map((e, i) => `Async loaded row #${i + offset * limit}`);
 
-  await new Promise((r) => setTimeout(r, 500));
+  await new Promise((r) => setTimeout(r, 2000));
 
   return { rows, nextOffset: offset + 1 };
 }
@@ -46,7 +46,7 @@ export default function GridTanstack() {
   const rowVirtualizer = useVirtualizer({
     count: hasNextPage ? allRows.length + 1 : allRows.length,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 500,
+    estimateSize: () => 250,
     overscan: 5
   });
 
@@ -80,7 +80,7 @@ export default function GridTanstack() {
       ) : (
         <div
           ref={parentRef}
-          className="List"
+          className="List "
           style={{
             height: `100vh`,
             width: `100%`,
@@ -93,6 +93,7 @@ export default function GridTanstack() {
               width: '100%',
               position: 'relative'
             }}
+            className="grid grid-cols-3 gap-6"
           >
             {rowVirtualizer.getVirtualItems().map((virtualRow) => {
               const isLoaderRow = virtualRow.index > allRows.length - 1;
