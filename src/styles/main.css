@@ -129,7 +129,7 @@ p a {
 
 /* TODO:  Delete after testing virtual dom with tanstack virtual — */
 
-.List {
+/* .List {
   border: 1px solid #e6e4dc;
   max-width: 100%;
 }
@@ -147,4 +147,4 @@ p a {
 
 button {
   border: 1px solid gray;
-}
+} */

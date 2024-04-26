@@ -1,9 +1,9 @@
-import Pricing from '@/components/ui/Pricing/Pricing';
-import { createClient } from '@/utils/supabase/server';
-import { ProductWithPrices } from '@/utils/types';
-import { ProductMetadataSchema } from '@/utils/types/zod/types';
-import Link from 'next/link';
-import EpisodesContainer from './_components/EpisodesContainer';
+import Pricing from '@/components/ui/Pricing/Pricing'
+import { createClient } from '@/utils/supabase/server'
+import { ProductWithPrices } from '@/utils/types'
+import { ProductMetadataSchema } from '@/utils/types/zod/types'
+import Link from 'next/link'
+import EpisodesContainer from './_components/EpisodesContainer'
 
 export default async function BrowsePage() {
   // const supabase = createClient();
@@ -38,7 +38,7 @@ export default async function BrowsePage() {
   return (
     <>
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
-      <EpisodesContainer />;
+      <EpisodesContainer />
     </>
-  );
+  )
 }

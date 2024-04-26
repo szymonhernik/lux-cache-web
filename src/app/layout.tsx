@@ -1,13 +1,13 @@
-import { Metadata } from 'next';
-import Footer from '@/components/ui/Footer';
-import { Toaster } from '@/components/ui/Toasts/toaster';
-import { PropsWithChildren, Suspense } from 'react';
-import localFont from 'next/font/local';
+import { Metadata } from 'next'
+import Footer from '@/components/ui/Footer'
+import { Toaster } from '@/components/ui/Toasts/toaster'
+import { PropsWithChildren, Suspense } from 'react'
+import localFont from 'next/font/local'
 
-import '@/styles/main.css';
-import { getURL } from '@/utils/helpers';
+import '@/styles/main.css'
+import { getURL } from '@/utils/helpers'
 
-import GlobalNav from '@/components/ui/Header/GlobalNav';
+import GlobalNav from '@/components/ui/Header/GlobalNav'
 
 const suisse = localFont({
   src: [
@@ -32,7 +32,7 @@ const suisse = localFont({
       style: 'italic'
     }
   ]
-});
+})
 
 const meta = {
   title: 'Next.js Subscription Starter',
@@ -41,7 +41,7 @@ const meta = {
   robots: 'follow, index',
   favicon: '/favicon.ico',
   url: getURL()
-};
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -71,7 +71,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: meta.description,
       images: [meta.cardImage]
     }
-  };
+  }
 }
 
 export default async function RootLayout({ children }: PropsWithChildren) {
@@ -81,7 +81,7 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         <div className="flex min-h-screen flex-col-reverse lg:flex-row">
           <main
             id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 overflow-auto "
+            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]   flex-1 overflow-auto "
           >
             {children}
           </main>
@@ -93,5 +93,5 @@ export default async function RootLayout({ children }: PropsWithChildren) {
         </Suspense>
       </body>
     </html>
-  );
+  )
 }

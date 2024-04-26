@@ -17,6 +17,9 @@ module.exports = {
       }
     },
     extend: {
+      gridTemplateRows: {
+        custom: 'repeat(auto-fill, minmax(400px, 1fr));'
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -74,4 +77,4 @@ module.exports = {
     }
   },
   plugins: [require('tailwindcss-animate')]
-};
+}

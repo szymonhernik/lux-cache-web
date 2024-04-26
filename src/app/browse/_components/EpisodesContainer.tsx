@@ -3,6 +3,7 @@ import Link from 'next/link';
 
 import GridTanstack from './GridTanstack';
 import GridTanstackWrapper from './GridTanstackWrapper';
+import ObservableGrid from './ObservableGrid';
 
 const mockUrls = [
   'https://placeholder.pics/svg/400x400/FFFFFF-F2F2F2/FFFFFF',
@@ -22,11 +23,13 @@ const mockImages = mockUrls.map((url, index) => ({
 
 export default function EpisodesContainer() {
   return (
-    <section className="lg:max-h-[100vh]  lg:overflow-y-hidden lg:overflow-x-auto  ">
-      <div className="flex flex-col flex-wrap gap-0 h-[100vh] content-start">
-        <GridTanstackWrapper>
+    <section className="lg:max-h-[100vh] lg:h-[100vh] lg:overflow-y-hidden lg:overflow-x-auto  ">
+      {/* <div className="flex flex-col flex-wrap gap-0 h-[100vh] content-start"> */}
+      <div className="h-full">
+        <ObservableGrid />
+        {/* <GridTanstackWrapper>
           <GridTanstack />
-        </GridTanstackWrapper>
+        </GridTanstackWrapper> */}
         {/* {mockImages.map((image, i) => {
           console.log('image.url', image.url);
 
