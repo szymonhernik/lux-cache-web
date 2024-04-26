@@ -18,7 +18,7 @@ module.exports = {
     },
     extend: {
       gridTemplateRows: {
-        custom: 'repeat(auto-fill, minmax(400px, 1fr));'
+        custom: 'repeat(auto-fill, minmax(33vh, 1fr));'
       },
       colors: {
         border: 'hsl(var(--border))',

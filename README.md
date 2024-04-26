@@ -33,7 +33,7 @@
 
 - [ ] Reset styles
 - [ ] Horizontal scrolling browse page
-- [ ] Use Swiper for the grid with videos (handles virtual slides, detecting when slides are in view, horizontal scrolling)
+- [ ] Design switching between list and grid view on mobile
 
 ### Not assigned yet
 
@@ -95,5 +95,6 @@ Possibly use for **Infinite Scroll**
 https://tanstack.com/virtual/latest
 Virtual, infinite scroll (i believe the height and width can be dynamic to viewport)
 https://codesandbox.io/p/devbox/kind-pascal-xsjqzx?file=/src/main.tsx:96,23
+https://stackblitz.com/edit/tanstack-virtual-8uf16a?file=src/main.tsx,src/index.css
 
 - [ ] Update later to @tanstack/react-query (v5) from react-query (v3)

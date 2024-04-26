@@ -2,11 +2,14 @@
 import React from 'react'
 import { useInView } from 'react-intersection-observer'
 
+// https://react-intersection-observer.vercel.app/?path=/docs/intro--docs
+
 export default function ObservableGrid() {
   const items = generateItems()
   return (
     <div className="grid md:grid-cols-2 lg:grid-rows-custom lg:grid-flow-col-dense lg:h-full  gap-0 lg:w-max">
       {items.map((item) => (
+        // each item has around 400px height and width
         <ListItem key={item.id} item={item} />
       ))}
     </div>
@@ -30,7 +33,7 @@ function ListItem({ item }: { item: { id: number; content: string } }) {
   return (
     <div
       ref={ref}
-      className={`w-full aspect-square flex flex-col items-center justify-center border border-white transition-all duration-1000 ${inView ? 'bg-green-200' : 'bg-pink-900'}`}
+      className={`w-full  aspect-square flex flex-col items-center justify-center border border-white transition-all duration-1000 ${inView ? 'bg-green-200' : 'bg-pink-900'}`}
     >
       {item.content}
       {inView && <video className="border-white border w-16">video</video>}

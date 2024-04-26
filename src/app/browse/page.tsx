@@ -4,6 +4,7 @@ import { ProductWithPrices } from '@/utils/types'
 import { ProductMetadataSchema } from '@/utils/types/zod/types'
 import Link from 'next/link'
 import EpisodesContainer from './_components/EpisodesContainer'
+import ObservableGrid from './_components/ObservableGrid'
 
 export default async function BrowsePage() {
   // const supabase = createClient();
@@ -37,8 +38,16 @@ export default async function BrowsePage() {
 
   return (
     <>
+      <div className="flex flex-col lg:max-h-screen lg:h-screen">
+        <div className="sticky top-16 left-0 w-full lg:fixed h-20 lg:top-auto lg:bottom-0   bg-red-200">
+          Filters
+        </div>
+        <section className="h-[20vh] min-h-48 max-h-64">Highlighted</section>
+        <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-20">
+          <ObservableGrid />
+        </section>
+      </div>
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
-      <EpisodesContainer />
     </>
   )
 }
