@@ -58,10 +58,10 @@ export default async function BrowsePage() {
             </div>
           </div>
         </div>
-        <section className="h-[20vh] min-h-48 max-h-64  p-4 uppercase">
+        <section className="h-[20vh] min-h-[20vh]  p-4 uppercase">
           Highlight
         </section>
-        <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16">
+        <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
           <ObservableGridWrapper>
             <ObservableGrid />
           </ObservableGridWrapper>

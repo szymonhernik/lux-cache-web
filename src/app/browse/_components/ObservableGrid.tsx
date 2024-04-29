@@ -8,6 +8,8 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { pages } from 'next/dist/build/templates/app-page'
 import Link from 'next/link'
 import { useDebouncedCallback, useIntersection } from '@mantine/hooks'
+import VideoTest from './VideoTest'
+import { AspectRatio } from '@/components/shadcn/ui/aspect-ratio'
 // const posts = [
 //   { id: 1, title: 'Post 1' },
 //   { id: 2, title: 'Post 2' },
@@ -69,7 +71,7 @@ export default function ObservableGrid() {
 
   const lastPostRef = useRef<HTMLElement>(null)
   const containerRef = useRef<any>(null)
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024)
+
   const { ref, entry } = useIntersection({
     root: lastPostRef.current,
     threshold: 1
@@ -81,23 +83,57 @@ export default function ObservableGrid() {
   const _posts = data?.pages.flatMap((page) => page)
 
   return (
-    <div className="lg:w-max lg:h-full lg:flex">
+    <div className="lg:flex">
       {data?.pages.map((page, i) => (
         <div
           key={i}
-          className="grid md:grid-cols-2 lg:grid-rows-custom lg:grid-flow-col-dense lg:h-full  gap-0  bg-pink-50"
+          // className="grid md:grid-cols-2 lg:grid-rows-custom lg:grid-flow-col-dense lg:h-full  gap-0  bg-pink-50"
+          className="grid grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0 bg-pink-50"
+          // className="flex flex-col flex-wrap lg:h-full "
         >
           {page.map(
             (post, index) =>
               index === page.length - 1 ? (
-                <div className={`w-full aspect-square `} ref={ref}>
+                <div
+                  className={`w-full lg:w-[calc((80vh-4rem)/2)] aspect-square `}
+                  ref={ref}
+                >
                   <ListItem key={post.id} item={post} />
                 </div>
               ) : (
-                <div className={`w-full aspect-square `} ref={ref}>
+                <div
+                  className={`w-full lg:w-[calc((80vh-4rem)/2)] aspect-square `}
+                  ref={ref}
+                >
                   <ListItem key={post.id} item={post} />
                 </div>
               ) // Other items do not get a ref
+            // (
+            //     <div
+            //       key={post.id}
+            //       className=" bg-blue-200 w-full lg:w-[calc((80vh-4rem)/2)] aspect-square "
+            //     >
+            //       {post.content}
+            //       {/* <AspectRatio ratio={16 / 9} className=" bg-lime-100 h-full">
+            //         {post.content}
+            //       </AspectRatio> */}
+            //     </div>
+            //     //  <div
+            //     //     key={post.id}
+            //     //     className={`aspect-square bg-blue-200 w-[40vh]  `}
+            //     //   >
+            //     //     {post.content}
+            //     //   </div>
+            //   )
+            // index === page.length - 1 ? (
+            //   <div className={`h-48 aspect-square `} ref={ref}>
+            //     <ListItem key={post.id} item={post} />
+            //   </div>
+            // ) : (
+            //   <div className={`h-48 aspect-square `} ref={ref}>
+            //     <ListItem key={post.id} item={post} />
+            //   </div>
+            // ) // Other items do not get a ref
           )}
         </div>
       ))}
@@ -131,14 +167,25 @@ function ListItem({ item }: { item: { id: number; content: string } }) {
 
   return (
     <div
-      className={` relative w-full  aspect-square flex flex-col items-center justify-center border border-white transition-all duration-1000  ${inView ? 'bg-green-200' : 'bg-pink-900'}`}
+      className={` relative h-full   flex flex-col items-center justify-center border border-white transition-all duration-1000  ${inView ? 'bg-green-200' : 'bg-pink-900'}`}
     >
       {/* This div serves as a workaround to prematurely trigger the 'inView' class in a horizontally scrollable div. Normally, setting ref on a container with overflow would apply 'inView' to all child elements on mobile. This happens because the container's height on mobile wraps all content, making all children effectively 'in view'. This hack specifically targets only the necessary elements without affecting others by using negative inset values and a low z-index. It is preventing unwanted rendering of video tags for all elements. */}
 
-      <div ref={ref} className="absolute inset-y-0 -inset-x-16 z-[-1000]"></div>
+      <div
+        ref={ref}
+        className="absolute inset-y-0 -inset-x-[100px] z-[-1000]"
+      ></div>
+      {/* <VideoTest /> */}
+      <div className="absolute z-[0] top-0 left-0 w-full h-full ">
+        <img
+          src="https://image.mux.com/WAJskpJEdrvho71n7CZkRjno0200Ewry2jGRhSf654IzY/thumbnail.png?width=5&time=0"
+          className="absolute w-full h-full "
+        />
+      </div>
 
-      <Link href={`article/${item.id}`}>{item.content}</Link>
-      {inView && <video className="border-white border w-16">video</video>}
+      <Link className="z-[10]" href={`article/${item.id}`}>
+        {inView && <VideoTest />}
+      </Link>
     </div>
   )
 }
