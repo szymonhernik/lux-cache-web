@@ -1,12 +1,13 @@
 'use client'
 
-import React from 'react'
+import { Fragment, useEffect, useRef } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 // https://react-intersection-observer.vercel.app/?path=/docs/intro--docs
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { pages } from 'next/dist/build/templates/app-page'
 import Link from 'next/link'
+import { useIntersection } from '@mantine/hooks'
 // const posts = [
 //   { id: 1, title: 'Post 1' },
 //   { id: 2, title: 'Post 2' },
@@ -16,7 +17,7 @@ import Link from 'next/link'
 //   { id: 6, title: 'Post 6' }
 // ]
 // Generate an array of 100 items
-const generatedItems = Array.from({ length: 100 }, (_, index) => ({
+const posts = Array.from({ length: 100 }, (_, index) => ({
   id: index + 1,
   content: `Item ${index + 1}`
 }))
@@ -25,7 +26,7 @@ const numberOfItemsPerPage = 10
 
 const fetchPostMock = async (page: number) => {
   await new Promise((resolve) => setTimeout(resolve, 1000))
-  return generatedItems.slice(
+  return posts.slice(
     (page - 1) * numberOfItemsPerPage,
     page * numberOfItemsPerPage
   )
@@ -43,7 +44,7 @@ export default function ObservableGrid() {
       return pages.length + 1
     },
     initialData: {
-      pages: [generatedItems.slice(0, numberOfItemsPerPage)],
+      pages: [posts.slice(0, numberOfItemsPerPage)],
       pageParams: [1]
     },
     initialPageParam: 1 // Set the initial page parameter, important when using initialData
@@ -66,33 +67,54 @@ export default function ObservableGrid() {
   //   }
   // )
 
+  const lastPostRef = useRef<HTMLElement>(null)
+  const { ref, entry } = useIntersection({
+    root: lastPostRef.current,
+    threshold: 1
+  })
+
+  useEffect(() => {
+    if (entry?.isIntersecting) fetchNextPage()
+  }, [entry])
+  // const _posts = data?.pages.flatMap((page) => page)
+
   return (
     <div className="lg:w-max lg:h-full lg:flex">
+      {/* {_posts?.map((post, i) => {
+        if (i === _posts.length - 1)
+          return (
+            <div key={post.id} ref={ref}>
+              {post.content}
+            </div>
+          )
+        return <div key={post.id}>{post.content}</div>
+      })} */}
       {data?.pages.map((page, i) => (
-        <>
-          <div
-            key={i}
-            className="grid md:grid-cols-2 lg:grid-rows-custom lg:grid-flow-col-dense lg:h-full  gap-0  bg-pink-50"
-          >
-            {page.map((item) => (
-              // <div key={item.id}>{item.title}</div>
-              <ListItem key={item.id} item={item} />
-            ))}
-          </div>
-        </>
+        <div
+          key={i}
+          className="grid md:grid-cols-2 lg:grid-rows-custom lg:grid-flow-col-dense lg:h-full  gap-0  bg-pink-50"
+        >
+          {page.map(
+            (post, index) =>
+              index === page.length - 1 ? (
+                <div className={`w-full aspect-square `} ref={ref}>
+                  <ListItem key={post.id} item={post} />
+                </div>
+              ) : (
+                <div className={`w-full aspect-square `} ref={ref}>
+                  <ListItem key={post.id} item={post} />
+                </div>
+              ) // Other items do not get a ref
+          )}
+        </div>
       ))}
       <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
         {isFetchingNextPage
           ? 'Loading more...'
-          : (data?.pages.length ?? 0) <
-              generatedItems.length / numberOfItemsPerPage
+          : (data?.pages.length ?? 0) < posts.length / numberOfItemsPerPage
             ? 'Load more'
             : 'Nothing more to load'}
       </button>
-      {/* {generatedItems.map((item) => (
-        // each item has around 400px height and width
-        <ListItem key={item.id} item={item} />
-      ))} */}
     </div>
   )
 }
@@ -104,7 +126,7 @@ function ListItem({ item }: { item: { id: number; content: string } }) {
   })
 
   // You can also use `inView` to perform actions when the item is visible
-  React.useEffect(() => {
+  useEffect(() => {
     if (inView) {
       console.log(`Item ${item.id} is in view.`)
       // You could dispatch actions here, like lazy-loading the item details

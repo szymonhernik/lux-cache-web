@@ -5,7 +5,7 @@ import { ProductMetadataSchema } from '@/utils/types/zod/types'
 import Link from 'next/link'
 import EpisodesContainer from './_components/EpisodesContainer'
 import ObservableGrid from './_components/ObservableGrid'
-import ScrollRestorationWrapper from './_components/ScrollRestorationWrapper'
+
 import ObservableGridWrapper from './_components/ObervableGridWrapper'
 
 export default async function BrowsePage() {
