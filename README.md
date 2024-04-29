@@ -28,6 +28,7 @@
 - [ ] Optional: When removing or updating payment method disable other buttons
 - [ ] Optional: Find a way to add first_subscription_date (timestamptz) and don't update it ever again in users table
 - [ ] Emails from stripe/supabase
+- [ ] Add paypal payment method and maybe local payment providers
 
 ### Front-end
 

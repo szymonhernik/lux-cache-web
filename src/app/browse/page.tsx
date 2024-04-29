@@ -5,6 +5,8 @@ import { ProductMetadataSchema } from '@/utils/types/zod/types'
 import Link from 'next/link'
 import EpisodesContainer from './_components/EpisodesContainer'
 import ObservableGrid from './_components/ObservableGrid'
+import ScrollRestorationWrapper from './_components/ScrollRestorationWrapper'
+import ObservableGridWrapper from './_components/ObervableGridWrapper'
 
 export default async function BrowsePage() {
   // const supabase = createClient();
@@ -44,7 +46,9 @@ export default async function BrowsePage() {
         </div>
         <section className="h-[20vh] min-h-48 max-h-64">Highlighted</section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-20">
-          <ObservableGrid />
+          <ObservableGridWrapper>
+            <ObservableGrid />
+          </ObservableGridWrapper>
         </section>
       </div>
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
