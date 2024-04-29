@@ -1,13 +1,13 @@
 'use client'
 
-import { Fragment, useEffect, useRef } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 import { useInView } from 'react-intersection-observer'
 
 // https://react-intersection-observer.vercel.app/?path=/docs/intro--docs
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { pages } from 'next/dist/build/templates/app-page'
 import Link from 'next/link'
-import { useIntersection } from '@mantine/hooks'
+import { useDebouncedCallback, useIntersection } from '@mantine/hooks'
 // const posts = [
 //   { id: 1, title: 'Post 1' },
 //   { id: 2, title: 'Post 2' },
@@ -68,6 +68,8 @@ export default function ObservableGrid() {
   // )
 
   const lastPostRef = useRef<HTMLElement>(null)
+  const containerRef = useRef<any>(null)
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024)
   const { ref, entry } = useIntersection({
     root: lastPostRef.current,
     threshold: 1
@@ -76,19 +78,10 @@ export default function ObservableGrid() {
   useEffect(() => {
     if (entry?.isIntersecting) fetchNextPage()
   }, [entry])
-  // const _posts = data?.pages.flatMap((page) => page)
+  const _posts = data?.pages.flatMap((page) => page)
 
   return (
     <div className="lg:w-max lg:h-full lg:flex">
-      {/* {_posts?.map((post, i) => {
-        if (i === _posts.length - 1)
-          return (
-            <div key={post.id} ref={ref}>
-              {post.content}
-            </div>
-          )
-        return <div key={post.id}>{post.content}</div>
-      })} */}
       {data?.pages.map((page, i) => (
         <div
           key={i}
@@ -122,10 +115,13 @@ export default function ObservableGrid() {
 function ListItem({ item }: { item: { id: number; content: string } }) {
   const { ref, inView, entry } = useInView({
     threshold: 0, // Customize the threshold as needed
-    rootMargin: '0px 0px'
+    rootMargin: '100px 0%'
   })
+  // const { ref, entry } = useIntersection({
+  //   threshold: 0.0, // Customize the threshold as needed
+  //   rootMargin: '100px 100px 100px 100px'
+  // })
 
-  // You can also use `inView` to perform actions when the item is visible
   useEffect(() => {
     if (inView) {
       console.log(`Item ${item.id} is in view.`)
@@ -135,9 +131,12 @@ function ListItem({ item }: { item: { id: number; content: string } }) {
 
   return (
     <div
-      ref={ref}
-      className={`w-full  aspect-square flex flex-col items-center justify-center border border-white transition-all duration-1000 ${inView ? 'bg-green-200' : 'bg-pink-900'}`}
+      className={` relative w-full  aspect-square flex flex-col items-center justify-center border border-white transition-all duration-1000  ${inView ? 'bg-green-200' : 'bg-pink-900'}`}
     >
+      {/* This div serves as a workaround to prematurely trigger the 'inView' class in a horizontally scrollable div. Normally, setting ref on a container with overflow would apply 'inView' to all child elements on mobile. This happens because the container's height on mobile wraps all content, making all children effectively 'in view'. This hack specifically targets only the necessary elements without affecting others by using negative inset values and a low z-index. It is preventing unwanted rendering of video tags for all elements. */}
+
+      <div ref={ref} className="absolute inset-y-0 -inset-x-16 z-[-1000]"></div>
+
       <Link href={`article/${item.id}`}>{item.content}</Link>
       {inView && <video className="border-white border w-16">video</video>}
     </div>

@@ -7,6 +7,7 @@ import EpisodesContainer from './_components/EpisodesContainer'
 import ObservableGrid from './_components/ObservableGrid'
 
 import ObservableGridWrapper from './_components/ObervableGridWrapper'
+import Search from '@/components/icons/Search'
 
 export default async function BrowsePage() {
   // const supabase = createClient();
@@ -41,11 +42,26 @@ export default async function BrowsePage() {
   return (
     <>
       <div className="flex flex-col lg:max-h-screen lg:h-screen">
-        <div className="sticky top-16 left-0 w-full lg:fixed h-20 lg:top-auto lg:bottom-0   bg-red-200">
-          Filters
+        <div className="sticky top-16 left-0 w-full lg:w-[calc(100vw-16rem)] lg:fixed h-16 lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4">
+          <div>
+            <button aria-label="Filter">Filter</button>
+          </div>
+          <div className="flex items-center gap-4">
+            <button aria-label="Switch View" className="opacity-70">
+              View
+            </button>
+            <div>
+              <button aria-label="Search" className="flex items-center">
+                <Search />
+                Search
+              </button>
+            </div>
+          </div>
         </div>
-        <section className="h-[20vh] min-h-48 max-h-64">Highlighted</section>
-        <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-20">
+        <section className="h-[20vh] min-h-48 max-h-64  p-4 uppercase">
+          Highlight
+        </section>
+        <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16">
           <ObservableGridWrapper>
             <ObservableGrid />
           </ObservableGridWrapper>
