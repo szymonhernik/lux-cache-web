@@ -42,7 +42,7 @@ export default async function BrowsePage() {
   return (
     <>
       <div className="flex flex-col lg:max-h-screen lg:h-screen">
-        <div className="sticky top-16 left-0 w-full lg:w-[calc(100vw-16rem)] lg:fixed h-16 lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4">
+        <div className="sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4">
           <div>
             <button aria-label="Filter">Filter</button>
           </div>
@@ -58,7 +58,7 @@ export default async function BrowsePage() {
             </div>
           </div>
         </div>
-        <section className="h-[20vh] min-h-[20vh]  p-4 uppercase">
+        <section className="h-highlightBar min-h-highlightBar  p-4 uppercase bg-surface-brand">
           Highlight
         </section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">

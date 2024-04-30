@@ -25,6 +25,14 @@ module.exports = {
           raw: '(min-width: 1200px) and (max-height: 800px)'
         }
       },
+      height: {
+        toolbar: 'var(--height-toolbar)',
+        highlightBar: 'var(--height-highlight-bar)'
+      },
+      width: {
+        navbarDesktop: 'var(--width-navbar)',
+        toolbarDesktop: 'calc(100vw - theme(width.navbarDesktop))'
+      },
       gridTemplateRows: {
         custom: 'repeat(auto-fill, minmax(33vh, 1fr));'
       },
@@ -34,9 +42,11 @@ module.exports = {
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        'surface-brand': 'hsl(var(--surface-brand))',
+        'surface-brand-darken': 'hsl(var(--surface-brand-darken))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
-          foreground: 'hsl(var(--primary-foreground))'
+          foreground: 'hsl(var(--primary-foreground)) '
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',

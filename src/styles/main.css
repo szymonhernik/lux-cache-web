@@ -33,6 +33,16 @@
     --ring: 240 10% 3.9%;
 
     --radius: 0.5rem;
+
+    /* lux cache colors */
+    --surface-brand: 330 11.1% 89.4%;
+    --surface-brand-darken: 330 11.1% 59.4%;
+
+    /* heights */
+    --height-highlight-bar: 20vh;
+    --height-toolbar: 4rem;
+    /* widths */
+    --width-navbar: 16rem;
   }
 }
 

@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import Hamburger from 'hamburger-react';
-import Link from 'next/link';
-import SignInOutLink from './SignInOutLink';
-import Logo from '@/components/icons/Logo';
-import s from './Navbar.module.css';
-import { User } from '@supabase/supabase-js';
-import clsx from 'clsx';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react'
+import Hamburger from 'hamburger-react'
+import Link from 'next/link'
+import SignInOutLink from './SignInOutLink'
+import Logo from '@/components/icons/Logo'
+import s from './Navbar.module.css'
+import { User } from '@supabase/supabase-js'
+import clsx from 'clsx'
+import { usePathname } from 'next/navigation'
 
 interface NavbarProps {
-  user: User | null;
+  user: User | null
 }
 
 const links = [
@@ -22,15 +22,15 @@ const links = [
   { name: 'FAQ', href: '/FAQ' },
   { name: 'contact', href: '/contact' },
   { name: 'account', href: '/account' }
-];
+]
 
 export default function Navbar({ user }: NavbarProps) {
-  const pathname = usePathname();
-  const [isOpen, setIsOpen] = useState(false);
-  const close = () => setIsOpen(false);
+  const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
+  const close = () => setIsOpen(false)
 
   return (
-    <div className="w-full sticky top-0 left-0 lg:w-64 lg:static  bg-zinc-100 ">
+    <div className="w-full sticky top-0 left-0 lg:w-navbarDesktop lg:static  bg-zinc-100 ">
       <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around ">
         <div className="flex h-16 items-center px-4 py-4 lg:h-auto">
           <Link
@@ -84,7 +84,7 @@ export default function Navbar({ user }: NavbarProps) {
                   >
                     <p className="font-normal">{link.name}</p>
                   </Link>
-                );
+                )
               })}
             </div>
             <div className="text-zinc-500 flex flex-col text-sm gap-2">
@@ -99,5 +99,5 @@ export default function Navbar({ user }: NavbarProps) {
         </div>
       </div>
     </div>
-  );
+  )
 }
