@@ -5,8 +5,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import Link from 'next/link'
 import { useIntersection } from '@mantine/hooks'
 import VideoTest from './VideoTest'
-import { Skeleton } from '@/components/shadcn/ui/skeleton'
-import EpisodeSkeleton from './EpisodeSkeleton'
+import { EpisodesSkeletonTwo } from '@/components/ui/skeletons/skeletons'
 
 const posts = Array.from({ length: 100 }, (_, index) => ({
   id: index + 1,
@@ -81,15 +80,9 @@ export default function ObservableGrid() {
       ))}
       <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
         {isFetchingNextPage ? (
-          <>
-            <Skeleton className="bg-gray-200  w-full lg:w-[calc((80vh-4rem)/2)]  wide-short:w-[calc(80vh-4rem)] aspect-square " />
-            <Skeleton className="bg-gray-200  w-full lg:w-[calc((80vh-4rem)/2)]  wide-short:w-[calc(80vh-4rem)] aspect-square delay-200" />
-          </>
+          <EpisodesSkeletonTwo />
         ) : (data?.pages.length ?? 0) < posts.length / numberOfItemsPerPage ? (
-          <>
-            <Skeleton className="bg-gray-200  w-full lg:w-[calc((80vh-4rem)/2)]  wide-short:w-[calc(80vh-4rem)] aspect-square " />
-            <Skeleton className="bg-gray-200  w-full lg:w-[calc((80vh-4rem)/2)]  wide-short:w-[calc(80vh-4rem)] aspect-square delay-200" />
-          </>
+          <EpisodesSkeletonTwo />
         ) : (
           'Nothing more to load'
         )}
