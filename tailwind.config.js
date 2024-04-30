@@ -17,6 +17,14 @@ module.exports = {
       }
     },
     extend: {
+      screens: {
+        'screen-wide-tall': {
+          raw: '(min-width: 1200px) and (min-height: 801px)'
+        },
+        'screen-wide-short': {
+          raw: '(min-width: 1200px) and (max-height: 800px)'
+        }
+      },
       gridTemplateRows: {
         custom: 'repeat(auto-fill, minmax(33vh, 1fr));'
       },
