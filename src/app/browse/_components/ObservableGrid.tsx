@@ -48,9 +48,9 @@ export default function ObservableGrid() {
     threshold: 0
   })
 
-  // useEffect(() => {
-  //   if (entry?.isIntersecting) fetchNextPage()
-  // }, [entry])
+  useEffect(() => {
+    if (entry?.isIntersecting) fetchNextPage()
+  }, [entry])
 
   return (
     <div className="lg:flex">
