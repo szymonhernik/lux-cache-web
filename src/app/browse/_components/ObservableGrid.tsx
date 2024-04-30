@@ -56,13 +56,13 @@ export default function ObservableGrid() {
       {data?.pages.map((page, i) => (
         <div
           key={i}
-          className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  wide-short:grid-rows-1"
+          className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1"
         >
           {page.map((post, index) =>
             index === page.length - 1 ? (
               <div
                 key={post.id}
-                className={`w-full lg:w-[calc((80vh-4rem)/2)]  wide-short:w-[calc(80vh-4rem)] aspect-square `}
+                className={`w-full lg:w-[calc((80vh-4rem)/2)]  screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
                 ref={ref}
               >
                 <ListItem item={post} />
@@ -70,7 +70,7 @@ export default function ObservableGrid() {
             ) : (
               <div
                 key={post.id}
-                className={`w-full lg:w-[calc((80vh-4rem)/2)] wide-short:w-[calc(80vh-4rem)] aspect-square `}
+                className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
               >
                 <ListItem item={post} />
               </div>

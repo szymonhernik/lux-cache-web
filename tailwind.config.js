@@ -13,16 +13,17 @@ module.exports = {
       center: true,
       padding: '2rem',
       screens: {
+        lg: '1024px',
         '2xl': '1400px'
       }
     },
     extend: {
       screens: {
         'screen-wide-tall': {
-          raw: '(min-width: 1200px) and (min-height: 801px)'
+          raw: '(min-width: theme(screens.lg)) and (min-height: 801px)'
         },
         'screen-wide-short': {
-          raw: '(min-width: 1200px) and (max-height: 800px)'
+          raw: '(min-width: theme(screens.lg)) and (max-height: 800px)'
         }
       },
       height: {
