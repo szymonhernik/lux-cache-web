@@ -29,6 +29,7 @@
 - [ ] Optional: Find a way to add first_subscription_date (timestamptz) and don't update it ever again in users table
 - [ ] Emails from stripe/supabase
 - [ ] Add paypal payment method and maybe local payment providers
+- [ ] different currencies
 
 ### Front-end
 

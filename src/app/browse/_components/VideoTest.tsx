@@ -9,7 +9,7 @@ export default function VideoTest() {
       }}
       muted
       loop
-      autoPlay
+      // autoPlay
     ></MuxVideo>
   )
 }

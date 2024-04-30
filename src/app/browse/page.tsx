@@ -3,7 +3,7 @@ import { createClient } from '@/utils/supabase/server'
 import { ProductWithPrices } from '@/utils/types'
 import { ProductMetadataSchema } from '@/utils/types/zod/types'
 import Link from 'next/link'
-import EpisodesContainer from './_components/EpisodesContainer'
+
 import ObservableGrid from './_components/ObservableGrid'
 
 import ObservableGridWrapper from './_components/ObervableGridWrapper'

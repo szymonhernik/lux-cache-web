@@ -114,6 +114,11 @@ p a {
   left: -20px;
 }
 
+dialog {
+  max-width: 100vw;
+  max-height: 100vh;
+}
+
 /* TODO:  Delete after testing virtual dom with tanstack virtual — */
 
 /* .List {

@@ -74,7 +74,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-export default async function RootLayout({ children }: PropsWithChildren) {
+export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={` loading ${suisse.className}`}>
@@ -83,14 +83,17 @@ export default async function RootLayout({ children }: PropsWithChildren) {
             id="skip"
             className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 lg:overflow-auto "
           >
-            {children}
+            {props.children}
           </main>
+
           <GlobalNav />
           {/* <Footer /> */}
         </div>
         <Suspense>
           <Toaster />
         </Suspense>
+
+        {/*  */}
       </body>
     </html>
   )
