@@ -8,6 +8,7 @@ import ObservableGrid from './_components/ObservableGrid'
 
 import ObservableGridWrapper from './_components/ObervableGridWrapper'
 import Search from '@/components/icons/Search'
+import Toolbar from './_components/Toolbar'
 
 export default async function BrowsePage() {
   // const supabase = createClient();
@@ -41,24 +42,11 @@ export default async function BrowsePage() {
 
   return (
     <>
-      <div className="flex flex-col lg:max-h-screen lg:h-screen">
-        <div className="sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4">
-          <div>
-            <button aria-label="Filter">Filter</button>
-          </div>
-          <div className="flex items-center gap-4">
-            <button aria-label="Switch View" className="opacity-70">
-              View
-            </button>
-            <div>
-              <button aria-label="Search" className="flex items-center">
-                <Search />
-                Search
-              </button>
-            </div>
-          </div>
+      <div className=" flex flex-col lg:max-h-screen lg:h-screen bg-surface-brand">
+        <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
+          <Toolbar />
         </div>
-        <section className="h-highlightBar min-h-highlightBar  p-4 uppercase bg-surface-brand">
+        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar  p-4 uppercase ">
           Highlight
         </section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">

@@ -35,8 +35,9 @@
 
 - [ ] Reset styles
 - [ ] Horizontal scrolling browse page
-- [ ] Design switching between list and grid view on mobile
-- [ ] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
+- [x] Design switching between list and grid view on mobile
+- [x] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
+- [ ] add color variables
 
 ### Not assigned yet
 

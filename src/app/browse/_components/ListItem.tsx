@@ -33,7 +33,7 @@ export default function ListItem({
       {/* <VideoTest /> */}
       <div className="absolute z-[0] top-0 left-0 w-full h-full ">
         <img
-          src="https://image.mux.com/WAJskpJEdrvho71n7CZkRjno0200Ewry2jGRhSf654IzY/thumbnail.png?width=5&time=0"
+          src="https://image.mux.com/6CmQytdllsC16IdzLXWcecHgPfaxWVgibAS73Pj01lGA/thumbnail.png?width=5&time=0"
           className="absolute w-full h-full "
         />
       </div>

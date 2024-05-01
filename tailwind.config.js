@@ -27,8 +27,11 @@ module.exports = {
         }
       },
       height: {
+        // UI
         toolbar: 'var(--height-toolbar)',
-        highlightBar: 'var(--height-highlight-bar)'
+        dynamicDisplayBar: 'var(--height-dynamic-display-bar)',
+        navbar: 'var(--height-navbar)',
+        'navbar-mobile': '4rem'
       },
       width: {
         navbarDesktop: 'var(--width-navbar)',
@@ -50,7 +53,7 @@ module.exports = {
           foreground: 'hsl(var(--primary-foreground)) '
         },
         secondary: {
-          DEFAULT: 'hsl(var(--secondary))',
+          DEFAULT: 'hsl(var(--surface-secondary))',
           foreground: 'hsl(var(--secondary-foreground))'
         },
         destructive: {
@@ -73,6 +76,10 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
         }
+        // text: {
+        //   DEFAULT: 'hsl(var(--color-text))',
+        //   secondary: 'hsl(var(--text-secondary))',
+        // }
       },
       borderRadius: {
         lg: 'var(--radius)',

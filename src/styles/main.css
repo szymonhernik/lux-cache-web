@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --background: 0, 0%, 98%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
@@ -13,11 +13,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0, 0%, 98%;
+    --primary-foreground: 0, 0%, 3.9%;
 
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
+    --secondary: 0, 0%, 96%;
+    --secondary-foreground: 0, 0%, 45%;
 
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
@@ -32,15 +32,19 @@
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
 
+    /* --color-text: 0, 0%, 3.9%;
+    --text-secondary: 0, 0%, 32.2%; */
+
     --radius: 0.5rem;
 
     /* lux cache colors */
-    --surface-brand: 330 11.1% 89.4%;
+    --surface-brand: 330, 11%, 89%;
     --surface-brand-darken: 330 11.1% 59.4%;
-
+    --surface-secondary: 0, 0%, 96.1%;
     /* heights */
-    --height-highlight-bar: 20vh;
+    --height-dynamic-display-bar: 20vh;
     --height-toolbar: 4rem;
+    --height-navbar: auto;
     /* widths */
     --width-navbar: 16rem;
   }

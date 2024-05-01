@@ -35,8 +35,9 @@ const suisse = localFont({
 })
 
 const meta = {
-  title: 'Next.js Subscription Starter',
-  description: 'Brought to you by Vercel, Stripe, and Supabase.',
+  title:
+    'Lux Cache | Tools. support and insight to experimental music production.',
+  description: 'Tools. support and insight to experimental music production.',
   cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
@@ -78,7 +79,8 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <body className={` loading ${suisse.className}`}>
-        <div className="flex min-h-screen flex-col-reverse lg:flex-row">
+        <div className="flex min-h-screen flex-col lg:flex-row-reverse">
+          <GlobalNav />
           <main
             id="skip"
             className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 lg:overflow-auto "
@@ -86,7 +88,6 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
             {props.children}
           </main>
 
-          <GlobalNav />
           {/* <Footer /> */}
         </div>
         <Suspense>

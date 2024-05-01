@@ -53,7 +53,7 @@ export default function ObservableGrid() {
       {data?.pages.map((page, i) => (
         <div
           key={i}
-          className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1"
+          className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1 lg:w-max"
         >
           {page.map((post, index) =>
             index === page.length - 1 ? (
@@ -80,9 +80,11 @@ export default function ObservableGrid() {
           <EpisodesSkeletonTwo />
         ) : (data?.pages.length ?? 0) < posts.length / numberOfItemsPerPage ? (
           <EpisodesSkeletonTwo />
-        ) : (
-          'Nothing more to load'
-        )}
+        ) : null
+        // <div className="h-full  flex items-center bg-black text-white text-xs p-16 w-max">
+        //   <span> Nothing more to load</span>
+        // </div>
+        }
       </button>
     </div>
   )

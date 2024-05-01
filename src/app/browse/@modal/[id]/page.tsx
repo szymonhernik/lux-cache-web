@@ -22,15 +22,9 @@ async function Episode({ id }: { id: string }) {
 
 export default function Page({ params }: { params: { id: string } }) {
   const { id } = params
-  // convert id to number
-  //   const episodeId = parseInt(id, 10)
-  //   console.log('episodeId', episodeId)
 
   return (
-    <Suspense fallback={null}>
-      {/* <div className="fixed top-0 left-0 z-[100000] h-screen w-screen bg-black/80 flex items-center justify-center">
-        <Episode id={id} />
-      </div> */}
+    <Suspense fallback={<h1>Loading</h1>}>
       <Modal>
         <Episode id={id} />
       </Modal>
