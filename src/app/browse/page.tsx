@@ -10,8 +10,18 @@ import ObservableGridWrapper from './_components/ObervableGridWrapper'
 import Search from '@/components/icons/SearchIcon'
 import Toolbar from './_components/Toolbar'
 import DynamicDisplayBar from './_components/DynamicDisplayBar'
+import { fetchData } from '@/app/common/fetching'
 
-export default async function BrowsePage() {
+export default async function BrowsePage({
+  searchParams
+}: {
+  searchParams?: { [key: string]: string | string[] | undefined }
+}) {
+  const { q: searchValue } = searchParams as { [key: string]: string }
+  // const products = await getProducts({ sortKey, reverse, query: searchValue });
+  const results = await fetchData(searchValue)
+  console.log('results', results)
+
   // const supabase = createClient();
 
   // const {
@@ -45,7 +55,7 @@ export default async function BrowsePage() {
     <>
       <div className=" flex flex-col lg:max-h-screen lg:h-screen bg-surface-brand">
         <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-          <Toolbar />
+          <Toolbar results={results} />
         </div>
         <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar">
           <DynamicDisplayBar />

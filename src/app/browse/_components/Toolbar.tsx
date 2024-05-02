@@ -15,7 +15,8 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { createUrl } from '@/utils/helpers'
 import { Suspense } from 'react'
 
-export default function Toolbar() {
+export default function Toolbar(props: { results: any }) {
+  const { results } = props
   return (
     <>
       <div>
@@ -27,7 +28,7 @@ export default function Toolbar() {
         </button>
         <div>
           <Suspense fallback={<div>Search skeleton</div>}>
-            <Search />
+            <Search results={results} />
           </Suspense>
         </div>
       </div>
@@ -35,11 +36,12 @@ export default function Toolbar() {
   )
 }
 
-function Search() {
+function Search(props: { results: any }) {
   const router = useRouter()
   const currentPath = usePathname()
   const searchParams = useSearchParams()
   const hasSearchParams = searchParams?.get('q')
+  const { results } = props
   return (
     <Dialog
       // defaultOpen={true}
@@ -56,7 +58,7 @@ function Search() {
       <DialogContent className="h-dvh overlay-y-auto px-24 pt-16">
         <DialogHeader className="space-y-48">
           <SearchInput />
-          <SearchResults />
+          <SearchResults results={results} />
         </DialogHeader>
       </DialogContent>
     </Dialog>

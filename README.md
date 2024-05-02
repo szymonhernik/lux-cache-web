@@ -39,8 +39,9 @@
 - [x] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
 - [ ] add color variables
 - [x] mobile menu: not closing after clicking on the link
-- [ ] Filters, Search dialogs
+- [x] Search dialog with sample data fetch (server side-reading searchParams)
 - [ ] clean up the code
+- [ ] Create pages for search results and artists.
 
 ### Not assigned yet
 

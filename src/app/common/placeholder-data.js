@@ -4,14 +4,18 @@ const episodes = [
     title: 'The Dawn of Rhythm',
     artistId: 'artist1',
     seriesId: 'series1',
-    tagIds: ['tag1', 'tag2']
+    tagIds: ['tag1', 'tag2'],
+    description:
+      'In this episode, we explore the origins of rhythm and how it has evolved over time.'
   },
   {
     id: 'ep2',
     title: 'Echoes of the Past',
     artistId: 'artist2',
     seriesId: 'series1',
-    tagIds: ['tag3']
+    tagIds: ['tag3'],
+    description:
+      'A journey through the classical compositions that have shaped music history.'
   }
 ]
 
