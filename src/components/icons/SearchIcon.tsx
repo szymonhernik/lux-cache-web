@@ -1,4 +1,4 @@
-const Search = ({ ...props }) => {
+const SearchIcon = ({ ...props }) => {
   return (
     <svg
       width="32"
@@ -18,4 +18,4 @@ const Search = ({ ...props }) => {
   )
 }
 
-export default Search
+export default SearchIcon

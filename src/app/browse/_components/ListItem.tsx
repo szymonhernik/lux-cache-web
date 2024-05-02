@@ -2,6 +2,7 @@ import { useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import VideoTest from './VideoTest'
+import { testVidAsset } from '@/app/common/testasset'
 
 export default function ListItem({
   item
@@ -33,7 +34,7 @@ export default function ListItem({
       {/* <VideoTest /> */}
       <div className="absolute z-[0] top-0 left-0 w-full h-full ">
         <img
-          src="https://image.mux.com/6CmQytdllsC16IdzLXWcecHgPfaxWVgibAS73Pj01lGA/thumbnail.png?width=5&time=0"
+          src={`https://image.mux.com/${testVidAsset.playbackId}/thumbnail.png?width=5&time=0`}
           className="absolute w-full h-full "
         />
       </div>

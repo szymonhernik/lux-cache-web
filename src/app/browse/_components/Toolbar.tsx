@@ -1,4 +1,5 @@
-import Search from '@/components/icons/Search'
+'use client'
+import SearchIcon from '@/components/icons/SearchIcon'
 
 import {
   Dialog,
@@ -8,6 +9,11 @@ import {
   DialogTitle,
   DialogTrigger
 } from '@/components/ui/dialog'
+import SearchInput from './SearchInput'
+import SearchResults from './SearchResults'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { createUrl } from '@/utils/helpers'
+import { Suspense } from 'react'
 
 export default function Toolbar() {
   return (
@@ -20,13 +26,40 @@ export default function Toolbar() {
           View
         </button>
         <div>
-          <button aria-label="Search" className="flex items-center">
+          <Suspense fallback={<div>Search skeleton</div>}>
             <Search />
-            Search
-          </button>
+          </Suspense>
         </div>
       </div>
     </>
+  )
+}
+
+function Search() {
+  const router = useRouter()
+  const currentPath = usePathname()
+  const searchParams = useSearchParams()
+  const hasSearchParams = searchParams?.get('q')
+  return (
+    <Dialog
+      // defaultOpen={true}
+      // open={hasSearchParams ? true : false}
+      onOpenChange={(e) => {
+        if (e === false) {
+          router.push(currentPath)
+        }
+      }}
+    >
+      <DialogTrigger className="p-2 focus:ring-2 focus:ring-zinc-950  focus:ring-offset-1 focus:outline-none rounded ">
+        Search
+      </DialogTrigger>
+      <DialogContent className="h-dvh overlay-y-auto px-24 pt-16">
+        <DialogHeader className="space-y-48">
+          <SearchInput />
+          <SearchResults />
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   )
 }
 

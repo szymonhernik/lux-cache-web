@@ -38,6 +38,9 @@
 - [x] Design switching between list and grid view on mobile
 - [x] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
 - [ ] add color variables
+- [x] mobile menu: not closing after clicking on the link
+- [ ] Filters, Search dialogs
+- [ ] clean up the code
 
 ### Not assigned yet
 

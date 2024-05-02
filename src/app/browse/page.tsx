@@ -7,8 +7,9 @@ import Link from 'next/link'
 import ObservableGrid from './_components/ObservableGrid'
 
 import ObservableGridWrapper from './_components/ObervableGridWrapper'
-import Search from '@/components/icons/Search'
+import Search from '@/components/icons/SearchIcon'
 import Toolbar from './_components/Toolbar'
+import DynamicDisplayBar from './_components/DynamicDisplayBar'
 
 export default async function BrowsePage() {
   // const supabase = createClient();
@@ -46,8 +47,8 @@ export default async function BrowsePage() {
         <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
           <Toolbar />
         </div>
-        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar  p-4 uppercase ">
-          Highlight
+        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar">
+          <DynamicDisplayBar />
         </section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
           <ObservableGridWrapper>

@@ -8,7 +8,9 @@ import Logo from '@/components/icons/Logo'
 import s from './Navbar.module.css'
 import { User } from '@supabase/supabase-js'
 import clsx from 'clsx'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
+import { handleRequest } from '@/utils/auth-helpers/client'
+import { SignOut } from '@/utils/auth-helpers/server'
 
 interface NavbarProps {
   user: User | null
@@ -26,6 +28,7 @@ const links = [
 
 export default function Navbar({ user }: NavbarProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
 
@@ -72,6 +75,7 @@ export default function Navbar({ user }: NavbarProps) {
                   <Link
                     key={link.name}
                     href={link.href}
+                    onClick={() => setIsOpen(!isOpen)}
                     className={clsx(
                       'flex  grow items-center text-xl gap-2  ',
                       {
@@ -94,6 +98,20 @@ export default function Navbar({ user }: NavbarProps) {
               <a href="">
                 <span>↳</span> instagram
               </a>
+            </div>
+            <div className="">
+              {user ? (
+                <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
+                  <input type="hidden" name="pathName" value={usePathname()} />
+                  <button type="submit" className={s.link}>
+                    Sign out
+                  </button>
+                </form>
+              ) : (
+                <Link href="/signin" className={s.link}>
+                  Sign In
+                </Link>
+              )}
             </div>
           </nav>
         </div>

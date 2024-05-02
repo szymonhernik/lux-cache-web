@@ -1,9 +1,10 @@
+import { testVidAsset } from '@/app/common/testasset'
 import MuxVideo from '@mux/mux-video-react'
 
 export default function VideoTest() {
   return (
     <MuxVideo
-      playbackId="6CmQytdllsC16IdzLXWcecHgPfaxWVgibAS73Pj01lGA"
+      playbackId={testVidAsset.playbackId}
       metadata={{
         video_title: 'lux cache'
       }}
