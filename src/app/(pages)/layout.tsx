@@ -9,7 +9,7 @@ import { getURL } from '@/utils/helpers'
 
 import GlobalNav from '@/components/ui/Header/GlobalNav'
 import { draftMode } from 'next/headers'
-import LiveVisualEditing from 'sanity/loader/LiveVisualEditing'
+import LiveVisualEditing from '@/sanity/loader/LiveVisualEditing'
 
 const meta = {
   title:
