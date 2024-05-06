@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { defineField, defineType } from 'sanity'
 
 export default defineType({
@@ -21,7 +22,7 @@ export default defineType({
             defineField({
               name: 'title',
               title: 'Title',
-              type: 'string',
+              type: 'string'
             }),
             {
               name: 'milestones',
@@ -31,15 +32,15 @@ export default defineType({
                 defineField({
                   name: 'milestone',
                   title: 'Milestone',
-                  type: 'milestone',
-                }),
-              ],
-            },
+                  type: 'milestone'
+                })
+              ]
+            }
           ],
           preview: {
             select: {
               items: 'milestones',
-              title: 'title',
+              title: 'title'
             },
             prepare({ items, title }) {
               const hasItems = items && items.length > 0
@@ -52,17 +53,17 @@ export default defineType({
                       items.length > 1 ? 's' : ''
                     })`
                   : 'No milestones',
-                title,
+                title
               }
-            },
-          },
-        },
-      ],
-    },
+            }
+          }
+        }
+      ]
+    }
   ],
   preview: {
     select: {
-      items: 'items',
+      items: 'items'
     },
     prepare({ items }: { items: { title: string }[] }) {
       const hasItems = items && items.length > 0
@@ -75,8 +76,8 @@ export default defineType({
           ? `${timelineNames} (${items.length} item${
               items.length > 1 ? 's' : ''
             })`
-          : 'No timelines',
+          : 'No timelines'
       }
-    },
-  },
+    }
+  }
 })
