@@ -4,7 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { draftMode } from 'next/headers'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
-import { loadPosts } from 'sanity/loader/loadQuery'
+import { loadPosts } from '@/sanity/loader/loadQuery'
 
 export default async function SplashPage() {
   // const supabase = createClient()

@@ -3,7 +3,7 @@ import 'server-only'
 import * as queryStore from '@sanity/react-loader'
 import { draftMode } from 'next/headers'
 
-import { token } from 'sanity/lib/token'
+import { token } from '@/sanity/lib/token'
 import {
   PagePayload,
   PostsPayload,
@@ -15,8 +15,8 @@ import {
   postsQuery,
   projectBySlugQuery,
   settingsQuery
-} from 'sanity/lib/queries'
-import { client } from 'sanity/lib/client'
+} from '@/sanity/lib/queries'
+import { client } from '@/sanity/lib/client'
 
 const serverClient = client.withConfig({
   token,

@@ -2,10 +2,10 @@
 
 import { type QueryResponseInitial } from '@sanity/react-loader'
 
-import { useQuery } from 'sanity/loader/useQuery'
+import { useQuery } from '@/sanity/loader/useQuery'
 
 import { PostsPayload } from '@/utils/types/sanity'
-import { postsQuery } from 'sanity/lib/queries'
+import { postsQuery } from '@/sanity/lib/queries'
 import HomePage from './HomePage'
 
 type Props = {
