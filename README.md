@@ -45,6 +45,7 @@
 
 ### Not assigned yet
 
+- [ ] create admin login with full access to page
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] Add CMS (w/ sanity)
 - [ ] move the necessary queries to a queries file (use import 'server-only')
