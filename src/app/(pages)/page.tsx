@@ -29,7 +29,7 @@ export default async function SplashPage() {
 // function LoremIpsum() {
 //   return (
 //     <p className="text-primary-foreground">
-//       Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris porta nisi
+//
 //       non velit maximus, quis efficitur lacus viverra. Phasellus dapibus mauris
 //       a mauris laoreet rhoncus. Suspendisse tristique dui et lorem vestibulum, a
 //       ultricies nunc pretium. Etiam eu blandit nibh. Vestibulum hendrerit vitae
