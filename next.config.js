@@ -10,7 +10,16 @@
 const nextConfig = {
   images: {
     dangerouslyAllowSVG: true,
-    remotePatterns: [{ hostname: 'placeholder.pics' }]
+    remotePatterns: [
+      { hostname: 'placeholder.pics' },
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io'
+      }
+    ]
+  },
+  experimental: {
+    taint: true
   }
-};
-module.exports = nextConfig;
+}
+module.exports = nextConfig

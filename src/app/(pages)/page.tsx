@@ -15,7 +15,9 @@ export default async function SplashPage() {
 
   return (
     <div className="">
-      <p>Splash page</p>
+      <div className="py-24">
+        <h1>Sanity content</h1>
+      </div>
       <LoremIpsum />
 
       <Link href="/pricing" className="">
