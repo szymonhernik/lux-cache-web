@@ -7,6 +7,7 @@ import {
   DocumentsIcon,
   FilterIcon,
   ProjectsIcon,
+  TagsIcon,
   UsersIcon
 } from '@sanity/icons'
 import { type DocumentDefinition } from 'sanity'
@@ -60,28 +61,6 @@ export const pageStructure = (
         )
     })
 
-    // Filter group items
-    const filterGroupItems = filterDefArray.map((filterDef) => {
-      return S.listItem()
-        .title(filterDef.title)
-        .icon(FilterIcon)
-        .child(S.documentTypeList(filterDef.name).title(filterDef.title))
-    })
-
-    // The default root list items
-    // Filter out both singletons and filter groups
-    // const excludedItems = typeDefArray
-    //   .map((singleton) => singleton.name)
-    //   .concat(filterDefArray.map((group) => group.name))
-    // const defaultListItems = S.documentTypeListItems().filter(
-    //   (listItem) => !excludedItems.includes(listItem.getId())
-    // )
-    // Define item for 'Posts'
-    const postsItem = S.listItem()
-      .title('Posts')
-      .icon(ProjectsIcon)
-      .child(S.documentTypeList('post').title('Posts'))
-
     const pagesItem = S.listItem()
       .title('Pages')
       .icon(DocumentsIcon)
@@ -92,22 +71,74 @@ export const pageStructure = (
       .icon(UsersIcon)
       .child(S.documentTypeList('artist').title('Artists'))
 
+    // Filter group items
+    const filterGroupItems = filterDefArray.map((filterDef) => {
+      return S.listItem()
+        .title(filterDef.title)
+        .icon(filterDef.icon)
+        .child(S.documentTypeList(filterDef.name).title(filterDef.title))
+    })
+
     const filterGroupStructure = S.listItem()
       .title('Filters')
       .icon(FilterIcon)
-      .child(S.list().title('Filter groups').items(filterGroupItems))
+      .child(S.list().title('Manage Filters').items(filterGroupItems))
+
+    // Define filtering for posts by tag or author
+    const filteredPostsByTag = S.listItem()
+      .title('Posts By Tag')
+      .icon(TagsIcon)
+      .child(
+        S.documentTypeList('filterItem')
+          .title('Posts by Tag')
+          .child((filterId) =>
+            S.documentList()
+              .title('Posts')
+              .filter('_type == "post" && $filterId in filters[]._ref')
+              .params({ filterId })
+          )
+      )
+
+    const filteredPostsByAuthor = S.listItem()
+      .title('Posts By Author')
+      .icon(UsersIcon)
+      .child(
+        S.documentTypeList('artist')
+          .title('Posts by Author')
+          .child((artistId) =>
+            S.documentList()
+              .title('Posts')
+              .filter('_type == "post" && $artistId == artist._ref')
+              .params({ artistId })
+          )
+      )
+
+    const filteredPosts = S.listItem()
+      .title('Filtered Posts')
+      .icon(FilterIcon)
+      .child(
+        S.list()
+          .title('Filters')
+          .items([filteredPostsByTag, filteredPostsByAuthor])
+      )
+    const allPosts = S.listItem().title('All Posts').icon(ProjectsIcon).child(
+      /* Create a list of all posts */
+      S.documentList().title('All Posts').filter('_type == "post"')
+    )
 
     return S.list()
       .title('Content')
       .items([
         ...singletonItems,
         S.divider(),
-        postsItem,
+        allPosts,
+        filteredPosts,
         S.divider(),
         pagesItem,
         S.divider(),
         filterGroupStructure,
-        artistsItem
+        artistsItem,
+        S.divider()
 
         // ...defaultListItems
       ])

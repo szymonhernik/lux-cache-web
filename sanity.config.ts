@@ -28,6 +28,8 @@ import season from '@/sanity/schemas/documents/filters/season'
 import contentType from '@/sanity/schemas/documents/filters/contentType'
 import subjectType from '@/sanity/schemas/documents/filters/subjectType'
 import artist from '@/sanity/schemas/documents/artist'
+import filterItem from '@/sanity/schemas/documents/filters/filterItem'
+import filterGroup from '@/sanity/schemas/documents/filters/filterGroup'
 
 export default defineConfig({
   basePath: '/studio',
@@ -44,6 +46,8 @@ export default defineConfig({
       post,
       page,
       artist,
+      filterItem,
+      filterGroup,
 
       daw,
       season,
@@ -65,7 +69,7 @@ export default defineConfig({
         //singletons
         [home, settings],
         //filter groups
-        [daw, season, contentType, subjectType]
+        [filterItem, filterGroup]
       )
     }),
     presentationTool({

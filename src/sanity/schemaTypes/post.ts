@@ -22,31 +22,17 @@ export default defineType({
       }
     }),
     defineField({
-      name: 'author',
-      title: 'Author',
-      type: 'reference',
-      to: { type: 'author' }
-    }),
-    defineField({
-      name: 'mainImage',
-      title: 'Main image',
-      type: 'image',
-      options: {
-        hotspot: true
-      },
-      fields: [
-        {
-          name: 'alt',
-          type: 'string',
-          title: 'Alternative Text'
-        }
-      ]
-    }),
-    defineField({
-      name: 'categories',
-      title: 'Categories',
+      name: 'artist',
+      title: 'Artist',
       type: 'array',
-      of: [{ type: 'reference', to: { type: 'category' } }]
+      of: [{ type: 'reference', to: { type: 'artist' } }]
+    }),
+
+    defineField({
+      name: 'filters',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'filterItem' } }]
     }),
     defineField({
       name: 'publishedAt',
@@ -63,12 +49,12 @@ export default defineType({
   preview: {
     select: {
       title: 'title',
-      author: 'author.name',
+      artist: 'artist.name',
       media: 'mainImage'
     },
     prepare(selection) {
-      const { author } = selection
-      return { ...selection, subtitle: author && `by ${author}` }
+      const { artist } = selection
+      return { ...selection, subtitle: artist && `by ${artist}` }
     }
   }
 })
