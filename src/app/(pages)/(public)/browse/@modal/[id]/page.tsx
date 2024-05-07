@@ -15,6 +15,7 @@ async function Episode({ id }: { id: string }) {
       </div>
       <div className="p-4">
         <h1 className="text-xl">{episode?.content}</h1>
+        <Link href={`post/...`}>Read</Link>
       </div>
     </div>
   )

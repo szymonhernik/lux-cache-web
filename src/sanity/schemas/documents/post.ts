@@ -22,6 +22,16 @@ export default defineType({
       }
     }),
     defineField({
+      title: 'Published date',
+      name: 'publishedAt',
+      type: 'date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+        // @ts-ignore
+        calendarTodayLabel: 'Today'
+      }
+    }),
+    defineField({
       name: 'artist',
       title: 'Artist',
       type: 'array',
@@ -34,11 +44,7 @@ export default defineType({
       type: 'array',
       of: [{ type: 'reference', to: { type: 'filterItem' } }]
     }),
-    defineField({
-      name: 'publishedAt',
-      title: 'Published at',
-      type: 'datetime'
-    }),
+
     defineField({
       name: 'body',
       title: 'Body',

@@ -14,19 +14,15 @@ import { schema } from '@/sanity/schema'
 import { presentationTool } from 'sanity/presentation'
 import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
-import duration from '@/sanity/schemas/objects/duration'
+
 import page from '@/sanity/schemas/documents/page'
 import project from '@/sanity/schemas/documents/project'
-import milestone from '@/sanity/schemas/objects/milestone'
-import post from '@/sanity/schemaTypes/post'
-import author from '@/sanity/schemaTypes/author'
-import category from '@/sanity/schemaTypes/category'
-import blockContent from '@/sanity/schemaTypes/blockContent'
+
+import post from '@/sanity/schemas/documents/post'
+
+import blockContent from '@/sanity/schemas/objects/blockContent'
 import { pageStructure } from '@/sanity/plugins/settings'
-import daw from '@/sanity/schemas/documents/filters/daw'
-import season from '@/sanity/schemas/documents/filters/season'
-import contentType from '@/sanity/schemas/documents/filters/contentType'
-import subjectType from '@/sanity/schemas/documents/filters/subjectType'
+
 import artist from '@/sanity/schemas/documents/artist'
 import filterItem from '@/sanity/schemas/documents/filters/filterItem'
 import filterGroup from '@/sanity/schemas/documents/filters/filterGroup'
@@ -49,18 +45,8 @@ export default defineConfig({
       filterItem,
       filterGroup,
 
-      daw,
-      season,
-      contentType,
-      subjectType,
-
-      duration,
-      project,
-      author,
-      category,
-      blockContent,
       // Objects
-      milestone
+      blockContent
     ]
   },
   plugins: [

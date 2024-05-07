@@ -14,7 +14,7 @@ export default defineType({
       description: 'This field is the title of your personal website.',
       title: 'Title',
       type: 'string',
-      validation: (rule) => rule.required(),
+      validation: (rule) => rule.required()
     }),
     defineField({
       name: 'overview',
@@ -36,51 +36,38 @@ export default defineType({
                   {
                     name: 'href',
                     type: 'url',
-                    title: 'Url',
-                  },
-                ],
-              },
+                    title: 'Url'
+                  }
+                ]
+              }
             ],
             decorators: [
               {
                 title: 'Italic',
-                value: 'em',
+                value: 'em'
               },
               {
                 title: 'Strong',
-                value: 'strong',
-              },
-            ],
+                value: 'strong'
+              }
+            ]
           },
           styles: [],
-          type: 'block',
-        }),
+          type: 'block'
+        })
       ],
-      validation: (rule) => rule.max(155).required(),
-    }),
-    defineField({
-      name: 'showcaseProjects',
-      title: 'Showcase projects',
-      description:
-        'These are the projects that will appear first on your landing page.',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'reference',
-          to: [{ type: 'project' }],
-        }),
-      ],
-    }),
+      validation: (rule) => rule.max(155).required()
+    })
   ],
   preview: {
     select: {
-      title: 'title',
+      title: 'title'
     },
     prepare({ title }) {
       return {
         subtitle: 'Home',
-        title,
+        title
       }
-    },
-  },
+    }
+  }
 })

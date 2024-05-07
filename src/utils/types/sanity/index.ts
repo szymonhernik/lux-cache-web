@@ -45,16 +45,21 @@ export interface PagePayload {
 }
 
 export interface PostsPayload {
-  posts?: Post[]
+  posts?: PostPayload[]
 }
 
-export interface Post {
+export interface PostPayload {
   title: string
   slug: {
     current: string
   }
   body: PortableTextBlock[]
   _id: string
+  // TODO: Define artist type
+  artists: Array<any>
+  // TODO: Define filters type
+  filters: Array<any>
+  publishedAt: string
 }
 
 export interface ProjectPayload {

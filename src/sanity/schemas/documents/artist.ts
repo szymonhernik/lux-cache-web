@@ -10,7 +10,7 @@ export default defineType({
   // liveEdit: true,
   fields: [
     defineField({
-      name: 'title',
+      name: 'name',
       title: 'Name',
       type: 'string',
       validation: (rule) => rule.required()

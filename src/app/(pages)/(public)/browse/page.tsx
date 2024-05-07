@@ -20,7 +20,7 @@ export default async function BrowsePage({
   const { q: searchValue } = searchParams as { [key: string]: string }
   // const products = await getProducts({ sortKey, reverse, query: searchValue });
   const results = await fetchData(searchValue)
-  console.log('results', results)
+  // console.log('results', results)
 
   // const supabase = createClient();
 
