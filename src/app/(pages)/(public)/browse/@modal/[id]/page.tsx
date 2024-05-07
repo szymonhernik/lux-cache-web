@@ -25,7 +25,7 @@ export default function Page({ params }: { params: { id: string } }) {
   const { id } = params
 
   return (
-    <Suspense fallback={<h1>Loading</h1>}>
+    <Suspense fallback={<h1>Loading...</h1>}>
       <Modal>
         <Episode id={id} />
       </Modal>
