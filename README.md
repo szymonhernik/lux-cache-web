@@ -47,11 +47,15 @@
 - [x] clean up the code
 - [ ] Create pages for search results
 - [x] Create pages for artists.
+- [x] "infinite scroll" (w/ tanstack infinite scroll lib)
 - [ ] routes - tabs (https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#tab-groups)
+- [ ] Routing/post page (parallel route)
 
 ### Supabase
 
+- [x] Set up database (w/ supabase)
 - [ ] add Google and Discord providers
+- [ ] adding bookmarks (after setting up CMS)
 
 ### Sanity CMS
 
@@ -67,20 +71,21 @@
 - [ ] create admin login with full access to page
 - [ ] fix reset password supabase email template (use the one written in the previous lc project)
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
-
 - [ ] move the necessary queries to a queries file (use import 'server-only')
-- [ ] Add authentication (w/ supabase)
-- [ ] Set up database (w/ supabase)
+- [x] Add authentication (w/ supabase)
+
 - [ ] Set up Stripe (checkout, api points, webhooks)
 - [ ] "taint" (server-only)
 - [ ] Error management (w/ Sentry)
-- [ ] Routing/image page (parallel route)
 - [ ] Analytics (posthog)
 - [ ] Ratelimiting (upstash)
-- [x] "infinite scroll"
-- [ ] style welcome emails and goodbye emails
 
-### Future improvements
+### Before going into production
+
+- [ ] style welcome emails and goodbye emails
+- [ ] Configure resend with Lux Cache email
+
+#### Future improvements
 
 - [ ] Make sure a person doesn't open many accounts and subscribes to trials forever
 
@@ -92,7 +97,7 @@
 - [ ] Optional: Find a way to add first_subscription_date (timestamptz) and don't update it ever again in users table
 - [ ] Add paypal payment method and maybe local payment providers
 
-## Research findings
+## REST: IGNORE
 
 ### handle grid with lots of videos; advice from Rauno
 

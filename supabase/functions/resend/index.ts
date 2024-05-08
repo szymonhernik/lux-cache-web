@@ -7,6 +7,7 @@
 
 type UserRecord = Database['auth']['Tables']['users']['Row']
 console.log('Hello from `database-webhook` function!')
+// @ts-ignore
 import { Database } from './types.ts'
 interface WebhookPayload {
   type: 'INSERT' | 'UPDATE' | 'DELETE'
