@@ -47,12 +47,27 @@
 - [x] clean up the code
 - [ ] Create pages for search results
 - [x] Create pages for artists.
+- [ ] routes - tabs (https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#tab-groups)
+
+### Supabase
+
+- [ ] add Google and Discord providers
+
+### Sanity CMS
+
+- [x] configure Sanity
+- [x] sketch out structure
+- [x] test fetching
+- [ ] meeting with Kai about the structure (https://excalidraw.com/)
+- [ ] CMS structure
+- [ ] Custom blocks for article contents
 
 ### Not assigned yet
 
 - [ ] create admin login with full access to page
+- [ ] fix reset password supabase email template (use the one written in the previous lc project)
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
-- [ ] Add CMS (w/ sanity)
+
 - [ ] move the necessary queries to a queries file (use import 'server-only')
 - [ ] Add authentication (w/ supabase)
 - [ ] Set up database (w/ supabase)
