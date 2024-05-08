@@ -1,34 +1,34 @@
-'use client';
+'use client'
 
-import Button from '@/components/ui/Button';
-import Link from 'next/link';
-import { signInWithPassword } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
-import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
-import { revalidatePath } from 'next/cache';
+import Button from '@/components/ui/Button'
+import Link from 'next/link'
+import { signInWithPassword } from '@/utils/auth-helpers/server'
+import { handleRequest } from '@/utils/auth-helpers/client'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import { revalidatePath } from 'next/cache'
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
-  allowEmail: boolean;
-  redirectMethod: string;
+  allowEmail: boolean
+  redirectMethod: string
 }
 
 export default function PasswordSignIn({
   allowEmail,
   redirectMethod
 }: PasswordSignInProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = redirectMethod === 'client' ? useRouter() : null
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signInWithPassword, router);
+    setIsSubmitting(true) // Disable the button while the request is being handled
+    await handleRequest(e, signInWithPassword, router)
     if (router) {
-      router.refresh();
+      router.refresh()
     }
-    setIsSubmitting(false);
-  };
+    setIsSubmitting(false)
+  }
 
   return (
     <div className="my-8">
@@ -48,7 +48,7 @@ export default function PasswordSignIn({
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-neutral-200"
             />
             <label htmlFor="password">Password</label>
             <input
@@ -57,7 +57,7 @@ export default function PasswordSignIn({
               type="password"
               name="password"
               autoComplete="current-password"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-neutral-200"
             />
           </div>
           <Button
@@ -88,5 +88,5 @@ export default function PasswordSignIn({
         </Link>
       </p>
     </div>
-  );
+  )
 }

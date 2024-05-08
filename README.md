@@ -23,25 +23,24 @@
   - [x] on checkout.session.completed stripe event update users table (as admin)
   - [x] when creating checkout session, don't pass trial option if can_trial is false (read from users table)
 
-- [ ] check why there is three coupon@test.com customers in stripe dashboard (doesnt match the supabase data)
-- [ ] Learn a bit more about stripe payment 3D Secure (3DS) authentication
-- [ ] Optional: When removing or updating payment method disable other buttons
-- [ ] Optional: Find a way to add first_subscription_date (timestamptz) and don't update it ever again in users table
-- [ ] Emails from stripe/supabase
-- [ ] Add paypal payment method and maybe local payment providers
-- [ ] different currencies
+## Customer emails
+
+- [ ] Emails from stripe
+- [ ] Emails from supabase
+- [ ] Connect Resend
 
 ### Front-end
 
-- [ ] Reset styles
+- [x] Reset styles
 - [ ] Horizontal scrolling browse page
 - [x] Design switching between list and grid view on mobile
 - [x] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
 - [ ] add color variables
 - [x] mobile menu: not closing after clicking on the link
 - [x] Search dialog with sample data fetch (server side-reading searchParams)
-- [ ] clean up the code
-- [ ] Create pages for search results and artists.
+- [x] clean up the code
+- [ ] Create pages for search results
+- [x] Create pages for artists.
 
 ### Not assigned yet
 
@@ -62,6 +61,14 @@
 ### Future improvements
 
 - [ ] Make sure a person doesn't open many accounts and subscribes to trials forever
+
+## Stripe
+
+- [ ] check why there is three coupon@test.com customers in stripe dashboard (doesnt match the supabase data)
+- [ ] Learn a bit more about stripe payment 3D Secure (3DS) authentication
+- [ ] Optional: When removing or updating payment method disable other buttons
+- [ ] Optional: Find a way to add first_subscription_date (timestamptz) and don't update it ever again in users table
+- [ ] Add paypal payment method and maybe local payment providers
 
 ## Research findings
 

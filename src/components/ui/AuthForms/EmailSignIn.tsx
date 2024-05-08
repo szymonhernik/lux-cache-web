@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import Button from '@/components/ui/Button';
-import Link from 'next/link';
-import { signInWithEmail } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Button from '@/components/ui/Button'
+import Link from 'next/link'
+import { signInWithEmail } from '@/utils/auth-helpers/server'
+import { handleRequest } from '@/utils/auth-helpers/client'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 // Define prop type with allowPassword boolean
 interface EmailSignInProps {
-  allowPassword: boolean;
-  redirectMethod: string;
-  disableButton?: boolean;
+  allowPassword: boolean
+  redirectMethod: string
+  disableButton?: boolean
 }
 
 export default function EmailSignIn({
@@ -19,14 +19,14 @@ export default function EmailSignIn({
   redirectMethod,
   disableButton
 }: EmailSignInProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = redirectMethod === 'client' ? useRouter() : null
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signInWithEmail, router);
-    setIsSubmitting(false);
-  };
+    setIsSubmitting(true) // Disable the button while the request is being handled
+    await handleRequest(e, signInWithEmail, router)
+    setIsSubmitting(false)
+  }
 
   return (
     <div className="my-8">
@@ -40,13 +40,13 @@ export default function EmailSignIn({
             <label htmlFor="email">Email</label>
             <input
               id="email"
-              placeholder="name@example.com"
+              placeholder="names@example.com"
               type="email"
               name="email"
               autoCapitalize="none"
               autoComplete="email"
               autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
+              className="w-full p-3 rounded-md bg-neutral-100"
             />
           </div>
           <Button
@@ -75,5 +75,5 @@ export default function EmailSignIn({
         </>
       )}
     </div>
-  );
+  )
 }
