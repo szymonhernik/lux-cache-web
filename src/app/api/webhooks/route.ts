@@ -94,7 +94,7 @@ export async function POST(req: Request) {
               throw new Error('Customer details not found')
             } else {
               await resend.emails.send({
-                from: 'Lux Cache <szymonhernik123@gmail.com>',
+                from: 'Lux Cache <hello@szymonhernik.com>',
                 to: [event.data.object.customer_details.email],
                 subject: 'Thanks for subscribing!',
                 react: SubscriptionCompletedEmail()
