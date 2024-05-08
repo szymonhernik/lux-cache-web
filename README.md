@@ -28,14 +28,12 @@
 ## Customer emails
 
 - [x] Sample email from stripe on subscription confirmed webhook
-- [ ] EDIT: Leave Supabase emails for later—you will have to have exported react-email to html and then in supabase/config.toml file you have to configure contet_path:
-      useful links:
-      https://supabase.com/docs/guides/cli/customizing-email-templates
-      https://github.com/orgs/supabase/discussions/20753
-      https://react.email/docs/utilities/render
-      https://supabase.com/docs/guides/auth/auth-email-templates
-
-- [ ] Connect Resend
+- [x] Supabase Auth email templates test styling for Magic Link
+- [x] Connect Resend
+- [x] Send email for a new signed up and deleted users (w/ Resend and Supabase Edge Functions)
+  - [x] create a test supabase edge function
+  - [x] set up supabase webhook listening to insert and delete events for users table
+    - useful link from supabase https://www.youtube.com/watch?v=Qf7XvL1fjvo&t=357s
 
 ### Front-end
 
@@ -64,7 +62,8 @@
 - [ ] Routing/image page (parallel route)
 - [ ] Analytics (posthog)
 - [ ] Ratelimiting (upstash)
-- [ ] "infinite scroll"
+- [x] "infinite scroll"
+- [ ] style welcome emails and goodbye emails
 
 ### Future improvements
 
