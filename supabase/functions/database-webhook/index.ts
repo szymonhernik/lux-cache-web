@@ -16,7 +16,7 @@ interface WebhookPayload {
   schema: 'auth'
   old_record: null | UserRecord
 }
-
+// @ts-ignore
 Deno.serve(async (req) => {
   const payload: WebhookPayload = await req.json()
   console.log(payload.record.email)

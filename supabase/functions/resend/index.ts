@@ -16,7 +16,7 @@ interface WebhookPayload {
   schema: 'auth'
   old_record: null | UserRecord
 }
-
+// @ts-ignore
 Deno.serve(async (req) => {
   const payload: WebhookPayload = await req.json()
   const newUser = payload.record
@@ -27,6 +27,7 @@ Deno.serve(async (req) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      // @ts-ignore
       Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`
     },
     body: JSON.stringify({
