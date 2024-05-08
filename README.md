@@ -23,10 +23,18 @@
   - [x] on checkout.session.completed stripe event update users table (as admin)
   - [x] when creating checkout session, don't pass trial option if can_trial is false (read from users table)
 
+- [ ] don't show premium plans panel in account for users without a current subscription
+
 ## Customer emails
 
-- [ ] Emails from stripe
-- [ ] Emails from supabase
+- [x] Sample email from stripe on subscription confirmed webhook
+- [ ] EDIT: Leave Supabase emails for later—you will have to have exported react-email to html and then in supabase/config.toml file you have to configure contet_path:
+      useful links:
+      https://supabase.com/docs/guides/cli/customizing-email-templates
+      https://github.com/orgs/supabase/discussions/20753
+      https://react.email/docs/utilities/render
+      https://supabase.com/docs/guides/auth/auth-email-templates
+
 - [ ] Connect Resend
 
 ### Front-end
