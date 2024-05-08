@@ -94,8 +94,8 @@ double_confirm_changes = true
 enable_confirmations = false
 
 # Uncomment to customize email template
-[auth.email.template.invite]
-subject = "You have been invited"
+[auth.email.template.magic_link]
+subject = "Custom magic link email"
 content_path = "./supabase/templates/invite.html"
 
 [auth.sms]
