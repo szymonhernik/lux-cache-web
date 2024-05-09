@@ -7,14 +7,15 @@ import { useQuery } from '@/sanity/loader/useQuery'
 import { PostsPayload } from '@/utils/types/sanity'
 import { postsQuery } from '@/sanity/lib/queries'
 import HomePage from './HomePage'
+import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'
 
 type Props = {
-  initial: QueryResponseInitial<PostsPayload | null>
+  initial: QueryResponseInitial<PostsQueryResult | null>
 }
 
 export default function HomePagePreview(props: Props) {
   const { initial } = props
-  const { data, encodeDataAttribute } = useQuery<PostsPayload | null>(
+  const { data, encodeDataAttribute } = useQuery<PostsQueryResult | null>(
     postsQuery,
     {},
     { initial }

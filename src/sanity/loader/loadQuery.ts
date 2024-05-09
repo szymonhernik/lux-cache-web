@@ -17,6 +17,10 @@ import {
   settingsQuery
 } from '@/sanity/lib/queries'
 import { client } from '@/sanity/lib/client'
+import {
+  PostBySlugQueryResult,
+  PostsQueryResult
+} from '@/utils/types/sanity/sanity.types'
 
 const serverClient = client.withConfig({
   token,
@@ -78,7 +82,7 @@ export function loadSettings() {
 //   )
 // }
 export function loadPosts() {
-  return loadQuery<PostsPayload | null>(
+  return loadQuery<PostsQueryResult | null>(
     postsQuery,
     {},
     { next: { tags: ['post'] } }
@@ -86,7 +90,7 @@ export function loadPosts() {
 }
 
 export function loadPost(slug: string) {
-  return loadQuery<PostPayload | null>(
+  return loadQuery<PostBySlugQueryResult | null>(
     postBySlugQuery,
     { slug },
     { next: { tags: [`post:${slug}`] } }

@@ -12,6 +12,7 @@ export const postBySlugQuery = groq`
     "slug": slug.current,
     filters,
     "artists": artist[]->{
+      _key,
       name,
       slug
     },

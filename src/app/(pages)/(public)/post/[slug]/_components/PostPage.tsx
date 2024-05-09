@@ -1,9 +1,10 @@
 import { PostPayload } from '@/utils/types/sanity'
+import { PostBySlugQueryResult } from '@/utils/types/sanity/sanity.types'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import React from 'react'
 
 export interface PostPageProps {
-  data: PostPayload | null
+  data: PostBySlugQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
 }
 export function PostPage({ data, encodeDataAttribute }: PostPageProps) {

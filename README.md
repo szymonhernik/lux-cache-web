@@ -64,7 +64,8 @@
 - [x] configure Sanity
 - [x] sketch out structure
 - [x] test fetching
-- [ ] TODO: sanity generate type interfaces (w/ sanity typegen)
+- [x] sanity generate type interfaces (w/ sanity typegen)
+- [x] substitute types with generated interfaces
 - [ ] meeting with Kai about the structure (https://excalidraw.com/)
 - [ ] CMS structure
 - [ ] Custom blocks for article contents
