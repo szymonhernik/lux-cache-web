@@ -4,20 +4,29 @@
 
 @layer base {
   :root {
-    --background: 0, 0%, 98%;
+    --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;
 
     --card: 0 0% 100%;
     --card-foreground: 240 10% 3.9%;
 
+    --disabled: 0 0% 63.9%;
+    --disabled-foreground: 0 0% 98%;
+
+    /* --inverted: 265 89% 78%;
+    --inverted-foreground: 60 30% 96%; */
+
+    --inverted: 0 0% 3.9%;
+    --inverted-foreground: 0 0% 98%;
+
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
 
-    --primary: 0, 0%, 98%;
-    --primary-foreground: 0, 0%, 3.9%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 3.9%;
 
-    --secondary: 0, 0%, 96%;
-    --secondary-foreground: 0, 0%, 45%;
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 0 0% 45%;
 
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;

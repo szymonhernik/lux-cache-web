@@ -52,6 +52,10 @@ module.exports = {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground)) '
         },
+        inverted: {
+          DEFAULT: 'hsl(var(--inverted))',
+          foreground: 'hsl(var(--inverted-foreground))'
+        },
         secondary: {
           DEFAULT: 'hsl(var(--surface-secondary))',
           foreground: 'hsl(var(--secondary-foreground))'
@@ -75,6 +79,10 @@ module.exports = {
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))'
+        },
+        disabled: {
+          DEFAULT: 'hsl(var(--disabled))',
+          foreground: 'hsl(var(--disabled-foreground))'
         }
         // text: {
         //   DEFAULT: 'hsl(var(--color-text))',

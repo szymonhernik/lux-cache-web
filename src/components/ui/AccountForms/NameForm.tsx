@@ -1,65 +1,90 @@
-'use client';
+'use client'
 
-import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
-import { updateName } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Card from '@/components/ui/Card'
+import { updateName } from '@/utils/auth-helpers/server'
+import { handleRequest } from '@/utils/auth-helpers/client'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { z } from 'zod'
+import { Button } from '@/components/shadcn/ui/button'
+
+const nameSchema = z
+  .string()
+  .min(1, "Name can't be empty")
+  .max(64, "Name can't exceed 64 characters")
 
 export default function NameForm({
   userName,
   userId
 }: {
-  userName: string;
-  userId: string;
+  userName: string
+  userId: string
 }) {
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [currentName, setCurrentName] = useState(userName)
+  const [isInputDisabled, setIsInputDisabled] = useState(true)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newName = e.target.value
+    setCurrentName(newName)
+    // Validate the new name using Zod schema
+    const validationResult = nameSchema.safeParse(newName)
+    setIsInputDisabled(!validationResult.success || newName === userName)
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     // Check if the new name is the same as the old name
     if (e.currentTarget.fullName.value === userName) {
-      e.preventDefault();
-      setIsSubmitting(false);
-      return;
+      e.preventDefault()
+      setIsSubmitting(false)
+      return
     }
-    handleRequest(e, updateName, router);
-    setIsSubmitting(false);
-  };
+    handleRequest(e, updateName, router)
+    setIsSubmitting(false)
+  }
 
   return (
     <Card
-      title="Name"
-      description="Please enter your full name, or a display name you are comfortable with."
+      title="Account Information"
       footer={
-        <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <p className="pb-4 sm:pb-0">64 characters maximum</p>
+        <div className="flex flex-col items-start justify-between gap-2 ">
           <Button
-            variant="slim"
             type="submit"
             form="nameForm"
-            loading={isSubmitting}
+            size="lg"
+            isLoading={isSubmitting}
+            loadingText="Updating"
           >
-            Update Name
+            Update
           </Button>
+          <p className="">64 characters maximum</p>
         </div>
       }
     >
-      <div className="mt-8 mb-4 ">
-        <form id="nameForm" onSubmit={(e) => handleSubmit(e)}>
-          <input type="hidden" name="userId" value={userId} />
-          <input
-            type="text"
-            name="fullName"
-            className="w-1/2 p-3 rounded-md bg-zinc-300"
-            defaultValue={userName}
-            placeholder="Your name"
-            maxLength={64}
-          />
+      <div className=" ">
+        <form
+          id="nameForm"
+          onSubmit={(e) => handleSubmit(e)}
+          className="flex gap-4 flex-col *:space-y-2 *:flex *:flex-col"
+        >
+          <div>
+            <label htmlFor="fullName">Name</label>
+            <input type="hidden" name="userId" value={userId} />
+            <input
+              id="fullName"
+              type="text"
+              name="fullName"
+              className="w-full sm:w-3/4 p-3 rounded-sm border border-zinc-300 bg-transparent"
+              defaultValue={userName}
+              onChange={handleInputChange}
+              placeholder="Your name"
+              maxLength={64}
+            />
+          </div>
         </form>
       </div>
     </Card>
-  );
+  )
 }
