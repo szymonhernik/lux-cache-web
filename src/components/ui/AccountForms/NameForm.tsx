@@ -49,7 +49,7 @@ export default function NameForm({
     <Card
       title="Account Information"
       footer={
-        <div className="flex flex-col items-start justify-between gap-2 ">
+        <>
           <Button
             type="submit"
             form="nameForm"
@@ -60,7 +60,7 @@ export default function NameForm({
             Update
           </Button>
           <p className="">64 characters maximum</p>
-        </div>
+        </>
       }
     >
       <div className=" ">

@@ -9,22 +9,24 @@ export default function NavbarAccount() {
   return (
     <nav
       className={clsx(
-        `bg-neutral-300 h-64 w-full flex flex-col justify-end p-4 gap-2 text-secondary-foreground text-sm`
+        `bg-neutral-300 h-64 w-full p-4 flex flex-col justify-end text-secondary-foreground text-sm  lg:min-w-36 lg:w-fit lg:bg-transparent`
       )}
     >
-      {links.map((link) => {
-        return (
-          <Link key={link.name} href={link.href}>
-            <p
-              className={clsx(``, {
-                ' text-primary-foreground': pathname === link.href
-              })}
-            >
-              {link.name}
-            </p>
-          </Link>
-        )
-      })}
+      <div className="flex flex-col  gap-2 lg:fixed lg:ml-4">
+        {links.map((link) => {
+          return (
+            <Link key={link.name} href={link.href}>
+              <p
+                className={clsx(``, {
+                  ' text-primary-foreground': pathname === link.href
+                })}
+              >
+                {link.name}
+              </p>
+            </Link>
+          )
+        })}
+      </div>
     </nav>
   )
 }

@@ -44,12 +44,12 @@ export default async function Page() {
             <Suspense fallback={<BillingInfoScheleton />}>
               <BillingInfoFetchZod subscription={subscription} />
             </Suspense>
-            <Suspense fallback={<BillingInfoScheleton />}>
+            {/* <Suspense fallback={<BillingInfoScheleton />}>
               <PremiumPlansPanel
                 products={products ?? []}
                 subscription={subscription}
               />
-            </Suspense>
+            </Suspense> */}
           </>
         ) : (
           // TODO: Consider having some kind of user's info here? maybe if someone had a subscription and then canceled it, they could still see their info here

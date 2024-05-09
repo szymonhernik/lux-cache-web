@@ -1,15 +1,15 @@
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button'
 
 import {
   detachPaymentMethod,
   updateSubscriptionDefaultPaymentMethod
-} from '@/utils/stripe/server';
-import { ListPaymentMethodSchema } from '@/utils/types/zod/types';
-import { redirect, usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { z } from 'zod';
+} from '@/utils/stripe/server'
+import { ListPaymentMethodSchema } from '@/utils/types/zod/types'
+import { redirect, usePathname, useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { z } from 'zod'
 
-type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>;
+type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>
 
 export default function DisplayPaymentData({
   paymentMethods,
@@ -17,43 +17,42 @@ export default function DisplayPaymentData({
   subscriptionId,
   onCardsUpdate
 }: {
-  paymentMethods: ListPaymentMethodSchemaType;
-  subscriptionDefaultPaymentMethodId: string | null;
-  subscriptionId: string;
-  onCardsUpdate: () => void;
+  paymentMethods: ListPaymentMethodSchemaType
+  subscriptionDefaultPaymentMethodId: string | null
+  subscriptionId: string
+  onCardsUpdate: () => void
 }) {
   // console.log('paymentMethods in new component', paymentMethods);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethodIdLoading, setPaymentMethodIdLoading] =
-    useState<string>();
-  const router = useRouter();
-  const currentPath = usePathname();
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [paymentMethodIdLoading, setPaymentMethodIdLoading] = useState<string>()
+  const router = useRouter()
+  const currentPath = usePathname()
 
   const handleStripePaymentMethodDetach = async (paymentMethodId: string) => {
     // TODO: Check if there is only one payment method left and show a message that the user needs to have at least one payment method
 
-    console.log('Deleting payment method with id:', paymentMethodId);
-    setIsSubmitting(true);
-    setPaymentMethodIdLoading(paymentMethodId);
+    console.log('Deleting payment method with id:', paymentMethodId)
+    setIsSubmitting(true)
+    setPaymentMethodIdLoading(paymentMethodId)
     try {
       const redirectUrl: string = await detachPaymentMethod(
         paymentMethodId,
         currentPath
-      );
-      setPaymentMethodIdLoading(undefined);
-      setIsSubmitting(false);
+      )
+      setPaymentMethodIdLoading(undefined)
+      setIsSubmitting(false)
 
-      router.push(redirectUrl);
+      router.push(redirectUrl)
       // router.refresh();
-      onCardsUpdate();
+      onCardsUpdate()
     } catch (error) {
-      console.error('Error deleting payment method', error);
+      console.error('Error deleting payment method', error)
     }
-  };
+  }
 
   const handleSetNewDefaultPaymentMethod = async (paymentMethodId: string) => {
-    setIsSubmitting(true);
-    setPaymentMethodIdLoading(paymentMethodId);
+    setIsSubmitting(true)
+    setPaymentMethodIdLoading(paymentMethodId)
 
     // Call the function to set the new default payment method
     // let redirectUrl: string;
@@ -62,16 +61,16 @@ export default function DisplayPaymentData({
         paymentMethodId,
         subscriptionId,
         currentPath
-      );
-      router.push(redirectUrl);
-      router.refresh();
-      setPaymentMethodIdLoading(undefined);
-      setIsSubmitting(false);
+      )
+      router.push(redirectUrl)
+      router.refresh()
+      setPaymentMethodIdLoading(undefined)
+      setIsSubmitting(false)
     } catch (error) {
-      return;
+      return
     }
-    console.log('New default payment method set.');
-  };
+    console.log('New default payment method set.')
+  }
   return (
     <>
       {paymentMethods.length > 0 ? (
@@ -136,5 +135,5 @@ export default function DisplayPaymentData({
         <p>Loading...</p>
       )}
     </>
-  );
+  )
 }

@@ -1,53 +1,52 @@
-import { PaymentElement, useCustomCheckout } from '@stripe/react-stripe-js';
-import { useState } from 'react';
-import Button from '@/components/ui/Button';
-import { redirect, usePathname, useRouter } from 'next/navigation';
-import { getStatusRedirect } from '@/utils/helpers';
+import { PaymentElement, useCustomCheckout } from '@stripe/react-stripe-js'
+import { useState } from 'react'
+
+import { redirect, usePathname, useRouter } from 'next/navigation'
+import { getStatusRedirect } from '@/utils/helpers'
+import { Button } from '@/components/shadcn/ui/button'
 
 export default function PaymentMethodSetupForm(props: {
-  onConfirmNewCard: () => void;
+  onConfirmNewCard: () => void
 }) {
-  const { onConfirmNewCard } = props;
-  const { confirm, canConfirm } = useCustomCheckout();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [messageBody, setMessageBody] = useState('');
+  const { onConfirmNewCard } = props
+  const { confirm, canConfirm } = useCustomCheckout()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [messageBody, setMessageBody] = useState('')
 
-  const router = useRouter();
-  const currentPath = usePathname();
+  const router = useRouter()
+  const currentPath = usePathname()
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission
     try {
       if (!canConfirm) {
-        e.preventDefault();
-        setIsSubmitting(false);
-        return;
+        e.preventDefault()
+        setIsSubmitting(false)
+        return
       }
-      e.preventDefault();
-      setIsSubmitting(true);
+      e.preventDefault()
+      setIsSubmitting(true)
 
       //  confirm() method returns a Promise that resolves to an object with one of the following types
       //  { session: CheckoutSession }
       //  { error: StripeError }
       confirm().then((result) => {
-        setIsSubmitting(false);
+        setIsSubmitting(false)
         if (result.session) {
-          onConfirmNewCard();
-          router.push(
-            getStatusRedirect(currentPath, 'Success!', 'Card added.')
-          );
-          router.refresh();
+          onConfirmNewCard()
+          router.push(getStatusRedirect(currentPath, 'Success!', 'Card added.'))
+          router.refresh()
           // setIsSuccess(true);
         } else {
-          setMessageBody(result.error.message || 'An error occurred');
-          return;
+          setMessageBody(result.error.message || 'An error occurred')
+          return
         }
-      });
+      })
     } catch (error) {
-      console.error('Error confirming payment');
+      console.error('Error confirming payment')
     } finally {
     }
-  };
+  }
 
   return (
     <div>
@@ -62,9 +61,9 @@ export default function PaymentMethodSetupForm(props: {
             {messageBody}
           </div>
           <Button
-            variant="slim"
             className="mt-16"
-            loading={isSubmitting}
+            size="lg"
+            isLoading={isSubmitting}
             disabled={!canConfirm || isSubmitting}
             type="submit"
           >
@@ -78,5 +77,5 @@ export default function PaymentMethodSetupForm(props: {
         </div>
       )}
     </div>
-  );
+  )
 }

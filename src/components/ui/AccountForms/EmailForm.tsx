@@ -31,7 +31,7 @@ export default function EmailForm({
     <Card
       title="Contact Information"
       footer={
-        <div className="flex flex-col items-start justify-between gap-2 ">
+        <>
           <Button
             type="submit"
             form="emailForm"
@@ -44,7 +44,7 @@ export default function EmailForm({
           <p className="pb-4 sm:pb-0">
             We will email you to verify the change.
           </p>
-        </div>
+        </>
       }
     >
       <div className="">

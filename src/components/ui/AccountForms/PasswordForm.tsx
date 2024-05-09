@@ -24,7 +24,8 @@ export default function PasswordForm() {
     <Card
       title="Change password"
       footer={
-        <div className="flex flex-col items-start justify-between gap-2 ">
+        <>
+          {' '}
           <Button
             type="submit"
             form="passwordUpdateForm"
@@ -34,7 +35,7 @@ export default function PasswordForm() {
           >
             Update
           </Button>
-        </div>
+        </>
       }
     >
       <div className="">

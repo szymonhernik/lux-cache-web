@@ -16,7 +16,11 @@ export default function Card({ title, description, footer, children }: Props) {
         {children}
       </div>
       {footer && (
-        <div className="text-sm text-secondary-foreground mt-4">{footer}</div>
+        <div className="text-sm text-secondary-foreground mt-4">
+          <div className="flex flex-col items-start justify-between gap-2 ">
+            {footer}
+          </div>
+        </div>
       )}
     </div>
   )

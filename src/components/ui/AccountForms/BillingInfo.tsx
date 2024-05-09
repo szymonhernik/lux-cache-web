@@ -1,20 +1,17 @@
-'use client';
-import Button from '@/components/ui/Button';
-import { getErrorRedirect } from '@/utils/helpers';
-import { getStripe } from '@/utils/stripe/client';
-import { updatePaymentMethod } from '@/utils/stripe/server';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { Stripe } from '@stripe/stripe-js';
-import {
-  CustomCheckoutProvider,
-  PaymentElement
-} from '@stripe/react-stripe-js';
+'use client'
+
+import { getErrorRedirect } from '@/utils/helpers'
+import { getStripe } from '@/utils/stripe/client'
+import { updatePaymentMethod } from '@/utils/stripe/server'
+import { usePathname, useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { Stripe } from '@stripe/stripe-js'
+import { CustomCheckoutProvider, PaymentElement } from '@stripe/react-stripe-js'
 import {
   createStripePortal,
   retrievePaymentMethods
-} from '@/utils/stripe/server';
-import Card from '@/components/ui/Card';
+} from '@/utils/stripe/server'
+import Card from '@/components/ui/Card'
 // import Stripe from 'stripe';
 
 import {
@@ -26,58 +23,59 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/ui/dialog';
-import DisplayPaymentData from './DisplayPaymentData';
-import { set, z } from 'zod';
+} from '@/components/shadcn/ui/dialog'
+import DisplayPaymentData from './DisplayPaymentData'
+import { set, z } from 'zod'
 import {
   ListPaymentMethodSchema,
   PaymentMethodSchema
-} from '@/utils/types/zod/types';
-import AddNewPaymentMethod from './AddNewPaymentMethod';
-import PaymentMethodSetupForm from './PaymentMethodSetupForm';
+} from '@/utils/types/zod/types'
+import AddNewPaymentMethod from './AddNewPaymentMethod'
+import PaymentMethodSetupForm from './PaymentMethodSetupForm'
+import { Button } from '@/components/shadcn/ui/button'
 
 interface Props {
-  userDefaultPaymentMethod: UserDefaultPaymentMethodType;
-  stripeCustomerId: string;
-  subscriptionId: string;
+  userDefaultPaymentMethod: UserDefaultPaymentMethodType
+  stripeCustomerId: string
+  subscriptionId: string
 }
 
-type UserDefaultPaymentMethodType = z.infer<typeof PaymentMethodSchema>;
+type UserDefaultPaymentMethodType = z.infer<typeof PaymentMethodSchema>
 
-type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>;
+type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
 export default function BillingInfo({
   userDefaultPaymentMethod,
   stripeCustomerId,
   subscriptionId
 }: Props) {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-  const currentPath = usePathname();
-  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+  const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null)
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const currentPath = usePathname()
+  const router = useRouter()
   const [paymentMethods, setPaymentMethods] =
-    useState<ListPaymentMethodSchemaType>([]);
-  const [confirmedNewCard, setConfirmedNewCard] = useState(false);
-  const [sessionOpen, setSessionOpen] = useState(false);
+    useState<ListPaymentMethodSchemaType>([])
+  const [confirmedNewCard, setConfirmedNewCard] = useState(false)
+  const [sessionOpen, setSessionOpen] = useState(false)
 
   const [showPaymentElement, toggleShowPaymentElement] =
-    useState<boolean>(false);
+    useState<boolean>(false)
 
-  const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod.id;
+  const subscriptionDefaultPaymentMethodId = userDefaultPaymentMethod.id
 
   const cardDetails = {
     last4: userDefaultPaymentMethod.card.last4,
     brand: userDefaultPaymentMethod.card.brand,
     exp_year: userDefaultPaymentMethod.card.exp_year,
     exp_month: userDefaultPaymentMethod.card.exp_month
-  };
+  }
 
   const handleDisplayPaymentMethods = async () => {
-    toggleShowPaymentElement(false);
-    console.log('handleDisplayMethod');
+    toggleShowPaymentElement(false)
+    console.log('handleDisplayMethod')
 
     //if the user hasn't confirmed payment method, return and don't fetch new data from stripe
     // if (!confirmedNewCard && sessionOpen) {
@@ -89,79 +87,77 @@ export default function BillingInfo({
 
     // safely fetch data from stripe (retrievePaymentMethods is server action)
     try {
-      const data = await retrievePaymentMethods(stripeCustomerId);
-      const validatedData = ListPaymentMethodSchema.safeParse(data);
+      const data = await retrievePaymentMethods(stripeCustomerId)
+      const validatedData = ListPaymentMethodSchema.safeParse(data)
       if (!validatedData.success) {
-        console.error(validatedData.error.issues);
-        return;
+        console.error(validatedData.error.issues)
+        return
       } else {
-        setPaymentMethods(validatedData.data);
+        setPaymentMethods(validatedData.data)
       }
     } catch (error) {
-      console.error('Failed to retrieve payment methods:', error);
+      console.error('Failed to retrieve payment methods:', error)
     }
-  };
+  }
 
   const handleStripePaymentMethodUpdate = async () => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     const { errorRedirect, clientSecret } = await updatePaymentMethod(
       stripeCustomerId,
       subscriptionId,
       currentPath
-    );
+    )
     if (errorRedirect) {
-      setIsSubmitting(false);
-      return router.push(errorRedirect);
+      setIsSubmitting(false)
+      return router.push(errorRedirect)
     }
     if (!clientSecret) {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
       return router.push(
         getErrorRedirect(
           currentPath,
           'An unknown error occurred.',
           'Please try again later or contact a system administrator.'
         )
-      );
+      )
     }
-    let stripe;
+    let stripe
     try {
-      stripe = await getStripe();
+      stripe = await getStripe()
     } catch (error) {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
       return router.push(
         getErrorRedirect(
           currentPath,
           'Could not connect to Stripe',
           'Please try again later or contact a system administrator.'
         )
-      );
+      )
     }
 
-    setStripeInstance(stripe);
-    setClientSecret(clientSecret);
-    setIsSubmitting(false);
-    toggleShowPaymentElement(!showPaymentElement);
-  };
+    setStripeInstance(stripe)
+    setClientSecret(clientSecret)
+    setIsSubmitting(false)
+    toggleShowPaymentElement(!showPaymentElement)
+  }
 
   return (
     <Card
-      title="Billing information"
-      description={`Your billing information from Stripe`}
+      title="Payment Method"
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
           <>
-            <p className="pb-4 sm:pb-0">Change your billing method.</p>
             <Dialog>
               <DialogTrigger asChild>
                 <Button
-                  variant="slim"
-                  loading={isSubmitting}
+                  size="lg"
+                  isLoading={isSubmitting}
                   onClick={(e) => handleDisplayPaymentMethods()}
                 >
                   Update payment method
                 </Button>
               </DialogTrigger>
-              <DialogContent className="border-zinc-800 bg-zinc-950">
+              <DialogContent className="bg-primary ">
                 <DialogHeader>
                   <DialogTitle>Edit cards</DialogTitle>
                 </DialogHeader>
@@ -186,7 +182,7 @@ export default function BillingInfo({
                     >
                       <PaymentMethodSetupForm
                         onConfirmNewCard={() => {
-                          handleDisplayPaymentMethods();
+                          handleDisplayPaymentMethods()
                           // toggleShowPaymentElement(!showPaymentElement);
                         }}
                       />
@@ -197,21 +193,22 @@ export default function BillingInfo({
                 <DialogFooter className="sm:justify-start">
                   {!showPaymentElement ? (
                     <Button
-                      variant="slim"
+                      size="lg"
                       className="w-fit"
-                      loading={isSubmitting}
+                      isLoading={isSubmitting}
                       onClick={() => {
-                        handleStripePaymentMethodUpdate();
+                        handleStripePaymentMethodUpdate()
                       }}
                     >
                       Add card
                     </Button>
                   ) : (
                     <Button
-                      variant="slim"
+                      variant={'outline'}
                       className="w-fit"
+                      size="lg"
                       onClick={() => {
-                        handleDisplayPaymentMethods();
+                        handleDisplayPaymentMethods()
                       }}
                     >
                       Back
@@ -224,8 +221,8 @@ export default function BillingInfo({
         </div>
       }
     >
-      <div className="mt-8 mb-4 text-base">
-        <p className="font-semibold">
+      <div className="">
+        <p className="font-semibold text-secondary-foreground">
           Card on file:{' '}
           <span className="font-normal ">
             <span className="uppercase">{cardDetails.brand} </span>
@@ -235,5 +232,5 @@ export default function BillingInfo({
         </p>
       </div>
     </Card>
-  );
+  )
 }
