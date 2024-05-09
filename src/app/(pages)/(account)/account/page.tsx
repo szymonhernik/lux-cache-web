@@ -1,33 +1,33 @@
-import EmailForm from '@/components/ui/AccountForms/EmailForm';
-import NameForm from '@/components/ui/AccountForms/NameForm';
-import { createClient } from '@/utils/supabase/server';
-import { redirect } from 'next/navigation';
-import { Suspense } from 'react';
-import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkeleton';
-import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod';
-import PremiumPlansPanel from './_components/PremiumPlansPanel';
+import EmailForm from '@/components/ui/AccountForms/EmailForm'
+import NameForm from '@/components/ui/AccountForms/NameForm'
+import { createClient } from '@/utils/supabase/server'
+import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
+import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkeleton'
+import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod'
+import PremiumPlansPanel from './_components/PremiumPlansPanel'
 
 export default async function Account() {
-  const supabase = createClient();
+  const supabase = createClient()
 
   const {
     data: { user }
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getUser()
 
   const { data: userDetails } = await supabase
     .from('users')
     .select('*')
-    .single();
+    .single()
 
   if (!user) {
-    return redirect('/signin');
+    return redirect('/signin')
   }
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
-    .maybeSingle();
+    .maybeSingle()
 
   const { data: products } = await supabase
     .from('products')
@@ -35,10 +35,10 @@ export default async function Account() {
     .eq('active', true)
     .eq('prices.active', true)
     .order('metadata->index')
-    .order('unit_amount', { referencedTable: 'prices' });
+    .order('unit_amount', { referencedTable: 'prices' })
 
   if (error) {
-    console.log(error);
+    console.log(error)
   }
 
   return (
@@ -50,15 +50,19 @@ export default async function Account() {
       </div>
       <div className="p-4">
         {/* <CustomerPortalForm subscription={subscription} /> */}
-        <Suspense fallback={<BillingInfoScheleton />}>
-          <BillingInfoFetchZod subscription={subscription} />
-        </Suspense>
-        <Suspense fallback={<BillingInfoScheleton />}>
-          <PremiumPlansPanel
-            products={products ?? []}
-            subscription={subscription}
-          />
-        </Suspense>
+        {subscription && (
+          <>
+            <Suspense fallback={<BillingInfoScheleton />}>
+              <BillingInfoFetchZod subscription={subscription} />
+            </Suspense>
+            <Suspense fallback={<BillingInfoScheleton />}>
+              <PremiumPlansPanel
+                products={products ?? []}
+                subscription={subscription}
+              />
+            </Suspense>
+          </>
+        )}
         {/* <BillingInfoSupabase
           userDefaultPaymentMethod={userDetails?.payment_method}
         /> */}
@@ -66,5 +70,5 @@ export default async function Account() {
         <EmailForm userEmail={user.email} />
       </div>
     </section>
-  );
+  )
 }
