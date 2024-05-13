@@ -70,8 +70,10 @@ export const updateSession = async (request: NextRequest) => {
     if (session.data.session) {
       const decodedJwt = decodeJwt(session.data.session.access_token)
       const userRole = decodedJwt.user_role
+      const plan = decodedJwt.product_name
 
       // console.log('Decoded JWT:', decodedJwt)
+      console.log('Plan:', plan)
       console.log('User Role:', userRole)
     }
   } catch (e) {

@@ -60,6 +60,7 @@
 - [ ] adding bookmarks (after setting up CMS)
 - [ ] TODO: role based authorization - tier based access (https://www.youtube.com/watch?v=yKq-gJzAnv4);
 - [x] try custom jwt token (assign user_roles for admins and editors)
+- [ ] add test value ("level") to already modified user_roles
 
 ### Sanity CMS
 
