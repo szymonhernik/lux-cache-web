@@ -7,15 +7,16 @@ import { redirect } from 'next/navigation'
 import { loadPosts } from '@/sanity/loader/loadQuery'
 
 export default async function SplashPage() {
-  // const supabase = createClient()
+  const supabase = createClient()
 
-  // const {
-  //   data: { user }
-  // } = await supabase.auth.getUser()
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
 
   // if (user) {
   //   // redirect('/browse')
   // }
+  // console.log('user', user)
 
   const initial = await loadPosts()
 

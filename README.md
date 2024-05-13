@@ -48,7 +48,7 @@
 - [ ] Create pages for search results
 - [x] Create pages for artists.
 - [x] "infinite scroll" (w/ tanstack infinite scroll lib)
-- [ ] TODO: routes - tabs (https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#tab-groups)
+- [x] routes - tabs
 - [ ] Routing/post page (parallel route)
 
 ### Supabase
@@ -58,6 +58,8 @@
   - [x] google
   - [x] discord
 - [ ] adding bookmarks (after setting up CMS)
+- [ ] TODO: role based authorization - tier based access (https://www.youtube.com/watch?v=yKq-gJzAnv4);
+- [x] try custom jwt token (assign user_roles for admins and editors)
 
 ### Sanity CMS
 
@@ -69,9 +71,11 @@
 - [ ] meeting with Kai about the structure (https://excalidraw.com/)
 - [ ] CMS structure
 - [ ] Custom blocks for article contents
+- [ ] TODO: role based access
 
 ### Not assigned yet
 
+- [ ] TODO: check how bandwidth is counted if i save articles as pdf on a website (download with basic css styles)
 - [ ] create admin login with full access to page
 - [ ] fix reset password supabase email template (use the one written in the previous lc project)
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
@@ -79,6 +83,7 @@
 - [x] Add authentication (w/ supabase)
 
 - [ ] Set up Stripe (checkout, api points, webhooks)
+- [ ] clean up billing info zod file (too much nesting and error scenarios)
 - [ ] "taint" (server-only)
 - [ ] Error management (w/ Sentry)
 - [ ] Analytics (posthog)
@@ -88,6 +93,7 @@
 
 - [ ] style welcome emails and goodbye emails
 - [ ] Configure resend with Lux Cache email
+- [ ] cookies info and how it works
 
 #### Future improvements
 
@@ -106,3 +112,8 @@
 - [ ] Information for welcome and goodbye emails, and other needed
 
 ---
+
+follow this tutorial:
+https://www.ericburel.tech/blog/static-paid-content-app-router
+
+i think on page.tsx route level instead of calling db you can retrieve subscription trier from session, set in custom JWT token (https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac) then in page.tsx you check it against info about post from CMS and render content or redirect.
