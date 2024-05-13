@@ -1,5 +1,4 @@
-This is my code. I'm especially worried about the second half of the code where i grant and revoke access, and create policies.
-```
+
 create
 or replace function public.custom_access_token_hook_test_six (event jsonb) returns jsonb language plpgsql stable as $$
   declare
@@ -101,4 +100,3 @@ select
 select
   to supabase_auth_admin using (true);
 
-  ```
