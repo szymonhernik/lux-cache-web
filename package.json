@@ -10,7 +10,7 @@
     "dev:typegen": "sanity schema extract && sanity typegen generate && mv schema.json sanity.types.ts src/utils/types/sanity/",
     "prettier-fix": "prettier --write .",
     "stripe:login": "stripe login",
-    "stripe:listen": "stripe listen --forward-to=localhost:3000",
+    "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks",
     "stripe:fixtures": "stripe fixtures fixtures/stripe-fixtures.json",
     "supabase:start": "npx supabase start",
     "supabase:stop": "npx supabase stop",
