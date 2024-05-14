@@ -42,7 +42,7 @@ export default async function Page() {
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
-              {/* <BillingInfoFetchZod subscription={subscription} /> */}
+              <BillingInfoFetchZod subscription={subscription} />
             </Suspense>
             {/* <Suspense fallback={<BillingInfoScheleton />}>
               <PremiumPlansPanel

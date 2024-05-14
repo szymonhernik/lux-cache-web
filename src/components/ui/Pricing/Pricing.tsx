@@ -145,7 +145,7 @@ export default function Pricing({
               if (metadata.trial_allowed && userCanTrial) {
                 buttonText = 'Trial' // Both product allows trial and user can trial
               } else {
-                buttonText = '(trial not available) Subscribe' // Either product doesn't allow trial or user can't trial
+                buttonText = '(trial not available) Subscribe' // user can't trial
               }
             }
 
