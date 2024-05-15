@@ -132,7 +132,7 @@ export const pageStructure = (
       .icon(BlockElementIcon)
       .child(S.documentTypeList('templates').title('Templates'))
     const plans = S.listItem()
-      .title('Plans')
+      .title('Plans (Developer Only)')
       .icon(TiersIcon)
       .child(S.documentTypeList('plan').title('Plan'))
 
@@ -149,9 +149,9 @@ export const pageStructure = (
         filterGroupStructure,
         artistsItem,
         S.divider(),
-        templates,
-        S.divider(),
-        plans
+        templates
+        // S.divider(),
+        // plans
 
         // ...defaultListItems
       ])

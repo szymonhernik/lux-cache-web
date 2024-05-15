@@ -32,6 +32,22 @@ export default defineType({
       }
     }),
     defineField({
+      title: 'Minimum Tier for access',
+      name: 'minimumTier',
+      type: 'string',
+
+      options: {
+        list: [
+          { title: 'Free', value: '0' },
+          { title: 'Supporter', value: '1' },
+          { title: 'Subscriber', value: '2' },
+          { title: 'Premium Subscriber', value: '3' }
+        ] // <-- predefined values
+        // layout: 'radio' // <-- defaults to 'dropdown'
+      },
+      validation: (rule) => rule.required()
+    }),
+    defineField({
       name: 'artist',
       title: 'Artist',
       type: 'array',

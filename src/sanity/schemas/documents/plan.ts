@@ -14,6 +14,12 @@ export default defineType({
       validation: (rule) => rule.required()
     }),
     defineField({
+      name: 'visualHelper',
+      title: 'Visual helper',
+      type: 'string',
+      validation: (rule) => rule.required()
+    }),
+    defineField({
       name: 'index',
       title: 'Index',
       description:
@@ -21,5 +27,18 @@ export default defineType({
       type: 'number',
       validation: (rule) => rule.required()
     })
-  ]
+  ],
+  preview: {
+    select: {
+      title: 'plan',
+      subtitle: 'visualHelper'
+    },
+    prepare(selection) {
+      const { title, subtitle } = selection
+      return {
+        title: title,
+        subtitle: subtitle
+      }
+    }
+  }
 })
