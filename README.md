@@ -24,6 +24,7 @@
   - [x] when creating checkout session, don't pass trial option if can_trial is false (read from users table)
 
 - [ ] don't show premium plans panel in account for users without a current subscription
+- [ ] see why you are getting three trial end and three customers get added when subscribing to stripe
 
 ### Customer emails
 
@@ -58,11 +59,11 @@
   - [x] google
   - [x] discord
 - [ ] adding bookmarks (after setting up CMS)
-- [ ] TODO: role based authorization - tier based access (https://www.youtube.com/watch?v=yKq-gJzAnv4);
-- [x] try custom jwt token (assign user_roles for admins and editors)
+- [x] user_roles — try custom jwt token (assign user_roles for admins and editors)
 - [x] Learn managing migrations between local and remote instance of db (good example of syncing in both direction https://www.youtube.com/watch?v=2SXK0TOsdNY&t=1733s)
-- [ ] set custom jwt token again and
+- [x] set custom jwt token again and
 - [x] add resend function in webhooks
+- [ ] fetch subscription data in routes (not JWT)
 
 ### Sanity CMS
 
@@ -74,11 +75,15 @@
 - [ ] meeting with Kai about the structure (https://excalidraw.com/)
 - [ ] CMS structure
 - [ ] Custom blocks for article contents
-- [ ] TODO: role based access
+
+TODAY:
+
+- [ ] TODO: Set up sanity schemas (sanity)
+- [ ] TODO: Role based access (front end)
 
 ### Not assigned yet
 
-- [ ] TODO: check how bandwidth is counted if i save articles as pdf on a website (download with basic css styles)
+- [ ] Check how bandwidth is counted with exporting pdfs
 - [ ] create admin login with full access to page
 - [ ] fix reset password supabase email template (use the one written in the previous lc project)
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table

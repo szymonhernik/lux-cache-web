@@ -10,6 +10,7 @@ import {
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
 import SubscriptionCompletedEmail from '@/components/emails/SubscriptionCompletedEmail'
+import { createClient } from '@/utils/supabase/server'
 
 const relevantEvents = new Set([
   'product.created',
@@ -37,6 +38,7 @@ export async function POST(req: Request) {
   const sig = req.headers.get('stripe-signature') as string
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
   let event: Stripe.Event
+  const supabase = createClient()
 
   try {
     if (!sig || !webhookSecret)
@@ -67,6 +69,7 @@ export async function POST(req: Request) {
           await deleteProductRecord(event.data.object as Stripe.Product)
           break
         case 'customer.subscription.created':
+
         case 'customer.subscription.updated':
         // TO DO: Trigger manageSubscriptionStatusChange to update the billing details in supabase
         case 'customer.subscription.deleted':
@@ -86,6 +89,7 @@ export async function POST(req: Request) {
               checkoutSession.customer as string,
               true
             )
+
             // Send email to customer with Resend
             if (
               event.data.object.customer_details === null ||
