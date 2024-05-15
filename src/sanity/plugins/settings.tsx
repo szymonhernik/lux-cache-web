@@ -4,10 +4,12 @@
  */
 
 import {
+  BlockElementIcon,
   DocumentsIcon,
   FilterIcon,
   ProjectsIcon,
   TagsIcon,
+  TiersIcon,
   UsersIcon
 } from '@sanity/icons'
 import { type DocumentDefinition } from 'sanity'
@@ -125,6 +127,14 @@ export const pageStructure = (
       /* Create a list of all posts */
       S.documentList().title('All Posts').filter('_type == "post"')
     )
+    const templates = S.listItem()
+      .title('Templates')
+      .icon(BlockElementIcon)
+      .child(S.documentTypeList('templates').title('Templates'))
+    const plans = S.listItem()
+      .title('Plans')
+      .icon(TiersIcon)
+      .child(S.documentTypeList('plan').title('Plan'))
 
     return S.list()
       .title('Content')
@@ -138,7 +148,10 @@ export const pageStructure = (
         S.divider(),
         filterGroupStructure,
         artistsItem,
-        S.divider()
+        S.divider(),
+        templates,
+        S.divider(),
+        plans
 
         // ...defaultListItems
       ])

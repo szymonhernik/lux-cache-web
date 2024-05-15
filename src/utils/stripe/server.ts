@@ -19,6 +19,26 @@ import {
   SubscriptionItemSchema
 } from '../types/zod/types'
 
+export async function retrieveProducts() {
+  try {
+    console.log('Call to server')
+    const products = await stripe.products.list({
+      limit: 10
+    })
+
+    // Filter products based on the "active" status
+    const activeProducts = products.data.filter((product) => product.active)
+
+    // Map the filtered products to get their names
+    // const productNames = activeProducts.map((product) => product.name)
+
+    return activeProducts
+  } catch (error) {
+    console.error(error)
+    throw new Error('Could not retrieve products.')
+  }
+}
+
 export async function retrievePaymentMethods(customerId: string) {
   try {
     const paymentMethods = await stripe.customers.listPaymentMethods(customerId)

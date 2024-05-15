@@ -26,6 +26,13 @@ import { pageStructure } from '@/sanity/plugins/settings'
 import artist from '@/sanity/schemas/documents/artist'
 import filterItem from '@/sanity/schemas/documents/filters/filterItem'
 import filterGroup from '@/sanity/schemas/documents/filters/filterGroup'
+import templates from '@/sanity/schemas/documents/templates'
+import mainBody from '@/sanity/schemas/objects/mainBody'
+
+import blockContentSimple from '@/sanity/schemas/objects/blockContentSimple'
+import faq from '@/sanity/schemas/objects/faq'
+import plan from '@/sanity/schemas/documents/plan'
+import asyncList from '@/sanity/schemas/objects/asyncList'
 
 export default defineConfig({
   basePath: '/studio',
@@ -44,9 +51,15 @@ export default defineConfig({
       artist,
       filterItem,
       filterGroup,
+      templates,
+      plan,
 
       // Objects
-      blockContent
+      blockContent,
+      blockContentSimple,
+      mainBody,
+      faq,
+      asyncList
     ]
   },
   plugins: [

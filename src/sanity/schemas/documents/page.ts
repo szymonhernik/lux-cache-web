@@ -6,6 +6,16 @@ export default defineType({
   name: 'page',
   title: 'Page',
   icon: DocumentIcon,
+  groups: [
+    {
+      name: 'settings',
+      title: 'Settings'
+    },
+    {
+      name: 'content',
+      title: 'Content'
+    }
+  ],
   fields: [
     defineField({
       type: 'string',
@@ -17,6 +27,7 @@ export default defineType({
       type: 'slug',
       name: 'slug',
       title: 'Slug',
+      group: 'settings',
       options: {
         source: 'title'
       },
@@ -27,6 +38,7 @@ export default defineType({
       description:
         'Used both for the <meta> description tag for SEO, and the personal website subheader.',
       title: 'Overview',
+      group: 'settings',
       type: 'array',
       of: [
         // Paragraphs
@@ -52,62 +64,16 @@ export default defineType({
       validation: (rule) => rule.max(155).required()
     }),
     defineField({
+      name: 'pageContent',
+      title: 'Page Content',
       type: 'array',
-      name: 'body',
-      title: 'Body',
-      description:
-        "This is where you can write the page's content. Including custom blocks like timelines for more a more visual display of information.",
+      group: 'content',
       of: [
-        // Paragraphs
         defineArrayMember({
-          type: 'block',
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'Url'
-                  }
-                ]
-              }
-            ]
-          },
-          styles: []
+          type: 'mainBody'
         }),
-
-        defineField({
-          type: 'image',
-          icon: ImageIcon,
-          name: 'image',
-          title: 'Image',
-          options: {
-            hotspot: true
-          },
-          preview: {
-            select: {
-              imageUrl: 'asset.url',
-              title: 'caption'
-            }
-          },
-          fields: [
-            defineField({
-              title: 'Caption',
-              name: 'caption',
-              type: 'string'
-            }),
-            defineField({
-              name: 'alt',
-              type: 'string',
-              title: 'Alt text',
-              description:
-                'Alternative text for screenreaders. Falls back on caption if not set'
-            })
-          ]
+        defineArrayMember({
+          type: 'faq'
         })
       ]
     })
