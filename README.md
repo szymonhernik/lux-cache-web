@@ -51,6 +51,7 @@
 - [x] "infinite scroll" (w/ tanstack infinite scroll lib)
 - [x] routes - tabs
 - [ ] Routing/post page (parallel route)
+- [ ] TODO: Role based access (front end)
 
 ### Supabase
 
@@ -74,12 +75,10 @@
 - [x] substitute types with generated interfaces
 - [ ] meeting with Kai about the structure (https://excalidraw.com/)
 - [ ] CMS structure
-- [ ] Custom blocks for article contents
+- [ ] TODO: Set up sanity schemas (sanity)
+- [ ] TODO: Custom blocks for post contents
 
 TODAY:
-
-- [ ] TODO: Set up sanity schemas (sanity)
-- [ ] TODO: Role based access (front end)
 
 ### Not assigned yet
 

@@ -7,6 +7,7 @@ import { locate } from '@/sanity/plugins/locate'
 import { visionTool } from '@sanity/vision'
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
+import { muxInput } from 'sanity-plugin-mux-input'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import { apiVersion, dataset, projectId } from '@/sanity/env'
@@ -33,6 +34,13 @@ import blockContentSimple from '@/sanity/schemas/objects/blockContentSimple'
 import faq from '@/sanity/schemas/objects/faq'
 import plan from '@/sanity/schemas/documents/plan'
 import asyncList from '@/sanity/schemas/objects/asyncList'
+import mentorsGallery from '@/sanity/schemas/objects/mentorsGallery'
+import series from '@/sanity/schemas/documents/series'
+import templateText from '@/sanity/schemas/objects/templateText'
+import blockContentAdvanced from '@/sanity/schemas/objects/blockContentAdvanced'
+import postContent from '@/sanity/schemas/objects/postContent'
+import pdfEmbed from '@/sanity/schemas/objects/pdfEmbed'
+import video from '@/sanity/schemas/objects/video'
 
 export default defineConfig({
   basePath: '/studio',
@@ -53,13 +61,20 @@ export default defineConfig({
       filterGroup,
       templates,
       plan,
+      series,
 
       // Objects
       blockContent,
       blockContentSimple,
       mainBody,
       faq,
-      asyncList
+      asyncList,
+      mentorsGallery,
+      templateText,
+      blockContentAdvanced,
+      postContent,
+      pdfEmbed,
+      video
     ]
   },
   plugins: [
@@ -71,6 +86,7 @@ export default defineConfig({
         [filterItem, filterGroup]
       )
     }),
+
     presentationTool({
       locate,
       previewUrl: {
@@ -79,6 +95,8 @@ export default defineConfig({
         }
       }
     }),
+    muxInput(),
+
     // Vision is a tool that lets you query your content with GROQ in the studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({ defaultApiVersion: apiVersion })

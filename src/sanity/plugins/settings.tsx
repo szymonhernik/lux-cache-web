@@ -8,6 +8,7 @@ import {
   DocumentsIcon,
   FilterIcon,
   ProjectsIcon,
+  SchemaIcon,
   TagsIcon,
   TiersIcon,
   UsersIcon
@@ -114,6 +115,19 @@ export const pageStructure = (
               .params({ artistId })
           )
       )
+    const filteredPostsBySeries = S.listItem()
+      .title('Posts By Series')
+      .icon(SchemaIcon)
+      .child(
+        S.documentTypeList('series')
+          .title('Posts by Series')
+          .child((seriesId) =>
+            S.documentList()
+              .title('Posts')
+              .filter('_type == "post" && $seriesId == series._ref')
+              .params({ seriesId })
+          )
+      )
 
     const filteredPosts = S.listItem()
       .title('Filtered Posts')
@@ -121,7 +135,11 @@ export const pageStructure = (
       .child(
         S.list()
           .title('Filters')
-          .items([filteredPostsByTag, filteredPostsByAuthor])
+          .items([
+            filteredPostsByTag,
+            filteredPostsByAuthor,
+            filteredPostsBySeries
+          ])
       )
     const allPosts = S.listItem().title('All Posts').icon(ProjectsIcon).child(
       /* Create a list of all posts */
@@ -135,6 +153,10 @@ export const pageStructure = (
       .title('Plans (Developer Only)')
       .icon(TiersIcon)
       .child(S.documentTypeList('plan').title('Plan'))
+    const series = S.listItem()
+      .title('Series')
+      .icon(SchemaIcon)
+      .child(S.documentTypeList('series').title('Series'))
 
     return S.list()
       .title('Content')
@@ -148,6 +170,7 @@ export const pageStructure = (
         S.divider(),
         filterGroupStructure,
         artistsItem,
+        series,
         S.divider(),
         templates
         // S.divider(),
