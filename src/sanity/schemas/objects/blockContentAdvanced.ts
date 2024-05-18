@@ -32,7 +32,10 @@ export default defineType({
         { title: 'H5', value: 'h5' },
         { title: 'Quote', value: 'blockquote' }
       ],
-      lists: [{ title: 'Bullet', value: 'bullet' }],
+      lists: [
+        { title: 'Bullet', value: 'bullet' },
+        { title: 'Number', value: 'number' }
+      ],
       // Marks let you mark up inline text in the Portable Text Editor
       marks: {
         // Decorators usually describe a single property – e.g. a typographic
@@ -62,6 +65,7 @@ export default defineType({
     // primitive types such as 'string' and 'number' in the same array
     // as a block type.
     defineArrayMember({
+      name: 'imageInline',
       type: 'image',
       options: { hotspot: true },
       fields: [
@@ -69,8 +73,47 @@ export default defineType({
           name: 'alt',
           type: 'string',
           title: 'Alternative Text'
+        },
+        {
+          name: 'caption',
+          type: 'string',
+          title: 'Caption'
+        },
+        {
+          name: 'size',
+          type: 'string',
+          title: 'Size',
+          initialValue: 'default',
+          options: {
+            list: [
+              { title: 'Small (around 30% of article width)', value: 'small' },
+              {
+                title: 'Default (around 50% of article width)',
+                value: 'default'
+              },
+              {
+                title: 'Medium (around 70% of article width)',
+                value: 'medium'
+              },
+              { title: 'Wide (100% article width)', value: 'wide' }
+            ]
+          }
         }
       ]
+    }),
+    defineArrayMember({
+      type: 'audioInline',
+      description: 'Add an audio element.'
+    }),
+    defineArrayMember({
+      type: 'video',
+      description: 'Add an video element.'
+    }),
+    defineArrayMember({
+      type: 'youtube'
+    }),
+    defineArrayMember({
+      type: 'spotify'
     })
   ]
 })

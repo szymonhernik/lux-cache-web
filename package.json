@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@mantine/hooks": "^7.8.1",
+    "@mux/mux-audio-react": "^0.9.0",
     "@mux/mux-video-react": "^0.9.0",
     "@next/env": "14.2.3",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -62,6 +63,8 @@
     "react-icons": "^5.2.1",
     "react-intersection-observer": "^9.8.2",
     "react-merge-refs": "^2.1.1",
+    "react-player": "^2.16.0",
+    "react-spotify-embed": "^2.0.4",
     "resend": "^3.2.0",
     "rxjs": "7.8.1",
     "sanity": "3.40.0",

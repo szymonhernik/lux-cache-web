@@ -277,6 +277,9 @@ export default defineType({
         defineArrayMember({
           type: 'pdfEmbed',
           description: 'Embed a PDF document within the post.'
+        }),
+        defineArrayMember({
+          type: 'postFooter'
         })
       ]
     })
@@ -286,7 +289,7 @@ export default defineType({
     select: {
       title: 'title',
       artist: 'artist.name',
-      media: 'mainImage'
+      media: 'coverImage'
     },
     prepare(selection) {
       const { artist } = selection

@@ -101,6 +101,8 @@ TODAY:
 - [ ] style welcome emails and goodbye emails
 - [ ] Configure resend with Lux Cache email
 - [ ] cookies info and how it works
+- [ ] Mux billing and card details
+- [ ] run videos and audio through bunny cdn
 
 #### Future improvements
 

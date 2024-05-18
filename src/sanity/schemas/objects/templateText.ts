@@ -16,11 +16,11 @@ export default defineType({
   ],
   preview: {
     select: {
-      //   title: 'heading',
+      title: 'templateText'
     },
-    prepare() {
+    prepare(title) {
       return {
-        title: 'Template Texts'
+        title: `Template Text`
       }
     }
   }

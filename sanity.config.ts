@@ -41,6 +41,10 @@ import blockContentAdvanced from '@/sanity/schemas/objects/blockContentAdvanced'
 import postContent from '@/sanity/schemas/objects/postContent'
 import pdfEmbed from '@/sanity/schemas/objects/pdfEmbed'
 import video from '@/sanity/schemas/objects/video'
+import audioInline from '@/sanity/schemas/objects/audioInline'
+import { youtube } from '@/sanity/schemas/objects/youTubeType'
+import { spotify } from '@/sanity/schemas/objects/spotifyType'
+import postFooter from '@/sanity/schemas/objects/postFooter'
 
 export default defineConfig({
   basePath: '/studio',
@@ -74,7 +78,11 @@ export default defineConfig({
       blockContentAdvanced,
       postContent,
       pdfEmbed,
-      video
+      video,
+      audioInline,
+      youtube,
+      spotify,
+      postFooter
     ]
   },
   plugins: [
