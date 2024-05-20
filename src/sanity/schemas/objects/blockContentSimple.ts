@@ -1,3 +1,4 @@
+import { InlineElementIcon } from '@sanity/icons'
 import { defineType, defineArrayMember } from 'sanity'
 
 export default defineType({
@@ -8,10 +9,29 @@ export default defineType({
     defineArrayMember({
       title: 'Block',
       type: 'block',
+      of: [
+        {
+          title: 'Inline Icon (.svg)',
+          name: 'inlineicon',
+          type: 'image',
+          options: {
+            accept: 'image/svg+xml'
+          },
+          icon: InlineElementIcon
+        }
+      ],
       // Styles let you define what blocks can be marked up as. The default
       // set corresponds with HTML tags, but you can set any title or value
       // you want, and decide how you want to deal with it where you want to
       // use your content.
+      // custom: [
+      //   {
+      //     title: 'Inline Icon',
+      //     name: 'inlineicon',
+      //     type: 'image',
+      //     icon: InlineElementIcon
+      //   }
+      // ],
       styles: [
         { title: 'Normal', value: 'normal' },
         { title: 'H1', value: 'h1' },
@@ -42,6 +62,12 @@ export default defineType({
               }
             ]
           }
+          // {
+          //   title: 'Inline Icon',
+          //   name: 'inlineicon',
+          //   type: 'image',
+          //   icon: InlineElementIcon
+          // }
         ]
       }
     })

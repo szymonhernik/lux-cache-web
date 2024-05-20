@@ -10,6 +10,15 @@ export default defineType({
   // liveEdit: true,
   fields: [
     defineField({
+      name: 'title',
+      type: 'string',
+      title: 'Title',
+      description: '(read only)',
+      initialValue: 'browse',
+      readOnly: true,
+      validation: (rule) => rule.required()
+    }),
+    defineField({
       name: 'highlight',
       description: 'The episode that will be highlighted on the home page.',
       title: 'Highglighted Episode',

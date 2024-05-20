@@ -52,6 +52,7 @@
 - [x] routes - tabs
 - [ ] Routing/post page (parallel route)
 - [ ] TODO: Role based access (front end)
+- [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
 
 ### Supabase
 
@@ -73,10 +74,12 @@
 - [x] test fetching
 - [x] sanity generate type interfaces (w/ sanity typegen)
 - [x] substitute types with generated interfaces
-- [ ] meeting with Kai about the structure (https://excalidraw.com/)
-- [ ] CMS structure
-- [ ] TODO: Set up sanity schemas (sanity)
-- [ ] TODO: Custom blocks for post contents
+- [x] meeting with Kai about the structure (https://excalidraw.com/)
+- [x] CMS structure
+- [x] Set up sanity schemas (sanity)
+- [x] Custom blocks for post contents
+- [ ] set up queries
+- [ ] typescript for sanity
 
 TODAY:
 
@@ -92,7 +95,7 @@ TODAY:
 - [ ] Set up Stripe (checkout, api points, webhooks)
 - [ ] clean up billing info zod file (too much nesting and error scenarios)
 - [ ] "taint" (server-only)
-- [ ] Error management (w/ Sentry)
+- [ ] Error management (w/ Sentry) https://www.youtube.com/watch?v=FmezY-vYlkg
 - [ ] Analytics (posthog)
 - [ ] Ratelimiting (upstash)
 

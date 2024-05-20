@@ -1,4 +1,12 @@
-import { CogIcon, EarthGlobeIcon, LinkIcon, MenuIcon } from '@sanity/icons'
+import {
+  BillIcon,
+  CogIcon,
+  EarthGlobeIcon,
+  LinkIcon,
+  MenuIcon,
+  TiersIcon,
+  UlistIcon
+} from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export default defineType({
@@ -21,6 +29,11 @@ export default defineType({
       name: 'socials',
       title: 'Socials',
       icon: LinkIcon
+    },
+    {
+      name: 'pricing',
+      title: 'Pricing',
+      icon: BillIcon
     }
   ],
   // Uncomment below to have edits publish automatically as you type
@@ -42,6 +55,9 @@ export default defineType({
             },
             {
               type: 'page'
+            },
+            {
+              type: 'pricing'
             }
           ]
         }

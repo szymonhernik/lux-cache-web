@@ -45,6 +45,7 @@ import audioInline from '@/sanity/schemas/objects/audioInline'
 import { youtube } from '@/sanity/schemas/objects/youTubeType'
 import { spotify } from '@/sanity/schemas/objects/spotifyType'
 import postFooter from '@/sanity/schemas/objects/postFooter'
+import pricing from '@/sanity/schemas/singletons/pricing'
 
 export default defineConfig({
   basePath: '/studio',
@@ -56,6 +57,7 @@ export default defineConfig({
       // Singletons
       home,
       settings,
+      pricing,
 
       // Documents
       post,
@@ -89,7 +91,7 @@ export default defineConfig({
     structureTool({
       structure: pageStructure(
         //singletons
-        [home, settings],
+        [home, pricing, settings],
         //filter groups
         [filterItem, filterGroup]
       )
