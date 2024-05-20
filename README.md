@@ -50,8 +50,9 @@
 - [x] Create pages for artists.
 - [x] "infinite scroll" (w/ tanstack infinite scroll lib)
 - [x] routes - tabs
+- [ ] TODO: Query page browse (infinite scroll)
 - [ ] Routing/post page (parallel route)
-- [ ] TODO: Role based access (front end)
+- [ ] Role based access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
 
 ### Supabase

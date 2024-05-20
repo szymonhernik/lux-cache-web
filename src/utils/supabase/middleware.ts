@@ -1,5 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { decodeJwt } from 'jose'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export const createClient = (request: NextRequest) => {
@@ -65,6 +67,20 @@ export const createClient = (request: NextRequest) => {
 
 export const updateSession = async (request: NextRequest) => {
   const { supabase, response } = createClient(request)
+
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+
+  // People with user account and logged in when visiting luxcache.com see browse page on homepage
+  if (user && request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/browse', request.url))
+  }
+
+  if (!user && request.nextUrl.pathname.startsWith('/account')) {
+    return NextResponse.redirect(new URL('/signin', request.url))
+  }
+
   try {
     // const { data, error } = await supabase.auth.refreshSession()
 

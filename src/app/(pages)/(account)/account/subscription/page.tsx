@@ -9,13 +9,13 @@ import Link from 'next/link'
 export default async function Page() {
   const supabase = createClient()
 
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+  // const {
+  //   data: { user }
+  // } = await supabase.auth.getUser()
 
-  if (!user) {
-    return redirect('/signin')
-  }
+  // if (!user) {
+  //   return redirect('/signin')
+  // }
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')

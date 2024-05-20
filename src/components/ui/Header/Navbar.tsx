@@ -5,16 +5,17 @@ import Hamburger from 'hamburger-react'
 import Link from 'next/link'
 import SignInOutLink from './SignInOutLink'
 import Logo from '@/components/icons/Logo'
-import s from './Navbar.module.css'
+
 import { User } from '@supabase/supabase-js'
 import clsx from 'clsx'
 import { usePathname, useRouter } from 'next/navigation'
 import { handleRequest } from '@/utils/auth-helpers/client'
 import { SignOut } from '@/utils/auth-helpers/server'
+import LoginButtonTest from './LoginButtonTest'
 
-interface NavbarProps {
-  user: User | null
-}
+// interface NavbarProps {
+//   user: User | null
+// }
 
 const links = [
   // { name: 'home', href: '/' },
@@ -26,7 +27,7 @@ const links = [
   { name: 'account', href: '/account' }
 ]
 
-export default function Navbar({ user }: NavbarProps) {
+export default function Navbar() {
   const pathname = usePathname()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -100,18 +101,7 @@ export default function Navbar({ user }: NavbarProps) {
               </a>
             </div>
             <div className="">
-              {user ? (
-                <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
-                  <input type="hidden" name="pathName" value={usePathname()} />
-                  <button type="submit" className={s.link}>
-                    Sign out
-                  </button>
-                </form>
-              ) : (
-                <Link href="/signin" className={s.link}>
-                  Sign In
-                </Link>
-              )}
+              <LoginButtonTest />
             </div>
           </nav>
         </div>
