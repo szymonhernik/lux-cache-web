@@ -4,6 +4,10 @@ export const postsQuery = groq`{
   "posts": *[_type == "post" && defined(slug)]
 }`
 
+export const initialPostsQuery = groq`*[_type == "post"] | order(publishedAt) [0...8] {
+  _id, title, publishedAt
+}`
+
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
     _createdAt,

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
 import { useEffect } from 'react'
@@ -7,7 +8,7 @@ import { testVidAsset } from '@/app/common/testasset'
 export default function ListItem({
   item
 }: {
-  item: { id: number; content: string }
+  item: { id: number; content: string; title: string }
 }) {
   const { ref, entry } = useIntersection({
     threshold: 0.0, // Customize the threshold as needed
@@ -16,10 +17,10 @@ export default function ListItem({
 
   useEffect(() => {
     if (entry?.isIntersecting) {
-      console.log(`Item ${item.id} is in view.`)
+      console.log(`Item ${item._id} is in view.`)
       // You could dispatch actions here, like lazy-loading the item details
     }
-  }, [entry?.isIntersecting, item.id])
+  }, [entry?.isIntersecting, item._id])
 
   return (
     <div
@@ -33,14 +34,15 @@ export default function ListItem({
       ></div>
       {/* <VideoTest /> */}
       <div className="absolute z-[0] top-0 left-0 w-full h-full ">
-        <img
+        {/* <img
           src={`https://image.mux.com/${testVidAsset.playbackId}/thumbnail.png?width=5&time=0`}
           className="absolute w-full h-full "
-        />
+        /> */}
+        {item.title}
       </div>
 
       <Link className="z-[10] " href={`/browse/${item.id}`}>
-        {entry?.isIntersecting && <VideoTest />}
+        {/* {entry?.isIntersecting && <VideoTest />} */}
       </Link>
     </div>
   )

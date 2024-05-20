@@ -12,6 +12,7 @@ import {
   SettingsPayload
 } from '@/utils/types/sanity'
 import {
+  initialPostsQuery,
   postBySlugQuery,
   postsQuery,
   settingsQuery
@@ -84,6 +85,13 @@ export function loadSettings() {
 export function loadPosts() {
   return loadQuery<PostsQueryResult | null>(
     postsQuery,
+    {},
+    { next: { tags: ['post'] } }
+  )
+}
+export function loadInitalPosts() {
+  return loadQuery<PostsQueryResult | null>(
+    initialPostsQuery,
     {},
     { next: { tags: ['post'] } }
   )

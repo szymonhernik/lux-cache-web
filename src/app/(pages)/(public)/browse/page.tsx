@@ -11,6 +11,8 @@ import Search from '@/components/icons/SearchIcon'
 import Toolbar from './_components/Toolbar'
 import DynamicDisplayBar from './_components/DynamicDisplayBar'
 import { fetchData } from '@/app/common/fetching'
+import { client } from '@/sanity/lib/client'
+import { loadInitalPosts } from '@/sanity/loader/loadQuery'
 
 export default async function BrowsePage({
   searchParams
@@ -20,6 +22,11 @@ export default async function BrowsePage({
   const { q: searchValue } = searchParams as { [key: string]: string }
   // const products = await getProducts({ sortKey, reverse, query: searchValue });
   const results = await fetchData(searchValue)
+
+  const initialResults = await loadInitalPosts()
+
+  // console.log('initialResults', initialResults)
+
   // console.log('results', results)
 
   // const supabase = createClient();
@@ -62,7 +69,7 @@ export default async function BrowsePage({
         </section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
           <ObservableGridWrapper>
-            <ObservableGrid />
+            <ObservableGrid initialResults={initialResults} />
           </ObservableGridWrapper>
         </section>
       </div>

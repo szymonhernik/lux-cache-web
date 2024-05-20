@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 
 import { useEffect, useRef } from 'react'
@@ -7,34 +8,61 @@ import { useIntersection } from '@mantine/hooks'
 import VideoTest from './VideoTest'
 import { EpisodesSkeletonTwo } from '@/components/ui/skeletons/skeletons'
 import ListItem from './ListItem'
-import { posts } from './postsTestData'
+// import { posts } from './postsTestData'
+import { client } from '@/sanity/lib/client'
+import { groq } from 'next-sanity'
 
-const numberOfItemsPerPage = 10
+const numberOfItemsPerPage = 8
+// let lastPublishedAt = ''
+// let lastId = ''
 
-const fetchPostMock = async (page: number) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-  return posts.slice(
-    (page - 1) * numberOfItemsPerPage,
-    page * numberOfItemsPerPage
+const fetchPostsFromSanity = async ({ lastPublishedAt = '', lastId = '' }) => {
+  const result = await client.fetch(
+    groq`*[_type == "post" && (
+    publishedAt > $lastPublishedAt
+    || (publishedAt == $lastPublishedAt && _id > $lastId)
+  )] | order(publishedAt) [0...${numberOfItemsPerPage}] {
+    _id, title, publishedAt
+  }`,
+    { lastPublishedAt, lastId }
   )
+  console.log('result', result)
+
+  if (result.length > 0) {
+    lastPublishedAt = result[result.length - 1].publishedAt
+    lastId = result[result.length - 1]._id
+  } else {
+    lastId = null // Reached the end
+  }
+
+  return result
 }
 
-export default function ObservableGrid() {
+export default function ObservableGrid({
+  initialResults
+}: {
+  initialResults: any
+}) {
+  // let lastPublishedAt = initialResults.data[initialResults.data.length - 1].publishedAt
+  // let lastId = initialResults.data[initialResults.data.length - 1]._id
+
   // v5 tanstack/react-query
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
     queryKey: ['query'],
-    queryFn: async ({ pageParam = 1 }) => {
-      const response = await fetchPostMock(pageParam)
-      return response
-    },
-    getNextPageParam: (_, pages) => {
-      return pages.length + 1
+    // pass lastId and lastPublishedAt to the query function
+    queryFn: ({ pageParam = {} }) => fetchPostsFromSanity(pageParam),
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.length > 0) {
+        const lastPost = lastPage[lastPage.length - 1]
+        return { lastPublishedAt: lastPost.publishedAt, lastId: lastPost._id }
+      }
+      return undefined // Indicates there are no more pages to load
     },
     initialData: {
-      pages: [posts.slice(0, numberOfItemsPerPage)],
-      pageParams: [1]
-    },
-    initialPageParam: 1 // Set the initial page parameter, important when using initialData
+      pages: [initialResults.data],
+      pageParams: [{}]
+    }
+    // initialPageParam: 1 // Set the initial page parameter, important when using initialData
   })
 
   const lastPostRef = useRef<HTMLElement>(null)
@@ -53,7 +81,7 @@ export default function ObservableGrid() {
       {data?.pages.map((page, i) => (
         <div
           key={i}
-          className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1 lg:w-max"
+          className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1 "
         >
           {page.map((post, index) =>
             index === page.length - 1 ? (
@@ -62,6 +90,7 @@ export default function ObservableGrid() {
                 className={`w-full lg:w-[calc((80vh-4rem)/2)]  screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
                 ref={ref}
               >
+                {/* <h1>{post.title}</h1> */}
                 <ListItem item={post} />
               </div>
             ) : (
@@ -69,23 +98,13 @@ export default function ObservableGrid() {
                 key={post.id}
                 className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
               >
+                {/* <h1>{post.title}</h1> */}
                 <ListItem item={post} />
               </div>
             )
           )}
         </div>
       ))}
-      <button onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
-        {isFetchingNextPage ? (
-          <EpisodesSkeletonTwo />
-        ) : (data?.pages.length ?? 0) < posts.length / numberOfItemsPerPage ? (
-          <EpisodesSkeletonTwo />
-        ) : null
-        // <div className="h-full  flex items-center bg-black text-white text-xs p-16 w-max">
-        //   <span> Nothing more to load</span>
-        // </div>
-        }
-      </button>
     </div>
   )
 }
