@@ -1,13 +1,11 @@
-import ObservableGrid from './_components/ObservableGrid'
-
-import ObservableGridWrapper from './_components/ObervableGridWrapper'
-import Toolbar from './_components/Toolbar'
-import DynamicDisplayBar from './_components/DynamicDisplayBar'
 import { fetchData } from '@/app/common/fetching'
 
 import { loadInitalPosts } from '@/sanity/loader/loadQuery'
+import { draftMode } from 'next/headers'
+import BrowsePage from './_components/BrowsePage'
+import BrowsePagePreview from './_components/BrowsePagePreview'
 
-export default async function BrowsePage({
+export default async function Page({
   searchParams
 }: {
   searchParams?: { [key: string]: string | string[] | undefined }
@@ -16,7 +14,9 @@ export default async function BrowsePage({
   // const products = await getProducts({ sortKey, reverse, query: searchValue });
   const results = await fetchData(searchValue)
 
-  const initialResults = await loadInitalPosts()
+  const initial = await loadInitalPosts()
+
+  // const initialResults = await loadInitalPosts()
 
   // console.log('initialResults', initialResults)
 
@@ -51,22 +51,9 @@ export default async function BrowsePage({
   //   .select('can_trial')
   //   .single();
 
-  return (
-    <>
-      <div className=" flex flex-col lg:max-h-screen lg:h-screen bg-surface-brand">
-        <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-          <Toolbar results={results} />
-        </div>
-        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar">
-          <DynamicDisplayBar />
-        </section>
-        <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
-          <ObservableGridWrapper>
-            <ObservableGrid initialResults={initialResults} />
-          </ObservableGridWrapper>
-        </section>
-      </div>
-      {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
-    </>
-  )
+  if (draftMode().isEnabled) {
+    return <BrowsePagePreview initial={initial} />
+  }
+
+  return <BrowsePage data={initial.data} />
 }

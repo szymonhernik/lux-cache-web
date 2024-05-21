@@ -9,7 +9,7 @@ type Props = {
 }
 export default async function ProjectSlugRoute({ params }: Props) {
   const initial = await loadPost(params.slug)
-  console.log('initial', initial)
+  // console.log('initial', initial)
 
   if (draftMode().isEnabled) {
     return <PostPreview params={params} initial={initial} />

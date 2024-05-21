@@ -39,34 +39,352 @@ export type SanityImageDimensions = {
   aspectRatio?: number
 }
 
-export type SanityFileAsset = {
-  _id: string
-  _type: 'sanity.fileAsset'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  originalFilename?: string
-  label?: string
-  title?: string
-  description?: string
-  altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
-  uploadId?: string
-  path?: string
-  url?: string
-  source?: SanityAssetSourceData
-}
-
 export type Geopoint = {
   _type: 'geopoint'
   lat?: number
   lng?: number
   alt?: number
 }
+
+export type PostFooter = {
+  _type: 'postFooter'
+  postFooterContent?: Array<{
+    children?: Array<
+      | {
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }
+      | {
+          asset?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+          }
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'inlineicon'
+          _key: string
+        }
+    >
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4'
+    listItem?: 'bullet'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type Spotify = {
+  _type: 'spotify'
+  url?: string
+}
+
+export type Youtube = {
+  _type: 'youtube'
+  url?: string
+}
+
+export type AudioInline = {
+  _type: 'audioInline'
+  audioLabel?: string
+  audioFile?: MuxVideo
+}
+
+export type PdfEmbed = {
+  _type: 'pdfEmbed'
+  pdfFile?: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+    }
+    _type: 'file'
+  }
+}
+
+export type PostContent = {
+  _type: 'postContent'
+  body?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'blockquote'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<{
+          href?: string
+          _type: 'link'
+          _key: string
+        }>
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        alt?: string
+        caption?: string
+        size?: 'small' | 'default' | 'medium' | 'wide'
+        _type: 'imageInline'
+        _key: string
+      }
+    | ({
+        _key: string
+      } & AudioInline)
+    | ({
+        _key: string
+      } & Video)
+    | ({
+        _key: string
+      } & Youtube)
+    | ({
+        _key: string
+      } & Spotify)
+  >
+}
+
+export type BlockContentAdvanced = Array<
+  | {
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'blockquote'
+      listItem?: 'bullet' | 'number'
+      markDefs?: Array<{
+        href?: string
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }
+  | {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      caption?: string
+      size?: 'small' | 'default' | 'medium' | 'wide'
+      _type: 'imageInline'
+      _key: string
+    }
+  | ({
+      _key: string
+    } & AudioInline)
+  | ({
+      _key: string
+    } & Video)
+  | ({
+      _key: string
+    } & Youtube)
+  | ({
+      _key: string
+    } & Spotify)
+>
+
+export type TemplateText = {
+  _type: 'templateText'
+  templateText?: Array<{
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    _key: string
+    [internalGroqTypeReferenceTo]?: 'templates'
+  }>
+}
+
+export type MentorsGallery = {
+  _type: 'mentorsGallery'
+  galleryItems?: Array<{
+    name?: string
+    image?: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+    description?: Array<{
+      children?: Array<
+        | {
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }
+        | {
+            asset?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+            }
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            _type: 'inlineicon'
+            _key: string
+          }
+      >
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        href?: string
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }>
+    _type: 'galleryItem'
+    _key: string
+  }>
+}
+
+export type AsyncList = never
+
+export type Faq = {
+  _type: 'faq'
+  faqItems?: Array<{
+    question?: string
+    answer?: Array<{
+      children?: Array<
+        | {
+            marks?: Array<string>
+            text?: string
+            _type: 'span'
+            _key: string
+          }
+        | {
+            asset?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+            }
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            _type: 'inlineicon'
+            _key: string
+          }
+      >
+      style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4'
+      listItem?: 'bullet'
+      markDefs?: Array<{
+        href?: string
+        _type: 'link'
+        _key: string
+      }>
+      level?: number
+      _type: 'block'
+      _key: string
+    }>
+    _type: 'faqItem'
+    _key: string
+  }>
+}
+
+export type MainBody = {
+  _type: 'mainBody'
+  body?: Array<{
+    children?: Array<
+      | {
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }
+      | {
+          asset?: {
+            _ref: string
+            _type: 'reference'
+            _weak?: boolean
+            [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+          }
+          hotspot?: SanityImageHotspot
+          crop?: SanityImageCrop
+          _type: 'inlineicon'
+          _key: string
+        }
+    >
+    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4'
+    listItem?: 'bullet'
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+}
+
+export type BlockContentSimple = Array<{
+  children?: Array<
+    | {
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'inlineicon'
+        _key: string
+      }
+  >
+  style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4'
+  listItem?: 'bullet'
+  markDefs?: Array<{
+    href?: string
+    _type: 'link'
+    _key: string
+  }>
+  level?: number
+  _type: 'block'
+  _key: string
+}>
 
 export type BlockContent = Array<
   | {
@@ -102,6 +420,37 @@ export type BlockContent = Array<
     }
 >
 
+export type Series = {
+  _id: string
+  _type: 'series'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  slug?: Slug
+}
+
+export type Plan = {
+  _id: string
+  _type: 'plan'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  plan?: string
+  visualHelper?: string
+  index?: number
+}
+
+export type Templates = {
+  _id: string
+  _type: 'templates'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  body?: BlockContent
+}
+
 export type FilterGroup = {
   _id: string
   _type: 'filterGroup'
@@ -129,16 +478,6 @@ export type FilterItem = {
   slug?: Slug
 }
 
-export type Artist = {
-  _id: string
-  _type: 'artist'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  name?: string
-  slug?: Slug
-}
-
 export type Page = {
   _id: string
   _type: 'page'
@@ -161,72 +500,32 @@ export type Page = {
     _type: 'block'
     _key: string
   }>
-  body?: Array<
-    | {
-        children?: Array<{
-          marks?: Array<string>
-          text?: string
-          _type: 'span'
-          _key: string
-        }>
-        style?: 'normal'
-        listItem?: 'bullet' | 'number'
-        markDefs?: Array<{
-          href?: string
-          _type: 'link'
-          _key: string
-        }>
-        level?: number
-        _type: 'block'
+  pageContent?: Array<
+    | ({
         _key: string
-      }
-    | {
-        asset?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-        }
-        hotspot?: SanityImageHotspot
-        crop?: SanityImageCrop
-        caption?: string
-        alt?: string
-        _type: 'image'
+      } & MainBody)
+    | ({
         _key: string
-      }
+      } & Faq)
+    | ({
+        _key: string
+      } & MentorsGallery)
   >
 }
 
-export type Post = {
+export type Pricing = {
   _id: string
-  _type: 'post'
+  _type: 'pricing'
   _createdAt: string
   _updatedAt: string
   _rev: string
   title?: string
-  slug?: Slug
-  publishedAt?: string
-  artist?: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
+  plansFeatures?: Array<{
+    planName?: string
+    planDescription?: BlockContentSimple
+    _type: 'plan'
     _key: string
-    [internalGroqTypeReferenceTo]?: 'artist'
   }>
-  filters?: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'filterItem'
-  }>
-  body?: BlockContent
-}
-
-export type Slug = {
-  _type: 'slug'
-  current?: string
-  source?: string
 }
 
 export type Settings = {
@@ -248,25 +547,13 @@ export type Settings = {
         _weak?: boolean
         [internalGroqTypeReferenceTo]?: 'page'
       }
+    | {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'pricing'
+      }
   >
-  footer?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'blockquote'
-    listItem?: 'bullet' | 'number'
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
   ogImage?: {
     asset?: {
       _ref: string
@@ -278,6 +565,180 @@ export type Settings = {
     crop?: SanityImageCrop
     _type: 'image'
   }
+  overview?: Array<{
+    children?: Array<{
+      marks?: Array<string>
+      text?: string
+      _type: 'span'
+      _key: string
+    }>
+    style?: 'normal'
+    listItem?: never
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
+    level?: number
+    _type: 'block'
+    _key: string
+  }>
+  footerPDF?: BlockContentSimple
+  linksSocials?: Array<{
+    linkTitle?: string
+    linkURL?: string
+    _key: string
+  }>
+}
+
+export type Home = {
+  _id: string
+  _type: 'home'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  highlight?: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'post'
+  }
+}
+
+export type Post = {
+  _id: string
+  _type: 'post'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  slug?: Slug
+  ogDescription?: string
+  artistList?: Array<{
+    artistRef?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'artist'
+    }
+    additionalContext?: string
+    _type: 'artistMention'
+    _key: string
+  }>
+  series?: Array<{
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    _key: string
+    [internalGroqTypeReferenceTo]?: 'series'
+  }>
+  publishedAt?: string
+  minimumTier?: '0' | '1' | '2' | '3'
+  coverImage?: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  coverVideo?: Video
+  filters?: Array<{
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    _key: string
+    [internalGroqTypeReferenceTo]?: 'filterItem'
+  }>
+  downloadFiles?: Array<{
+    fileTitle?: string
+    fileForDownload?: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+      }
+      _type: 'file'
+    }
+    _type: 'fileAsset'
+    _key: string
+  }>
+  pageContent?: Array<
+    | ({
+        _key: string
+      } & TemplateText)
+    | ({
+        _key: string
+      } & PostContent)
+    | ({
+        _key: string
+      } & PdfEmbed)
+    | ({
+        _key: string
+      } & PostFooter)
+  >
+}
+
+export type SanityFileAsset = {
+  _id: string
+  _type: 'sanity.fileAsset'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  originalFilename?: string
+  label?: string
+  title?: string
+  description?: string
+  altText?: string
+  sha1hash?: string
+  extension?: string
+  mimeType?: string
+  size?: number
+  assetId?: string
+  uploadId?: string
+  path?: string
+  url?: string
+  source?: SanityAssetSourceData
+}
+
+export type Video = {
+  _type: 'video'
+  videoLabel?: string
+  videoFile?: MuxVideo
+}
+
+export type Artist = {
+  _id: string
+  _type: 'artist'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  name?: string
+  slug?: Slug
+  image?: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  }
+  bio?: string
+  linksArtist?: Array<{
+    linkTitle?: string
+    linkURL?: string
+    _key: string
+  }>
 }
 
 export type SanityImageCrop = {
@@ -337,31 +798,29 @@ export type SanityImageMetadata = {
   isOpaque?: boolean
 }
 
-export type Home = {
-  _id: string
-  _type: 'home'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  title?: string
-  overview?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+export type Slug = {
+  _type: 'slug'
+  current?: string
+  source?: string
+}
+
+export type MuxVideo = {
+  _type: 'mux.video'
+  asset?: {
+    _ref: string
+    _type: 'reference'
+    _weak?: boolean
+    [internalGroqTypeReferenceTo]?: 'mux.videoAsset'
+  }
+}
+
+export type MuxVideoAsset = {
+  _type: 'mux.videoAsset'
+  status?: string
+  assetId?: string
+  playbackId?: string
+  filename?: string
+  thumbTime?: number
 }
 export declare const internalGroqTypeReferenceTo: unique symbol
 
@@ -378,14 +837,40 @@ export type PostsQueryResult = {
     _rev: string
     title?: string
     slug?: Slug
-    publishedAt?: string
-    artist?: Array<{
+    ogDescription?: string
+    artistList?: Array<{
+      artistRef?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'artist'
+      }
+      additionalContext?: string
+      _type: 'artistMention'
+      _key: string
+    }>
+    series?: Array<{
       _ref: string
       _type: 'reference'
       _weak?: boolean
       _key: string
-      [internalGroqTypeReferenceTo]?: 'artist'
+      [internalGroqTypeReferenceTo]?: 'series'
     }>
+    publishedAt?: string
+    minimumTier?: '0' | '1' | '2' | '3'
+    coverImage?: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    }
+    coverVideo?: Video
     filters?: Array<{
       _ref: string
       _type: 'reference'
@@ -393,7 +878,44 @@ export type PostsQueryResult = {
       _key: string
       [internalGroqTypeReferenceTo]?: 'filterItem'
     }>
-    body?: BlockContent
+    downloadFiles?: Array<{
+      fileTitle?: string
+      fileForDownload?: {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+        }
+        _type: 'file'
+      }
+      _type: 'fileAsset'
+      _key: string
+    }>
+    pageContent?: Array<
+      | ({
+          _key: string
+        } & PdfEmbed)
+      | ({
+          _key: string
+        } & PostContent)
+      | ({
+          _key: string
+        } & PostFooter)
+      | ({
+          _key: string
+        } & TemplateText)
+    >
+  }>
+}
+
+// Variable: initialPostsQuery
+// Query: {  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...8] {    _id, title, publishedAt  }}
+export type InitialPostsQueryResult = {
+  initialPosts: Array<{
+    _id: string
+    title: string | null
+    publishedAt: string | null
   }>
 }
 
@@ -411,13 +933,9 @@ export type PostBySlugQueryResult = {
     _key: string
     [internalGroqTypeReferenceTo]?: 'filterItem'
   }> | null
-  artists: Array<{
-    _key: null
-    name: string | null
-    slug: Slug | null
-  }> | null
+  artists: null
   publishedAt: string | null
-  body: BlockContent | null
+  body: null
 } | null
 
 // Variable: settingsQuery

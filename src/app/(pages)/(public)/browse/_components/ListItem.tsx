@@ -6,9 +6,11 @@ import VideoTest from './VideoTest'
 import { testVidAsset } from '@/app/common/testasset'
 
 export default function ListItem({
-  item
+  item,
+  encodeDataAttribute
 }: {
-  item: { id: number; content: string; title: string }
+  item: { id: number; content: string; title: string; slug: string }
+  encodeDataAttribute?: EncodeDataAttributeCallback
 }) {
   const { ref, entry } = useIntersection({
     threshold: 0.0, // Customize the threshold as needed
@@ -33,6 +35,7 @@ export default function ListItem({
         className="absolute inset-y-0 -inset-x-[100px] z-[-1000]"
       ></div>
       {/* <VideoTest /> */}
+
       <div className="absolute z-[0] top-0 left-0 w-full h-full ">
         {/* <img
           src={`https://image.mux.com/${testVidAsset.playbackId}/thumbnail.png?width=5&time=0`}
@@ -40,8 +43,7 @@ export default function ListItem({
         /> */}
         {item.title}
       </div>
-
-      <Link className="z-[10] " href={`/browse/${item.id}`}>
+      <Link className="z-[10] " href={`/browse/a`}>
         {/* {entry?.isIntersecting && <VideoTest />} */}
       </Link>
     </div>

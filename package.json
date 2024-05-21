@@ -26,7 +26,7 @@
     "supabase:migration-up": "npx supabase migration up"
   },
   "dependencies": {
-    "@mantine/hooks": "^7.8.1",
+    "@mantine/hooks": "^7.9.0",
     "@mux/mux-audio-react": "^0.9.0",
     "@mux/mux-video-react": "^0.9.0",
     "@next/env": "14.2.3",
@@ -43,14 +43,14 @@
     "@sanity/react-loader": "1.9.17",
     "@sanity/ui": "2.1.6",
     "@sanity/vision": "3.40.0",
-    "@stripe/react-stripe-js": "^2.6.0",
+    "@stripe/react-stripe-js": "^2.7.0",
     "@stripe/stripe-js": "3.0.7",
     "@supabase/ssr": "^0.1.0",
-    "@supabase/supabase-js": "^2.42.4",
+    "@supabase/supabase-js": "^2.43.1",
     "@tanstack/react-query": "^5.36.0",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
-    "clsx": "^2.1.0",
+    "clsx": "^2.1.1",
     "hamburger-react": "^2.5.0",
     "jose": "^5.3.0",
     "locate": "link:@/sanity/plugins/locate",
@@ -61,7 +61,7 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-icons": "^5.2.1",
-    "react-intersection-observer": "^9.8.2",
+    "react-intersection-observer": "^9.10.2",
     "react-merge-refs": "^2.1.1",
     "react-player": "^2.16.0",
     "react-spotify-embed": "^2.0.4",
@@ -70,12 +70,12 @@
     "sanity": "3.40.0",
     "sanity-plugin-mux-input": "^2.3.4",
     "server-only": "0.0.1",
-    "stripe": "^14.20.0",
-    "styled-components": "6",
-    "tailwind-merge": "^2.2.2",
+    "stripe": "^14.25.0",
+    "styled-components": "^6.1.9",
+    "tailwind-merge": "^2.3.0",
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.22.4"
+    "zod": "^3.23.6"
   },
   "devDependencies": {
     "@types/node": "20.12.7",
@@ -89,8 +89,8 @@
     "eslint-plugin-tailwindcss": "^3.15.1",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.13",
-    "supabase": "^1.157.2",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "supabase": "^1.165.0",
     "typescript": "^5.4.5"
   }
 }

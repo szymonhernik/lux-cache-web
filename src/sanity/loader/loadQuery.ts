@@ -19,6 +19,7 @@ import {
 } from '@/sanity/lib/queries'
 import { client } from '@/sanity/lib/client'
 import {
+  InitialPostsQueryResult,
   PostBySlugQueryResult,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
@@ -90,7 +91,7 @@ export function loadPosts() {
   )
 }
 export function loadInitalPosts() {
-  return loadQuery<PostsQueryResult | null>(
+  return loadQuery<InitialPostsQueryResult | null>(
     initialPostsQuery,
     {},
     { next: { tags: ['post'] } }
