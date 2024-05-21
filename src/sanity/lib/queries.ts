@@ -4,7 +4,7 @@ export const postsQuery = groq`{
   "posts": *[_type == "post" && defined(slug)]
 }`
 
-export const initialPostsQuery = groq`*[_type == "post"] | order(publishedAt) [0...8] {
+export const initialPostsQuery = groq`*[_type == "post"] | order(publishedAt desc) [0...8] {
   _id, title, publishedAt
 }`
 

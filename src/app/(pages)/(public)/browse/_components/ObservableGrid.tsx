@@ -19,9 +19,9 @@ const numberOfItemsPerPage = 8
 const fetchPostsFromSanity = async ({ lastPublishedAt = '', lastId = '' }) => {
   const result = await client.fetch(
     groq`*[_type == "post" && (
-    publishedAt > $lastPublishedAt
+    publishedAt < $lastPublishedAt
     || (publishedAt == $lastPublishedAt && _id > $lastId)
-  )] | order(publishedAt) [0...${numberOfItemsPerPage}] {
+  )] | order(publishedAt desc)  [0...${numberOfItemsPerPage}] {
     _id, title, publishedAt
   }`,
     { lastPublishedAt, lastId }
