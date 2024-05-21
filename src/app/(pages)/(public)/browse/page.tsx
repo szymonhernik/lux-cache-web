@@ -1,17 +1,10 @@
-import Pricing from '@/components/ui/Pricing/Pricing'
-import { createClient } from '@/utils/supabase/server'
-import { ProductWithPrices } from '@/utils/types'
-import { ProductMetadataSchema } from '@/utils/types/zod/types'
-import Link from 'next/link'
-
 import ObservableGrid from './_components/ObservableGrid'
 
 import ObservableGridWrapper from './_components/ObervableGridWrapper'
-import Search from '@/components/icons/SearchIcon'
 import Toolbar from './_components/Toolbar'
 import DynamicDisplayBar from './_components/DynamicDisplayBar'
 import { fetchData } from '@/app/common/fetching'
-import { client } from '@/sanity/lib/client'
+
 import { loadInitalPosts } from '@/sanity/loader/loadQuery'
 
 export default async function BrowsePage({

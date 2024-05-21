@@ -1,13 +1,13 @@
 import { groq } from 'next-sanity'
 
-// export const postsQuery = groq`{
-//   "posts": *[_type == "post" && defined(slug)]
-// }`
 export const postsQuery = groq`{
-  "posts": *[_type == "post"] | order(publishedAt desc) [0...10] {
-    _id, title, publishedAt
-  }
+  "posts": *[_type == "post" && defined(slug)]
 }`
+// export const postsQuery = groq`{
+//   "posts": *[_type == "post"] | order(publishedAt desc) [0...10] {
+//     _id, title, publishedAt
+//   }
+// }`
 
 export const initialPostsQuery = groq`*[_type == "post"] | order(publishedAt desc) [0...8] {
   _id, title, publishedAt
