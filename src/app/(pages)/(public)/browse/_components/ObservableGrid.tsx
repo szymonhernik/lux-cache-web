@@ -13,20 +13,27 @@ import { client } from '@/sanity/lib/client'
 import { groq } from 'next-sanity'
 
 const numberOfItemsPerPage = 8
-// let lastPublishedAt = ''
-// let lastId = ''
 
-const fetchPostsFromSanity = async ({ lastPublishedAt = '', lastId = '' }) => {
+const fetchPostsFromSanity = async ({
+  lastPublishedAt = undefined,
+  lastId = undefined
+}) => {
+  console.log(
+    'inside of fetchPostsFromSanity, lastPublishedAt',
+    lastPublishedAt
+  )
+
   const result = await client.fetch(
     groq`*[_type == "post" && (
     publishedAt < $lastPublishedAt
-    || (publishedAt == $lastPublishedAt && _id > $lastId)
+    || (publishedAt == $lastPublishedAt && _id < $lastId)
   )] | order(publishedAt desc)  [0...${numberOfItemsPerPage}] {
     _id, title, publishedAt
   }`,
     { lastPublishedAt, lastId }
   )
-  console.log('result', result)
+  // first result looks OK follows correct order and in sync with initialResults
+  // console.log('result', result)
 
   if (result.length > 0) {
     lastPublishedAt = result[result.length - 1].publishedAt
@@ -43,24 +50,44 @@ export default function ObservableGrid({
 }: {
   initialResults: any
 }) {
-  // let lastPublishedAt = initialResults.data[initialResults.data.length - 1].publishedAt
-  // let lastId = initialResults.data[initialResults.data.length - 1]._id
+  const initialLastPublishedAt =
+    initialResults.data[initialResults.data.length - 1].publishedAt
+  const initialLastId = initialResults.data[initialResults.data.length - 1]._id
+
+  // console.log('initialLastPublishedAt', initialLastPublishedAt)
+  // console.log('initialLastId', initialLastId)
+  // console.log('initialResults', initialResults.data)
 
   // v5 tanstack/react-query
   const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
-    queryKey: ['query'],
+    queryKey: ['infinite'],
     // pass lastId and lastPublishedAt to the query function
-    queryFn: ({ pageParam = {} }) => fetchPostsFromSanity(pageParam),
+    queryFn: ({ pageParam = {} }) => {
+      // console.log('pageParam', pageParam)
+      return fetchPostsFromSanity(pageParam)
+    },
     getNextPageParam: (lastPage, pages) => {
       if (lastPage.length > 0) {
+        console.log('lastPage', lastPage)
+        // console.log(
+        //   'lastPublishedAt: ',
+        //   lastPage[lastPage.length - 1].publishedAt
+        // )
+        // console.log('lastId: ', lastPage[lastPage.length - 1]._id)
+
         const lastPost = lastPage[lastPage.length - 1]
+        // console.log('lastPost', lastPost)
+
         return { lastPublishedAt: lastPost.publishedAt, lastId: lastPost._id }
       }
       return undefined // Indicates there are no more pages to load
     },
     initialData: {
       pages: [initialResults.data],
-      pageParams: [{}]
+      pageParams: [
+        {}
+        // { lastPublishedAt: initialLastPublishedAt, lastId: initialLastId }
+      ]
     }
     // initialPageParam: 1 // Set the initial page parameter, important when using initialData
   })
@@ -75,6 +102,8 @@ export default function ObservableGrid({
   useEffect(() => {
     if (entry?.isIntersecting) fetchNextPage()
   }, [entry])
+
+  // console.log('data.pages', data.pages)
 
   return (
     <div className="lg:flex">
@@ -105,6 +134,7 @@ export default function ObservableGrid({
           )}
         </div>
       ))}
+      {/* <button onClick={() => fetchNextPage()}>Load More</button> */}
     </div>
   )
 }

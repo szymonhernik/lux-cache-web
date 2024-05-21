@@ -17,7 +17,7 @@ export default function ListItem({
 
   useEffect(() => {
     if (entry?.isIntersecting) {
-      console.log(`Item ${item._id} is in view.`)
+      // console.log(`Item ${item._id} is in view.`)
       // You could dispatch actions here, like lazy-loading the item details
     }
   }, [entry?.isIntersecting, item._id])
