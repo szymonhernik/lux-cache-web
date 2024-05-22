@@ -54,8 +54,8 @@ export default function ObservableGrid({
     queryFn: ({ pageParam = {} }) => {
       return fetchPostsFromSanity(pageParam)
     },
-    getNextPageParam: (lastPage) => {
-      if (lastPage.length > 0) {
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage && lastPage.length > 0) {
         const lastPost = lastPage[lastPage.length - 1]
 
         return { lastPublishedAt: lastPost.publishedAt, lastId: lastPost._id }
@@ -79,7 +79,47 @@ export default function ObservableGrid({
     if (entry?.isIntersecting) fetchNextPage()
   }, [entry])
 
+  console.log('initialResults', initialResults)
+  console.log('data.pages', data.pages)
+
   return (
+    // <div className="flex">
+    //   {initialResults.map((post, index) => (
+    //     <div className="m-4 p-4 bg-white">
+    //       <p>{post.title}</p>
+    //     </div>
+    //   ))}
+    // </div>
+
+    // <div className="lg:flex">
+    //   {data?.pages.map((page, i) => (
+    //     <div
+    //       key={i}
+    //       className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1 "
+    //     >
+    //       {page.map((post, index) => {
+    //         return index === page.length - 1 ? (
+    //           <div
+    //             key={post._id}
+    //             className={`w-full lg:w-[calc((80vh-4rem)/2)]  screen-wide-short:w-[calc(80vh-4rem)] aspect-square bg-white`}
+    //             ref={ref}
+    //           >
+    //             <p>{post.title}</p>
+    //           </div>
+    //         ) : (
+    //           <div
+    //             key={post.id}
+    //             className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square bg-white`}
+    //           >
+    //             <p>{post.title}</p>
+    //           </div>
+    //         )
+    //       })}
+    //     </div>
+    //   ))}
+    //   {/* <button onClick={() => fetchNextPage()}>Load More</button> */}
+    // </div>
+
     <div className="lg:flex">
       {data?.pages.map((page, i) => (
         <div

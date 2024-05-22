@@ -43,7 +43,7 @@ export default function ListItem({
         /> */}
         {item.title}
       </div>
-      <Link className="z-[10] " href={`/browse/a`}>
+      <Link className="z-[10]" href={`/post/${item.slug}`}>
         {/* {entry?.isIntersecting && <VideoTest />} */}
       </Link>
     </div>

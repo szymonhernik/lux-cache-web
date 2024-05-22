@@ -1,7 +1,9 @@
 import { groq } from 'next-sanity'
 
 export const postsQuery = groq`{
-  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) 
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {
+    _id, title, publishedAt, "slug": slug.current,
+  }
 }`
 // export const postsQuery = groq`{
 //   "posts": *[_type == "post"] | order(publishedAt desc) [0...10] {

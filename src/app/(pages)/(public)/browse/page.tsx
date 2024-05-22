@@ -1,6 +1,6 @@
 import { fetchData } from '@/app/common/fetching'
 
-import { loadInitalPosts } from '@/sanity/loader/loadQuery'
+import { loadInitalPosts, loadPosts } from '@/sanity/loader/loadQuery'
 import { draftMode } from 'next/headers'
 import BrowsePage from './_components/BrowsePage'
 import BrowsePagePreview from './_components/BrowsePagePreview'
@@ -50,10 +50,13 @@ export default async function Page({
   //   .from('users')
   //   .select('can_trial')
   //   .single();
-
   if (draftMode().isEnabled) {
-    return <BrowsePagePreview initial={initial} />
+    const initialPreview = await loadPosts()
+
+    return <BrowsePagePreview initial={initialPreview} />
   }
 
-  return <BrowsePage data={initial.data} />
+  return (
+    <BrowsePage data={initial.data} isDraftMode={false} results={results} />
+  )
 }
