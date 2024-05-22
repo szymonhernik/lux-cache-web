@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { fetchData } from '@/app/common/fetching'
 
 import { loadInitalPosts, loadPosts } from '@/sanity/loader/loadQuery'

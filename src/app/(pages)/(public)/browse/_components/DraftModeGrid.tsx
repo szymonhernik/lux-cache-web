@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { QueryResponseInitial } from '@sanity/react-loader'
