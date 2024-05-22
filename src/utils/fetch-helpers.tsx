@@ -8,6 +8,8 @@ const fetchPostsFromSanity = async ({
   lastPublishedAt = undefined,
   lastId = undefined
 }) => {
+  // freeze for 3 seconds
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
   const result = await client.fetch(
     groq`{"posts": *[_type == "post" && (
     publishedAt < $lastPublishedAt
@@ -27,6 +29,7 @@ const fetchPostsFromSanity = async ({
 
   const r = result as PostsQueryResult
   const posts = r.posts
+
   return posts
 }
 
