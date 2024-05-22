@@ -30,7 +30,7 @@ export default defineType({
           title: 'Plan',
           type: 'object',
           icon: TiersIcon,
-          name: 'plan',
+          name: 'planObject',
           fields: [
             defineField({
               title: 'Plan Name',

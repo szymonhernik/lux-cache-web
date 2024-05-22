@@ -1,15 +1,17 @@
-// @ts-nocheck
 import { useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import VideoTest from './VideoTest'
 import { testVidAsset } from '@/app/common/testasset'
+import { EncodeDataAttributeCallback } from '@sanity/react-loader'
+import { Post } from '@/utils/types/sanity/sanity.types'
+import { SinglePostType } from '@/utils/types/sanity'
 
 export default function ListItem({
   item,
   encodeDataAttribute
 }: {
-  item: { id: number; content: string; title: string; slug: string }
+  item: SinglePostType
   encodeDataAttribute?: EncodeDataAttributeCallback
 }) {
   const { ref, entry } = useIntersection({

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import {
   InitialPostsQueryResult,
   PostsQueryResult
@@ -11,8 +10,8 @@ import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import DraftModeGrid from './DraftModeGrid'
 
 export interface BrowsePageProps {
-  data: InitialPostsQueryResult | null
-  posts: PostsQueryResult
+  data?: InitialPostsQueryResult | null
+  previewData?: PostsQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
   isDraftMode?: boolean
   results?: any
@@ -20,11 +19,13 @@ export interface BrowsePageProps {
 
 export default function BrowsePage({
   data,
+  previewData,
   encodeDataAttribute,
   isDraftMode,
   results
 }: BrowsePageProps) {
-  const { initialPosts, posts } = data || {}
+  // const { initialPosts } = data || {}
+  // const { posts } = previewData || {}
   return (
     <>
       <div className=" flex flex-col lg:max-h-screen lg:h-screen bg-surface-brand">
@@ -35,16 +36,16 @@ export default function BrowsePage({
           <DynamicDisplayBar />
         </section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
-          {isDraftMode ? (
-            <DraftModeGrid data={posts} />
-          ) : (
+          {isDraftMode && previewData ? (
+            <DraftModeGrid data={previewData} />
+          ) : !isDraftMode && data ? (
             <ObservableGridWrapper>
               <ObservableGrid
-                initialResults={initialPosts}
+                data={data}
                 encodeDataAttribute={encodeDataAttribute}
               />
             </ObservableGridWrapper>
-          )}
+          ) : null}
         </section>
       </div>
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}

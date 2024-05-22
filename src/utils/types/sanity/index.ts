@@ -1,5 +1,6 @@
 // import type { PortableTextBlock } from 'next-sanity'
 import type { Image, PortableTextBlock } from 'sanity'
+import { PostsQueryResult } from './sanity.types'
 
 export interface MenuItem {
   _type: string
@@ -82,3 +83,5 @@ export interface SettingsPayload {
   menuItems?: MenuItem[]
   ogImage?: Image
 }
+
+export type SinglePostType = PostsQueryResult['posts'][number]

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { fetchData } from '@/app/common/fetching'
 
 import { loadInitalPosts, loadPosts } from '@/sanity/loader/loadQuery'
@@ -16,8 +15,6 @@ export default async function Page({
   const results = await fetchData(searchValue)
 
   const initial = await loadInitalPosts()
-
-  // const initialResults = await loadInitalPosts()
 
   // console.log('initialResults', initialResults)
 
@@ -51,9 +48,11 @@ export default async function Page({
   //   .from('users')
   //   .select('can_trial')
   //   .single();
-  if (draftMode().isEnabled) {
-    const initialPreview = await loadPosts()
 
+  // When in Sanity Studio Draft Mode, we want to show the preview that differs from the live functionality
+  if (draftMode().isEnabled) {
+    // We want to fetch all posts as we will render them all in the preview (no infinite scroll)
+    const initialPreview = await loadPosts()
     return <BrowsePagePreview initial={initialPreview} />
   }
 

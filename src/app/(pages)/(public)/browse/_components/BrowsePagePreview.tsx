@@ -26,14 +26,10 @@ export default function BrowsePagePreview(props: Props) {
     {},
     { initial }
   )
-  //   console.log('INITIAL', initial)
-  //   const results = data?.posts
-  //   console.log('INITIAL', initial)
-  console.log(' DATA', data)
 
   return (
     <BrowsePage
-      data={data!}
+      previewData={data!}
       encodeDataAttribute={encodeDataAttribute}
       isDraftMode={true}
     />

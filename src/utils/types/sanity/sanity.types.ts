@@ -436,7 +436,7 @@ export type Plan = {
   _createdAt: string
   _updatedAt: string
   _rev: string
-  plan?: string
+  planName?: string
   visualHelper?: string
   index?: number
 }
@@ -827,95 +827,24 @@ export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ./src/sanity/lib/queries.ts
 // Variable: postsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)]}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {    _id, title, publishedAt, "slug": slug.current,  }}
 export type PostsQueryResult = {
   posts: Array<{
     _id: string
-    _type: 'post'
-    _createdAt: string
-    _updatedAt: string
-    _rev: string
-    title?: string
-    slug?: Slug
-    ogDescription?: string
-    artistList?: Array<{
-      artistRef?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'artist'
-      }
-      additionalContext?: string
-      _type: 'artistMention'
-      _key: string
-    }>
-    series?: Array<{
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      _key: string
-      [internalGroqTypeReferenceTo]?: 'series'
-    }>
-    publishedAt?: string
-    minimumTier?: '0' | '1' | '2' | '3'
-    coverImage?: {
-      asset?: {
-        _ref: string
-        _type: 'reference'
-        _weak?: boolean
-        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-      }
-      hotspot?: SanityImageHotspot
-      crop?: SanityImageCrop
-      alt?: string
-      _type: 'image'
-    }
-    coverVideo?: Video
-    filters?: Array<{
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      _key: string
-      [internalGroqTypeReferenceTo]?: 'filterItem'
-    }>
-    downloadFiles?: Array<{
-      fileTitle?: string
-      fileForDownload?: {
-        asset?: {
-          _ref: string
-          _type: 'reference'
-          _weak?: boolean
-          [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
-        }
-        _type: 'file'
-      }
-      _type: 'fileAsset'
-      _key: string
-    }>
-    pageContent?: Array<
-      | ({
-          _key: string
-        } & PdfEmbed)
-      | ({
-          _key: string
-        } & PostContent)
-      | ({
-          _key: string
-        } & PostFooter)
-      | ({
-          _key: string
-        } & TemplateText)
-    >
+    title: string | null
+    publishedAt: string | null
+    slug: string | null
   }>
 }
 
 // Variable: initialPostsQuery
-// Query: {  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...8] {    _id, title, publishedAt  }}
+// Query: {  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...8] {    _id, title, publishedAt,     "slug": slug.current,  }}
 export type InitialPostsQueryResult = {
   initialPosts: Array<{
     _id: string
     title: string | null
     publishedAt: string | null
+    slug: string | null
   }>
 }
 

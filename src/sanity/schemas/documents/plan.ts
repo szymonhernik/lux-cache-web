@@ -8,7 +8,7 @@ export default defineType({
   icon: TiersIcon,
   fields: [
     defineField({
-      name: 'plan',
+      name: 'planName',
       title: 'Plan name',
       type: 'string',
       validation: (rule) => rule.required()
@@ -30,7 +30,7 @@ export default defineType({
   ],
   preview: {
     select: {
-      title: 'plan',
+      title: 'planName',
       subtitle: 'visualHelper'
     },
     prepare(selection) {
