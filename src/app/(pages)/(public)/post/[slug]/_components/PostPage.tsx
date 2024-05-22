@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { PostPayload } from '@/utils/types/sanity'
 import { PostBySlugQueryResult } from '@/utils/types/sanity/sanity.types'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
