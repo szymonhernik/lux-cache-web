@@ -1,16 +1,32 @@
-import { numberOfItemsPerPage } from '@/utils/fetch-helpers'
 import { groq } from 'next-sanity'
 
 export const postsQuery = groq`{
   "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {
-    _id, title, publishedAt, "slug": slug.current,
+    _id, 
+    title, 
+    artistList,
+    publishedAt, 
+    "slug": slug.current,
+    coverImage,
+    coverVideo,
+    filters,
+    minimumTier,
+    ogDescription,
   }
 }`
 
 export const initialPostsQuery = groq`{
-  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...${numberOfItemsPerPage as number}] {
-    _id, title, publishedAt, 
+  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...8] {
+    _id, 
+    title, 
+    artistList,
+    publishedAt, 
     "slug": slug.current,
+    coverImage,
+    coverVideo,
+    filters,
+    minimumTier,
+    ogDescription,
   }
 }`
 // export const postsQuery = groq`{
@@ -21,18 +37,16 @@ export const initialPostsQuery = groq`{
 
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
-    _createdAt,
-    _id,
-    title,
+    _id, 
+    title, 
+    artistList,
+    publishedAt, 
     "slug": slug.current,
+    coverImage,
+    coverVideo,
     filters,
-    "artists": artist[]->{
-      _key,
-      name,
-      slug
-    },
-    publishedAt,
-    body,
+    minimumTier,
+    ogDescription,
   }
 `
 

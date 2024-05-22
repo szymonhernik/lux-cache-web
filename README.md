@@ -51,10 +51,12 @@
 - [x] "infinite scroll" (w/ tanstack infinite scroll lib)
 - [x] routes - tabs
 - [x] Query page browse (infinite scroll)
+- [x] Clean the draft mode and typescript
 - [ ] Routing/post page (parallel route)
 - [ ] Role based access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
-- [ ] TODO: Clean the draft mode and typescript
+- [ ] TODO: dynamic search (also in studio)
+- [ ] TODO: see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
 
 ### Supabase
 
@@ -80,8 +82,9 @@
 - [x] CMS structure
 - [x] Set up sanity schemas (sanity)
 - [x] Custom blocks for post contents
-- [ ] set up queries
-- [ ] typescript for sanity
+- [x] typescript for sanity
+- [ ] TODO: set up queries
+- [ ] TODO: dynamic search queries
 
 TODAY:
 

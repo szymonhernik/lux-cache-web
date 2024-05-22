@@ -523,7 +523,7 @@ export type Pricing = {
   plansFeatures?: Array<{
     planName?: string
     planDescription?: BlockContentSimple
-    _type: 'plan'
+    _type: 'planObject'
     _key: string
   }>
 }
@@ -827,34 +827,124 @@ export declare const internalGroqTypeReferenceTo: unique symbol
 
 // Source: ./src/sanity/lib/queries.ts
 // Variable: postsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {    _id, title, publishedAt, "slug": slug.current,  }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters,    minimumTier,    ogDescription,  }}
 export type PostsQueryResult = {
   posts: Array<{
     _id: string
     title: string | null
+    artistList: Array<{
+      artistRef?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'artist'
+      }
+      additionalContext?: string
+      _type: 'artistMention'
+      _key: string
+    }> | null
     publishedAt: string | null
     slug: string | null
+    coverImage: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    } | null
+    coverVideo: Video | null
+    filters: Array<{
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      _key: string
+      [internalGroqTypeReferenceTo]?: 'filterItem'
+    }> | null
+    minimumTier: '0' | '1' | '2' | '3' | null
+    ogDescription: string | null
   }>
 }
 
 // Variable: initialPostsQuery
-// Query: {  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...8] {    _id, title, publishedAt,     "slug": slug.current,  }}
+// Query: {  "initialPosts": *[_type == "post"] | order(publishedAt desc) [0...8] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters,    minimumTier,    ogDescription,  }}
 export type InitialPostsQueryResult = {
   initialPosts: Array<{
     _id: string
     title: string | null
+    artistList: Array<{
+      artistRef?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'artist'
+      }
+      additionalContext?: string
+      _type: 'artistMention'
+      _key: string
+    }> | null
     publishedAt: string | null
     slug: string | null
+    coverImage: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    } | null
+    coverVideo: Video | null
+    filters: Array<{
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      _key: string
+      [internalGroqTypeReferenceTo]?: 'filterItem'
+    }> | null
+    minimumTier: '0' | '1' | '2' | '3' | null
+    ogDescription: string | null
   }>
 }
 
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _createdAt,    _id,    title,    "slug": slug.current,    filters,    "artists": artist[]->{      _key,      name,      slug    },    publishedAt,    body,  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters,    minimumTier,    ogDescription,  }
 export type PostBySlugQueryResult = {
-  _createdAt: string
   _id: string
   title: string | null
+  artistList: Array<{
+    artistRef?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'artist'
+    }
+    additionalContext?: string
+    _type: 'artistMention'
+    _key: string
+  }> | null
+  publishedAt: string | null
   slug: string | null
+  coverImage: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    alt?: string
+    _type: 'image'
+  } | null
+  coverVideo: Video | null
   filters: Array<{
     _ref: string
     _type: 'reference'
@@ -862,9 +952,8 @@ export type PostBySlugQueryResult = {
     _key: string
     [internalGroqTypeReferenceTo]?: 'filterItem'
   }> | null
-  artists: null
-  publishedAt: string | null
-  body: null
+  minimumTier: '0' | '1' | '2' | '3' | null
+  ogDescription: string | null
 } | null
 
 // Variable: settingsQuery
