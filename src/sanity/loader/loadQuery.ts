@@ -97,13 +97,6 @@ export function loadInitalPosts(selectedFiltersArray: Array<string> | null) {
     { next: { tags: ['post'] } }
   )
 }
-export function loadInitalPostsSanity() {
-  return loadQuery<InitialPostsQueryResult | null>(
-    initialDataFromSanity,
-    {},
-    { next: { tags: ['post'] } }
-  )
-}
 
 export function loadPost(slug: string) {
   return loadQuery<PostBySlugQueryResult | null>(

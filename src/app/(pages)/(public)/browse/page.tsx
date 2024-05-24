@@ -1,11 +1,7 @@
 // @ts-nocheck
 import { fetchData } from '@/app/common/fetching'
 
-import {
-  loadInitalPosts,
-  loadInitalPostsSanity,
-  loadPosts
-} from '@/sanity/loader/loadQuery'
+import { loadInitalPosts, loadPosts } from '@/sanity/loader/loadQuery'
 import { draftMode } from 'next/headers'
 import BrowsePage from './_components/BrowsePage'
 import BrowsePagePreview from './_components/BrowsePagePreview'

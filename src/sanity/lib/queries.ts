@@ -15,28 +15,6 @@ export const postsQuery = groq`{
   }
 }`
 
-export const initialDataFromSanity = groq`{
-  "posts": *[
-    _type == "post" &&  
-    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
-      count(
-        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
-      )
-    ] | order(publishedAt desc) [0...8] {
-    _id, 
-    title, 
-    artistList,
-    publishedAt, 
-    "slug": slug.current,
-    coverImage,
-    coverVideo,
-    filters[]->{
-      "slug": slug.current
-    },
-    minimumTier,
-    ogDescription,
-  }
-}`
 export const initialPostsQuery = groq`{
   "initialPosts": *[
     _type == "post" &&  
@@ -59,11 +37,6 @@ export const initialPostsQuery = groq`{
     ogDescription,
   }
 }`
-// export const postsQuery = groq`{
-//   "posts": *[_type == "post"] | order(publishedAt desc) [0...10] {
-//     _id, title, publishedAt
-//   }
-// }`
 
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
