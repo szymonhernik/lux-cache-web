@@ -1,7 +1,13 @@
+// @ts-nocheck
 'use client'
 
-import { useEffect, useRef } from 'react'
-import { InfiniteData, useInfiniteQuery } from '@tanstack/react-query'
+import { use, useEffect, useRef } from 'react'
+import {
+  InfiniteData,
+  QueryObserver,
+  useInfiniteQuery,
+  useQueryClient
+} from '@tanstack/react-query'
 import Link from 'next/link'
 import { useIntersection } from '@mantine/hooks'
 import { EpisodesSkeletonTwo } from '@/components/ui/skeletons/skeletons'
@@ -25,6 +31,8 @@ import {
   TQueryFnData,
   TQueryKey
 } from '@/utils/types/tanstack'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { loadPosts } from '@/sanity/loader/loadQuery'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
@@ -37,19 +45,25 @@ export default function ObservableGrid({
 }: ObservableGridProps) {
   const { initialPosts } = dataProps || {}
 
+  const initialPublishedAt = initialPosts[initialPosts.length - 1].publishedAt
+  const initialLastId = initialPosts[initialPosts.length - 1]._id
+
+  // console.log('initialPosts', initialPosts)
+  // console.log('queryClient', queryClient)
+
   // v5 tanstack/react-query
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery<TQueryFnData, TError, TData, TQueryKey, TPageParam>({
       queryKey: ['infinite'],
-      queryFn: ({ pageParam = {} }): Promise<TQueryFnData> => {
-        return fetchPostsFromSanity(pageParam)
+      queryFn: ({ pageParam }) => {
+        const results = fetchPostsFromSanity(pageParam)
+        return results
       },
+
       getNextPageParam: (lastPage) => {
         if (
           lastPage &&
           lastPage.length > 0 &&
-          // If it's equal to the number of items per page then there might be more
-          // if not, don't fetch more
           lastPage.length === numberOfItemsPerPage
         ) {
           const lastPost = lastPage[lastPage.length - 1]
@@ -61,12 +75,36 @@ export default function ObservableGrid({
         }
         return undefined // Indicates there are no more pages to load
       },
-      initialData: {
-        pages: [initialPosts],
-        pageParams: [{}]
-      },
-      initialPageParam: {}
+
+      initialPageParam: {
+        // lastPublishedAt: initialPublishedAt,
+        // lastId: initialLastId
+      }
     })
+
+  // initialData: {
+  //   // pages: [filtersArray ? serverActionFetch(filtersArray) : initialPosts],
+  //   pages: [initialPosts],
+  //   pageParams: [{}]
+  // },
+
+  // const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+  //   useInfiniteQuery({
+  //     queryKey: ['infinite'],
+  //     queryFn: async () => {
+  //       const r = await fetchPostsSimple()
+  //       console.log('r', r)
+  //       return r
+  //     },
+  //     // gcTime: 0,
+  //     getNextPageParam: (lastPage, allPages) => {},
+  //     // initialData: {
+  //     //   // pages: [filtersArray ? serverActionFetch(filtersArray) : initialPosts],
+  //     //   pages: [initialPosts],
+  //     //   pageParams: [{}]
+  //     // },
+  //     initialPageParam: 1
+  //   })
 
   const lastPostRef = useRef<HTMLElement>(null)
 

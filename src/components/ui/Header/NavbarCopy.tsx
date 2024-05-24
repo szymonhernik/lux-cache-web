@@ -8,7 +8,7 @@ import Logo from '@/components/icons/Logo'
 
 import { User } from '@supabase/supabase-js'
 import clsx from 'clsx'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { handleRequest } from '@/utils/auth-helpers/client'
 import { SignOut } from '@/utils/auth-helpers/server'
 import LoginButtonTest from './LoginButtonTest'
@@ -27,11 +27,16 @@ const links = [
   { name: 'account', href: '/account' }
 ]
 
-export default function Navbar() {
+export default function NavbarCopy() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const close = () => setIsOpen(false)
+
+  const filter = searchParams.get('filter')
+
+  console.log('filter', filter)
 
   return (
     <div className="z-[20]  w-full sticky top-0 left-0 lg:w-navbarDesktop lg:static  bg-secondary ">
@@ -72,19 +77,45 @@ export default function Navbar() {
           <nav className="space-y-8 p-4 ">
             <div className="space-y-4">
               {links.map((link) => {
-                return (
+                return link.name !== 'browse' ? (
                   <Link
                     key={link.name}
                     href={link.href}
-                    onClick={(e) => {
-                      if (link.href == '/browse') {
-                        console.log('pathname is browse')
-                        e.preventDefault()
-                        router.push('/browse')
-                        router.refresh()
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={clsx(
+                      'flex  grow items-center text-xl gap-2  ',
+                      {
+                        'text-primary-foreground': pathname === link.href
+                      },
+                      {
+                        'text-secondary-foreground': pathname != link.href
                       }
-                      setIsOpen(!isOpen)
-                    }}
+                    )}
+                  >
+                    <p className="font-normal">{link.name}</p>
+                  </Link>
+                ) : filter ? (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={clsx(
+                      'flex  grow items-center text-xl gap-2  ',
+                      {
+                        'text-primary-foreground': pathname === link.href
+                      },
+                      {
+                        'text-secondary-foreground': pathname != link.href
+                      }
+                    )}
+                  >
+                    <p className="font-normal">{link.name}</p>
+                  </a>
+                ) : (
+                  <Link
+                    key={link.name}
+                    href={link.href}
+                    onClick={() => setIsOpen(!isOpen)}
                     className={clsx(
                       'flex  grow items-center text-xl gap-2  ',
                       {
@@ -99,6 +130,7 @@ export default function Navbar() {
                   </Link>
                 )
               })}
+              {/* This solution makes the route to always refresh the whole route when moving to browse. for example if i didnt use browse page before it shouldn't use a href but Link. it should only be if i applied filter, then went to a different route and back to browse..   */}
             </div>
             <div className="text-zinc-500 flex flex-col text-sm gap-2">
               <a href="">

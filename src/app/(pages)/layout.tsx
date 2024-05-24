@@ -10,6 +10,7 @@ import { getURL } from '@/utils/helpers'
 import GlobalNav from '@/components/ui/Header/GlobalNav'
 import { draftMode } from 'next/headers'
 import LiveVisualEditing from '@/sanity/loader/LiveVisualEditing'
+import ObservableGridWrapper from './(public)/browse/_components/ObervableGridWrapper'
 
 const meta = {
   title:
@@ -55,23 +56,26 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <>
-      <div className="flex min-h-screen flex-col lg:flex-row-reverse">
-        <GlobalNav />
-        <main
-          id="skip"
-          className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 lg:overflow-auto "
-        >
-          {props.children}
-        </main>
+      <ObservableGridWrapper>
+        <div className="flex min-h-screen flex-col lg:flex-row-reverse">
+          <GlobalNav />
+          <main
+            id="skip"
+            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 lg:overflow-auto "
+          >
+            {props.children}
+          </main>
 
-        {/* <Footer /> */}
-      </div>
-      <Suspense>
-        <Toaster />
-      </Suspense>
-      {draftMode().isEnabled && <LiveVisualEditing />}
+          {/* <Footer /> */}
+        </div>
+        <Suspense>
+          <Toaster />
+        </Suspense>
 
-      {/*  */}
+        {draftMode().isEnabled && <LiveVisualEditing />}
+
+        {/*  */}
+      </ObservableGridWrapper>
     </>
   )
 }

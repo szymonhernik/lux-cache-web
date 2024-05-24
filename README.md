@@ -55,7 +55,8 @@
 - [ ] Routing/post page (parallel route)
 - [ ] Role based access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
-- [ ] TODO: dynamic search (also in studio)
+- [ ] TODO: filters results
+- [ ] TODO: dynamic search results (also in studio)
 - [ ] TODO: see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
 
 ### Supabase
