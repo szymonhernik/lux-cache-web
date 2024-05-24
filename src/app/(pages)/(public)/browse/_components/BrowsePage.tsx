@@ -39,12 +39,10 @@ export default function BrowsePage({
           {isDraftMode && previewData ? (
             <DraftModeGrid data={previewData} />
           ) : !isDraftMode && data ? (
-            <ObservableGridWrapper>
-              <ObservableGrid
-                data={data}
-                encodeDataAttribute={encodeDataAttribute}
-              />
-            </ObservableGridWrapper>
+            <ObservableGrid
+              data={data}
+              encodeDataAttribute={encodeDataAttribute}
+            />
           ) : null}
         </section>
       </div>

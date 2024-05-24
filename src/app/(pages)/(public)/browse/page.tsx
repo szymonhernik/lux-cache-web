@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { fetchData } from '@/app/common/fetching'
 
 import { loadInitalPosts, loadPosts } from '@/sanity/loader/loadQuery'
@@ -26,73 +25,19 @@ export default async function Page({
   const selectedFiltersArray = selectedFilters
     ? selectedFilters.split(',')
     : null
+  const paginationParams = {
+    lastPublishedAt: null,
+    lastId: null,
+    limit: 8
+  }
+  const initial = await loadInitalPosts(selectedFiltersArray, paginationParams)
 
-  const initial = await loadInitalPosts(selectedFiltersArray)
-  // console.log('INITIAL', initial)
-
-  const { initialPosts } = initial.data || {}
-
-  // // const testFetch = await loadPosts()
-  // // console.log('testFetch', testFetch)
-
-  const initialPublishedAt = initialPosts[0].publishedAt
-  const initialLastId = initialPosts[0]._id
-  // console.log('initialPublishedAt', initialPublishedAt)
-  // console.log('initialLastId', initialLastId)
-  // const fetchfetch = await fetchPostsFromSanity({
-  //   lastPublishedAt: initialPublishedAt,
-  //   lastId: initialLastId
-  // })
-  // console.log('fetchfetch', fetchfetch)
-
-  const queryClient = new QueryClient()
-
-  await queryClient.prefetchQuery({
-    queryKey: ['infinite'],
-    queryFn: () => {
-      const results = loadPosts()
-      return results
-    }
-  })
-  // const edit = await getPosts()
-  // console.log('queryClient', queryClient)
-  // const products = await getProducts({ sortKey, reverse, query: searchValue });
+  // I'll need a fetch function that:
+  // 1. gets array of filters from the searchParams (optionally)
+  // 2. gets the lastUpdatedAt and lastId as an object passed to it (optionally)
 
   // search results will appear only in the dialog-> not in the grid in the browse page
   const results = await fetchData(searchValue)
-
-  // console.log('initialResults', initialResults)
-
-  // console.log('results', results)
-
-  // const supabase = createClient();
-
-  // const {
-  //   data: { user }
-  // } = await supabase.auth.getUser();
-
-  // const { data: subscription, error } = await supabase
-  //   .from('subscriptions')
-  //   .select('*, prices(*, products(*))')
-  //   .in('status', ['trialing', 'active'])
-  //   .maybeSingle();
-
-  // if (error) {
-  //   console.log(error);
-  // }
-
-  // const { data: products } = await supabase
-  //   .from('products')
-  //   .select('*, prices(*)')
-  //   .eq('active', true)
-  //   .eq('prices.active', true)
-  //   .order('metadata->index')
-  //   .order('unit_amount', { referencedTable: 'prices' });
-
-  // const { data: userDetails } = await supabase
-  //   .from('users')
-  //   .select('can_trial')
-  //   .single();
 
   // When in Sanity Studio Draft Mode, we want to show the preview that differs from the live functionality
   if (draftMode().isEnabled) {
@@ -102,8 +47,33 @@ export default async function Page({
   }
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <BrowsePage data={initial.data} isDraftMode={false} results={results} />
-    </HydrationBoundary>
+    <BrowsePage data={initial.data} isDraftMode={false} results={results} />
   )
 }
+
+// const {
+//   data: { user }
+// } = await supabase.auth.getUser();
+
+// const { data: subscription, error } = await supabase
+//   .from('subscriptions')
+//   .select('*, prices(*, products(*))')
+//   .in('status', ['trialing', 'active'])
+//   .maybeSingle();
+
+// if (error) {
+//   console.log(error);
+// }
+
+// const { data: products } = await supabase
+//   .from('products')
+//   .select('*, prices(*)')
+//   .eq('active', true)
+//   .eq('prices.active', true)
+//   .order('metadata->index')
+//   .order('unit_amount', { referencedTable: 'prices' });
+
+// const { data: userDetails } = await supabase
+//   .from('users')
+//   .select('can_trial')
+//   .single();

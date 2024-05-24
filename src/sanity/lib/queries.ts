@@ -22,7 +22,29 @@ export const initialPostsQuery = groq`{
       count(
         (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
       )
-    ] | order(publishedAt desc) [0...8] {
+    ] | order(publishedAt desc) [0...$limit] {
+    _id, 
+    title, 
+    artistList,
+    publishedAt, 
+    "slug": slug.current,
+    coverImage,
+    coverVideo,
+    filters[]->{
+      "slug": slug.current
+    },
+    minimumTier,
+    ogDescription,
+  }
+}`
+export const morePostsQuery = groq`{
+  "initialPosts": *[
+    _type == "post" &&  
+    (
+      publishedAt < $lastPublishedAt
+      || (publishedAt == $lastPublishedAt && _id < $lastId)
+    )
+    ] | order(publishedAt desc) [0...$limit] {
     _id, 
     title, 
     artistList,

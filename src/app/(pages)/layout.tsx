@@ -56,26 +56,24 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <>
-      <ObservableGridWrapper>
-        <div className="flex min-h-screen flex-col lg:flex-row-reverse">
-          <GlobalNav />
-          <main
-            id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 lg:overflow-auto "
-          >
-            {props.children}
-          </main>
+      <div className="flex min-h-screen flex-col lg:flex-row-reverse">
+        <GlobalNav />
+        <main
+          id="skip"
+          className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 lg:overflow-auto "
+        >
+          {props.children}
+        </main>
 
-          {/* <Footer /> */}
-        </div>
-        <Suspense>
-          <Toaster />
-        </Suspense>
+        {/* <Footer /> */}
+      </div>
+      <Suspense>
+        <Toaster />
+      </Suspense>
 
-        {draftMode().isEnabled && <LiveVisualEditing />}
+      {draftMode().isEnabled && <LiveVisualEditing />}
 
-        {/*  */}
-      </ObservableGridWrapper>
+      {/*  */}
     </>
   )
 }

@@ -13,6 +13,7 @@ import {
 } from '@/utils/types/sanity'
 import {
   initialPostsQuery,
+  morePostsQuery,
   postBySlugQuery,
   postsQuery,
   settingsQuery
@@ -90,10 +91,42 @@ export function loadPosts() {
     { next: { tags: ['post'] } }
   )
 }
-export function loadInitalPosts(selectedFiltersArray: Array<string> | null) {
+export function loadInitalPosts(
+  selectedFiltersArray: Array<string> | null,
+  paginationParams: {
+    lastPublishedAt: string | null
+    lastId: string | null
+    limit: number
+  }
+) {
   return loadQuery<InitialPostsQueryResult | null>(
     initialPostsQuery,
-    { selectedFiltersArray },
+    {
+      selectedFiltersArray,
+      lastPublishedAt: paginationParams.lastPublishedAt,
+      lastId: paginationParams.lastId,
+      limit: paginationParams.limit
+    },
+    { next: { tags: ['post'] } }
+  )
+}
+
+export function loadMorePosts(
+  selectedFiltersArray: Array<string> | null,
+  paginationParams: {
+    lastPublishedAt: string | null
+    lastId: string | null
+    limit: number
+  }
+) {
+  return loadQuery<InitialPostsQueryResult | null>(
+    morePostsQuery,
+    {
+      selectedFiltersArray,
+      lastPublishedAt: paginationParams.lastPublishedAt,
+      lastId: paginationParams.lastId,
+      limit: paginationParams.limit
+    },
     { next: { tags: ['post'] } }
   )
 }

@@ -1,3 +1,4 @@
+'use client'
 import { useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
