@@ -14,15 +14,15 @@ export interface BrowsePageProps {
   previewData?: PostsQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
   isDraftMode?: boolean
-  results?: any
+  // results?: any
 }
 
 export default function BrowsePage({
   data,
   previewData,
   encodeDataAttribute,
-  isDraftMode,
-  results
+  isDraftMode
+  // results
 }: BrowsePageProps) {
   // const { initialPosts } = data || {}
   // const { posts } = previewData || {}
@@ -30,7 +30,7 @@ export default function BrowsePage({
     <>
       <div className=" flex flex-col lg:max-h-screen lg:h-screen bg-surface-brand">
         <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-          <Toolbar results={results} />
+          <Toolbar />
         </div>
         <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar">
           <DynamicDisplayBar />

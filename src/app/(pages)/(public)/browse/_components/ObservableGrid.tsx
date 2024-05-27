@@ -12,6 +12,7 @@ import {
   numberOfItemsPerPage
 } from '@/utils/fetch-helpers'
 import LoadMore from './LoadMore'
+import { Suspense } from 'react'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
@@ -40,10 +41,12 @@ export default function ObservableGrid({
                 key={post._id}
                 className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
               >
-                <ListItem
-                  item={post}
-                  encodeDataAttribute={encodeDataAttribute}
-                />
+                <Suspense>
+                  <ListItem
+                    item={post}
+                    encodeDataAttribute={encodeDataAttribute}
+                  />
+                </Suspense>
               </div>
             )
           })}

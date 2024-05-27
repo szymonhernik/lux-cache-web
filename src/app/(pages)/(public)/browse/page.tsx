@@ -12,19 +12,21 @@ import {
 } from '@tanstack/react-query'
 import { fetchPostsFromSanity } from '@/utils/fetch-helpers'
 
-export default async function Page({
-  searchParams
-}: {
-  searchParams?: { [key: string]: string | string[] | undefined }
-}) {
-  const { q: searchValue, filter } = searchParams as {
-    [key: string]: string
-  }
+export default async function Page() {
+  // const { q: searchValue, filter } = searchParams as {
+  //   [key: string]: string
+  // }
   // filter=season8,production -> separated by comma
-  const selectedFilters = filter
-  const selectedFiltersArray = selectedFilters
-    ? selectedFilters.split(',')
-    : null
+  // const selectedFilters = filter
+  // const selectedFiltersArray = selectedFilters
+  //   ? selectedFilters.split(',')
+  //   : null
+  // const paginationParams = {
+  //   lastPublishedAt: null,
+  //   lastId: null,
+  //   limit: 8
+  // }
+  const selectedFiltersArray = null
   const paginationParams = {
     lastPublishedAt: null,
     lastId: null,
@@ -37,7 +39,7 @@ export default async function Page({
   // 2. gets the lastUpdatedAt and lastId as an object passed to it (optionally)
 
   // search results will appear only in the dialog-> not in the grid in the browse page
-  const results = await fetchData(searchValue)
+  // const results = await fetchData(searchValue)
 
   // When in Sanity Studio Draft Mode, we want to show the preview that differs from the live functionality
   if (draftMode().isEnabled) {
@@ -46,9 +48,7 @@ export default async function Page({
     return <BrowsePagePreview initial={initialPreview} />
   }
 
-  return (
-    <BrowsePage data={initial.data} isDraftMode={false} results={results} />
-  )
+  return <BrowsePage data={initial.data} isDraftMode={false} />
 }
 
 // const {

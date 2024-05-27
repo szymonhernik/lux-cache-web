@@ -4,7 +4,7 @@
 import { getCachedPosts, getPosts } from '@/utils/actions/getPosts'
 import { SinglePostType } from '@/utils/types/sanity'
 import { useInViewport } from '@mantine/hooks'
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import ListItem from './ListItem'
 import { unstable_cache } from 'next/cache'
 
@@ -57,7 +57,9 @@ export default function LoadMore({
           key={post._id}
           className="w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square"
         >
-          <ListItem item={post} />
+          <Suspense>
+            <ListItem item={post} />
+          </Suspense>
         </div>
       ))}
       <div ref={container}>load more</div>
