@@ -1,12 +1,14 @@
 // @ts-nocheck
 'use client'
 
-import { getPosts } from '@/utils/actions/getPosts'
+import { getCachedPosts, getPosts } from '@/utils/actions/getPosts'
 import { SinglePostType } from '@/utils/types/sanity'
 import { useInViewport } from '@mantine/hooks'
 import { useEffect, useRef, useState } from 'react'
 import ListItem from './ListItem'
 import { unstable_cache } from 'next/cache'
+
+// Create a cached version of the getPosts function
 
 export default function LoadMore({
   initialPosts
@@ -26,14 +28,12 @@ export default function LoadMore({
 
   useEffect(() => {
     if (inViewport) {
-      // call api route to fetch more data
-      // const cacheKey = `getPosts-${lastPublishedAt}-${lastId}`;
-      try {
-        getPosts(null, {
-          lastPublishedAt,
-          lastId,
-          limit: 8
-        }).then((res) => {
+      getCachedPosts({
+        lastPublishedAt,
+        lastId,
+        limit: 8
+      })
+        .then((res) => {
           const newInitialPosts = res.data?.initialPosts
           if (newInitialPosts && newInitialPosts.length > 0) {
             setLastPublishedAt(
@@ -41,15 +41,13 @@ export default function LoadMore({
             )
             setLastId(newInitialPosts[newInitialPosts.length - 1]._id)
           }
-          setData((data) => ({
-            posts: [...data.posts, ...newInitialPosts]
+          setData((prevData) => ({
+            posts: [...prevData.posts, ...newInitialPosts]
           }))
-          //   console.log('newInitialPosts: ', newInitialPosts)
         })
-      } catch (error: unknown) {
-        console.log(error)
-        throw new Error(`An error happened: ${error}`)
-      }
+        .catch((error) => {
+          console.error(`An error happened: ${error}`)
+        })
     }
   }, [inViewport])
   return (

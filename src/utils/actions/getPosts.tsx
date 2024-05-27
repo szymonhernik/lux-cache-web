@@ -1,6 +1,7 @@
 'use server'
 
 import { loadMorePosts } from '@/sanity/loader/loadQuery'
+import { unstable_cache } from 'next/cache'
 
 export const getPosts = async (
   selectedFiltersArray: Array<string> | null,
@@ -22,3 +23,8 @@ export const getPosts = async (
     throw new Error(`An error happened: ${error}`)
   }
 }
+
+export const getCachedPosts = unstable_cache(
+  async (params) => getPosts(null, params),
+  ['getPosts'] // Unique cache key parts
+)
