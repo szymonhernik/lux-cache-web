@@ -3,7 +3,6 @@ import {
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 import DynamicDisplayBar from './DynamicDisplayBar'
-import ObservableGridWrapper from './ObervableGridWrapper'
 import ObservableGrid from './ObservableGrid'
 import Toolbar from './Toolbar'
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
@@ -14,15 +13,13 @@ export interface BrowsePageProps {
   previewData?: PostsQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
   isDraftMode?: boolean
-  // results?: any
 }
 
-export default function BrowsePage({
+export default async function BrowsePage({
   data,
   previewData,
   encodeDataAttribute,
   isDraftMode
-  // results
 }: BrowsePageProps) {
   // const { initialPosts } = data || {}
   // const { posts } = previewData || {}

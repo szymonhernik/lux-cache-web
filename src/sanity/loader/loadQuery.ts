@@ -12,6 +12,7 @@ import {
   SettingsPayload
 } from '@/utils/types/sanity'
 import {
+  filterGroupsQuery,
   initialPostsQuery,
   morePostsQuery,
   postBySlugQuery,
@@ -20,6 +21,7 @@ import {
 } from '@/sanity/lib/queries'
 import { client } from '@/sanity/lib/client'
 import {
+  FilterGroupsQueryResult,
   InitialPostsQueryResult,
   PostBySlugQueryResult,
   PostsQueryResult
@@ -91,18 +93,21 @@ export function loadPosts() {
     { next: { tags: ['post'] } }
   )
 }
-export function loadInitalPosts(
-  selectedFiltersArray: Array<string> | null,
-  paginationParams: {
-    lastPublishedAt: string | null
-    lastId: string | null
-    limit: number
-  }
-) {
+export function loadFilterGroups() {
+  return loadQuery<FilterGroupsQueryResult | null>(
+    filterGroupsQuery,
+    {},
+    { next: { tags: ['filterGroup, filterItem'] } }
+  )
+}
+export function loadInitalPosts(paginationParams: {
+  lastPublishedAt: string | null
+  lastId: string | null
+  limit: number
+}) {
   return loadQuery<InitialPostsQueryResult | null>(
     initialPostsQuery,
     {
-      selectedFiltersArray,
       lastPublishedAt: paginationParams.lastPublishedAt,
       lastId: paginationParams.lastId,
       limit: paginationParams.limit

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EpisodesSkeletonTwo } from '@/components/ui/skeletons/skeletons'
 import ListItem from './ListItem'
 
@@ -19,7 +20,7 @@ export interface ObservableGridProps {
   encodeDataAttribute?: EncodeDataAttributeCallback
 }
 
-export default function ObservableGrid({
+export default async function ObservableGrid({
   data: dataProps,
   encodeDataAttribute
 }: ObservableGridProps) {

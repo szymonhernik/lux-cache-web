@@ -7,7 +7,7 @@ import { testVidAsset } from '@/app/common/testasset'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import { Post } from '@/utils/types/sanity/sanity.types'
 import { SinglePostType } from '@/utils/types/sanity'
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 export default function ListItem({
   item,
@@ -21,6 +21,7 @@ export default function ListItem({
     threshold: 0.0, // Customize the threshold as needed
     rootMargin: '100px 0%'
   })
+  const pathName = usePathname()
   //  Simple check to detect if JS is enabled
   const [js, setJs] = useState(false)
   useEffect(() => {
@@ -47,7 +48,7 @@ export default function ListItem({
       {/* <VideoTest /> */}
       <Link
         className="z-[10]"
-        href={js ? `/browse/${item.slug}` : `/post/${item.slug}`} // make sure users with js disabled can go to posts directly
+        href={js ? `${pathName}/${item.slug}` : `/post/${item.slug}`} // make sure users with js disabled can go to posts directly
       >
         <div className="absolute z-[0] top-0 left-0 w-full h-full ">
           {/* <img

@@ -15,14 +15,21 @@ export const postsQuery = groq`{
   }
 }`
 
+export const filterGroupsQuery = groq`{
+  "filterGroups": *[_type == "filterGroup"]{
+    _id,
+    title,
+    "slug": slug.current,
+    groupFilters[]->{
+      _id,
+      "slug":slug.current,
+      title,
+    }
+  }
+}`
+
 export const initialPostsQuery = groq`{
-  "initialPosts": *[
-    _type == "post" &&  
-    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
-      count(
-        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
-      )
-    ] | order(publishedAt desc) [0...$limit] {
+  "initialPosts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {
     _id, 
     title, 
     artistList,
@@ -44,7 +51,7 @@ export const morePostsQuery = groq`{
       publishedAt < $lastPublishedAt
       || (publishedAt == $lastPublishedAt && _id < $lastId)
     )
-    ] | order(publishedAt desc) [0...$limit] {
+    ] | order(publishedAt desc) [0...8] {
     _id, 
     title, 
     artistList,
