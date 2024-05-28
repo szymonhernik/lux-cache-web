@@ -25,6 +25,7 @@ export default function ListItem({
   encodeDataAttribute?: EncodeDataAttributeCallback
 }) {
   const searchParams = useSearchParams()
+  const filters = searchParams.get('filter')
   const { ref, entry } = useIntersection({
     threshold: 0.0, // Customize the threshold as needed
     rootMargin: '100px 0%'
@@ -56,7 +57,11 @@ export default function ListItem({
       {/* <VideoTest /> */}
       <Link
         className="z-[10]"
-        href={js ? `${pathName}/${item.slug}` : `/post/${item.slug}`} // make sure users with js disabled can go to posts directly
+        href={
+          js
+            ? `${pathName}/${item.slug}${filters ? `?filter=${filters}` : ''}`
+            : `/post/${item.slug}`
+        } // make sure users with js disabled can go to posts directly
       >
         <div className="absolute z-[0] top-0 left-0 w-full h-full ">
           {/* <img

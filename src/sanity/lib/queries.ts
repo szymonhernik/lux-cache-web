@@ -50,7 +50,11 @@ export const morePostsQuery = groq`{
     (
       publishedAt < $lastPublishedAt
       || (publishedAt == $lastPublishedAt && _id < $lastId)
-    )
+    ) && 
+    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
+      count(
+        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
+      )
     ] | order(publishedAt desc) [0...8] {
     _id, 
     title, 
@@ -87,3 +91,26 @@ export const settingsQuery = groq`
     ogImage
   }
 `
+
+export const filterExample = groq`{
+  "initialPosts": *[
+    _type == "post" &&  
+    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
+      count(
+        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
+      )
+    ] | order(publishedAt desc) [0...$limit] {
+    _id, 
+    title, 
+    artistList,
+    publishedAt, 
+    "slug": slug.current,
+    coverImage,
+    coverVideo,
+    filters[]->{
+      "slug": slug.current
+    },
+    minimumTier,
+    ogDescription,
+  }
+}`

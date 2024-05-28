@@ -15,8 +15,10 @@ const fetchMorePosts = async (
     limit: number
   }
 ) => {
+  console.log('selectedFiltersArray: ', selectedFiltersArray)
+
   const result: MorePostsQueryResult = await client.fetch(morePostsQuery, {
-    selectedFiltersArray,
+    selectedFiltersArray: selectedFiltersArray,
     lastPublishedAt: paginationParams.lastPublishedAt,
     lastId: paginationParams.lastId,
     limit: paginationParams.limit

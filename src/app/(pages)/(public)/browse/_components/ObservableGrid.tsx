@@ -13,9 +13,10 @@ import {
   numberOfItemsPerPage
 } from '@/utils/fetch-helpers'
 import LoadMore from './LoadMore'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
+import LoadMoreTest from './LoadMoreTest'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
@@ -29,15 +30,17 @@ export default function ObservableGrid({
   const { posts: initialPosts } = dataProps || {}
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
+  // render boolean from filters
 
+  const [filtersOn, setFiltersOn] = useState<boolean>(false)
   //if filters value is NOT null, don't render from initialPosts but only from the fetch tanstack function
 
   return (
     <div className="lg:flex">
       <>
-        {!filters && (
-          <GridWrapperDiv>
-            {initialPosts.map((post, index) => {
+        <GridWrapperDiv>
+          {!filters &&
+            initialPosts.map((post, index) => {
               return (
                 <div
                   key={post._id}
@@ -52,9 +55,10 @@ export default function ObservableGrid({
                 </div>
               )
             })}
-          </GridWrapperDiv>
-        )}
-        <LoadMore initialPosts={initialPosts} />
+          <LoadMoreTest initialPosts={initialPosts} />
+        </GridWrapperDiv>
+
+        {/* <LoadMore initialPosts={initialPosts} /> */}
       </>
     </div>
   )
