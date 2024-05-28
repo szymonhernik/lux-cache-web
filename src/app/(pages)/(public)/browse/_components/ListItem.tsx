@@ -5,15 +5,23 @@ import { useEffect, useState } from 'react'
 import VideoTest from './VideoTest'
 import { testVidAsset } from '@/app/common/testasset'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
-import { Post } from '@/utils/types/sanity/sanity.types'
-import { SinglePostType } from '@/utils/types/sanity'
+import {
+  InitialPostsQueryResult,
+  MorePostsQueryResult,
+  Post,
+  PostsQueryResult
+} from '@/utils/types/sanity/sanity.types'
+
 import { usePathname, useSearchParams } from 'next/navigation'
+import { SinglePostType } from '@/utils/types/sanity'
 
 export default function ListItem({
   item,
   encodeDataAttribute
 }: {
-  item: SinglePostType
+  item:
+    | InitialPostsQueryResult['posts'][number]
+    | PostsQueryResult['posts'][number]
   encodeDataAttribute?: EncodeDataAttributeCallback
 }) {
   const searchParams = useSearchParams()

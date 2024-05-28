@@ -8,7 +8,7 @@ import {
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import React, { useState } from 'react'
 
-export default function ObservableGridWrapper({
+export default function QueryWrapper({
   children
 }: {
   children: React.ReactNode

@@ -39,7 +39,7 @@ export default function FilterDialogContents(props: Props) {
   const router = useRouter()
   const pathname = usePathname()
   const { filterGroups } = props
-  console.log('tagsSelected', tagsSelected)
+  // console.log('tagsSelected', tagsSelected)
 
   // TODO: upon selecting a tag, it will have to look through posts to find the ones that have the tag and allow only tags that are matching
 

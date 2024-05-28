@@ -7,6 +7,9 @@ import ObservableGrid from './ObservableGrid'
 import Toolbar from './Toolbar'
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import DraftModeGrid from './DraftModeGrid'
+import { draftMode } from 'next/headers'
+import BrowsePreview from './BrowsePreview'
+import { Suspense } from 'react'
 
 export interface BrowsePageProps {
   data?: InitialPostsQueryResult | null
@@ -33,13 +36,15 @@ export default async function BrowsePage({
           <DynamicDisplayBar />
         </section>
         <section className="lg:grow lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
-          {isDraftMode && previewData ? (
-            <DraftModeGrid data={previewData} />
-          ) : !isDraftMode && data ? (
-            <ObservableGrid
-              data={data}
-              encodeDataAttribute={encodeDataAttribute}
-            />
+          {draftMode().isEnabled ? (
+            <BrowsePreview />
+          ) : !draftMode().isEnabled && data ? (
+            <Suspense>
+              <ObservableGrid
+                data={data}
+                encodeDataAttribute={encodeDataAttribute}
+              />
+            </Suspense>
           ) : null}
         </section>
       </div>

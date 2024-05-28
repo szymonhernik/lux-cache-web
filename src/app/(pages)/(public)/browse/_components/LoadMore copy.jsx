@@ -11,7 +11,6 @@ import { loadMorePosts } from '@/sanity/loader/loadQuery'
 import { fetchMorePosts } from '@/utils/fetch-helpers/client'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
-import { useInfinitePost } from '@/utils/hooks/use-infinite-post'
 
 // Create a cached version of the getPosts function
 
@@ -20,6 +19,10 @@ export default function LoadMore({
 }: {
   initialPosts?: SinglePostType[]
 }) {
+  const [dataPosts, setDataPosts] = useState({
+    posts: []
+  })
+
   const { ref: container, inViewport } = useInViewport()
   const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(
     initialPosts ? initialPosts[initialPosts.length - 1].publishedAt : null
@@ -28,14 +31,75 @@ export default function LoadMore({
     initialPosts ? initialPosts[initialPosts.length - 1]._id : null
   )
 
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfinitePost(lastPublishedAt, lastId, 8)
-  // console.log('hasNextPage: ', hasNextPage)
+  // const { data, isLoading, isSuccess,  refetch } = useQuery({
+  //   queryKey: ['posts'],
+
+  //   queryFn: async () => {
+  //     const r = await fetchMorePosts(null, {
+  //       lastPublishedAt,
+  //       lastId,
+  //       limit: 8
+  //     })
+  //     // console.log('TANSTACK DATA: ', r)
+  //     const newPosts = r as SinglePostType[]
+  //     console.log('newPosts ', newPosts)
+  //     if (newPosts && newPosts.length > 0) {
+  //       setLastPublishedAt(newPosts[newPosts.length - 1].publishedAt)
+  //       setLastId(newPosts[newPosts.length - 1]._id)
+  //     }
+
+  //     setDataPosts((prevData) => ({
+  //       posts: [...prevData.posts, ...newPosts]
+  //     }))
+  //     const data = newPosts
+
+  //     return data as SinglePostType[]
+  //   },
+  //   enabled: false,
+
+  // })
+  // console.log('data: ', data)
+
+  // useEffect(() => {
+  //   if (inViewport && !isLoading) {
+  //     refetch()
+  //   }
+  // }, [inViewport])
+
+  const { data, fetchNextPage, isFetchingNextPage } = useInfiniteQuery({
+    queryKey: ['infinite'],
+    // pass lastId and lastPublishedAt to the query function
+    queryFn: ({
+      pageParam = { lastPublishedAt, lastId, limit: 8 }
+    }: {
+      pageParam
+    }) => {
+      // console.log('pageParam', pageParam)
+      const r = fetchMorePosts(null, pageParam)
+      return r as Promise<SinglePostType[]>
+    },
+    enabled: false,
+    getNextPageParam: (lastPage) => {
+      if (lastPage.length > 0) {
+        const lastPost = lastPage[lastPage.length - 1]
+        return {
+          lastPublishedAt: lastPost.publishedAt,
+          lastId: lastPost._id,
+          limit: 8
+        }
+      }
+      return undefined // Indicates there are no more pages to load
+    },
+    initialPageParam: { lastPublishedAt, lastId, limit: 8 } // Set the initial page parameter, important when using initialData
+  })
+  // useEffect(() => {
+  //   console.log('data: ', data)
+  // }, [data])
 
   useEffect(() => {
     if (inViewport && !isFetchingNextPage) {
       fetchNextPage()
-      // console.log('fetching next page')
+      console.log('fetching next page')
     }
   }, [inViewport])
 

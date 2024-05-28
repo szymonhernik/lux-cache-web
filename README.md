@@ -55,9 +55,10 @@
 - [ ] Routing/post page (parallel route)
 - [ ] Role based access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
-- [ ] TODO: filters results
-- [ ] TODO: dynamic search results (also in studio)
-- [ ] TODO: see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
+- [ ] TODO: Fetch function for initial posts — render static browse, all posts filtered should be dynamic (api route)
+- [ ] filters results
+- [ ] dynamic search results (also in studio)
+- [ ] see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
 
 ### Supabase
 
@@ -112,6 +113,7 @@ TODAY:
 - [ ] cookies info and how it works
 - [ ] Mux billing and card details
 - [ ] run videos and audio through bunny cdn
+- [ ] https://www.youtube.com/watch?v=nSOmL2DxzbU (using posthog)
 
 #### Future improvements
 

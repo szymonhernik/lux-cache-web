@@ -10,6 +10,7 @@ export default function ModalPage(props: ModalProps) {
   const { data } = props
   return (
     <Suspense fallback={<h1>Loading..</h1>}>
+      {/* @ts-ignore */}
       <Modal>{data && <Episode data={data} />}</Modal>
     </Suspense>
   )

@@ -868,22 +868,23 @@ export type PostsQueryResult = {
   }>
 }
 // Variable: filterGroupsQuery
-// Query: {  "filterGroups": *[_type == "filterGroup"]{    _id,    title,    "slug": slug.current,    groupFilters[]->{      "slug":slug.current,      title,    }  }}
+// Query: {  "filterGroups": *[_type == "filterGroup"]{    _id,    title,    "slug": slug.current,    groupFilters[]->{      _id,      "slug":slug.current,      title,    }  }}
 export type FilterGroupsQueryResult = {
   filterGroups: Array<{
     _id: string
     title: string | null
     slug: string | null
     groupFilters: Array<{
+      _id: string
       slug: string | null
       title: string | null
     }> | null
   }>
 }
 // Variable: initialPostsQuery
-// Query: {  "initialPosts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters[]->{      "slug": slug.current    },    minimumTier,    ogDescription,  }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters[]->{      "slug": slug.current    },    minimumTier,    ogDescription,  }}
 export type InitialPostsQueryResult = {
-  initialPosts: Array<{
+  posts: Array<{
     _id: string
     title: string | null
     artistList: Array<{
@@ -920,9 +921,9 @@ export type InitialPostsQueryResult = {
   }>
 }
 // Variable: morePostsQuery
-// Query: {  "initialPosts": *[    _type == "post" &&      (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )    ] | order(publishedAt desc) [0...8] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters[]->{      "slug": slug.current    },    minimumTier,    ogDescription,  }}
+// Query: {  "posts": *[    _type == "post" &&      (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )    ] | order(publishedAt desc) [0...8] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters[]->{      "slug": slug.current    },    minimumTier,    ogDescription,  }}
 export type MorePostsQueryResult = {
-  initialPosts: Array<{
+  posts: Array<{
     _id: string
     title: string | null
     artistList: Array<{

@@ -29,7 +29,7 @@ export const filterGroupsQuery = groq`{
 }`
 
 export const initialPostsQuery = groq`{
-  "initialPosts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {
     _id, 
     title, 
     artistList,
@@ -45,7 +45,7 @@ export const initialPostsQuery = groq`{
   }
 }`
 export const morePostsQuery = groq`{
-  "initialPosts": *[
+  "posts": *[
     _type == "post" &&  
     (
       publishedAt < $lastPublishedAt

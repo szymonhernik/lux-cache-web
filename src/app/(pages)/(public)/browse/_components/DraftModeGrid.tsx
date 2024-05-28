@@ -2,17 +2,20 @@
 import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { QueryResponseInitial } from '@sanity/react-loader'
 import ListItem from './ListItem'
+import { GridWrapperDiv } from './GridWrapperDiv'
+import { Suspense } from 'react'
 
-type Props = {
-  data: PostsQueryResult
-}
-export default function DraftModeGrid(props: Props) {
+export default function DraftModeGrid(props: {
+  data: PostsQueryResult | null
+}) {
+  // const { data } = props
   const { data } = props
-  const { posts } = data
+  const { posts } = data || {}
+  console.log('props: ', props)
 
   return (
     <div className="lg:flex">
-      <div className=" grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0  screen-wide-short:grid-rows-1 ">
+      <GridWrapperDiv>
         {posts &&
           posts?.map((post, index) => {
             return (
@@ -21,12 +24,13 @@ export default function DraftModeGrid(props: Props) {
                 //   data-sanity={encodeDataAttribute?.('title')}
                 className={`w-full lg:w-[calc((80vh-4rem)/2)]  screen-wide-short:w-[calc(80vh-4rem)] aspect-square  `}
               >
-                <ListItem item={post} />
+                <Suspense>
+                  <ListItem item={post} />
+                </Suspense>
               </div>
             )
           })}
-      </div>
-
+      </GridWrapperDiv>
       {/* <button onClick={() => fetchNextPage()}>Load More</button> */}
     </div>
   )
