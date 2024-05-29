@@ -32,15 +32,41 @@ export default function ObservableGrid({
   const filters = searchParams.get('filter')
   // render boolean from filters
 
-  const [filtersOn, setFiltersOn] = useState<boolean>(false)
   //if filters value is NOT null, don't render from initialPosts but only from the fetch tanstack function
 
+  // return (
+  //   <div className="lg:flex">
+  //     <>
+  //       <GridWrapperDiv>
+  //         {!filters &&
+  //           initialPosts.map((post, index) => {
+  //             return (
+  //               <div
+  //                 key={post._id}
+  //                 className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
+  //               >
+  //                 <Suspense>
+  //                   <ListItem
+  //                     item={post}
+  //                     encodeDataAttribute={encodeDataAttribute}
+  //                   />
+  //                 </Suspense>
+  //               </div>
+  //             )
+  //           })}
+  //         <LoadMoreTest initialPosts={initialPosts} />
+  //       </GridWrapperDiv>
+
+  //       {/* <LoadMore initialPosts={initialPosts} /> */}
+  //     </>
+  //   </div>
+  // )
   return (
     <div className="lg:flex">
       <>
-        <GridWrapperDiv>
-          {!filters &&
-            initialPosts.map((post, index) => {
+        {!filters && (
+          <GridWrapperDiv>
+            {initialPosts.map((post, index) => {
               return (
                 <div
                   key={post._id}
@@ -55,10 +81,9 @@ export default function ObservableGrid({
                 </div>
               )
             })}
-          <LoadMoreTest initialPosts={initialPosts} />
-        </GridWrapperDiv>
-
-        {/* <LoadMore initialPosts={initialPosts} /> */}
+          </GridWrapperDiv>
+        )}
+        <LoadMore initialPosts={initialPosts} />
       </>
     </div>
   )

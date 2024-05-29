@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 
 import { getCachedPosts, getPosts } from '@/utils/actions/getPosts'
@@ -12,6 +13,7 @@ import { fetchMorePosts } from '@/utils/fetch-helpers/client'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useInfinitePost } from '@/utils/hooks/use-infinite-post'
+import { useSearchParams } from 'next/navigation'
 
 // Create a cached version of the getPosts function
 
@@ -21,21 +23,44 @@ export default function LoadMore({
   initialPosts?: SinglePostType[]
 }) {
   const { ref: container, inViewport } = useInViewport()
-  const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(
-    initialPosts ? initialPosts[initialPosts.length - 1].publishedAt : null
+
+  const searchParams = useSearchParams()
+  const filters = searchParams.get('filter') //
+  const selectedFiltersArray = filters ? filters.split(',') : null
+
+  const [lastPublishedAt, setLastPublishedAt] = useState<string>(
+    initialPosts[initialPosts.length - 1].publishedAt
   )
-  const [lastId, setLastId] = useState<string | null>(
-    initialPosts ? initialPosts[initialPosts.length - 1]._id : null
+  const [lastId, setLastId] = useState<string>(
+    initialPosts[initialPosts.length - 1]._id
   )
 
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
-    useInfinitePost(lastPublishedAt, lastId, 8)
-  // console.log('hasNextPage: ', hasNextPage)
+  useEffect(() => {
+    if (filters) {
+      setLastPublishedAt(null)
+      setLastId(null)
+      console.log('SHOULD SET TO NULL')
+    } else {
+      setLastPublishedAt(initialPosts[initialPosts.length - 1].publishedAt)
+      setLastId(initialPosts[initialPosts.length - 1]._id)
+      console.log('SHOULD SET TO INITIAL POSTS')
+      // refetch()
+    }
+  }, [searchParams])
+
+  const {
+    data,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+    refetch,
+    isFetching,
+    isLoading
+  } = useInfinitePost(selectedFiltersArray, lastPublishedAt, lastId, 8)
 
   useEffect(() => {
     if (inViewport && !isFetchingNextPage) {
       fetchNextPage()
-      // console.log('fetching next page')
     }
   }, [inViewport])
 

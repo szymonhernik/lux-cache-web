@@ -11,7 +11,7 @@ export default function DraftModeGrid(props: {
   // const { data } = props
   const { data } = props
   const { posts } = data || {}
-  console.log('props: ', props)
+  // console.log('props: ', props)
 
   return (
     <div className="lg:flex">

@@ -8,6 +8,7 @@ import '@/styles/main.css'
 import { getURL } from '@/utils/helpers'
 
 import GlobalNav from '@/components/ui/Header/GlobalNav'
+import { Providers } from '@/components/global/providers'
 
 const suisse = localFont({
   src: [
@@ -78,7 +79,9 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={` loading ${suisse.className}`}>{props.children}</body>
+      <Providers>
+        <body className={` loading ${suisse.className}`}>{props.children}</body>
+      </Providers>
     </html>
   )
 }

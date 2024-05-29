@@ -15,7 +15,7 @@ const fetchMorePosts = async (
     limit: number
   }
 ) => {
-  console.log('selectedFiltersArray: ', selectedFiltersArray)
+  // console.log('selectedFiltersArray: ', selectedFiltersArray)
 
   const result: MorePostsQueryResult = await client.fetch(morePostsQuery, {
     selectedFiltersArray: selectedFiltersArray,
@@ -25,7 +25,7 @@ const fetchMorePosts = async (
   })
   const newPosts = result.posts
 
-  console.log('Fetching new data')
+  // console.log('Fetching new data')
 
   // if (newPosts.length > 0) {
   //   paginationParams.lastPublishedAt = newPosts[newPosts.length - 1].publishedAt
@@ -33,6 +33,7 @@ const fetchMorePosts = async (
   // } else {
   //   paginationParams.lastId = null // Reached the end
   // }
+  // console.log('newPosts ', newPosts)
 
   const posts = newPosts as SinglePostType[]
 

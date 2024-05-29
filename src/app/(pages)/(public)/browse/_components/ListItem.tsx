@@ -1,3 +1,4 @@
+// @ts-nocheck
 'use client'
 import { useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
@@ -68,7 +69,19 @@ export default function ListItem({
           src={`https://image.mux.com/${testVidAsset.playbackId}/thumbnail.png?width=5&time=0`}
           className="absolute w-full h-full "
         /> */}
-          {item.title}
+
+          <p>{item.title}</p>
+          <div className="mt-2 flex items-center gap-2">
+            {item.filters?.map((filter) => (
+              <p
+                className="border-2 p-1 w-fit border-black  font-semibold"
+                key={filter.slug}
+              >
+                {filter.slug}
+              </p>
+            ))}
+          </div>
+          {/* <p>{item.filters}</p> */}
         </div>
 
         {/* {entry?.isIntersecting && <VideoTest />} */}

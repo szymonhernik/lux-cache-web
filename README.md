@@ -85,8 +85,8 @@
 - [x] Set up sanity schemas (sanity)
 - [x] Custom blocks for post contents
 - [x] typescript for sanity
-- [ ] TODO: set up queries
-- [ ] TODO: dynamic search queries
+- [x] set up queries
+- [x] dynamic search queries
 
 TODAY:
 

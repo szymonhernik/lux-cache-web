@@ -47,10 +47,10 @@ export const initialPostsQuery = groq`{
 export const morePostsQuery = groq`{
   "posts": *[
     _type == "post" &&  
-    (
+    ( !defined($lastPublishedAt) || (
       publishedAt < $lastPublishedAt
       || (publishedAt == $lastPublishedAt && _id < $lastId)
-    ) && 
+    )) && 
     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
       count(
         (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)

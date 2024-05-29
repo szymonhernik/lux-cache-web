@@ -1,7 +1,8 @@
 'use client'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -35,7 +36,12 @@ type Props = {
 }
 
 export default function FilterDialogContents(props: Props) {
-  const [tagsSelected, setTagsSelected] = useState<string[]>([])
+  const searchParams = useSearchParams()
+  const filters = searchParams.get('filter')
+  const filtersArray = filters ? filters.split(',') : []
+  const [tagsSelected, setTagsSelected] = useState<string[]>(
+    filtersArray ? filtersArray : []
+  )
   const router = useRouter()
   const pathname = usePathname()
   const { filterGroups } = props
@@ -49,6 +55,9 @@ export default function FilterDialogContents(props: Props) {
     console.error('Error loading filters.')
     return null
   }
+
+  console.log('tagsSelected', tagsSelected)
+  console.log('filtersArray', filtersArray)
 
   return (
     <>
@@ -97,14 +106,35 @@ export default function FilterDialogContents(props: Props) {
         </div>
 
         <DialogFooter className="fixed w-max mx-auto left-0 right-0 bottom-16 ">
-          <Button
-            onClick={() => {
-              router.push(`${pathname}?filter=${tagsSelected.join(',')}`)
-            }}
-            size={'lg'}
-          >
-            Apply
-          </Button>
+          {tagsSelected.length > 0 ? (
+            <DialogClose asChild>
+              <Button
+                onClick={() => {
+                  router.push(`${pathname}?filter=${tagsSelected.join(',')}`)
+                  //  setTagsSelected([])
+                }}
+                size={'lg'}
+              >
+                Apply
+              </Button>
+            </DialogClose>
+          ) : tagsSelected !== filtersArray ? (
+            <DialogClose asChild>
+              <Button
+                onClick={() => {
+                  router.push(`${pathname}`)
+                  //  setTagsSelected([])
+                }}
+                size={'lg'}
+              >
+                Apply
+              </Button>
+            </DialogClose>
+          ) : (
+            <Button disabled={true} size={'lg'}>
+              Apply
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </>

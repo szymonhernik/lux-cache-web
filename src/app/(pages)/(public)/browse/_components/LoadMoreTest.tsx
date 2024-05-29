@@ -1,18 +1,13 @@
 // @ts-nocheck
 'use client'
 
-import { getCachedPosts, getPosts } from '@/utils/actions/getPosts'
 import { SinglePostType } from '@/utils/types/sanity'
 import { useInViewport } from '@mantine/hooks'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import ListItem from './ListItem'
-import { unstable_cache } from 'next/cache'
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
-import { loadMorePosts } from '@/sanity/loader/loadQuery'
 import { fetchMorePosts } from '@/utils/fetch-helpers/client'
-import { GridWrapperDiv } from './GridWrapperDiv'
-import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useSearchParams } from 'next/navigation'
+import { useQuery } from '@tanstack/react-query'
 
 // Create a cached version of the getPosts function
 
@@ -26,16 +21,17 @@ export default function LoadMoreTest({
   })
   const searchParams = useSearchParams()
   const filter = searchParams.get('filter') //
+
   //   filter=season8,production -> separated by comma
 
   const selectedFiltersArray = filter ? filter.split(',') : null
 
   const { ref: container, inViewport } = useInViewport()
   const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(
-    initialPosts ? initialPosts[initialPosts.length - 1].publishedAt : null
+    !filter ? initialPosts[initialPosts.length - 1].publishedAt : null
   )
   const [lastId, setLastId] = useState<string | null>(
-    initialPosts ? initialPosts[initialPosts.length - 1]._id : null
+    !filter ? initialPosts[initialPosts.length - 1]._id : null
   )
 
   const { data, isLoading, isSuccess, refetch } = useQuery({
@@ -48,7 +44,7 @@ export default function LoadMoreTest({
       })
       // console.log('TANSTACK DATA: ', r)
       const newPosts = r as SinglePostType[]
-      console.log('newPosts ', newPosts)
+      // console.log('newPosts ', newPosts)
       if (newPosts && newPosts.length > 0) {
         setLastPublishedAt(newPosts[newPosts.length - 1].publishedAt)
         setLastId(newPosts[newPosts.length - 1]._id)
@@ -57,19 +53,29 @@ export default function LoadMoreTest({
       setDataPosts((prevData) => ({
         posts: [...prevData.posts, ...newPosts]
       }))
-      const data = newPosts
 
-      return data as SinglePostType[]
+      // console.log('data:', data)
+
+      return 'fetched'
     },
     enabled: false
   })
-  //   console.log('data: ', data)
 
   useEffect(() => {
     if (inViewport && !isLoading) {
       refetch()
     }
   }, [inViewport])
+
+  // useEffect(() => {
+  //   console.log('EFFECT')
+  //   setDataPosts({
+  //     posts: []
+  //   })
+  //   refetch()
+  // }, [searchParams])
+
+  console.log('dataPosts: ', dataPosts)
 
   return (
     <>
