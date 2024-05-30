@@ -1,5 +1,7 @@
 // @ts-nocheck
 
+import TestQuery from '@/components/TestQuery'
+import { Button } from '@/components/shadcn/ui/button'
 import { PostsPayload } from '@/utils/types/sanity'
 import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
@@ -16,7 +18,11 @@ export default function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   const { posts } = data || {}
 
   return (
-    <main className="container mt-16 lg:mt-4 mx-auto grid grid-cols-1 divide-y divide-neutral-400">
+    <main className="container mt-16 lg:mt-4 mx-auto grid grid-cols-1 ">
+      {/* <Button className="mb-2">
+        <Link href={'/noquery'}>No query route</Link>
+      </Button>
+      <TestQuery /> */}
       {posts && posts?.length > 0 ? (
         posts.map((post) => (
           <Link key={post._id} href={`post/${post.slug}`}>

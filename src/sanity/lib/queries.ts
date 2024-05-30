@@ -1,7 +1,7 @@
 import { groq } from 'next-sanity'
 
 export const postsQuery = groq`{
-  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc)[0...2] {
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {
     _id, 
     title, 
     artistList,

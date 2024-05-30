@@ -9,6 +9,7 @@ import { getURL } from '@/utils/helpers'
 
 import GlobalNav from '@/components/ui/Header/GlobalNav'
 import { Providers } from '@/components/global/providers'
+import QueryWrapper from './(pages)/(public)/browse/_components/QueryWrapper'
 
 const suisse = localFont({
   src: [
@@ -80,7 +81,11 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <Providers>
-        <body className={` loading ${suisse.className}`}>{props.children}</body>
+        <QueryWrapper>
+          <body className={` loading ${suisse.className}`}>
+            {props.children}
+          </body>
+        </QueryWrapper>
       </Providers>
     </html>
   )

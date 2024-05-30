@@ -10,13 +10,11 @@ export default function Layout({
 }) {
   const queryClient = new QueryClient()
   return (
-    <QueryWrapper>
-      <div>
-        {children}
-        {modal}
-        {/* {props.modal} */}
-        <div id="modal-root" />
-      </div>
-    </QueryWrapper>
+    <div>
+      {children}
+      {modal}
+      {/* {props.modal} */}
+      <div id="modal-root" />
+    </div>
   )
 }
