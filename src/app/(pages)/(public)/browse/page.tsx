@@ -1,7 +1,6 @@
 import 'server-only'
-import { loadInitalPosts, loadPosts } from '@/sanity/loader/loadQuery'
-import { draftMode } from 'next/headers'
-// import BrowsePagePreview from './_components/BrowsePagePreview'
+import { loadInitalPosts } from '@/sanity/loader/loadQuery'
+
 import BrowsePage from './_components/BrowsePage'
 
 export default async function Page() {

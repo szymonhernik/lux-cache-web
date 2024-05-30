@@ -6,6 +6,9 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { loadPosts } from '@/sanity/loader/loadQuery'
 
+// export default async function Page() {
+//   return <p>Homepage</p>
+// }
 export default async function Page() {
   const initial = await loadPosts()
 

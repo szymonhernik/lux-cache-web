@@ -20,16 +20,17 @@ export const useInfinitePost = (
     ? { lastPublishedAt: null, lastId: null, limit }
     : { lastPublishedAt, lastId, limit }
   return useInfiniteQuery({
-    queryKey: ['infinite'],
+    queryKey: ['infinite', selectedFiltersArray],
     staleTime: 10 * (60 * 1000), // 10 minutes
+
     // pass lastId and lastPublishedAt to the query function
     queryFn: ({
       pageParam = { lastPublishedAt, lastId, limit }
     }: {
       pageParam: PageParam
     }) => {
-      console.log('pageParam: ', pageParam)
-      console.log('selectedFiltersArray: ', selectedFiltersArray)
+      // console.log('pageParam: ', pageParam)
+      // console.log('selectedFiltersArray: ', selectedFiltersArray)
 
       return fetchMorePosts(selectedFiltersArray, pageParam)
     },

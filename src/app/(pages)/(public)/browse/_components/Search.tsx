@@ -11,7 +11,6 @@ import {
   DialogTrigger
 } from '@/components/ui/dialog'
 import SearchInput from './SearchInput'
-import SearchResults from './SearchResults'
 
 export default function Search() {
   const router = useRouter()

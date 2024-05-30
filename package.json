@@ -29,6 +29,7 @@
     "@mantine/hooks": "^7.9.0",
     "@mux/mux-audio-react": "^0.9.0",
     "@mux/mux-video-react": "^0.9.0",
+    "@next/bundle-analyzer": "^14.2.3",
     "@next/env": "14.2.3",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-avatar": "^1.0.4",

@@ -1,12 +1,7 @@
 'use client'
-import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
-import {
-  HydrationBoundary,
-  QueryClient,
-  QueryClientProvider
-} from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import React, { useState } from 'react'
+import React from 'react'
 
 export default function QueryWrapper({
   children

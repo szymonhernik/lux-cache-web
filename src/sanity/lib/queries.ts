@@ -1,13 +1,15 @@
 import { groq } from 'next-sanity'
 
 export const postsQuery = groq`{
-  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc)[0...2] {
     _id, 
     title, 
     artistList,
     publishedAt, 
     "slug": slug.current,
-    coverImage,
+    coverImage{
+      asset->{url}
+    },
     coverVideo,
     filters,
     minimumTier,
