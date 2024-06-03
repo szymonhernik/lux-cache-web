@@ -16,32 +16,20 @@ import { GridWrapperDiv } from './GridWrapperDiv'
 export default function LoadMore({
   initialPosts
 }: {
-  initialPosts: SinglePostType[]
+  initialPosts?: SinglePostType[]
 }) {
   const { ref: container, inViewport } = useInViewport()
 
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
   const selectedFiltersArray = filters ? filters.split(',') : null
-  const lastStaticPost = initialPosts[initialPosts.length - 1]
+  const lastStaticPost = initialPosts
+    ? initialPosts[initialPosts.length - 1]
+    : null
 
-  const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(
-    lastStaticPost.publishedAt
-  )
-  const [lastId, setLastId] = useState<string | null>(lastStaticPost._id)
+  const lastPublishedAt = lastStaticPost ? lastStaticPost.publishedAt : null
 
-  useEffect(() => {
-    if (filters) {
-      setLastPublishedAt(null)
-      setLastId(null)
-      console.log('SHOULD SET TO NULL')
-    } else {
-      setLastPublishedAt(lastStaticPost.publishedAt)
-      setLastId(lastStaticPost._id)
-      console.log('SHOULD SET TO INITIAL POSTS')
-      // refetch()
-    }
-  }, [searchParams])
+  const lastId = lastStaticPost ? lastStaticPost._id : null
 
   const {
     data,
