@@ -142,3 +142,16 @@ export const createUrl = (
 
   return `${pathname}${queryString}`
 }
+
+export const sortSelectedFilters = (
+  filtersArray: Array<string> | null
+): Array<string> | null => {
+  if (filtersArray === null) {
+    return null
+  }
+
+  // Clone the array to avoid mutating the original array
+  const sortedArray = [...filtersArray].sort((a, b) => a.localeCompare(b))
+
+  return sortedArray
+}

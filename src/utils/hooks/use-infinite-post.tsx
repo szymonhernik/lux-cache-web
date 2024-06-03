@@ -2,6 +2,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query'
 import { fetchMorePosts } from '../fetch-helpers/client'
 import { useSearchParams } from 'next/navigation'
+import { sortSelectedFilters } from '../helpers'
 
 interface PageParam {
   lastPublishedAt: string | null
@@ -15,26 +16,23 @@ export const useInfinitePost = (
   lastId: string | null,
   limit: number
 ) => {
-  const searchParams = useSearchParams()
-  const initialPageParams = searchParams.get('filter')
-    ? { lastPublishedAt: null, lastId: null, limit }
-    : { lastPublishedAt, lastId, limit }
+  const initialPageParams = { lastPublishedAt, lastId, limit }
+  // const searchParams = useSearchParams()
+  // const initialPageParams = searchParams.get('filter')
+  //   ? { lastPublishedAt: null, lastId: null, limit }
+  //   : { lastPublishedAt, lastId, limit }
+  // TODO: sort selectedFiltersArray alphabetically so that whatever order the user selects the filters in, the query key will be the same
+  const sortedSelectedFiltersArray = sortSelectedFilters(selectedFiltersArray)
   return useInfiniteQuery({
-    queryKey: ['infinite', selectedFiltersArray],
-    staleTime: 10 * (60 * 1000), // 10 minutes
-
-    // pass lastId and lastPublishedAt to the query function
+    queryKey: ['infinite', sortedSelectedFiltersArray],
+    staleTime: 4 * (60 * 1000), // 4 minutes
     queryFn: ({
       pageParam = { lastPublishedAt, lastId, limit }
     }: {
       pageParam: PageParam
     }) => {
-      // console.log('pageParam: ', pageParam)
-      // console.log('selectedFiltersArray: ', selectedFiltersArray)
-
       return fetchMorePosts(selectedFiltersArray, pageParam)
     },
-    // staleTime: 30000,
     // enabled: false,
     getNextPageParam: (lastPage) => {
       if (lastPage.length > 0) {
@@ -50,3 +48,8 @@ export const useInfinitePost = (
     initialPageParam: initialPageParams
   })
 }
+
+// const searchParams = useSearchParams()
+// const initialPageParams = searchParams.get('filter')
+//   ? { lastPublishedAt: null, lastId: null, limit }
+//   : { lastPublishedAt, lastId, limit }

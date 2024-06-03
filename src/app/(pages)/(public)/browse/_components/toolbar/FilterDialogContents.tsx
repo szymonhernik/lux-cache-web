@@ -56,8 +56,8 @@ export default function FilterDialogContents(props: Props) {
     return null
   }
 
-  console.log('tagsSelected', tagsSelected)
-  console.log('filtersArray', filtersArray)
+  // console.log('tagsSelected', tagsSelected)
+  // console.log('filtersArray', filtersArray)
 
   return (
     <>

@@ -26,32 +26,34 @@ export default function ObservableGrid({
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
 
-  // goal: refactor to pass to load more either the last post data or nothing
   // if filters are present i don't want to render initial posts and load more should fetch first $limit posts without lastpublisheddate
   // if filters are NOT present i want to render initial posts and load more should fetch next $limit posts with lastpublisheddate
   return (
     <div className="lg:flex">
       <>
         {!filters && (
-          <GridWrapperDiv>
-            {initialPosts.map((post, index) => {
-              return (
-                <div
-                  key={post._id}
-                  className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
-                >
-                  <Suspense>
-                    <ListItem
-                      item={post}
-                      encodeDataAttribute={encodeDataAttribute}
-                    />
-                  </Suspense>
-                </div>
-              )
-            })}
-          </GridWrapperDiv>
+          <>
+            <GridWrapperDiv>
+              {initialPosts.map((post, index) => {
+                return (
+                  <div
+                    key={post._id}
+                    className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
+                  >
+                    <Suspense>
+                      <ListItem
+                        item={post}
+                        encodeDataAttribute={encodeDataAttribute}
+                      />
+                    </Suspense>
+                  </div>
+                )
+              })}
+            </GridWrapperDiv>
+            <LoadMore initialPosts={initialPosts} />
+          </>
         )}
-        <LoadMore initialPosts={initialPosts} />
+        {filters && <LoadMore />}
       </>
     </div>
   )

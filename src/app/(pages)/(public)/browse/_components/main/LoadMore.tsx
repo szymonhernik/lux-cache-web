@@ -27,6 +27,8 @@ export default function LoadMore({
     ? initialPosts[initialPosts.length - 1]
     : null
 
+  console.log('lastStaticPost', lastStaticPost)
+
   const lastPublishedAt = lastStaticPost ? lastStaticPost.publishedAt : null
 
   const lastId = lastStaticPost ? lastStaticPost._id : null
@@ -64,7 +66,12 @@ export default function LoadMore({
             ))}
           </GridWrapperDiv>
         ))}
-      <div ref={container}>load more</div>
+      {/* if the last page in data has less than 8 results stop rendering load more  */}
+      {data && data.pages[data.pages.length - 1].length < 8 ? (
+        <div className="text-center">No more posts to load</div>
+      ) : (
+        <div ref={container}>load more</div>
+      )}
     </>
   )
 }
