@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import QueryWrapper from './_components/QueryWrapper'
+import QueryWrapper from '../../../../components/providers/QueryWrapper'
 
 export default function Layout({
   children,

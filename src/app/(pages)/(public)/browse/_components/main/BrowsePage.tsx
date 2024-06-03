@@ -2,13 +2,13 @@ import {
   InitialPostsQueryResult,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
-import DynamicDisplayBar from '../DynamicDisplayBar'
-import ObservableGrid from '../ObservableGrid'
+import DynamicDisplayBar from './DynamicDisplayBar'
+import ObservableGrid from './ObservableGrid'
 import Toolbar from '../toolbar/Toolbar'
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
-import DraftModeGrid from '../DraftModeGrid'
+import DraftModeGrid from './draftmode/DraftModeGrid'
 import { draftMode } from 'next/headers'
-import BrowsePreview from '../BrowsePreview'
+import BrowsePreview from './BrowsePreview'
 import { Suspense } from 'react'
 
 export interface BrowsePageProps {

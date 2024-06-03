@@ -1,21 +1,17 @@
-// @ts-nocheck
-
 'use client'
+
 import { useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import VideoTest from './VideoTest'
 import { testVidAsset } from '@/app/common/testasset'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import {
   InitialPostsQueryResult,
-  MorePostsQueryResult,
-  Post,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { SinglePostType } from '@/utils/types/sanity'
+
 import {
   Dialog,
   DialogClose,
@@ -25,6 +21,7 @@ import {
   DialogTitle
 } from '@/components/shadcn/ui/dialog'
 import { Button } from '@/components/shadcn/ui/button'
+import VideoTest from './VideoTest'
 
 export default function ListItem({
   item,
@@ -52,7 +49,7 @@ export default function ListItem({
   }, [])
   //on esc key press setModalOpen to false
   useEffect(() => {
-    const handleEscape = (e) => {
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setModalOpen(false)
       }

@@ -4,10 +4,10 @@ import Link from 'next/link'
 import CloseButton from './CloseButton'
 import { Suspense } from 'react'
 
-type EpisodeProps = {
+type Props = {
   data: SinglePostType
 }
-export default function Episode(props: EpisodeProps) {
+export default function EpisodePreview(props: Props) {
   const { data } = props
   const { title, publishedAt, filters, ogDescription, slug } = data
 

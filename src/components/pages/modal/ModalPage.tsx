@@ -1,5 +1,6 @@
 import { Modal } from '@/app/(pages)/(public)/browse/@modal/[slug]/modal'
-import Episode from '@/app/(pages)/(public)/browse/_components/EpisodePreview'
+import EpisodePreview from '@/app/(pages)/(public)/browse/_components/post-preview/EpisodePreview'
+
 import { PostBySlugQueryResult } from '@/utils/types/sanity/sanity.types'
 import { Suspense } from 'react'
 
@@ -11,7 +12,7 @@ export default function ModalPage(props: ModalProps) {
   return (
     <Suspense fallback={<h1>Loading..</h1>}>
       {/* @ts-ignore */}
-      <Modal>{data && <Episode data={data} />}</Modal>
+      <Modal>{data && <EpisodePreview data={data} />}</Modal>
     </Suspense>
   )
 }

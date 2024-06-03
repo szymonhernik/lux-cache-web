@@ -12,11 +12,11 @@ import {
   fetchPostsFromSanity,
   numberOfItemsPerPage
 } from '@/utils/fetch-helpers'
-import LoadMore from './LoadMore'
+
 import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
-import LoadMoreTest from './LoadMoreTest'
+import LoadMore from './LoadMore'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
@@ -30,37 +30,7 @@ export default function ObservableGrid({
   const { posts: initialPosts } = dataProps || {}
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
-  // render boolean from filters
 
-  //if filters value is NOT null, don't render from initialPosts but only from the fetch tanstack function
-
-  // return (
-  //   <div className="lg:flex">
-  //     <>
-  //       <GridWrapperDiv>
-  //         {!filters &&
-  //           initialPosts.map((post, index) => {
-  //             return (
-  //               <div
-  //                 key={post._id}
-  //                 className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
-  //               >
-  //                 <Suspense>
-  //                   <ListItem
-  //                     item={post}
-  //                     encodeDataAttribute={encodeDataAttribute}
-  //                   />
-  //                 </Suspense>
-  //               </div>
-  //             )
-  //           })}
-  //         <LoadMoreTest initialPosts={initialPosts} />
-  //       </GridWrapperDiv>
-
-  //       {/* <LoadMore initialPosts={initialPosts} /> */}
-  //     </>
-  //   </div>
-  // )
   return (
     <div className="lg:flex">
       <>
@@ -87,8 +57,4 @@ export default function ObservableGrid({
       </>
     </div>
   )
-
-  {
-    /* <LoadMore initialPosts={initialPosts} /> */
-  }
 }

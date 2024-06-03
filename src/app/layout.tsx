@@ -9,7 +9,7 @@ import { getURL } from '@/utils/helpers'
 
 import GlobalNav from '@/components/ui/Header/GlobalNav'
 import { Providers } from '@/components/providers/providers'
-import QueryWrapper from './(pages)/(public)/browse/_components/QueryWrapper'
+import QueryWrapper from '../components/providers/QueryWrapper'
 
 const suisse = localFont({
   src: [
