@@ -1,6 +1,5 @@
 'use client'
 
-import Button from '@/components/ui/Button'
 import LogoCloud from '@/components/ui/LogoCloud'
 import type { Tables } from 'types_db'
 import { getStripe } from '@/utils/stripe/client'
@@ -23,6 +22,7 @@ import {
   AvatarFallback,
   AvatarImage
 } from '@/components/shadcn/ui/avatar'
+import { Button } from '@/components/shadcn/ui/button'
 
 interface Props {
   user: User | null | undefined
@@ -179,7 +179,6 @@ export default function Pricing({
                   </p>
 
                   <Button
-                    variant="slim"
                     type="button"
                     onClick={(e) => {
                       {
@@ -190,8 +189,8 @@ export default function Pricing({
                             : router.push('/account')
                       }
                     }}
-                    loading={priceIdLoading === price.id}
-                    className="block w-full py-2 mt-8 text-sm font-semibold text-center text-black rounded-md hover:bg-zinc-900"
+                    isLoading={priceIdLoading === price.id}
+                    className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md "
                   >
                     {subscription ? 'Manage' : buttonText}
                   </Button>
