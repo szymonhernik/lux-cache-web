@@ -1,28 +1,28 @@
-'use client';
+'use client'
 
-import Button from '@/components/ui/Button';
-import React from 'react';
-import Link from 'next/link';
-import { signUp } from '@/utils/auth-helpers/server';
-import { handleRequest } from '@/utils/auth-helpers/client';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import React from 'react'
+import Link from 'next/link'
+import { signUp } from '@/utils/auth-helpers/server'
+import { handleRequest } from '@/utils/auth-helpers/client'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { Button } from '@/components/shadcn/ui/button'
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
-  allowEmail: boolean;
-  redirectMethod: string;
+  allowEmail: boolean
+  redirectMethod: string
 }
 
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null;
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = redirectMethod === 'client' ? useRouter() : null
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true); // Disable the button while the request is being handled
-    await handleRequest(e, signUp, router);
-    setIsSubmitting(false);
-  };
+    setIsSubmitting(true) // Disable the button while the request is being handled
+    await handleRequest(e, signUp, router)
+    setIsSubmitting(false)
+  }
 
   return (
     <div className="my-8">
@@ -54,12 +54,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
               className="w-full p-3 rounded-md bg-zinc-800"
             />
           </div>
-          <Button
-            variant="slim"
-            type="submit"
-            className="mt-1"
-            loading={isSubmitting}
-          >
+          <Button type="submit" className="mt-1" isLoading={isSubmitting}>
             Sign up
           </Button>
         </div>
@@ -78,5 +73,5 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
         </p>
       )}
     </div>
-  );
+  )
 }

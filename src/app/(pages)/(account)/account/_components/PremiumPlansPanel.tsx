@@ -1,39 +1,40 @@
-'use client';
-import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
-import { updateSubscriptionPlan } from '@/utils/stripe/server';
-import { ProductWithPrices, SubscriptionWithProduct } from '@/utils/types';
-import { usePathname, useRouter } from 'next/navigation';
+'use client'
+
+import { Button } from '@/components/shadcn/ui/button'
+import Card from '@/components/ui/Card'
+import { updateSubscriptionPlan } from '@/utils/stripe/server'
+import { ProductWithPrices, SubscriptionWithProduct } from '@/utils/types'
+import { usePathname, useRouter } from 'next/navigation'
 
 interface Props {
-  products: ProductWithPrices[];
-  subscription: SubscriptionWithProduct | null;
+  products: ProductWithPrices[]
+  subscription: SubscriptionWithProduct | null
 }
 
 export default function PremiumPlansPanel(props: Props) {
-  const { products, subscription } = props;
+  const { products, subscription } = props
   const isSubscribedTo = (priceId: string) => {
-    return subscription?.prices?.id === priceId;
-  };
-  const router = useRouter();
-  const currentPath = usePathname();
+    return subscription?.prices?.id === priceId
+  }
+  const router = useRouter()
+  const currentPath = usePathname()
   const handleSwitchPlans = async (
     subscriptionId: string | undefined,
     newPriceId: string
   ) => {
     if (!subscriptionId || !newPriceId) {
-      return;
+      return
     }
     const redirectUrl = await updateSubscriptionPlan(
       subscriptionId,
       newPriceId,
       currentPath
-    );
+    )
     if (redirectUrl) {
-      router.push(redirectUrl);
-      router.refresh();
+      router.push(redirectUrl)
+      router.refresh()
     }
-  };
+  }
   return (
     <Card
       title="Premium Plans"
@@ -56,7 +57,6 @@ export default function PremiumPlansPanel(props: Props) {
                   className="flex justify-between items-center mt-2"
                 >
                   <Button
-                    variant="slim"
                     disabled={isSubscribedTo(price.id)}
                     onClick={() =>
                       handleSwitchPlans(subscription?.id, price.id)
@@ -78,5 +78,5 @@ export default function PremiumPlansPanel(props: Props) {
         ))}
       </ul>
     </Card>
-  );
+  )
 }

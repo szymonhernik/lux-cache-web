@@ -13,7 +13,7 @@ import {
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 import BrowsePage from './BrowsePage'
-import ListItem from './ListItem'
+import ListItem from '../ListItem'
 
 type Props = {
   initial: QueryResponseInitial<PostsQueryResult | null>

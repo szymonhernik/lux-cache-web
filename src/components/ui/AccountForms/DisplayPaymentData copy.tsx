@@ -1,5 +1,4 @@
-import Button from '@/components/ui/Button'
-
+import { Button } from '@/components/shadcn/ui/button'
 import {
   detachPaymentMethod,
   updateSubscriptionDefaultPaymentMethod
@@ -96,14 +95,13 @@ export default function DisplayPaymentData({
                 subscriptionDefaultPaymentMethodId ? null : (
                   <>
                     <Button
-                      variant="slim"
                       type="submit"
                       className="!py-0 !px-4"
                       onClick={() =>
                         handleSetNewDefaultPaymentMethod(paymentMethod.id)
                       }
                       // loading={isSubmitting}
-                      loading={
+                      isLoading={
                         paymentMethodIdLoading === paymentMethod.id &&
                         isSubmitting
                       }
@@ -111,10 +109,9 @@ export default function DisplayPaymentData({
                       Set as default
                     </Button>
                     <Button
-                      variant="slim"
                       type="submit"
                       className="!py-0 !px-4 "
-                      loading={
+                      isLoading={
                         paymentMethodIdLoading === paymentMethod.id &&
                         isSubmitting
                       }

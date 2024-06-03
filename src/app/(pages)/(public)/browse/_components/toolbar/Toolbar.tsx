@@ -1,7 +1,7 @@
 import { Suspense } from 'react'
 import Search from './Search'
 import Filter from './Filter'
-import DisplaySelectedFilters from './DisplaySelectedFilters'
+import DisplaySelectedFilters from '../DisplaySelectedFilters'
 
 export default async function Toolbar() {
   return (

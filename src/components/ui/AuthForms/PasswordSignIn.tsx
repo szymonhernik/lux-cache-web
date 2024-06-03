@@ -1,12 +1,12 @@
 'use client'
 
-import Button from '@/components/ui/Button'
 import Link from 'next/link'
 import { signInWithPassword } from '@/utils/auth-helpers/server'
 import { handleRequest } from '@/utils/auth-helpers/client'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { revalidatePath } from 'next/cache'
+import { Button } from '@/components/shadcn/ui/button'
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -60,12 +60,7 @@ export default function PasswordSignIn({
               className="w-full p-3 rounded-md bg-neutral-200"
             />
           </div>
-          <Button
-            variant="slim"
-            type="submit"
-            className="mt-1"
-            loading={isSubmitting}
-          >
+          <Button type="submit" className="mt-1" isLoading={isSubmitting}>
             Sign in
           </Button>
         </div>

@@ -1,31 +1,32 @@
-'use client';
+'use client'
 import {
   AddressElement,
   PaymentElement,
   useCustomCheckout
-} from '@stripe/react-stripe-js';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+} from '@stripe/react-stripe-js'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
-import { revalidatePath } from 'next/cache';
-import Link from 'next/link';
-import { getStatusRedirect } from '@/utils/helpers';
-import Button from '@/components/ui/Button';
-import PromotionCodeForm from './PromotionCodeForm';
-import OrderSummary from './OrderSummary';
+import { revalidatePath } from 'next/cache'
+import Link from 'next/link'
+import { getStatusRedirect } from '@/utils/helpers'
+
+import PromotionCodeForm from './PromotionCodeForm'
+import OrderSummary from './OrderSummary'
+import { Button } from '@/components/shadcn/ui/button'
 
 export default function CheckoutForm(props: {
-  priceWithTrial: boolean;
-  daysTrial: number | null;
-  userCanTrial: boolean;
+  priceWithTrial: boolean
+  daysTrial: number | null
+  userCanTrial: boolean
 }) {
   const { confirm, canConfirm, confirmationRequirements, lineItems, currency } =
-    useCustomCheckout();
-  const { priceWithTrial, daysTrial, userCanTrial } = props;
-  const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [messageBody, setMessageBody] = useState('');
+    useCustomCheckout()
+  const { priceWithTrial, daysTrial, userCanTrial } = props
+  const router = useRouter()
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+  const [messageBody, setMessageBody] = useState('')
 
   // console.log('lineItems', lineItems);
   // console.log('priceWithTrial', priceWithTrial);
@@ -33,27 +34,27 @@ export default function CheckoutForm(props: {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission
     if (!canConfirm) {
-      e.preventDefault();
-      setIsSubmitting(false);
-      return;
+      e.preventDefault()
+      setIsSubmitting(false)
+      return
     }
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
 
     //  confirm() method returns a Promise that resolves to an object with one of the following types
     //  { session: CheckoutSession }
     //  { error: StripeError }
     confirm().then((result) => {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
       if (result.session) {
         // router.refresh();
         // router.push(`/?ts=${Date.now()}`);
-        setIsSuccess(true);
+        setIsSuccess(true)
       } else {
-        setMessageBody(result.error.message || 'An error occurred');
+        setMessageBody(result.error.message || 'An error occurred')
       }
-    });
-  };
+    })
+  }
   return (
     <div className="flex flex-col gap-16 ">
       {!isSuccess ? (
@@ -84,9 +85,8 @@ export default function CheckoutForm(props: {
             </div>
 
             <Button
-              variant="slim"
               className="w-fit"
-              loading={isSubmitting}
+              isLoading={isSubmitting}
               disabled={!canConfirm || isSubmitting}
               type="submit"
             >
@@ -107,7 +107,7 @@ export default function CheckoutForm(props: {
                 // window.location.reload();
 
                 // router.refresh();
-                router.push('/');
+                router.push('/')
               }}
             >
               Close
@@ -116,5 +116,5 @@ export default function CheckoutForm(props: {
         </div>
       )}
     </div>
-  );
+  )
 }

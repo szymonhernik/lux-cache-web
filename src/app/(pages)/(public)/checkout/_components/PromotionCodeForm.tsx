@@ -1,25 +1,25 @@
-import Button from '@/components/ui/Button';
-import { useCustomCheckout } from '@stripe/react-stripe-js';
-import { useState } from 'react';
+import { Button } from '@/components/shadcn/ui/button'
+import { useCustomCheckout } from '@stripe/react-stripe-js'
+import { useState } from 'react'
 
 export default function PromotionCodeForm() {
-  const { applyPromotionCode, removePromotionCode } = useCustomCheckout();
-  const [draft, setDraft] = useState('');
-  const [loading, setLoading] = useState(false);
+  const { applyPromotionCode, removePromotionCode } = useCustomCheckout()
+  const [draft, setDraft] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDraft(e.target.value);
-  };
+    setDraft(e.target.value)
+  }
   const handleSubmit = () => {
-    setLoading(true);
+    setLoading(true)
     applyPromotionCode(draft).finally(() => {
-      setDraft('');
-      setLoading(false);
-    });
-  };
+      setDraft('')
+      setLoading(false)
+    })
+  }
   const handleRemove = () => {
-    removePromotionCode();
-  };
+    removePromotionCode()
+  }
 
   return (
     <div className="flex flex-col ">
@@ -33,7 +33,7 @@ export default function PromotionCodeForm() {
             onChange={handleChange}
             className="text-[#30313D] appearance-auto p-3 rounded"
           />
-          <Button variant="slim" disabled={loading} onClick={handleSubmit}>
+          <Button disabled={loading} onClick={handleSubmit}>
             Apply
           </Button>
         </div>
@@ -45,5 +45,5 @@ export default function PromotionCodeForm() {
         </p>
       </div>
     </div>
-  );
+  )
 }

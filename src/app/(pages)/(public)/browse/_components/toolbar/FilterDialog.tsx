@@ -1,4 +1,4 @@
-import { Dialog, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogTrigger } from '@/components/shadcn/ui/dialog'
 import FilterDialogContents from './FilterDialogContents'
 import { FilterGroupsQueryResult } from '@/utils/types/sanity/sanity.types'
 

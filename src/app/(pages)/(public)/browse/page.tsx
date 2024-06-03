@@ -1,7 +1,7 @@
 import 'server-only'
 import { loadInitalPosts } from '@/sanity/loader/loadQuery'
 
-import BrowsePage from './_components/BrowsePage'
+import BrowsePage from './_components/main/BrowsePage'
 
 export default async function Page() {
   const paginationParams = {
