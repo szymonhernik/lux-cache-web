@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/shadcn/ui/dialog'
+} from './ToolbarDialog'
 import { FilterGroupsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'

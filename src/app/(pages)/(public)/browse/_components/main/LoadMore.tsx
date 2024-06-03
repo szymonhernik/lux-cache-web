@@ -1,4 +1,3 @@
-// @ts-nocheck
 'use client'
 
 import { SinglePostType } from '@/utils/types/sanity'
@@ -17,20 +16,19 @@ import { GridWrapperDiv } from './GridWrapperDiv'
 export default function LoadMore({
   initialPosts
 }: {
-  initialPosts?: SinglePostType[]
+  initialPosts: SinglePostType[]
 }) {
   const { ref: container, inViewport } = useInViewport()
 
   const searchParams = useSearchParams()
-  const filters = searchParams.get('filter') //
+  const filters = searchParams.get('filter')
   const selectedFiltersArray = filters ? filters.split(',') : null
+  const lastStaticPost = initialPosts[initialPosts.length - 1]
 
-  const [lastPublishedAt, setLastPublishedAt] = useState<string>(
-    initialPosts[initialPosts.length - 1].publishedAt
+  const [lastPublishedAt, setLastPublishedAt] = useState<string | null>(
+    lastStaticPost.publishedAt
   )
-  const [lastId, setLastId] = useState<string>(
-    initialPosts[initialPosts.length - 1]._id
-  )
+  const [lastId, setLastId] = useState<string | null>(lastStaticPost._id)
 
   useEffect(() => {
     if (filters) {
@@ -38,8 +36,8 @@ export default function LoadMore({
       setLastId(null)
       console.log('SHOULD SET TO NULL')
     } else {
-      setLastPublishedAt(initialPosts[initialPosts.length - 1].publishedAt)
-      setLastId(initialPosts[initialPosts.length - 1]._id)
+      setLastPublishedAt(lastStaticPost.publishedAt)
+      setLastId(lastStaticPost._id)
       console.log('SHOULD SET TO INITIAL POSTS')
       // refetch()
     }
@@ -81,45 +79,4 @@ export default function LoadMore({
       <div ref={container}>load more</div>
     </>
   )
-
-  // return (
-  //   <>
-  //     {dataPosts.posts.map((post) => (
-  //       <div
-  //         key={post._id}
-  //         className="w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square"
-  //       >
-  //         <Suspense>
-  //           <ListItem item={post} />
-  //         </Suspense>
-  //       </div>
-  //     ))}
-  //     <div ref={container}>load more</div>
-  //   </>
-  // )
 }
-
-// useEffect(() => {
-//   if (inViewport) {
-//     getCachedPosts({
-//       lastPublishedAt,
-//       lastId,
-//       limit: 8
-//     })
-//       .then((res) => {
-//         const newInitialPosts = res.data?.initialPosts
-//         if (newInitialPosts && newInitialPosts.length > 0) {
-//           setLastPublishedAt(
-//             newInitialPosts[newInitialPosts.length - 1].publishedAt
-//           )
-//           setLastId(newInitialPosts[newInitialPosts.length - 1]._id)
-//         }
-//         setData((prevData) => ({
-//           posts: [...prevData.posts, ...newInitialPosts]
-//         }))
-//       })
-//       .catch((error) => {
-//         console.error(`An error happened: ${error}`)
-//       })
-//   }
-// }, [inViewport])

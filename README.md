@@ -137,3 +137,8 @@ follow this tutorial:
 https://www.ericburel.tech/blog/static-paid-content-app-router
 
 i think on page.tsx route level instead of calling db you can retrieve subscription trier from session, set in custom JWT token (https://supabase.com/docs/guides/database/postgres/custom-claims-and-role-based-access-control-rbac) then in page.tsx you check it against info about post from CMS and render content or redirect.
+
+command to generate types (sanity)
+sanity schema extract  
+sanity typegen generate  
+mv schema.json sanity.types.ts src/utils/types/sanity/

@@ -29,7 +29,7 @@ export default function ListItem({
 }: {
   item:
     | InitialPostsQueryResult['posts'][number]
-    | PostsQueryResult['posts'][number]
+    | PostsQueryResult['posts'][number] // this is used in draft mode
   encodeDataAttribute?: EncodeDataAttributeCallback
 }) {
   const router = useRouter()
@@ -95,7 +95,7 @@ export default function ListItem({
           >
             <p>Go to post</p>
           </Link>
-          {/* <div className="mt-2 flex items-center gap-2">
+          <div className="mt-2 flex items-center gap-2">
             {item.filters?.map((filter) => (
               <p
                 className="border-2 p-1 w-fit border-black  font-semibold"
@@ -104,7 +104,7 @@ export default function ListItem({
                 {filter.slug}
               </p>
             ))}
-          </div> */}
+          </div>
           {/* <p>{item.filters}</p> */}
         </div>
 

@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger
-} from '@/components/shadcn/ui/dialog'
+} from './ToolbarDialog'
 import SearchInput from './SearchInput'
 
 export default function Search() {

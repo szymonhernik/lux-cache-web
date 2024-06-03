@@ -1,7 +1,6 @@
 import { groq } from 'next-sanity'
 
-export const postsQuery = groq`{
-  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {
+const postQueryFields = `
     _id, 
     title, 
     artistList,
@@ -14,6 +13,37 @@ export const postsQuery = groq`{
     filters,
     minimumTier,
     ogDescription,
+    filters[]->{
+      "slug": slug.current
+    },
+  
+`
+
+export const postsQuery = groq`{
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {
+    ${postQueryFields}
+  }
+}`
+
+export const initialPostsQuery = groq`{
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {
+    ${postQueryFields}
+  }
+}`
+
+export const morePostsQuery = groq`{
+  "posts": *[
+    _type == "post" &&  
+    ( !defined($lastPublishedAt) || (
+      publishedAt < $lastPublishedAt
+      || (publishedAt == $lastPublishedAt && _id < $lastId)
+    )) && 
+    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
+      count(
+        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
+      )
+    ] | order(publishedAt desc) [0...8] {
+    ${postQueryFields}
   }
 }`
 
@@ -27,49 +57,6 @@ export const filterGroupsQuery = groq`{
       "slug":slug.current,
       title,
     }
-  }
-}`
-
-export const initialPostsQuery = groq`{
-  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {
-    _id, 
-    title, 
-    artistList,
-    publishedAt, 
-    "slug": slug.current,
-    coverImage,
-    coverVideo,
-    filters[]->{
-      "slug": slug.current
-    },
-    minimumTier,
-    ogDescription,
-  }
-}`
-export const morePostsQuery = groq`{
-  "posts": *[
-    _type == "post" &&  
-    ( !defined($lastPublishedAt) || (
-      publishedAt < $lastPublishedAt
-      || (publishedAt == $lastPublishedAt && _id < $lastId)
-    )) && 
-    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || 
-      count(
-        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
-      )
-    ] | order(publishedAt desc) [0...8] {
-    _id, 
-    title, 
-    artistList,
-    publishedAt, 
-    "slug": slug.current,
-    coverImage,
-    coverVideo,
-    filters[]->{
-      "slug": slug.current
-    },
-    minimumTier,
-    ogDescription,
   }
 }`
 
