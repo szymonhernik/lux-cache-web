@@ -27,8 +27,6 @@ export default function LoadMore({
     ? initialPosts[initialPosts.length - 1]
     : null
 
-  console.log('lastStaticPost', lastStaticPost)
-
   const lastPublishedAt = lastStaticPost ? lastStaticPost.publishedAt : null
 
   const lastId = lastStaticPost ? lastStaticPost._id : null

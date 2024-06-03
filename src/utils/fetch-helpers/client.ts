@@ -1,10 +1,9 @@
 import { client } from '@/sanity/lib/client'
-import { groq } from 'next-sanity'
 import {
   MorePostsQueryResult,
   PostsQueryResult
 } from '../types/sanity/sanity.types'
-import { morePostsQuery } from '@/sanity/lib/queries'
+import { morePostsQuery, searchQuery } from '@/sanity/lib/queries'
 import { SinglePostType } from '../types/sanity'
 
 const fetchMorePosts = async (
@@ -15,8 +14,6 @@ const fetchMorePosts = async (
     limit: number
   }
 ) => {
-  console.log('paginationParams: ', paginationParams)
-
   // console.log('selectedFiltersArray: ', selectedFiltersArray)
 
   const result: MorePostsQueryResult = await client.fetch(morePostsQuery, {
@@ -43,4 +40,11 @@ const fetchMorePosts = async (
   return posts
 }
 
-export { fetchMorePosts }
+const getSearchResults = async (searchValue: string) => {
+  const result = await client.fetch(searchQuery, { searchValue })
+  console.log('result: ', result)
+
+  return result
+}
+
+export { fetchMorePosts, getSearchResults }

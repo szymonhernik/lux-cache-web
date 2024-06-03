@@ -10,7 +10,6 @@ const postQueryFields = `
       asset->{url}
     },
     coverVideo,
-    filters,
     minimumTier,
     ogDescription,
     filters[]->{
@@ -46,6 +45,28 @@ export const morePostsQuery = groq`{
     ${postQueryFields}
   }
 }`
+
+export const searchQuery = groq`
+  {
+    "artists": *[_type == "artist" && name match $searchValue + "*"]{
+      _id,
+      name,
+      "slug": slug.current,
+    },
+    "posts": *[_type == "post" && title match $searchValue + "*"]{
+      _id,
+      title,
+      publishedAt,
+      "slug": slug.current,
+      ogDescription,
+      filters[]->{
+        "slug": slug.current,
+        title
+      },
+    }
+    
+  }
+`
 
 export const filterGroupsQuery = groq`{
   "filterGroups": *[_type == "filterGroup"]{
