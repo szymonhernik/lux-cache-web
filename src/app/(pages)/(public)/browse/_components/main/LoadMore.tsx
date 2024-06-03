@@ -1,7 +1,6 @@
 // @ts-nocheck
 'use client'
 
-import { getCachedPosts, getPosts } from '@/utils/actions/getPosts'
 import { SinglePostType } from '@/utils/types/sanity'
 import { useInViewport } from '@mantine/hooks'
 import { Suspense, useEffect, useRef, useState } from 'react'
@@ -9,14 +8,11 @@ import ListItem from './ListItem'
 import { unstable_cache } from 'next/cache'
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query'
 import { loadMorePosts } from '@/sanity/loader/loadQuery'
-import { fetchMorePosts } from '@/utils/fetch-helpers/client'
 
 import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useInfinitePost } from '@/utils/hooks/use-infinite-post'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
-
-// Create a cached version of the getPosts function
 
 export default function LoadMore({
   initialPosts

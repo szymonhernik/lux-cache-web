@@ -8,11 +8,6 @@ import {
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
-import {
-  fetchPostsFromSanity,
-  numberOfItemsPerPage
-} from '@/utils/fetch-helpers'
-
 import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
