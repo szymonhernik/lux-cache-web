@@ -63,7 +63,23 @@ export const searchQuery = groq`
         "slug": slug.current,
         title
       },
+    },
+    "series": *[_type== "series" && title match $searchValue + "*"]{
+      _id,
+      title,
+      "slug": slug.current,
+    },
+    "hiddenTags": *[_type == 'post' && hiddenTags match $searchValue + "*"]{
+      _id,
+      title,
+      "slug": slug.current,
     }
+    // "series":  *[_type == "post" && series[]->title match $searchValue + "*"] {
+    //   _id,
+    //   title,
+    //   "slug": slug.current,
+    // },
+    
     
   }
 `

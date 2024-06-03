@@ -4293,6 +4293,13 @@
           }
         },
         "optional": true
+      },
+      "hiddenTags": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
       }
     }
   },

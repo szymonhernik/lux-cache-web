@@ -683,6 +683,7 @@ export type Post = {
         _key: string
       } & PostFooter)
   >
+  hiddenTags?: string
 }
 
 export type SanityFileAsset = {
@@ -825,7 +826,7 @@ export type MuxVideoAsset = {
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: ./src/sanity/lib/queries.ts
 // Variable: postsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    filters,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type PostsQueryResult = {
   posts: Array<{
     _id: string
@@ -849,15 +850,15 @@ export type PostsQueryResult = {
       } | null
     } | null
     coverVideo: Video | null
+    minimumTier: '0' | '1' | '2' | '3' | null
+    ogDescription: string | null
     filters: Array<{
       slug: string | null
     }> | null
-    minimumTier: '0' | '1' | '2' | '3' | null
-    ogDescription: string | null
   }>
 }
 // Variable: initialPostsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {        _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    filters,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {        _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type InitialPostsQueryResult = {
   posts: Array<{
     _id: string
@@ -881,15 +882,15 @@ export type InitialPostsQueryResult = {
       } | null
     } | null
     coverVideo: Video | null
+    minimumTier: '0' | '1' | '2' | '3' | null
+    ogDescription: string | null
     filters: Array<{
       slug: string | null
     }> | null
-    minimumTier: '0' | '1' | '2' | '3' | null
-    ogDescription: string | null
   }>
 }
 // Variable: morePostsQuery
-// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...8] {        _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    filters,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...8] {        _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type MorePostsQueryResult = {
   posts: Array<{
     _id: string
@@ -913,11 +914,36 @@ export type MorePostsQueryResult = {
       } | null
     } | null
     coverVideo: Video | null
+    minimumTier: '0' | '1' | '2' | '3' | null
+    ogDescription: string | null
     filters: Array<{
       slug: string | null
     }> | null
-    minimumTier: '0' | '1' | '2' | '3' | null
+  }>
+}
+// Variable: searchQuery
+// Query:   {    "artists": *[_type == "artist" && name match $searchValue + "*"]{      _id,      name,      "slug": slug.current,    },    "posts": *[_type == "post" && title match $searchValue + "*"]{      _id,      title,      publishedAt,      "slug": slug.current,      ogDescription,      filters[]->{        "slug": slug.current,        title      },    },    "series":  *[_type == "post" && series[]->title match $searchValue + "*"] {      _id,      title,      "slug": slug.current,    }      }
+export type SearchQueryResult = {
+  artists: Array<{
+    _id: string
+    name: string | null
+    slug: string | null
+  }>
+  posts: Array<{
+    _id: string
+    title: string | null
+    publishedAt: string | null
+    slug: string | null
     ogDescription: string | null
+    filters: Array<{
+      slug: string | null
+      title: string | null
+    }> | null
+  }>
+  series: Array<{
+    _id: string
+    title: string | null
+    slug: string | null
   }>
 }
 // Variable: filterGroupsQuery

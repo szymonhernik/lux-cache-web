@@ -282,6 +282,14 @@ export default defineType({
           type: 'postFooter'
         })
       ]
+    }),
+    defineField({
+      title: 'Hidden contextual tags',
+      name: 'hiddenTags',
+      type: 'text',
+      rows: 3,
+      description:
+        'Hidden tags that are not displayed on the post but that are used for search (example: LennarDigital delay reverb fors)'
     })
   ],
 

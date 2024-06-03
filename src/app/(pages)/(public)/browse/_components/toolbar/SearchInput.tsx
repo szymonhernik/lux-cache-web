@@ -56,16 +56,34 @@ export default function SearchInput() {
           {data.artists && (
             <div>
               <h1 className="font-semibold mb-2 text-xl">Artists</h1>
-              {data.artists.map((artist: any) => (
-                <div key={artist._id}>{artist.name}</div>
-              ))}
+              <div className="flex flex-col divide-y">
+                {data.artists.map((artist: any) => (
+                  <h2 key={artist._id}>{artist.name}</h2>
+                ))}
+              </div>
             </div>
           )}
           {data.posts && (
             <div>
               <h1 className="font-semibold mb-2 text-xl">Episodes</h1>
               {data.posts.map((post: any) => (
-                <div key={post._id}>{post.title}</div>
+                <h2 key={post._id}>{post.title}</h2>
+              ))}
+            </div>
+          )}
+          {data.series && (
+            <div>
+              <h1 className="font-semibold mb-2 text-xl">Series</h1>
+              {data.series.map((post: any) => (
+                <h2 key={post._id}>{post.title}</h2>
+              ))}
+            </div>
+          )}
+          {data.hiddenTags && (
+            <div>
+              <h1 className="font-semibold mb-2 text-xl">Tags</h1>
+              {data.hiddenTags.map((post: any) => (
+                <h2 key={post._id}>{post.title}</h2>
               ))}
             </div>
           )}

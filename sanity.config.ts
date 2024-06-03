@@ -17,7 +17,6 @@ import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
 
 import page from '@/sanity/schemas/documents/page'
-import project from '@/sanity/schemas/documents/project'
 
 import post from '@/sanity/schemas/documents/post'
 
