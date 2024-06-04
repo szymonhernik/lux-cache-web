@@ -7,6 +7,9 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import ArtistsResults from '../ArtistsResults'
 import s from './SearchInput.module.css'
+import EpisodesResults from '../EpisodesResults'
+import HiddenTagsResults from '../HiddenTagsResults'
+import SeriesResults from '../SeriesResults'
 
 const SearchInput = () => {
   const [searchValue, setSearchValue] = useState<string | null>(null)
@@ -62,54 +65,53 @@ const SearchInput = () => {
         className={`${s.minimalScrollbar} flex flex-col items-start gap-16 grow overflow-y-none overflow-x-hidden py-24`}
       >
         {/* Artists */}
-        <div className="flex flex-col gap-4 w-full">
-          <h1 className="font-semibold mb-2 text-xl lg:px-searchXPadding">
-            Artists
-          </h1>
-          {isLoading && <p className="lg:px-searchXPadding">Loading...</p>}
-          {data && data.artists && (
-            <ArtistsResults artistsResults={data.artists} />
-          )}
+        <div className="flex flex-col gap-4 w-full *:lg:px-searchXPadding">
+          <h1 className="font-semibold mb-2 text-xl ">Artists</h1>
+          {isLoading && <p className="">Loading...</p>}
+          <div className="!px-0">
+            {data && data.artists && data.artists.length > 0 ? (
+              <ArtistsResults artistsResults={data.artists} />
+            ) : data && data.artists.length == 0 ? (
+              <p className="lg:px-searchXPadding opacity-50">
+                no results found
+              </p>
+            ) : null}
+          </div>
         </div>
         {/* Episodes */}
-        <div>
-          <h1 className="font-semibold mb-2 text-xl lg:px-searchXPadding">
-            Episodes
-          </h1>
-          {isLoading && <p className="lg:px-searchXPadding">Loading...</p>}
-          {data && data.posts && (
-            <div className="lg:px-searchXPadding">
-              {data.posts.map((post: any) => (
-                <h2 key={post._id}>{post.title}</h2>
-              ))}
-            </div>
-          )}
+        <div className="lg:px-searchXPadding">
+          <h1 className="font-semibold mb-2 text-xl ">Episodes</h1>
+          {isLoading && <p className="">Loading...</p>}
+          {data && data.posts && data.posts.length > 0 ? (
+            <EpisodesResults episodesResults={data.posts} />
+          ) : data && data.posts.length == 0 ? (
+            <p className=" opacity-50">no results found</p>
+          ) : null}
         </div>
-        <div>
-          <h1 className="font-semibold mb-2 text-xl lg:px-searchXPadding">
-            Series
-          </h1>
-          {isLoading && <p className="lg:px-searchXPadding">Loading...</p>}
-          {data && data.series && (
-            <div className="lg:px-searchXPadding">
-              {data.series.map((post: any) => (
+        <div className="lg:px-searchXPadding w-full">
+          <h1 className="font-semibold mb-2 text-xl  ">Series</h1>
+          {isLoading && <p className="">Loading...</p>}
+          {data && data.series && data.series.length > 0 ? (
+            <div className="">
+              {/* {data.series.map((post: any) => (
                 <h2 key={post._id}>{post.title}</h2>
-              ))}
+              ))} */}
+              <SeriesResults seriesResults={data.series} />
             </div>
-          )}
+          ) : data && data.series.length == 0 ? (
+            <p className=" opacity-50">no results found</p>
+          ) : null}
         </div>
-        <div>
-          <h1 className="font-semibold mb-2 text-xl lg:px-searchXPadding">
-            Tags
-          </h1>
-          {isLoading && <p className="lg:px-searchXPadding">Loading...</p>}
-          {data && data.hiddenTags && (
-            <div className="lg:px-searchXPadding">
-              {data.hiddenTags.map((post: any) => (
-                <h2 key={post._id}>{post.title}</h2>
-              ))}
+        <div className="lg:px-searchXPadding">
+          <h1 className="font-semibold mb-2 text-xl ">Tags</h1>
+          {isLoading && <p className="">Loading...</p>}
+          {data && data.hiddenTags && data.hiddenTags.length > 0 ? (
+            <div className="">
+              <HiddenTagsResults hiddenTagsResults={data.hiddenTags} />
             </div>
-          )}
+          ) : data && data.hiddenTags.length == 0 ? (
+            <p className=" opacity-50">no results found</p>
+          ) : null}
         </div>
       </div>
     </>

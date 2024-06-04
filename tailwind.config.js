@@ -43,6 +43,9 @@ module.exports = {
       padding: {
         searchXPadding: 'var(--padding-x-searchbar)'
       },
+      inset: {
+        searchXPadding: 'var(--padding-x-searchbar)'
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
