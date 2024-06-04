@@ -922,21 +922,32 @@ export type MorePostsQueryResult = {
   }>
 }
 // Variable: searchQuery
-// Query:   {    "artists": *[_type == "artist" && name match $searchValue + "*"]{      _id,      name,      "slug": slug.current,    },    "posts": *[_type == "post" && title match $searchValue + "*"]{      _id,      title,      publishedAt,      "slug": slug.current,      ogDescription,      filters[]->{        "slug": slug.current,        title      },    },    "series":  *[_type == "post" && series[]->title match $searchValue + "*"] {      _id,      title,      "slug": slug.current,    }      }
+// Query:   {    "artists": *[_type == "artist" && name match $searchValue + "*"]{      _id,      name,      "slug": slug.current,      image,    },    "posts": *[_type == "post" && title match $searchValue + "*"]{      _id,      title,      publishedAt,      "slug": slug.current,      series[]->{        _id,        title,      },    },    "series": *[_type== "series" && title match $searchValue + "*"]{      _id,      title,      "slug": slug.current,    },    "hiddenTags": *[_type == 'post' && hiddenTags match $searchValue + "*"]{      _id,      title,      "slug": slug.current,      publishedAt,      series[]->{        _id,        title,      },    }    // "series":  *[_type == "post" && series[]->title match $searchValue + "*"] {    //   _id,    //   title,    //   "slug": slug.current,    // },          }
 export type SearchQueryResult = {
   artists: Array<{
     _id: string
     name: string | null
     slug: string | null
+    image: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    } | null
   }>
   posts: Array<{
     _id: string
     title: string | null
     publishedAt: string | null
     slug: string | null
-    ogDescription: string | null
-    filters: Array<{
-      slug: string | null
+    series: Array<{
+      _id: string
       title: string | null
     }> | null
   }>
@@ -944,6 +955,16 @@ export type SearchQueryResult = {
     _id: string
     title: string | null
     slug: string | null
+  }>
+  hiddenTags: Array<{
+    _id: string
+    title: string | null
+    slug: string | null
+    publishedAt: string | null
+    series: Array<{
+      _id: string
+      title: string | null
+    }> | null
   }>
 }
 // Variable: filterGroupsQuery

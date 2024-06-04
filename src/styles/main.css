@@ -41,6 +41,8 @@
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
 
+    --highlight-green: 151 100% 50%;
+
     /* --color-text: 0, 0%, 3.9%;
     --text-secondary: 0, 0%, 32.2%; */
 
@@ -56,6 +58,9 @@
     --height-navbar: auto;
     /* widths */
     --width-navbar: 16rem;
+
+    /* padding */
+    --padding-x-searchbar: 8rem;
   }
 }
 

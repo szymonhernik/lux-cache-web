@@ -40,10 +40,14 @@ module.exports = {
       gridTemplateRows: {
         custom: 'repeat(auto-fill, minmax(33vh, 1fr));'
       },
+      padding: {
+        searchXPadding: 'var(--padding-x-searchbar)'
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        highlightGreen: 'hsl(var(--highlight-green))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         'surface-brand': 'hsl(var(--surface-brand))',
@@ -84,6 +88,7 @@ module.exports = {
           DEFAULT: 'hsl(var(--disabled))',
           foreground: 'hsl(var(--disabled-foreground))'
         }
+
         // text: {
         //   DEFAULT: 'hsl(var(--color-text))',
         //   secondary: 'hsl(var(--text-secondary))',

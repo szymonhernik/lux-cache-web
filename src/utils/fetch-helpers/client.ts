@@ -1,7 +1,8 @@
 import { client } from '@/sanity/lib/client'
 import {
   MorePostsQueryResult,
-  PostsQueryResult
+  PostsQueryResult,
+  SearchQueryResult
 } from '../types/sanity/sanity.types'
 import { morePostsQuery, searchQuery } from '@/sanity/lib/queries'
 import { SinglePostType } from '../types/sanity'
@@ -41,10 +42,12 @@ const fetchMorePosts = async (
 }
 
 const getSearchResults = async (searchValue: string) => {
+  // freeze for 3 seconds
+  await new Promise((resolve) => setTimeout(resolve, 3000))
   const result = await client.fetch(searchQuery, { searchValue })
   console.log('result: ', result)
 
-  return result
+  return result as SearchQueryResult
 }
 
 export { fetchMorePosts, getSearchResults }

@@ -52,16 +52,16 @@ export const searchQuery = groq`
       _id,
       name,
       "slug": slug.current,
+      image,
     },
     "posts": *[_type == "post" && title match $searchValue + "*"]{
       _id,
       title,
       publishedAt,
       "slug": slug.current,
-      ogDescription,
-      filters[]->{
-        "slug": slug.current,
-        title
+      series[]->{
+        _id,
+        title,
       },
     },
     "series": *[_type== "series" && title match $searchValue + "*"]{
@@ -73,6 +73,11 @@ export const searchQuery = groq`
       _id,
       title,
       "slug": slug.current,
+      publishedAt,
+      series[]->{
+        _id,
+        title,
+      },
     }
     // "series":  *[_type == "post" && series[]->title match $searchValue + "*"] {
     //   _id,

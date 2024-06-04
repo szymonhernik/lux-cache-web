@@ -31,11 +31,11 @@ export default function Search() {
       <DialogTrigger className="p-2 focus:ring-2 focus:ring-zinc-950  focus:ring-offset-1 focus:outline-none rounded ">
         Search
       </DialogTrigger>
-      <DialogContent className="h-dvh overlay-y-auto px-24 pt-16">
-        <DialogHeader className="space-y-48">
-          <SearchInput />
-          {/* <SearchResults /> */}
-        </DialogHeader>
+      <DialogContent className="h-dvh flex flex-col ">
+        {/* <DialogHeader className="space-y-48"> */}
+        <SearchInput />
+        {/* <SearchResults /> */}
+        {/* </DialogHeader> */}
       </DialogContent>
     </Dialog>
   )
