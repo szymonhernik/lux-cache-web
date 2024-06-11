@@ -5,7 +5,11 @@ import {
   Subscription,
   SubscriptionWithPriceAndProduct
 } from '../types'
+import { redirect } from 'next/navigation'
+import { Tables } from 'types_db'
+import { getErrorRedirect } from '../helpers'
 
+type User = Tables<'users'>
 export const getUser = cache(async (supabase: SupabaseClient) => {
   const {
     data: { user }
@@ -19,6 +23,9 @@ export const getSubscription = cache(async (supabase: SupabaseClient) => {
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
     .maybeSingle()
+  if (error) {
+    console.error('Error fetching subscription:', error)
+  }
 
   return subscription as SubscriptionWithPriceAndProduct
 })
@@ -31,6 +38,9 @@ export const getProducts = cache(async (supabase: SupabaseClient) => {
     .eq('prices.active', true)
     .order('metadata->index')
     .order('unit_amount', { referencedTable: 'prices' })
+  if (error) {
+    console.error('Error fetching products:', error)
+  }
 
   return products as ProductWithPrices[]
 })
@@ -40,5 +50,31 @@ export const getUserDetails = cache(async (supabase: SupabaseClient) => {
     .from('users')
     .select('*')
     .single()
-  return userDetails
+  return userDetails as User
 })
+
+// get price and product info from stripe based on the price id
+export const getPrice = cache(
+  async (supabase: SupabaseClient, priceId: string) => {
+    const { data: price, error } = await supabase
+      .from('prices')
+      .select('*, products(*)')
+      .eq('active', true)
+      .eq('id', priceId)
+      .eq('products.active', true)
+      .maybeSingle()
+
+    console.log('price', price)
+
+    if (error || !price) {
+      return redirect(
+        getErrorRedirect(
+          `/`,
+          'Plan that you chose was not found',
+          'Please choose one of the available plans.'
+        )
+      )
+    }
+    return price
+  }
+)

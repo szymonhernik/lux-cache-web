@@ -5,6 +5,12 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import CustomStripeCheckout from './_components/CustomStripeCheckout'
+import {
+  getPrice,
+  getSubscription,
+  getUser,
+  getUserDetails
+} from '@/utils/supabase/queries'
 
 export const dynamic = 'force-dynamic'
 
@@ -33,10 +39,7 @@ export default async function CheckoutPage({
   // check if the user is logged in
 
   const supabase = createClient()
-
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+  const user = await getUser(supabase)
 
   if (!user) {
     return redirect('/signin')
@@ -45,39 +48,17 @@ export default async function CheckoutPage({
   // check if the user has a subscription
   // // if yes we want to redirect the user to their account page to avoid making multiple subscriptions
 
-  const { data: subscription, error } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .maybeSingle()
-
-  if (error) {
-    console.log(error)
-  }
+  const subscription = await getSubscription(supabase)
 
   if (subscription) {
-    redirect('/account')
+    return redirect('/account')
   }
 
   // get price and product info from stripe based on the price id
-  const { data: price, error: priceFetchError } = await supabase
-    .from('prices')
-    .select('*, products(*)')
-    .eq('active', true)
-    .eq('id', validatedSearchParams.data.priceId)
-    .eq('products.active', true)
-    .maybeSingle()
-
-  if (priceFetchError) {
-    return redirect('/')
-  }
-
-  const { data: userDetails } = await supabase
-    .from('users')
-    .select('can_trial')
-    .single()
-
-  // console.log('userCanTrial', userCanTrial);
+  const [price, userDetails] = await Promise.all([
+    getPrice(supabase, 'aar'),
+    getUserDetails(supabase)
+  ])
 
   // if the price is found and all the checks passed we can render the custom checkout page
 
