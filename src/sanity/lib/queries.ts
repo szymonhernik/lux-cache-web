@@ -81,6 +81,14 @@ export const searchQuery = groq`
     }
   }
 `
+
+export const filterByTagsQuery = groq`
+  *[_type == "post" && count((filters[]->slug.current)[@ in $tagsSelected]) == count($tagsSelected)]{
+    _id,
+    filters[]->{
+      "slug": slug.current
+    }
+  }`
 export const searchQueryDefault = groq`
   {
     "artists": *[_type == "artist" && name match "*a*" ][0..0]{

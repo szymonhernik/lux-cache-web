@@ -17,7 +17,8 @@ export const useInfinitePost = (
   limit: number
 ) => {
   const initialPageParams = { lastPublishedAt, lastId, limit }
-  // const searchParams = useSearchParams()
+  const searchParams = useSearchParams()
+  const isFiltered = searchParams.get('filter')
   // const initialPageParams = searchParams.get('filter')
   //   ? { lastPublishedAt: null, lastId: null, limit }
   //   : { lastPublishedAt, lastId, limit }
@@ -33,7 +34,9 @@ export const useInfinitePost = (
     }) => {
       return fetchMorePosts(selectedFiltersArray, pageParam)
     },
-    enabled: false,
+    // if filters are present i want to fetch posts on rerender
+    // if the app is in default (no filters) i don't want to fetch new posts, until i reach the element that triggers the fetch is in the viewport
+    enabled: Boolean(isFiltered),
     getNextPageParam: (lastPage) => {
       if (lastPage.length > 0) {
         const lastPost = lastPage[lastPage.length - 1]

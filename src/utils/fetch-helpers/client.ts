@@ -1,10 +1,12 @@
 import { client } from '@/sanity/lib/client'
 import {
+  FilterByTagsQueryResult,
   MorePostsQueryResult,
   PostsQueryResult,
   SearchQueryResult
 } from '../types/sanity/sanity.types'
 import {
+  filterByTagsQuery,
   morePostsQuery,
   searchQuery,
   searchQueryDefault
@@ -62,5 +64,10 @@ const getSearchResults = async (searchValue: string | null) => {
 
   return result as SearchQueryResult
 }
+const getFilteredPosts = async (tagsSelected: string[]) => {
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
+  const result = await client.fetch(filterByTagsQuery, { tagsSelected })
+  return result as FilterByTagsQueryResult
+}
 
-export { fetchMorePosts, getSearchResults }
+export { fetchMorePosts, getSearchResults, getFilteredPosts }

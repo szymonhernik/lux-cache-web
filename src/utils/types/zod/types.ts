@@ -49,6 +49,24 @@ const CustomerDataSchema = z.object({
   })
 })
 
+// FILTER DIALOG
+
+const groupFilterSchema = z.object({
+  slug: z.string(),
+  title: z.string().nullable()
+})
+
+const filterGroupSchema = z.object({
+  _id: z.string(),
+  title: z.string().nullable(),
+  slug: z.string().nullable(),
+  groupFilters: z.array(groupFilterSchema).nullable()
+})
+
+const FilterGroupsSchema = z.array(filterGroupSchema)
+
+// END OF FILTER DIALOG
+
 export {
   CardDetailsSchema,
   PaymentMethodSchema,
@@ -59,5 +77,6 @@ export {
   SubscriptionSchema,
   SubscriptionIdSchema,
   ListPaymentMethodSchema,
-  ProductMetadataSchema
+  ProductMetadataSchema,
+  FilterGroupsSchema
 }

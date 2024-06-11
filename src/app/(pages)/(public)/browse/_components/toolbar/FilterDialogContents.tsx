@@ -11,32 +11,21 @@ import {
   DialogTrigger
 } from './ToolbarDialog'
 import { FilterGroupsQueryResult } from '@/utils/types/sanity/sanity.types'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
-import { z } from 'zod'
 import s from './SearchInput/SearchInput.module.css'
-import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 
-// Define Zod schema for validation
-const groupFilterSchema = z.object({
-  slug: z.string(),
-  title: z.string().nullable()
-})
-
-const filterGroupSchema = z.object({
-  _id: z.string(),
-  title: z.string().nullable(),
-  slug: z.string().nullable(),
-  groupFilters: z.array(groupFilterSchema).nullable()
-})
-
-const filterGroupsSchema = z.array(filterGroupSchema)
+import { FilterGroupsSchema } from '@/utils/types/zod/types'
+import { useQuery } from '@tanstack/react-query'
+import { getFilteredPosts } from '@/utils/fetch-helpers/client'
 
 type Props = {
   filterGroups: FilterGroupsQueryResult['filterGroups']
 }
 
 export default function FilterDialogContents(props: Props) {
+  const { filterGroups } = props
+
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
   const filtersArray = filters ? filters.split(',') : []
@@ -45,20 +34,39 @@ export default function FilterDialogContents(props: Props) {
   )
   const router = useRouter()
   const pathname = usePathname()
-  const { filterGroups } = props
-  // console.log('tagsSelected', tagsSelected)
+  useEffect(() => {
+    setTagsSelected(filtersArray)
+  }, [searchParams])
 
   // TODO: upon selecting a tag, it will have to look through posts to find the ones that have the tag and allow only tags that are matching
 
-  const validatedFilterGroups = filterGroupsSchema.safeParse(filterGroups)
+  // When a filter is selected, i need to fetch the posts that have that tag, and then filter the tags that are available to select (if a tag is not in the posts, it should not be selectable)
 
-  if (!validatedFilterGroups.success) {
-    console.error('Error loading filters.')
-    return null
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ['filter', tagsSelected ? tagsSelected : ''],
+    staleTime: 5 * 60 * 1000, //  5 minutes
+    queryFn: () => {
+      if (tagsSelected.length > 0) {
+        return getFilteredPosts(tagsSelected)
+      } else {
+        return null
+      }
+    }
+    // enabled: searchValue !== null
+  })
+  const availableFilters = data?.map((post) => post.filters).flat()
+  const flattenedFilters = availableFilters?.flat()
+
+  // Extract slugs and remove duplicates using a Set
+  const uniqueSlugs = [
+    ...new Set(flattenedFilters?.map((filter) => filter?.slug))
+  ]
+
+  // console.log('uniqueSlugs:', uniqueSlugs)
+
+  const isFilterAvailable = (slug: string | undefined) => {
+    return uniqueSlugs.length === 0 || uniqueSlugs.includes(slug!)
   }
-
-  // console.log('tagsSelected', tagsSelected)
-  // console.log('filtersArray', filtersArray)
 
   return (
     <>
@@ -68,8 +76,8 @@ export default function FilterDialogContents(props: Props) {
         >
           {/* <h1 className="font-semibold uppercase">ARTISTS</h1> */}
 
-          {validatedFilterGroups.success ? (
-            validatedFilterGroups?.data.map((filterGroup) => (
+          {filterGroups &&
+            filterGroups?.map((filterGroup) => (
               <div key={filterGroup._id} className="flex flex-col gap-2 ">
                 <h1 className="font-semibold uppercase ">
                   {filterGroup.title}
@@ -78,20 +86,25 @@ export default function FilterDialogContents(props: Props) {
                   {filterGroup?.groupFilters?.map((groupFilter) => (
                     <li key={groupFilter.title}>
                       <button
+                        disabled={
+                          !isFilterAvailable(groupFilter?.slug!) || isLoading
+                        }
                         className={`px-6 py-2 rounded-3xl text-xs lg:text-sm uppercase ${
-                          tagsSelected.includes(groupFilter.slug)
+                          tagsSelected.includes(groupFilter.slug!)
                             ? 'bg-white text-black border-gray-300'
                             : 'bg-black text-white border-black'
-                        }`}
+                        } 
+                        ${isLoading && 'animate-pulse !text-neutral-500'}
+                        ${!isFilterAvailable(groupFilter?.slug!) && '!text-neutral-500 '}`}
                         onClick={() => {
                           // Ensure slug is not null
                           setTagsSelected((prev) => {
-                            if (prev.includes(groupFilter.slug)) {
+                            if (prev.includes(groupFilter.slug!)) {
                               return prev.filter(
                                 (tag) => tag !== groupFilter.slug
                               )
                             } else {
-                              return [...prev, groupFilter.slug]
+                              return [...prev, groupFilter.slug!]
                             }
                           })
                         }}
@@ -102,10 +115,7 @@ export default function FilterDialogContents(props: Props) {
                   ))}
                 </ul>
               </div>
-            ))
-          ) : (
-            <p>Error: No filters found.</p>
-          )}
+            ))}
         </div>
 
         <DialogFooter className="fixed w-max mx-auto left-0 right-0 bottom-8 lg:bottom-16 ">
@@ -121,17 +131,18 @@ export default function FilterDialogContents(props: Props) {
                 Apply
               </Button>
             </DialogClose>
-          ) : tagsSelected !== filtersArray ? //   <Button // <DialogClose asChild>
-          //     onClick={() => {
-          //       router.push(`${pathname}`)
-          //       //  setTagsSelected([])
-          //     }}
-          //     size={'xl'}
-          //   >
-          //     Apply
-          //   </Button>
-          // </DialogClose>
-          null : (
+          ) : tagsSelected !== filtersArray ? (
+            <DialogClose asChild>
+              <Button
+                onClick={() => {
+                  router.push(`${pathname}`)
+                }}
+                size={'lg'}
+              >
+                Apply
+              </Button>
+            </DialogClose>
+          ) : (
             <Button disabled={true} size={'xl'}>
               Apply
             </Button>
