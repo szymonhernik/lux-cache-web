@@ -1,9 +1,11 @@
 # lc app
 
+Template repo: https://github.com/vercel/nextjs-subscription-payments
+
 ## TODO
 
 - [x] Make it deploy (vercel)
-- [ ] TODO: Update with changes made to template repo: https://github.com/vercel/nextjs-subscription-payments
+- [x] Update with changes made to template repo
 
 ### Stripe
 
@@ -56,10 +58,11 @@
 - [ ] Routing/post page (parallel route)
 - [ ] Role based access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
-- [ ] TODO: Fetch function for initial posts — render static browse, all posts filtered should be dynamic (api route)
-- [ ] filters results
-- [ ] dynamic search results (also in studio)
-- [ ] see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
+- [x] Fetch function for initial posts — render static browse, all posts filtered should be dynamic (api route)
+- [x] filters results
+- [x] dynamic search results (also in studio)
+- [x] see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
+- [ ] render default two results for each search query so that it's not empty
 
 ### Supabase
 

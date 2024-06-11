@@ -19,8 +19,8 @@ export default function ArtistsResults(props: Props) {
                   image={artist.image}
                   size="30vw"
                   classesWrapper="relative aspect-[16/9]"
-                  width={360}
-                  height={200}
+                  width={504}
+                  height={280}
                 />
               </div>
 

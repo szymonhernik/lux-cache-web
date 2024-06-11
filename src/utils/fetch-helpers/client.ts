@@ -4,7 +4,11 @@ import {
   PostsQueryResult,
   SearchQueryResult
 } from '../types/sanity/sanity.types'
-import { morePostsQuery, searchQuery } from '@/sanity/lib/queries'
+import {
+  morePostsQuery,
+  searchQuery,
+  searchQueryDefault
+} from '@/sanity/lib/queries'
 import { SinglePostType } from '../types/sanity'
 
 export const limitNumber = 20
@@ -43,10 +47,15 @@ const fetchMorePosts = async (
   return posts
 }
 
-const getSearchResults = async (searchValue: string) => {
+const getSearchResults = async (searchValue: string | null) => {
   // freeze for 3 seconds
-  await new Promise((resolve) => setTimeout(resolve, 3000))
-  const result = await client.fetch(searchQuery, { searchValue })
+  console.log('Trying fetching')
+  console.log('searchValue: ', searchValue)
+
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
+  const result = searchValue
+    ? await client.fetch(searchQuery, { searchValue })
+    : await client.fetch(searchQueryDefault)
   console.log('result: ', result)
 
   return result as SearchQueryResult

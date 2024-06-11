@@ -79,13 +79,41 @@ export const searchQuery = groq`
         title,
       },
     }
-    // "series":  *[_type == "post" && series[]->title match $searchValue + "*"] {
-    //   _id,
-    //   title,
-    //   "slug": slug.current,
-    // },
-    
-    
+  }
+`
+export const searchQueryDefault = groq`
+  {
+    "artists": *[_type == "artist" && name match "*a*" ][0..0]{
+      _id,
+      name,
+      "slug": slug.current,
+      image,
+    },
+    "posts": *[_type == "post" && title match "*a*" ][0..0]{
+      _id,
+      title,
+      publishedAt,
+      "slug": slug.current,
+      series[]->{
+        _id,
+        title,
+      },
+    },
+    "series": *[_type == "series" && title match "*a*" ][0..0]{
+      _id,
+      title,
+      "slug": slug.current,
+    },
+    "hiddenTags": *[_type == 'post' && hiddenTags match "*a*" ][0..0]{
+      _id,
+      title,
+      "slug": slug.current,
+      publishedAt,
+      series[]->{
+        _id,
+        title,
+      },
+    }
   }
 `
 

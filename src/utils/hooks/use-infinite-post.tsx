@@ -21,7 +21,7 @@ export const useInfinitePost = (
   // const initialPageParams = searchParams.get('filter')
   //   ? { lastPublishedAt: null, lastId: null, limit }
   //   : { lastPublishedAt, lastId, limit }
-  // TODO: sort selectedFiltersArray alphabetically so that whatever order the user selects the filters in, the query key will be the same
+  // sort selectedFiltersArray alphabetically so that whatever order the user selects the filters in, the query key will be the same
   const sortedSelectedFiltersArray = sortSelectedFilters(selectedFiltersArray)
   return useInfiniteQuery({
     queryKey: ['infinite', sortedSelectedFiltersArray],

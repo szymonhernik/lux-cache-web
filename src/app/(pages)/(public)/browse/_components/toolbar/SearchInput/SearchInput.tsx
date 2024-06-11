@@ -18,13 +18,9 @@ const SearchInput = () => {
     queryKey: ['search', searchValue ? searchValue : ''],
     staleTime: 5 * 60 * 1000, //  5 minutes
     queryFn: () => {
-      if (searchValue !== null) {
-        return getSearchResults(searchValue)
-      } else {
-        return null
-      }
-    },
-    enabled: searchValue !== null
+      return getSearchResults(searchValue)
+    }
+    // enabled: searchValue !== null
   })
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -48,7 +44,7 @@ const SearchInput = () => {
     <>
       <form
         onSubmit={onSubmit}
-        className="relative w-full h-24 mt-16 lg:px-searchXPadding"
+        className="relative w-full h-24 mt-16 lg:px-searchXPadding flex items-center gap-4"
       >
         <input
           key={searchValue ? searchValue : 'default'}
@@ -57,16 +53,21 @@ const SearchInput = () => {
           placeholder="SEARCH"
           autoComplete="off"
           defaultValue={searchValue ? searchValue : ''}
-          className="w-full   border-b-[1px]  bg-transparent py-1  text-lg text-white focus:ring-0  focus:ring-offset-0 focus:outline-none uppercase italic font-semibold placeholder:text-neutral-400 placeholder:uppercase "
+          className="peer w-46 flex-grow  border-b-[1px]  bg-transparent py-1  text-lg text-white focus:ring-0  focus:ring-offset-0 focus:outline-none uppercase italic font-semibold placeholder:text-neutral-400 placeholder:uppercase animate-all"
         />
+        <button
+          className={`w-fit font-semibold text-sm hidden peer-focus:block`}
+        >
+          SEARCH
+        </button>
       </form>
 
       <div
-        className={`${s.minimalScrollbar} flex flex-col items-start gap-16 grow overflow-y-none overflow-x-hidden py-24`}
+        className={`${s.minimalScrollbar} flex flex-col items-start gap-12 grow overflow-y-none overflow-x-hidden py-24`}
       >
         {/* Artists */}
         <div className="flex flex-col gap-4 w-full *:lg:px-searchXPadding">
-          <h1 className="font-semibold mb-2 text-xl ">Artists</h1>
+          <h1 className="font-semibold mb-2 text-lg uppercase">Artists</h1>
           {isLoading && <p className="">Loading...</p>}
           <div className="!px-0">
             {data && data.artists && data.artists.length > 0 ? (
@@ -80,7 +81,7 @@ const SearchInput = () => {
         </div>
         {/* Episodes */}
         <div className="lg:px-searchXPadding">
-          <h1 className="font-semibold mb-2 text-xl ">Episodes</h1>
+          <h1 className="font-semibold mb-2 text-lg uppercase">Episodes</h1>
           {isLoading && <p className="">Loading...</p>}
           {data && data.posts && data.posts.length > 0 ? (
             <EpisodesResults episodesResults={data.posts} />
@@ -89,7 +90,7 @@ const SearchInput = () => {
           ) : null}
         </div>
         <div className="lg:px-searchXPadding w-full">
-          <h1 className="font-semibold mb-2 text-xl  ">Series</h1>
+          <h1 className="font-semibold mb-2 text-lg uppercase">Series</h1>
           {isLoading && <p className="">Loading...</p>}
           {data && data.series && data.series.length > 0 ? (
             <div className="">
@@ -103,7 +104,7 @@ const SearchInput = () => {
           ) : null}
         </div>
         <div className="lg:px-searchXPadding">
-          <h1 className="font-semibold mb-2 text-xl ">Tags</h1>
+          <h1 className="font-semibold mb-2 text-lg uppercase">Tags</h1>
           {isLoading && <p className="">Loading...</p>}
           {data && data.hiddenTags && data.hiddenTags.length > 0 ? (
             <div className="">
