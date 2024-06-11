@@ -14,6 +14,7 @@ import { FilterGroupsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import { z } from 'zod'
+import s from './SearchInput/SearchInput.module.css'
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 
 // Define Zod schema for validation
@@ -61,13 +62,15 @@ export default function FilterDialogContents(props: Props) {
 
   return (
     <>
-      <DialogContent className="h-dvh overlay-y-auto p-0  m-0 ">
-        <div className="space-y-16 overflow-y-auto py-24 px-24">
+      <DialogContent className={`h-dvh overlay-y-auto p-0  m-0 `}>
+        <div
+          className={`space-y-16 overflow-y-auto pt-24 pb-36 px-6 lg:px-24 ${tagsSelected.length > 0 && s.shadowOverview}`}
+        >
           {/* <h1 className="font-semibold uppercase">ARTISTS</h1> */}
 
           {validatedFilterGroups.success ? (
             validatedFilterGroups?.data.map((filterGroup) => (
-              <div key={filterGroup._id} className="flex flex-col gap-2">
+              <div key={filterGroup._id} className="flex flex-col gap-2 ">
                 <h1 className="font-semibold uppercase ">
                   {filterGroup.title}
                 </h1>
@@ -75,7 +78,7 @@ export default function FilterDialogContents(props: Props) {
                   {filterGroup?.groupFilters?.map((groupFilter) => (
                     <li key={groupFilter.title}>
                       <button
-                        className={`px-6 py-2 rounded-3xl text-sm uppercase ${
+                        className={`px-6 py-2 rounded-3xl text-xs lg:text-sm uppercase ${
                           tagsSelected.includes(groupFilter.slug)
                             ? 'bg-white text-black border-gray-300'
                             : 'bg-black text-white border-black'
@@ -101,11 +104,11 @@ export default function FilterDialogContents(props: Props) {
               </div>
             ))
           ) : (
-            <p>We are having problems loading filters...</p>
+            <p>Error: No filters found.</p>
           )}
         </div>
 
-        <DialogFooter className="fixed w-max mx-auto left-0 right-0 bottom-16 ">
+        <DialogFooter className="fixed w-max mx-auto left-0 right-0 bottom-8 lg:bottom-16 ">
           {tagsSelected.length > 0 ? (
             <DialogClose asChild>
               <Button
@@ -113,25 +116,23 @@ export default function FilterDialogContents(props: Props) {
                   router.push(`${pathname}?filter=${tagsSelected.join(',')}`)
                   //  setTagsSelected([])
                 }}
-                size={'lg'}
+                size={'xl'}
               >
                 Apply
               </Button>
             </DialogClose>
-          ) : tagsSelected !== filtersArray ? (
-            <DialogClose asChild>
-              <Button
-                onClick={() => {
-                  router.push(`${pathname}`)
-                  //  setTagsSelected([])
-                }}
-                size={'lg'}
-              >
-                Apply
-              </Button>
-            </DialogClose>
-          ) : (
-            <Button disabled={true} size={'lg'}>
+          ) : tagsSelected !== filtersArray ? //   <Button // <DialogClose asChild>
+          //     onClick={() => {
+          //       router.push(`${pathname}`)
+          //       //  setTagsSelected([])
+          //     }}
+          //     size={'xl'}
+          //   >
+          //     Apply
+          //   </Button>
+          // </DialogClose>
+          null : (
+            <Button disabled={true} size={'xl'}>
               Apply
             </Button>
           )}

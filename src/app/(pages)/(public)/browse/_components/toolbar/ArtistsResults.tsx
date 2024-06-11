@@ -11,13 +11,13 @@ export default function ArtistsResults(props: Props) {
     <div className="flex flex-col gap-2 ">
       {artistsResults.map((artist) => (
         <Link key={artist._id} href={`/artists/${artist.slug}`}>
-          <div className=" h-56  group relative hover:bg-highlightGreen/20 w-full">
+          <div className=" h-72 lg:h-56  group relative hover:bg-highlightGreen/20 w-full">
             {/* <div className="group- absolute h-56 w-[calc(100vw-2rem)] left-4 z-[-1]"></div> */}
-            <div className=" py-8 h-full flex gap-4 px-4 lg:px-searchXPadding">
-              <div className="w-72 h-full bg-pink-300 rounded-full overflow-hidden ">
+            <div className=" py-8 h-full flex flex-col lg:flex-row gap-4 px-4 lg:px-searchXPadding">
+              <div className="w-full lg:w-72  bg-pink-300 rounded-full overflow-hidden ">
                 <ImageBox
                   image={artist.image}
-                  size="30vw"
+                  size="(max-width: 768px) 100vw, 30vw"
                   classesWrapper="relative aspect-[16/9]"
                   width={504}
                   height={280}

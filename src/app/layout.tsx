@@ -1,13 +1,10 @@
 import { Metadata } from 'next'
 import Footer from '@/components/ui/Footer'
-import { Toaster } from '@/components/ui/Toasts/toaster'
-import { PropsWithChildren, Suspense } from 'react'
 import localFont from 'next/font/local'
 
 import '@/styles/main.css'
 import { getURL } from '@/utils/helpers'
 
-import GlobalNav from '@/components/ui/Header/GlobalNav'
 import { Providers } from '@/components/providers/providers'
 import QueryWrapper from '../components/providers/QueryWrapper'
 

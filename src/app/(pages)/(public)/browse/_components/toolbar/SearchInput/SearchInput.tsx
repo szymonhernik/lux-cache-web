@@ -10,9 +10,12 @@ import s from './SearchInput.module.css'
 import EpisodesResults from '../EpisodesResults'
 import HiddenTagsResults from '../HiddenTagsResults'
 import SeriesResults from '../SeriesResults'
+import { toast } from 'sonner'
 
 const SearchInput = () => {
   const [searchValue, setSearchValue] = useState<string | null>(null)
+  const [isInputFocused, setIsInputFocused] = useState(false)
+  const [isIputEmpty, setIsInputEmpty] = useState(true)
 
   const { data, refetch, isLoading } = useQuery({
     queryKey: ['search', searchValue ? searchValue : ''],
@@ -22,29 +25,49 @@ const SearchInput = () => {
     }
     // enabled: searchValue !== null
   })
+  const handleType = (value: string) => {
+    if (value.length > 0) {
+      setIsInputEmpty(false)
+    } else {
+      setIsInputEmpty(true)
+      setSearchValue(null)
+    }
+  }
+  const handleFocus = () => {
+    setIsInputFocused(true)
+  }
+  const handleBlur = (event: React.FocusEvent<HTMLFormElement>) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setIsInputFocused(false)
+    }
+  }
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  function onSubmit(
+    e: React.FormEvent<HTMLFormElement> | React.ChangeEvent<HTMLInputElement>
+  ) {
     e.preventDefault()
+
     // fetch the search input
     const val = e.target as HTMLFormElement
     const search = val.search as HTMLInputElement
+
     // format to lower case
     const searchValueFormatted = search.value.toLowerCase()
-    setSearchValue(searchValueFormatted)
-    // refetch()
 
-    // artists (get from artists)
-    // episodes (posts)
-    // series (get from episodes)
-    // tags (get from episodes)
+    // needs to be at least three characters
+    if (search.value.length > 2 || search.value.length == 0) {
+      setSearchValue(searchValueFormatted)
+    } else {
+      toast('Please enter at least 3 characters')
+    }
   }
-  // console.log('data ', data)
 
   return (
     <>
       <form
         onSubmit={onSubmit}
-        className="relative w-full h-24 mt-16 lg:px-searchXPadding flex items-center gap-4"
+        className=" relative w-full h-24 mt-16 lg:px-searchXPadding flex items-center gap-4"
+        onBlur={handleBlur}
       >
         <input
           key={searchValue ? searchValue : 'default'}
@@ -53,17 +76,21 @@ const SearchInput = () => {
           placeholder="SEARCH"
           autoComplete="off"
           defaultValue={searchValue ? searchValue : ''}
+          onFocus={handleFocus}
+          onChange={(e) => {
+            handleType(e.target.value)
+          }}
           className="peer w-46 flex-grow  border-b-[1px]  bg-transparent py-1  text-lg text-white focus:ring-0  focus:ring-offset-0 focus:outline-none uppercase italic font-semibold placeholder:text-neutral-400 placeholder:uppercase animate-all"
         />
-        <button
-          className={`w-fit font-semibold text-sm hidden peer-focus:block`}
-        >
-          SEARCH
-        </button>
+        {isInputFocused && (
+          <button type="submit" className="w-fit font-semibold text-sm">
+            SEARCH
+          </button>
+        )}
       </form>
 
       <div
-        className={`${s.minimalScrollbar} flex flex-col items-start gap-12 grow overflow-y-none overflow-x-hidden py-24`}
+        className={`${s.minimalScrollbar}  flex flex-col items-start gap-12 grow overflow-y-none overflow-x-hidden py-24`}
       >
         {/* Artists */}
         <div className="flex flex-col gap-4 w-full *:lg:px-searchXPadding">

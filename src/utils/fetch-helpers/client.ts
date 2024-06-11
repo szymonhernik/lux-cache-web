@@ -49,14 +49,16 @@ const fetchMorePosts = async (
 
 const getSearchResults = async (searchValue: string | null) => {
   // freeze for 3 seconds
-  console.log('Trying fetching')
-  console.log('searchValue: ', searchValue)
-
   // await new Promise((resolve) => setTimeout(resolve, 3000))
+
+  // artists (get from artists)
+  // episodes (posts)
+  // series (get from episodes)
+  // tags (get from episodes)
   const result = searchValue
     ? await client.fetch(searchQuery, { searchValue })
     : await client.fetch(searchQueryDefault)
-  console.log('result: ', result)
+  // console.log('result: ', result)
 
   return result as SearchQueryResult
 }

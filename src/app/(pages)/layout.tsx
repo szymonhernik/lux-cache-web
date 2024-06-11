@@ -1,6 +1,8 @@
 import { Metadata } from 'next'
 import Footer from '@/components/ui/Footer'
 import { Toaster } from '@/components/ui/Toasts/toaster'
+import { Toaster as Sonner } from '@/components/shadcn/ui/sonner'
+
 import { PropsWithChildren, Suspense } from 'react'
 import localFont from 'next/font/local'
 
@@ -46,6 +48,9 @@ export default async function Layout(props: { children: React.ReactNode }) {
       </div>
       <Suspense>
         <Toaster />
+      </Suspense>
+      <Suspense>
+        <Sonner />
       </Suspense>
 
       {draftMode().isEnabled && <LiveVisualEditing />}
