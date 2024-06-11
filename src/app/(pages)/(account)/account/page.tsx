@@ -7,18 +7,23 @@ import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkelet
 import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod'
 import PremiumPlansPanel from './_components/PremiumPlansPanel'
 import PasswordForm from '@/components/ui/AccountForms/PasswordForm'
+import { getUser, getUserDetails } from '@/utils/supabase/queries'
 
 export default async function Account() {
   const supabase = createClient()
+  const [user, userDetails] = await Promise.all([
+    getUser(supabase),
+    getUserDetails(supabase)
+  ])
 
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+  // const {
+  //   data: { user }
+  // } = await supabase.auth.getUser()
 
-  const { data: userDetails } = await supabase
-    .from('users')
-    .select('*')
-    .single()
+  // const { data: userDetails } = await supabase
+  //   .from('users')
+  //   .select('*')
+  //   .single()
 
   if (!user) {
     return redirect('/signin')

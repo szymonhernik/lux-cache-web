@@ -5,35 +5,22 @@ import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import PremiumPlansPanel from '../_components/PremiumPlansPanel'
 import Link from 'next/link'
+import {
+  getProducts,
+  getSubscription,
+  getUser,
+  getUserDetails
+} from '@/utils/supabase/queries'
 
 export default async function Page() {
   const supabase = createClient()
 
-  // const {
-  //   data: { user }
-  // } = await supabase.auth.getUser()
-
-  // if (!user) {
-  //   return redirect('/signin')
-  // }
-
-  const { data: subscription, error } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .maybeSingle()
-
-  const { data: products } = await supabase
-    .from('products')
-    .select('*, prices(*)')
-    .eq('active', true)
-    .eq('prices.active', true)
-    .order('metadata->index')
-    .order('unit_amount', { referencedTable: 'prices' })
-
-  if (error) {
-    console.log(error)
-  }
+  const [products, subscription] = await Promise.all([
+    // getUser(supabase),
+    // getUserDetails(supabase),
+    getProducts(supabase),
+    getSubscription(supabase)
+  ])
 
   return (
     <>

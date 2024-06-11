@@ -20,35 +20,13 @@ const meta = {
   favicon: '/favicon.ico',
   url: getURL()
 }
-
-export async function generateMetadata(): Promise<Metadata> {
-  return {
+export const metadata: Metadata = {
+  metadataBase: new URL(getURL()),
+  title: meta.title,
+  description: meta.description,
+  openGraph: {
     title: meta.title,
-    description: meta.description,
-    referrer: 'origin-when-cross-origin',
-    keywords: ['Vercel', 'Supabase', 'Next.js', 'Stripe', 'Subscription'],
-    authors: [{ name: 'Vercel', url: 'https://vercel.com/' }],
-    creator: 'Vercel',
-    publisher: 'Vercel',
-    robots: meta.robots,
-    icons: { icon: meta.favicon },
-    metadataBase: new URL(meta.url),
-    openGraph: {
-      url: meta.url,
-      title: meta.title,
-      description: meta.description,
-      images: [meta.cardImage],
-      type: 'website',
-      siteName: meta.title
-    },
-    twitter: {
-      card: 'summary_large_image',
-      site: '@Vercel',
-      creator: '@Vercel',
-      title: meta.title,
-      description: meta.description,
-      images: [meta.cardImage]
-    }
+    description: meta.description
   }
 }
 

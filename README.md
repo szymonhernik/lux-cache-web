@@ -3,6 +3,7 @@
 ## TODO
 
 - [x] Make it deploy (vercel)
+- [ ] TODO: Update with changes made to template repo: https://github.com/vercel/nextjs-subscription-payments
 
 ### Stripe
 
