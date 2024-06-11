@@ -12,6 +12,7 @@ import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useInfinitePost } from '@/utils/hooks/use-infinite-post'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
+import { limitNumber } from '@/utils/fetch-helpers/client'
 
 export default function LoadMore({
   initialPosts
@@ -39,7 +40,12 @@ export default function LoadMore({
     refetch,
     isFetching,
     isLoading
-  } = useInfinitePost(selectedFiltersArray, lastPublishedAt, lastId, 8)
+  } = useInfinitePost(
+    selectedFiltersArray,
+    lastPublishedAt,
+    lastId,
+    limitNumber
+  )
 
   useEffect(() => {
     if (inViewport && !isFetchingNextPage) {
@@ -65,7 +71,7 @@ export default function LoadMore({
           </GridWrapperDiv>
         ))}
       {/* if the last page in data has less than 8 results stop rendering load more  */}
-      {data && data.pages[data.pages.length - 1].length < 8 ? (
+      {data && data.pages[data.pages.length - 1].length < limitNumber ? (
         <div className="text-center">No more posts to load</div>
       ) : (
         <div ref={container}>load more</div>

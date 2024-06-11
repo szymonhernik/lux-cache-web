@@ -25,7 +25,7 @@ export const postsQuery = groq`{
 }`
 
 export const initialPostsQuery = groq`{
-  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...8] {
+  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {
     ${postQueryFields}
   }
 }`
@@ -41,7 +41,7 @@ export const morePostsQuery = groq`{
       count(
         (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)
       )
-    ] | order(publishedAt desc) [0...8] {
+    ] | order(publishedAt desc) [0...20] {
     ${postQueryFields}
   }
 }`

@@ -33,7 +33,7 @@ export const useInfinitePost = (
     }) => {
       return fetchMorePosts(selectedFiltersArray, pageParam)
     },
-    // enabled: false,
+    enabled: false,
     getNextPageParam: (lastPage) => {
       if (lastPage.length > 0) {
         const lastPost = lastPage[lastPage.length - 1]

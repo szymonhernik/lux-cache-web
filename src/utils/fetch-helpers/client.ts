@@ -7,6 +7,8 @@ import {
 import { morePostsQuery, searchQuery } from '@/sanity/lib/queries'
 import { SinglePostType } from '../types/sanity'
 
+export const limitNumber = 20
+
 const fetchMorePosts = async (
   selectedFiltersArray: Array<string> | null,
   paginationParams: {
