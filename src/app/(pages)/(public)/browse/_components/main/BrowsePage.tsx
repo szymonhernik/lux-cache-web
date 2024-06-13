@@ -29,26 +29,28 @@ export default async function BrowsePage({
   // const { posts } = previewData || {}
   return (
     <>
-      <BrowsePageWrapper>
-        <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-          <Toolbar />
-        </div>
-        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[10] sticky top-0 left-0 bg-surface-brand">
-          <DynamicDisplayBar />
-        </section>
-        <section className="lg:grow overflow-x-hidden lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
-          {draftMode().isEnabled ? (
-            <BrowsePreview />
-          ) : !draftMode().isEnabled && data ? (
-            <Suspense>
-              <ObservableGrid
-                data={data}
-                encodeDataAttribute={encodeDataAttribute}
-              />
-            </Suspense>
-          ) : null}
-        </section>
-      </BrowsePageWrapper>
+      <Suspense>
+        <BrowsePageWrapper>
+          <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
+            <Toolbar />
+          </div>
+          <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[10] sticky top-0 left-0 bg-surface-brand">
+            <DynamicDisplayBar />
+          </section>
+          <section className="lg:grow overflow-x-hidden lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
+            {draftMode().isEnabled ? (
+              <BrowsePreview />
+            ) : !draftMode().isEnabled && data ? (
+              <Suspense>
+                <ObservableGrid
+                  data={data}
+                  encodeDataAttribute={encodeDataAttribute}
+                />
+              </Suspense>
+            ) : null}
+          </section>
+        </BrowsePageWrapper>
+      </Suspense>
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
     </>
   )
