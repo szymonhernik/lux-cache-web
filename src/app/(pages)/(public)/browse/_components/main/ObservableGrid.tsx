@@ -12,6 +12,8 @@ import { Suspense, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import LoadMore from './LoadMore'
+import clsx from 'clsx'
+import PostWrapper from './PostWrapper'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
@@ -25,32 +27,34 @@ export default function ObservableGrid({
   const { posts: initialPosts } = dataProps || {}
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
+  const view = searchParams.get('view')
 
   // if filters are present i don't want to render initial posts and load more should fetch first $limit posts without lastpublisheddate
   // if filters are NOT present i want to render initial posts and load more should fetch next $limit posts with lastpublisheddate
   return (
-    <div className="lg:flex">
+    <div
+      className={clsx('lg:flex', {
+        'flex-col ': view === 'list'
+      })}
+    >
       <>
         {!filters && (
           <>
-            <GridWrapperDiv>
+            <GridWrapperDiv view={view}>
               {initialPosts.map((post, index) => {
                 return (
-                  <div
-                    key={post._id}
-                    className={`w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square `}
-                  >
-                    <Suspense>
+                  <PostWrapper key={post._id}>
+                    <Suspense fallback={<h1>Loading</h1>}>
                       <ListItem
                         item={post}
                         encodeDataAttribute={encodeDataAttribute}
                       />
                     </Suspense>
-                  </div>
+                  </PostWrapper>
                 )
               })}
             </GridWrapperDiv>
-            <LoadMore initialPosts={initialPosts} />
+            <LoadMore initialPosts={initialPosts} view={view} />
           </>
         )}
         {filters && <LoadMore />}

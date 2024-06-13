@@ -10,6 +10,7 @@ import DraftModeGrid from './draftmode/DraftModeGrid'
 import { draftMode } from 'next/headers'
 import BrowsePreview from './BrowsePreview'
 import { Suspense } from 'react'
+import BrowsePageWrapper from './BrowsePageWrapper'
 
 export interface BrowsePageProps {
   data?: InitialPostsQueryResult | null
@@ -28,11 +29,11 @@ export default async function BrowsePage({
   // const { posts } = previewData || {}
   return (
     <>
-      <div className=" flex flex-col lg:max-h-screen lg:h-screen bg-surface-brand">
+      <BrowsePageWrapper>
         <div className="z-10 sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
           <Toolbar />
         </div>
-        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar">
+        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[10] sticky top-0 left-0 bg-surface-brand">
           <DynamicDisplayBar />
         </section>
         <section className="lg:grow overflow-x-hidden lg:overflow-y-hidden lg:overflow-x-auto  lg:mb-16 ">
@@ -47,7 +48,7 @@ export default async function BrowsePage({
             </Suspense>
           ) : null}
         </section>
-      </div>
+      </BrowsePageWrapper>
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
     </>
   )

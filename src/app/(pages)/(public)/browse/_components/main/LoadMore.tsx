@@ -13,11 +13,14 @@ import { useInfinitePost } from '@/utils/hooks/use-infinite-post'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import { limitNumber } from '@/utils/fetch-helpers/client'
+import PostWrapper from './PostWrapper'
 
 export default function LoadMore({
-  initialPosts
+  initialPosts,
+  view
 }: {
   initialPosts?: SinglePostType[]
+  view?: string | null
 }) {
   const { ref: container, inViewport } = useInViewport()
 
@@ -57,16 +60,13 @@ export default function LoadMore({
     <>
       {data &&
         data.pages.map((page, index) => (
-          <GridWrapperDiv key={index}>
+          <GridWrapperDiv key={index} view={view}>
             {page.map((post) => (
-              <div
-                key={post._id}
-                className="w-full lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)] aspect-square"
-              >
+              <PostWrapper key={post._id}>
                 <Suspense>
                   <ListItem item={post} />
                 </Suspense>
-              </div>
+              </PostWrapper>
             ))}
           </GridWrapperDiv>
         ))}

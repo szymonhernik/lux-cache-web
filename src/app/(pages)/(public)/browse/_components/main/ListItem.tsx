@@ -36,6 +36,7 @@ export default function ListItem({
   const [modalOpen, setModalOpen] = useState(false)
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
+  const view = searchParams.get('view')
   const { ref, entry } = useIntersection({
     threshold: 0.0, // Customize the threshold as needed
     rootMargin: '100px 0%'
