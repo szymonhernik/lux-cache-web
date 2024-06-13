@@ -133,16 +133,6 @@ export const getErrorRedirect = (
     arbitraryParams
   )
 
-export const createUrl = (
-  pathname: string,
-  params: URLSearchParams | ReadonlyURLSearchParams
-) => {
-  const paramsString = params.toString()
-  const queryString = `${paramsString.length ? '?' : ''}${paramsString}`
-
-  return `${pathname}${queryString}`
-}
-
 export const sortSelectedFilters = (
   filtersArray: Array<string> | null
 ): Array<string> | null => {
@@ -154,4 +144,14 @@ export const sortSelectedFilters = (
   const sortedArray = [...filtersArray].sort((a, b) => a.localeCompare(b))
 
   return sortedArray
+}
+
+export const createUrl = (
+  pathname: string,
+  params: URLSearchParams | ReadonlyURLSearchParams
+) => {
+  const paramsString = params.toString()
+  const queryString = `${paramsString.length ? '?' : ''}${paramsString}`
+
+  return `${pathname}${queryString}`
 }

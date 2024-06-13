@@ -1,14 +1,30 @@
 'use client'
 
 import { Button } from '@/components/shadcn/ui/button'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { createUrl } from '@/utils/helpers'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
 export default function DisplaySelectedFilters() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const filters = searchParams.get('filter')
+  const pathname = usePathname()
   // filter=season8,production -> separated by comma
   const filtersArray = filters ? filters.split(',') : null
+
+  const handleFilterRemove = (filter: string) => {
+    const newFilters = filtersArray!.filter((f) => f !== filter)
+    const newParams = new URLSearchParams(searchParams.toString())
+    if (newFilters.length) {
+      newParams.set('filter', newFilters.join(','))
+    } else {
+      //   if filtersArray is empty, remove the filter query param
+      newParams.delete('filter')
+    }
+    const newUrl = createUrl(pathname, newParams)
+
+    router.push(newUrl)
+  }
 
   return (
     <div className="flex items-center gap-2">
@@ -20,11 +36,7 @@ export default function DisplaySelectedFilters() {
           <p>{filter} </p>
           <button
             onClick={() => {
-              const newFilters = filtersArray.filter((f) => f !== filter)
-              //   if filtersArray is empty, remove the filter query param
-              router.push(
-                `/browse${newFilters.length ? `?filter=${newFilters.join(',')}` : ''}`
-              )
+              handleFilterRemove(filter)
             }}
             className="text-lg  pl-2"
           >

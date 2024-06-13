@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import Search from './Search'
 import Filter from './Filter'
 import DisplaySelectedFilters from './DisplaySelectedFilters'
+import SwitchView from './SwitchView'
 
 export default async function Toolbar() {
   return (
@@ -15,9 +16,9 @@ export default async function Toolbar() {
         </Suspense>
       </div>
       <div className="flex items-center gap-4">
-        <button aria-label="Switch View" className="opacity-70">
-          View
-        </button>
+        <Suspense>
+          <SwitchView />
+        </Suspense>
         <div>
           <Suspense fallback={<div>Loading...</div>}>
             <Search />

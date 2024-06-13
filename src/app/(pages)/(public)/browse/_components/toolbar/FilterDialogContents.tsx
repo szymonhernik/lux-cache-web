@@ -18,6 +18,7 @@ import s from './SearchInput/SearchInput.module.css'
 import { FilterGroupsSchema } from '@/utils/types/zod/types'
 import { useQuery } from '@tanstack/react-query'
 import { getFilteredPosts } from '@/utils/fetch-helpers/client'
+import { createUrl } from '@/utils/helpers'
 
 type Props = {
   filterGroups: FilterGroupsQueryResult['filterGroups']
@@ -38,7 +39,16 @@ export default function FilterDialogContents(props: Props) {
     setTagsSelected(filtersArray)
   }, [searchParams])
 
-  // TODO: upon selecting a tag, it will have to look through posts to find the ones that have the tag and allow only tags that are matching
+  const handleApplyClick = () => {
+    const newParams = new URLSearchParams(searchParams.toString())
+    if (tagsSelected.length > 0) {
+      newParams.set('filter', tagsSelected.join(','))
+    } else {
+      newParams.delete('filter')
+    }
+    const newUrl = createUrl(pathname, newParams)
+    router.push(newUrl)
+  }
 
   // When a filter is selected, i need to fetch the posts that have that tag, and then filter the tags that are available to select (if a tag is not in the posts, it should not be selectable)
 
@@ -122,10 +132,10 @@ export default function FilterDialogContents(props: Props) {
           {tagsSelected.length > 0 ? (
             <DialogClose asChild>
               <Button
-                onClick={() => {
-                  router.push(`${pathname}?filter=${tagsSelected.join(',')}`)
-                  //  setTagsSelected([])
-                }}
+                onClick={handleApplyClick}
+                // onClick={() => {
+                //   router.push(`${pathname}?filter=${tagsSelected.join(',')}`)
+                // }}
                 size={'xl'}
               >
                 Apply
