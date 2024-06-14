@@ -83,10 +83,14 @@ export default function ObservableGrid({
                   )
                 })}
               </GridWrapperDiv>
-              <LoadMore initialPosts={initialPosts} view={view} />
+              <LoadMore
+                initialPosts={initialPosts}
+                view={view}
+                onHover={handleHover}
+              />
             </>
           )}
-          {filters && <LoadMore />}
+          {filters && <LoadMore onHover={handleHover} />}
         </div>
       </>
     </div>

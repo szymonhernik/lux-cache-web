@@ -17,10 +17,12 @@ import PostWrapper from './PostWrapper'
 
 export default function LoadMore({
   initialPosts,
-  view
+  view,
+  onHover
 }: {
   initialPosts?: SinglePostType[]
   view?: string | null
+  onHover: (postId: string) => void
 }) {
   const { ref: container, inViewport } = useInViewport()
 
@@ -62,7 +64,7 @@ export default function LoadMore({
         data.pages.map((page, index) => (
           <GridWrapperDiv key={index} view={view}>
             {page.map((post) => (
-              <PostWrapper key={post._id}>
+              <PostWrapper postId={post._id} onHover={onHover}>
                 <Suspense>
                   <ListItem item={post} />
                 </Suspense>
