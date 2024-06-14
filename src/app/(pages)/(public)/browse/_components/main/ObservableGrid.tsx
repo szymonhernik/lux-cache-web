@@ -8,7 +8,7 @@ import {
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
-import { Suspense, useState } from 'react'
+import { Suspense, useCallback, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import LoadMore from './LoadMore'
@@ -28,6 +28,11 @@ export default function ObservableGrid({
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
+  const [hoveredPostId, setHoveredPostId] = useState<string | null>(null)
+
+  const handleHover = useCallback((postId: string | null) => {
+    setHoveredPostId(postId)
+  }, [])
 
   // if filters are present i don't want to render initial posts and load more should fetch first $limit posts without lastpublisheddate
   // if filters are NOT present i want to render initial posts and load more should fetch next $limit posts with lastpublisheddate
@@ -48,7 +53,9 @@ export default function ObservableGrid({
             <Suspense fallback={<EpisodeSkeletonListView />}>
               <div
                 className={` bg-gray-400 hidden lg:block w-full lg:w-[20vw] lg:max-w-72   aspect-square`}
-              ></div>
+              >
+                {hoveredPostId}
+              </div>
             </Suspense>
           </div>
         )}
@@ -62,8 +69,10 @@ export default function ObservableGrid({
             <>
               <GridWrapperDiv view={view}>
                 {initialPosts.map((post, index) => {
+                  console.log('post:', post._id)
+
                   return (
-                    <PostWrapper key={post._id}>
+                    <PostWrapper postId={post._id} onHover={handleHover}>
                       <Suspense fallback={<h1>Loading</h1>}>
                         <ListItem
                           item={post}

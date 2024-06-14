@@ -1,6 +1,6 @@
 'use client'
 
-import { useIntersection } from '@mantine/hooks'
+import { useHover, useIntersection } from '@mantine/hooks'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { testVidAsset } from '@/app/common/testasset'
@@ -22,6 +22,7 @@ import {
 } from '@/components/shadcn/ui/dialog'
 import { Button } from '@/components/shadcn/ui/button'
 import VideoTest from './VideoTest'
+import clsx from 'clsx'
 
 export default function ListItem({
   item,
@@ -41,6 +42,7 @@ export default function ListItem({
     threshold: 0.0, // Customize the threshold as needed
     rootMargin: '100px 0%'
   })
+
   const pathName = usePathname()
   //  Simple check to detect if JS is enabled
   const [js, setJs] = useState(false)
@@ -48,6 +50,7 @@ export default function ListItem({
     setJs(true)
     setModalOpen(false)
   }, [])
+
   //on esc key press setModalOpen to false
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -69,7 +72,10 @@ export default function ListItem({
 
         <div
           ref={ref}
-          className="absolute inset-y-0 -inset-x-[100px] z-[-1000]"
+          className={clsx('absolute inset-y-0  z-[-1000]', {
+            '-inset-x-[100px]': !view,
+            'inset-x-0': view === 'list'
+          })}
         ></div>
         {/* <VideoTest /> */}
 
