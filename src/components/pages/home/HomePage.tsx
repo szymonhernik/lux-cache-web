@@ -19,28 +19,7 @@ export default function HomePage({ data, encodeDataAttribute }: HomePageProps) {
 
   return (
     <main className="container mt-16 lg:mt-4 mx-auto grid grid-cols-1 ">
-      {/* <Button className="mb-2">
-        <Link href={'/noquery'}>No query route</Link>
-      </Button>
-      <TestQuery /> */}
-      {posts && posts?.length > 0 ? (
-        posts.map((post) => (
-          <Link key={post._id} href={`post/${post.slug}`}>
-            <h2 className="p-4 hover:bg-neutral-100">{post.title}</h2>
-            <p>{post.ogDescription}</p>
-            {post.coverImage?.asset?.url && (
-              <Image
-                alt={''}
-                src={post.coverImage.asset.url}
-                width={500}
-                height={500}
-              ></Image>
-            )}
-          </Link>
-        ))
-      ) : (
-        <div className="p-4 text-red-500">No posts found</div>
-      )}
+      <h1>Home page</h1>
     </main>
   )
 }

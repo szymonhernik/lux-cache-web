@@ -1,5 +1,5 @@
 'use client'
-import { EpisodesSkeletonTwo } from '@/components/ui/skeletons/skeletons'
+import { EpisodeSkeletonListView } from '@/components/ui/skeletons/skeletons'
 import ListItem from './ListItem'
 
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
@@ -33,31 +33,53 @@ export default function ObservableGrid({
   // if filters are NOT present i want to render initial posts and load more should fetch next $limit posts with lastpublisheddate
   return (
     <div
-      className={clsx('lg:flex', {
-        'flex-col ': view === 'list'
+      className={clsx('overflow-x-hidden relative', {
+        'lg:overflow-x-visible ': !view,
+        'flex ': view === 'list'
       })}
     >
       <>
-        {!filters && (
-          <>
-            <GridWrapperDiv view={view}>
-              {initialPosts.map((post, index) => {
-                return (
-                  <PostWrapper key={post._id}>
-                    <Suspense fallback={<h1>Loading</h1>}>
-                      <ListItem
-                        item={post}
-                        encodeDataAttribute={encodeDataAttribute}
-                      />
-                    </Suspense>
-                  </PostWrapper>
-                )
-              })}
-            </GridWrapperDiv>
-            <LoadMore initialPosts={initialPosts} view={view} />
-          </>
-        )}
-        {filters && <LoadMore />}
+        <div
+          className={clsx(
+            'hidden sticky top-0 left-0 z-[1000] h-[20vw] w-[20vw] bg-blue-200 ',
+            {
+              'lg:block': view === 'list'
+            }
+          )}
+        >
+          <Suspense fallback={<EpisodeSkeletonListView />}>
+            <div
+              className={` bg-gray-400 hidden lg:block w-full lg:w-[20vw] lg:max-w-72   aspect-square`}
+            ></div>
+          </Suspense>
+        </div>
+
+        <div
+          className={clsx('lg:flex', {
+            'lg:flex-col lg:flex-grow': view === 'list'
+          })}
+        >
+          {!filters && (
+            <>
+              <GridWrapperDiv view={view}>
+                {initialPosts.map((post, index) => {
+                  return (
+                    <PostWrapper key={post._id}>
+                      <Suspense fallback={<h1>Loading</h1>}>
+                        <ListItem
+                          item={post}
+                          encodeDataAttribute={encodeDataAttribute}
+                        />
+                      </Suspense>
+                    </PostWrapper>
+                  )
+                })}
+              </GridWrapperDiv>
+              <LoadMore initialPosts={initialPosts} view={view} />
+            </>
+          )}
+          {filters && <LoadMore />}
+        </div>
       </>
     </div>
   )

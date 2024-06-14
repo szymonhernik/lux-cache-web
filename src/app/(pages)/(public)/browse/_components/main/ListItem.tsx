@@ -87,7 +87,7 @@ export default function ListItem({
             <p>{item.title}</p>
           </button>
           <Link
-            className="z-[10]"
+            className="z-[10] text-right"
             href={
               js
                 ? `/post/${item.slug}${filters ? `?filter=${filters}` : ''}`

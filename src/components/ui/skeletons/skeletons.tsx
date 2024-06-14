@@ -5,7 +5,14 @@ const shimmer =
 export function EpisodeSkeleton() {
   return (
     <div
-      className={`${shimmer} overflow-hidden relative bg-gray-200  w-full lg:w-[calc((80vh-4rem)/2)]  wide-short:w-[calc(80vh-4rem)] aspect-square`}
+      className={`${shimmer} overflow-hidden relative bg-gray-200  w-full lg:w-[calc((80vh-4rem)/2)]  screen-wide-short:w-[calc(80vh-4rem)] aspect-square`}
+    ></div>
+  )
+}
+export function EpisodeSkeletonListView() {
+  return (
+    <div
+      className={`${shimmer} overflow-hidden relative bg-gray-200 hidden lg:block w-full lg:w-[30vw] lg:max-w-96   aspect-square`}
     ></div>
   )
 }

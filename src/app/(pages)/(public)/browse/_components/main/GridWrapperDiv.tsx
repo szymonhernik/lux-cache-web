@@ -13,7 +13,7 @@ export function GridWrapperDiv({
   return (
     <div
       key={key}
-      className={clsx('   ', {
+      className={clsx('', {
         'animate-pulse flex flex-col': view === 'list',
         'screen-wide-short:grid-rows-1 grid md:grid-cols-2 lg:grid-cols-none lg:grid-flow-col lg:h-full lg:grid-rows-2 lg:w-min gap-0':
           !view
