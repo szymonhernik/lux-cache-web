@@ -37,7 +37,7 @@ export default async function BrowsePage({
           <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[10] sticky top-0 left-0 bg-surface-brand">
             <DynamicDisplayBar />
           </section>
-          <section className="lg:grow overflow-x-hidden lg:overflow-x-auto  lg:mb-16 ">
+          <section data-listattr={true} className="lg:grow lg:mb-16 ">
             {draftMode().isEnabled ? (
               <BrowsePreview />
             ) : !draftMode().isEnabled && data ? (

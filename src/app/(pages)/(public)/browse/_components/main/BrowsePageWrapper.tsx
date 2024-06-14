@@ -16,8 +16,9 @@ export default function BrowsePageWrapper({
       className={clsx(
         ' lg:max-w-[calc(100vw-var(--width-navbar))] flex flex-col  bg-surface-brand',
         {
-          'lg:h-auto ': view === 'list',
-          'lg:max-h-screen lg:h-screen': !view
+          'lg:h-auto  ': view === 'list',
+          'lg:max-h-screen lg:h-screen *:overflow-x-hidden *:lg:overflow-x-auto':
+            !view
         }
       )}
     >

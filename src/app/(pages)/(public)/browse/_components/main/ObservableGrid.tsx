@@ -33,30 +33,29 @@ export default function ObservableGrid({
   // if filters are NOT present i want to render initial posts and load more should fetch next $limit posts with lastpublisheddate
   return (
     <div
-      className={clsx('overflow-x-hidden relative', {
-        'lg:overflow-x-visible ': !view,
-        'flex ': view === 'list'
+      className={clsx(' relative', {
+        'overflow-x-hidden  lg:overflow-x-visible ': !view,
+        'flex items-start': view === 'list'
       })}
     >
       <>
-        <div
-          className={clsx(
-            'hidden sticky top-0 left-0 z-[1000] h-[20vw] w-[20vw] bg-blue-200 ',
-            {
-              'lg:block': view === 'list'
-            }
-          )}
-        >
-          <Suspense fallback={<EpisodeSkeletonListView />}>
-            <div
-              className={` bg-gray-400 hidden lg:block w-full lg:w-[20vw] lg:max-w-72   aspect-square`}
-            ></div>
-          </Suspense>
-        </div>
+        {view === 'list' && (
+          <div
+            className={clsx(
+              'hidden lg:block sticky top-dynamicDisplayBar ml-4 mr-8  bg-blue-200'
+            )}
+          >
+            <Suspense fallback={<EpisodeSkeletonListView />}>
+              <div
+                className={` bg-gray-400 hidden lg:block w-full lg:w-[20vw] lg:max-w-72   aspect-square`}
+              ></div>
+            </Suspense>
+          </div>
+        )}
 
         <div
           className={clsx('lg:flex', {
-            'lg:flex-col lg:flex-grow': view === 'list'
+            'lg:flex-col flex-grow': view === 'list'
           })}
         >
           {!filters && (

@@ -44,7 +44,9 @@ module.exports = {
         searchXPadding: 'var(--padding-x-searchbar)'
       },
       inset: {
-        searchXPadding: 'var(--padding-x-searchbar)'
+        searchXPadding: 'var(--padding-x-searchbar)',
+        toolbarHeight: 'var(--height-toolbar)',
+        dynamicDisplayBar: 'var(--height-dynamic-display-bar)'
       },
       colors: {
         border: 'hsl(var(--border))',

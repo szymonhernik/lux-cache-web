@@ -11,20 +11,24 @@ import {
   DialogTrigger
 } from './ToolbarDialog'
 import SearchInput from './SearchInput'
+import { useState } from 'react'
 
 export default function Search() {
   const router = useRouter()
   const currentPath = usePathname()
   const searchParams = useSearchParams()
   const hasSearchParams = searchParams?.get('q')
+  const [isOpen, setIsOpen] = useState(false)
   // const { results } = props
   return (
     <Dialog
       // defaultOpen={true}
-      // open={hasSearchParams ? true : false}
+      open={isOpen ? true : false}
       onOpenChange={(e) => {
         if (e === false) {
-          router.push(currentPath)
+          setIsOpen(false)
+        } else {
+          setIsOpen(true)
         }
       }}
     >
