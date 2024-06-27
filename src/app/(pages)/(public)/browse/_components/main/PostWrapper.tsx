@@ -12,7 +12,7 @@ export default function PostWrapper({
   postId: string
   onHover: (postId: string) => void
 }) {
-  console.log('key:', postId)
+  // console.log('key:', postId)
 
   const searchParams = useSearchParams()
   const view = searchParams.get('view')

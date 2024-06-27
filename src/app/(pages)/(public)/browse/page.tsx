@@ -1,5 +1,6 @@
 import 'server-only'
 import { loadInitalPosts } from '@/sanity/loader/loadQuery'
+// import { createClient } from '@/utils/supabase/server'
 
 import BrowsePage from './_components/main/BrowsePage'
 import { limitNumber } from '@/utils/fetch-helpers/client'
@@ -11,6 +12,12 @@ export default async function Page() {
     limit: limitNumber
   }
   const initial = await loadInitalPosts(paginationParams)
+  // const supabase = createClient()
+  // const { data: subscription, error } = await supabase
+  //   .from('subscriptions')
+  //   .select('*, prices(*, products(*))')
+  //   .in('status', ['trialing', 'active'])
+  //   .maybeSingle()
 
   // When in Sanity Studio Draft Mode, we want to show the preview that differs from the live functionality
   // if (draftMode().isEnabled) {

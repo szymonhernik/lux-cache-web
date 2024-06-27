@@ -14,10 +14,19 @@ import { GridWrapperDiv } from './GridWrapperDiv'
 import LoadMore from './LoadMore'
 import clsx from 'clsx'
 import PostWrapper from './PostWrapper'
+import { createClient } from '@/utils/supabase/client'
+import { useQuery } from '@tanstack/react-query'
+import { getSubscription, getUser, getUserTier } from '@/utils/supabase/queries'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
   encodeDataAttribute?: EncodeDataAttributeCallback
+}
+
+export const fetchSubscriptions = async () => {
+  const supabase = createClient()
+  const userTierObject = await getUserTier(supabase)
+  return userTierObject?.userTier
 }
 
 export default function ObservableGrid({
@@ -29,6 +38,19 @@ export default function ObservableGrid({
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
   const [hoveredPostId, setHoveredPostId] = useState<string | null>(null)
+
+  const {
+    data: subscriberData,
+    refetch,
+    isLoading
+  } = useQuery({
+    queryKey: ['subscriptions'],
+    // staleTime: 5 * 60 * 1000, //  5 minutes
+    queryFn: fetchSubscriptions
+    // enabled: searchValue !== null
+  })
+
+  const userTier = subscriberData ? subscriberData : 0
 
   const handleHover = useCallback((postId: string | null) => {
     setHoveredPostId(postId)
@@ -69,13 +91,14 @@ export default function ObservableGrid({
             <>
               <GridWrapperDiv view={view}>
                 {initialPosts.map((post, index) => {
-                  console.log('post:', post._id)
+                  // console.log('post:', post._id)
 
                   return (
                     <PostWrapper postId={post._id} onHover={handleHover}>
                       <Suspense fallback={<h1>Loading</h1>}>
                         <ListItem
                           item={post}
+                          userTier={userTier}
                           encodeDataAttribute={encodeDataAttribute}
                         />
                       </Suspense>

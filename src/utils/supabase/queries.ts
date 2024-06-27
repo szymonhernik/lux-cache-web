@@ -8,6 +8,7 @@ import {
 import { redirect } from 'next/navigation'
 import { Tables } from 'types_db'
 import { getErrorRedirect } from '../helpers'
+import subscriptionTiers, { SubscriptionTiers } from '../stripe/products'
 
 type User = Tables<'users'>
 export const getUser = cache(async (supabase: SupabaseClient) => {
@@ -28,6 +29,27 @@ export const getSubscription = cache(async (supabase: SupabaseClient) => {
   }
 
   return subscription as SubscriptionWithPriceAndProduct
+})
+export const getUserTier = cache(async (supabase: SupabaseClient) => {
+  const { data: subscription, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .maybeSingle()
+
+  if (error) {
+    console.error('Error fetching subscription:', error)
+    return null // Return Free tier in case of error
+  }
+
+  if (subscription) {
+    const productId = subscription.prices.products.id
+    const productName = subscription.prices.products.name
+    const userTier = (subscriptionTiers as SubscriptionTiers)[productId] ?? 0 // Default to Free (0) if not found
+    return { userTier, productName }
+  }
+
+  return { userTier: 0, productName: 'free' } // No subscription, hence Free tier
 })
 
 export const getProducts = cache(async (supabase: SupabaseClient) => {

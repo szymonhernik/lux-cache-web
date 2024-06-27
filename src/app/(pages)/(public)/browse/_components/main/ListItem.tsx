@@ -23,15 +23,18 @@ import {
 import { Button } from '@/components/shadcn/ui/button'
 import VideoTest from './VideoTest'
 import clsx from 'clsx'
+import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 
 export default function ListItem({
   item,
-  encodeDataAttribute
+  encodeDataAttribute,
+  userTier
 }: {
   item:
     | InitialPostsQueryResult['posts'][number]
     | PostsQueryResult['posts'][number] // this is used in draft mode
   encodeDataAttribute?: EncodeDataAttributeCallback
+  userTier?: number
 }) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
@@ -43,7 +46,9 @@ export default function ListItem({
     rootMargin: '100px 0%'
   })
 
-  const pathName = usePathname()
+  const canAccess = canAccessPost(userTier, item.minimumTier)
+
+  // const pathName = usePathname()
   //  Simple check to detect if JS is enabled
   const [js, setJs] = useState(false)
   useEffect(() => {
@@ -79,7 +84,7 @@ export default function ListItem({
         ></div>
         {/* <VideoTest /> */}
 
-        <div className="absolute z-[0] top-0 left-0 w-full h-full ">
+        <div className="absolute z-[0] top-0 left-0 w-full h-full *:text-left">
           {/* <img
           src={`https://image.mux.com/${testVidAsset.playbackId}/thumbnail.png?width=5&time=0`}
           className="absolute w-full h-full "
@@ -91,18 +96,20 @@ export default function ListItem({
             }}
           >
             <p>{item.title}</p>
+            <p>{item.minimumTier}</p>
+            <p>can access: {canAccess ? 'Yes' : 'No'}</p>
           </button>
-          <Link
-            className="z-[10] text-right"
+          {/* <Link
+            className="z-[10]"
             href={
               js
                 ? `/post/${item.slug}${filters ? `?filter=${filters}` : ''}`
                 : `/post/${item.slug}`
             } // make sure users with js disabled can go to posts directly
           >
-            <p>Go to post</p>
-          </Link>
-          <div className="mt-2 flex items-center gap-2">
+            {canAccess ? <p>Go to post</p> : <p>Blocked</p>}
+          </Link> */}
+          <div className="mt-2 flex gap-2">
             {item.filters?.map((filter) => (
               <p
                 className="border-2 p-1 w-fit border-black  font-semibold"
@@ -128,14 +135,17 @@ export default function ListItem({
               </DialogDescription>
               <a
                 target="_blank"
-                className="z-[10]"
-                // onClick={() => {
-                //   // setModalOpen(false)
-                //   router.push(`/post/${item.slug}`)
-                // }}
-                href={`/post/${item.slug}`}
+                className={clsx(`z-[10] bg-violet-400 rounded-sm p-2 w-fit`, {
+                  'cursor-pointer': canAccess,
+                  'cursor-not-allowed': !canAccess
+                })}
+                onClick={() => {
+                  // setModalOpen(false)
+                  canAccess ? router.push(`/post/${item.slug}`) : null
+                }}
+                // href={canAccess ? `/post/${item.slug}` '#'
               >
-                <p>Go to post</p>
+                {canAccess ? <p>Go to post</p> : <p>Blocked</p>}
               </a>
             </DialogHeader>
             {/* <DialogClose asChild> */}
