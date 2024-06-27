@@ -73,7 +73,7 @@ export default function ListItem({
         <div
           ref={ref}
           className={clsx('absolute inset-y-0  z-[-1000]', {
-            '-inset-x-[100px]': !view,
+            'lg:-inset-x-[100px]': !view,
             'inset-x-0': view === 'list'
           })}
         ></div>
@@ -112,7 +112,6 @@ export default function ListItem({
               </p>
             ))}
           </div>
-          {/* <p>{item.filters}</p> */}
         </div>
 
         {/* {entry?.isIntersecting && <VideoTest />} */}

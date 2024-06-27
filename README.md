@@ -56,8 +56,8 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] Query page browse (infinite scroll)
 - [x] Clean the draft mode and typescript
 - [ ] TODO: Routing/post page (parallel route)
-- [ ] TODO: List view
-- [ ] Role based access (front end)
+- [x] List view
+- [ ] TODO: Role based access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
 - [x] Fetch function for initial posts — render static browse, all posts filtered should be dynamic (api route)
 - [x] filters results

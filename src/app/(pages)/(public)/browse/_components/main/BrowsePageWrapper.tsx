@@ -9,16 +9,15 @@ export default function BrowsePageWrapper({
   children: React.ReactNode
 }) {
   const searchParams = useSearchParams()
-
-  const view = searchParams.get('view')
+  // if view exists it means it's a list view
+  const listView = searchParams.get('view')
   return (
     <div
       className={clsx(
-        ' lg:max-w-[calc(100vw-var(--width-navbar))] flex flex-col  bg-surface-brand',
+        ' lg:max-w-[calc(100vw-var(--width-navbar))] lg:w-[calc(100vw-var(--width-navbar))] flex flex-col  bg-surface-brand ',
         {
-          'lg:h-auto  ': view === 'list',
-          'lg:max-h-screen lg:h-screen *:overflow-x-hidden *:lg:overflow-x-auto':
-            !view
+          'lg:h-auto  ': listView === 'list',
+          'lg:max-h-screen lg:h-screen ': !listView
         }
       )}
     >

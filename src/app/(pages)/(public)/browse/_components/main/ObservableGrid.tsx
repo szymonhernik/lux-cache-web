@@ -39,7 +39,7 @@ export default function ObservableGrid({
   return (
     <div
       className={clsx(' relative', {
-        'overflow-x-hidden  lg:overflow-x-visible ': !view,
+        'overflow-x-auto   ': !view,
         'flex items-start': view === 'list'
       })}
     >
