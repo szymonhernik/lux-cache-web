@@ -8,7 +8,7 @@ import {
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
-import { Suspense, useCallback, useState } from 'react'
+import { Suspense, useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import LoadMore from './LoadMore'
@@ -17,17 +17,21 @@ import PostWrapper from './PostWrapper'
 import { createClient } from '@/utils/supabase/client'
 import { useQuery } from '@tanstack/react-query'
 import { getSubscription, getUser, getUserTier } from '@/utils/supabase/queries'
+import { fetchSubscriptions } from '@/utils/fetch-helpers/client'
+import useSubscription from '@/utils/hooks/use-subscription-query'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult
   encodeDataAttribute?: EncodeDataAttributeCallback
 }
 
-export const fetchSubscriptions = async () => {
-  const supabase = createClient()
-  const userTierObject = await getUserTier(supabase)
-  return userTierObject?.userTier
-}
+// export const fetchSubscriptions = async () => {
+//   const supabase = createClient()
+//   const userTierObject = await getUserTier(supabase)
+//   // frieze for 3 sec
+//   await new Promise((resolve) => setTimeout(resolve, 3000))
+//   return userTierObject?.userTier
+// }
 
 export default function ObservableGrid({
   data: dataProps,
@@ -39,18 +43,28 @@ export default function ObservableGrid({
   const view = searchParams.get('view')
   const [hoveredPostId, setHoveredPostId] = useState<string | null>(null)
 
-  const {
-    data: subscriberData,
-    refetch,
-    isLoading
-  } = useQuery({
-    queryKey: ['subscriptions'],
-    // staleTime: 5 * 60 * 1000, //  5 minutes
-    queryFn: fetchSubscriptions
-    // enabled: searchValue !== null
-  })
+  const supabase = createClient()
+  const [sessionExpiresAt, setSessionExpiresAt] = useState(null)
+  useEffect(() => {
+    const getSession = async () => {
+      const { data } = await supabase.auth.getSession()
+      //   @ts-ignore
+      // sleep for 3 seconds
 
-  const userTier = subscriberData ? subscriberData : 0
+      setSessionExpiresAt(data.session?.expires_at)
+    }
+    getSession()
+  }, [])
+
+  const { data, isLoading } = useSubscription(sessionExpiresAt)
+
+  // const { data: subscriberData, isLoading } = useQuery({
+  //   queryKey: ['subscriptions', sessionExpiresAt],
+  //   staleTime: 5 * 60 * 1000, //  5 minutes
+  //   queryFn: fetchSubscriptions
+  // })
+
+  const userTier = data ? data : 0
 
   const handleHover = useCallback((postId: string | null) => {
     setHoveredPostId(postId)
@@ -99,6 +113,7 @@ export default function ObservableGrid({
                         <ListItem
                           item={post}
                           userTier={userTier}
+                          isLoading={isLoading}
                           encodeDataAttribute={encodeDataAttribute}
                         />
                       </Suspense>
@@ -109,11 +124,19 @@ export default function ObservableGrid({
               <LoadMore
                 initialPosts={initialPosts}
                 view={view}
+                userTier={userTier}
+                isLoadingSubscriptions={isLoading}
                 onHover={handleHover}
               />
             </>
           )}
-          {filters && <LoadMore onHover={handleHover} />}
+          {filters && (
+            <LoadMore
+              onHover={handleHover}
+              userTier={userTier}
+              isLoadingSubscriptions={isLoading}
+            />
+          )}
         </div>
       </>
     </div>

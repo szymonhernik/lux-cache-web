@@ -2,7 +2,6 @@ import { client } from '@/sanity/lib/client'
 import {
   FilterByTagsQueryResult,
   MorePostsQueryResult,
-  PostsQueryResult,
   SearchQueryResult
 } from '../types/sanity/sanity.types'
 import {
@@ -12,6 +11,9 @@ import {
   searchQueryDefault
 } from '@/sanity/lib/queries'
 import { SinglePostType } from '../types/sanity'
+
+import { getUserTier } from '../supabase/queries'
+import { createClient } from '../supabase/client'
 
 export const limitNumber = 20
 
@@ -68,6 +70,16 @@ const getFilteredPosts = async (tagsSelected: string[]) => {
   // await new Promise((resolve) => setTimeout(resolve, 3000))
   const result = await client.fetch(filterByTagsQuery, { tagsSelected })
   return result as FilterByTagsQueryResult
+}
+
+export const fetchSubscriptions = async () => {
+  const supabase = createClient()
+  console.log('Fetching')
+
+  const userTierObject = await getUserTier(supabase)
+  // frieze for 3 sec
+  await new Promise((resolve) => setTimeout(resolve, 3000))
+  return userTierObject?.userTier
 }
 
 export { fetchMorePosts, getSearchResults, getFilteredPosts }

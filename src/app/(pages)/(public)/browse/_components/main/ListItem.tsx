@@ -28,13 +28,15 @@ import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 export default function ListItem({
   item,
   encodeDataAttribute,
-  userTier
+  userTier,
+  isLoading
 }: {
   item:
     | InitialPostsQueryResult['posts'][number]
     | PostsQueryResult['posts'][number] // this is used in draft mode
   encodeDataAttribute?: EncodeDataAttributeCallback
   userTier?: number
+  isLoading?: boolean
 }) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
@@ -46,7 +48,12 @@ export default function ListItem({
     rootMargin: '100px 0%'
   })
 
-  const canAccess = canAccessPost(userTier, item.minimumTier)
+  const canAccess =
+    userTier && item.minimumTier
+      ? canAccessPost(userTier, item.minimumTier)
+      : 'loading'
+
+  // console.log('canAccess', canAccess)
 
   // const pathName = usePathname()
   //  Simple check to detect if JS is enabled
@@ -97,7 +104,11 @@ export default function ListItem({
           >
             <p>{item.title}</p>
             <p>{item.minimumTier}</p>
-            <p>can access: {canAccess ? 'Yes' : 'No'}</p>
+            {isLoading || canAccess === 'loading' ? (
+              <p>loading...</p>
+            ) : (
+              <p>can access: {canAccess ? 'Yes' : 'No'}</p>
+            )}
           </button>
           {/* <Link
             className="z-[10]"

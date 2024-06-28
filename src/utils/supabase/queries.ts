@@ -86,6 +86,7 @@ export const getPrice = cache(
       .eq('products.active', true)
       .maybeSingle()
 
+    console.log('priceId', priceId)
     console.log('price', price)
 
     if (error || !price) {

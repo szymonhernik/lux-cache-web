@@ -18,11 +18,15 @@ import PostWrapper from './PostWrapper'
 export default function LoadMore({
   initialPosts,
   view,
-  onHover
+  onHover,
+  userTier,
+  isLoadingSubscriptions
 }: {
   initialPosts?: SinglePostType[]
   view?: string | null
   onHover: (postId: string) => void
+  userTier?: number
+  isLoadingSubscriptions?: boolean
 }) {
   const { ref: container, inViewport } = useInViewport()
 
@@ -66,7 +70,11 @@ export default function LoadMore({
             {page.map((post) => (
               <PostWrapper postId={post._id} onHover={onHover}>
                 <Suspense>
-                  <ListItem item={post} />
+                  <ListItem
+                    item={post}
+                    isLoading={isLoadingSubscriptions}
+                    userTier={userTier}
+                  />
                 </Suspense>
               </PostWrapper>
             ))}

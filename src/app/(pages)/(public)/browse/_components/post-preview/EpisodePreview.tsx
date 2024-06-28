@@ -6,9 +6,10 @@ import { Suspense } from 'react'
 
 type Props = {
   data: SinglePostType
+  canAccess?: boolean | 'loading'
 }
 export default function EpisodePreview(props: Props) {
-  const { data } = props
+  const { data, canAccess } = props
   const { title, publishedAt, filters, ogDescription, slug } = data
 
   return (
@@ -21,6 +22,13 @@ export default function EpisodePreview(props: Props) {
       <div className="p-4">
         <h1 className="text-xl">{title}</h1>
         <p className="">{publishedAt}</p>
+        {canAccess === 'loading' ? (
+          <p>Loading...</p>
+        ) : canAccess ? (
+          <p>Access allowed</p>
+        ) : (
+          <p>Access denied</p>
+        )}
 
         <Link
           href={`/post/${slug}`}

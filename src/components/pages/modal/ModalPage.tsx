@@ -6,13 +6,17 @@ import { Suspense } from 'react'
 
 type ModalProps = {
   data: PostBySlugQueryResult
+  canAccess: boolean | 'loading'
 }
 export default function ModalPage(props: ModalProps) {
-  const { data } = props
+  const { data, canAccess } = props
   return (
     <Suspense fallback={<h1>Loading..</h1>}>
       {/* @ts-ignore */}
-      <Modal>{data && <EpisodePreview data={data} />}</Modal>
+      <Modal>
+        {/* @ts-ignore */}
+        {data && <EpisodePreview data={data} canAccess={canAccess} />}
+      </Modal>
     </Suspense>
   )
 }

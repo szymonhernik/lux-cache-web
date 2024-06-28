@@ -56,7 +56,7 @@ export default async function CheckoutPage({
 
   // get price and product info from stripe based on the price id
   const [price, userDetails] = await Promise.all([
-    getPrice(supabase, 'aar'),
+    getPrice(supabase, searchParams.priceId as string),
     getUserDetails(supabase)
   ])
 
