@@ -29,8 +29,29 @@ const suisse = localFont({
       path: '../fonts/SuisseIntl-SemiBoldItalic-WebTrial.woff2',
       weight: '600',
       style: 'italic'
+    },
+    {
+      path: '../fonts/SuisseNeue-Regular-WebTrial.woff2',
+      weight: '400',
+      style: 'italic'
     }
-  ]
+  ],
+  variable: '--font-suisse'
+})
+const suisseNeue = localFont({
+  src: [
+    {
+      path: '../fonts/SuisseNeue-Regular.woff2',
+      weight: '400',
+      style: 'normal'
+    },
+    {
+      path: '../fonts/SuisseNeue-RegularItalic.woff2',
+      weight: '400',
+      style: 'italic'
+    }
+  ],
+  variable: '--font-suisseNeue'
 })
 
 const meta = {
@@ -76,12 +97,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={` ${suisse.variable} ${suisseNeue.variable}`}>
       <Providers>
         <QueryWrapper>
-          <body className={` loading ${suisse.className}`}>
-            {props.children}
-          </body>
+          <body className={` loading `}>{props.children}</body>
         </QueryWrapper>
       </Providers>
     </html>

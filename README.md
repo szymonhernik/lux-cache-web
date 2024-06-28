@@ -147,3 +147,5 @@ command to generate types (sanity)
 sanity schema extract  
 sanity typegen generate  
 mv schema.json sanity.types.ts src/utils/types/sanity/
+
+https://www.radix-ui.com/icons

@@ -78,7 +78,7 @@ export const fetchSubscriptions = async () => {
 
   const userTierObject = await getUserTier(supabase)
   // frieze for 3 sec
-  await new Promise((resolve) => setTimeout(resolve, 3000))
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
   return userTierObject?.userTier
 }
 

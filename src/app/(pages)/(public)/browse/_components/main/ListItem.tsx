@@ -24,6 +24,8 @@ import { Button } from '@/components/shadcn/ui/button'
 import VideoTest from './VideoTest'
 import clsx from 'clsx'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
+import { Modal } from '../../@modal/[slug]/modal'
+import EpisodePreview from '../post-preview/EpisodePreview'
 
 export default function ListItem({
   item,
@@ -63,6 +65,10 @@ export default function ListItem({
     setModalOpen(false)
   }, [])
 
+  const handleModalClose = () => {
+    setModalOpen(false)
+  }
+
   //on esc key press setModalOpen to false
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -90,18 +96,17 @@ export default function ListItem({
           })}
         ></div>
         {/* <VideoTest /> */}
-
-        <div className="absolute z-[0] top-0 left-0 w-full h-full *:text-left">
-          {/* <img
+        <button
+          onClick={() => {
+            setModalOpen(true)
+          }}
+        >
+          <div className="absolute z-[0] top-0 left-0 w-full h-full *:text-left ">
+            {/* <img
           src={`https://image.mux.com/${testVidAsset.playbackId}/thumbnail.png?width=5&time=0`}
           className="absolute w-full h-full "
         /> */}
 
-          <button
-            onClick={() => {
-              setModalOpen(true)
-            }}
-          >
             <p>{item.title}</p>
             <p>{item.minimumTier}</p>
             {isLoading || canAccess === 'loading' ? (
@@ -109,8 +114,8 @@ export default function ListItem({
             ) : (
               <p>can access: {canAccess ? 'Yes' : 'No'}</p>
             )}
-          </button>
-          {/* <Link
+
+            {/* <Link
             className="z-[10]"
             href={
               js
@@ -120,59 +125,69 @@ export default function ListItem({
           >
             {canAccess ? <p>Go to post</p> : <p>Blocked</p>}
           </Link> */}
-          <div className="mt-2 flex gap-2">
-            {item.filters?.map((filter) => (
-              <p
-                className="border-2 p-1 w-fit border-black  font-semibold"
-                key={filter.slug}
-              >
-                {filter.slug}
-              </p>
-            ))}
+            <div className="mt-2 flex gap-2">
+              {item.filters?.map((filter) => (
+                <p
+                  className="border-2 p-1 w-fit border-black  font-semibold"
+                  key={filter.slug}
+                >
+                  {filter.slug}
+                </p>
+              ))}
+            </div>
           </div>
-        </div>
+        </button>
 
         {/* {entry?.isIntersecting && <VideoTest />} */}
         {/* </Link> */}
       </div>
       {modalOpen && (
-        <Dialog open={modalOpen}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Are you absolutely sure?</DialogTitle>
-              <DialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </DialogDescription>
-              <a
-                target="_blank"
-                className={clsx(`z-[10] bg-violet-400 rounded-sm p-2 w-fit`, {
-                  'cursor-pointer': canAccess,
-                  'cursor-not-allowed': !canAccess
-                })}
-                onClick={() => {
-                  // setModalOpen(false)
-                  canAccess ? router.push(`/post/${item.slug}`) : null
-                }}
-                // href={canAccess ? `/post/${item.slug}` '#'
-              >
-                {canAccess ? <p>Go to post</p> : <p>Blocked</p>}
-              </a>
-            </DialogHeader>
-            {/* <DialogClose asChild> */}
+        <Modal onModalDisplayChange={handleModalClose}>
+          {item && (
+            <EpisodePreview
+              data={item}
+              onModalDisplayChange={handleModalClose}
+              canAccess={canAccess}
+            />
+          )}
+        </Modal>
+        // <Dialog open={modalOpen}>
+        //   <DialogContent>
+        //     <DialogHeader>
+        //       <DialogTitle>Are you absolutely sure?</DialogTitle>
+        //       <DialogDescription>
+        //         This action cannot be undone. This will permanently delete your
+        //         account and remove your data from our servers.
+        //       </DialogDescription>
+        //       <a
+        //         target="_blank"
+        //         className={clsx(`z-[10] bg-violet-400 rounded-sm p-2 w-fit`, {
+        //           'cursor-pointer': canAccess,
+        //           'cursor-not-allowed': !canAccess
+        //         })}
+        //         onClick={() => {
+        //           // setModalOpen(false)
+        //           canAccess ? router.push(`/post/${item.slug}`) : null
+        //         }}
+        //         // href={canAccess ? `/post/${item.slug}` '#'
+        //       >
+        //         {canAccess ? <p>Go to post</p> : <p>Blocked</p>}
+        //       </a>
+        //     </DialogHeader>
+        //     {/* <DialogClose asChild> */}
 
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => {
-                setModalOpen(false)
-              }}
-            >
-              Close
-            </Button>
-            {/* </DialogClose> */}
-          </DialogContent>
-        </Dialog>
+        //     <Button
+        //       type="button"
+        //       variant="secondary"
+        //       onClick={() => {
+        //         setModalOpen(false)
+        //       }}
+        //     >
+        //       Close
+        //     </Button>
+        //     {/* </DialogClose> */}
+        //   </DialogContent>
+        // </Dialog>
       )}
     </>
   )

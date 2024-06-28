@@ -18,6 +18,10 @@ module.exports = {
       }
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-suisse)'],
+        neue: ['var(--font-suisseNeue)']
+      },
       screens: {
         'screen-wide-tall': {
           raw: '(min-width: theme(screens.lg)) and (min-height: 801px)'

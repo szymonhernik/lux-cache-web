@@ -52,6 +52,15 @@ export default defineType({
       type: 'string',
       validation: (rule) => rule.required()
     }),
+    defineField({
+      name: 'subtitle',
+      title: 'Subtitle',
+      group: 'basicInfo',
+      description:
+        'The subtitle of the post, that will be displayed on post previews.',
+      type: 'string'
+      // validation: (rule) => rule.required()
+    }),
 
     defineField({
       name: 'slug',

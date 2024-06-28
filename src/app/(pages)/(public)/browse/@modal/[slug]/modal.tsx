@@ -4,7 +4,13 @@ import { type ElementRef, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createPortal } from 'react-dom'
 
-export function Modal({ children }: { children: React.ReactNode }) {
+export function Modal({
+  children,
+  onModalDisplayChange
+}: {
+  children: React.ReactNode
+  onModalDisplayChange?: (value: boolean) => void
+}) {
   const router = useRouter()
   const dialogRef = useRef<ElementRef<'dialog'>>(null)
   const [mounted, setMounted] = useState(false)
@@ -13,6 +19,14 @@ export function Modal({ children }: { children: React.ReactNode }) {
     setMounted(true)
   }, [])
 
+  const handleModalDisplayChange = () => {
+    if (onModalDisplayChange) {
+      onModalDisplayChange(false)
+    } else {
+      return null
+    }
+  }
+
   useEffect(() => {
     if (!dialogRef.current?.open) {
       dialogRef.current?.showModal()
@@ -20,14 +34,21 @@ export function Modal({ children }: { children: React.ReactNode }) {
   }, [mounted])
 
   function onDismiss() {
-    router.back()
+    if (!onModalDisplayChange) {
+      router.back()
+      console.log('XXX')
+    } else {
+      console.log('Handle close modal')
+
+      handleModalDisplayChange()
+    }
   }
 
   return mounted
     ? createPortal(
         <dialog
           ref={dialogRef}
-          className="m-0 h-screen w-screen bg-black/40 flex justify-center items-center"
+          className="m-0 h-screen w-screen bg-black/80 flex justify-center items-center"
           onClose={onDismiss}
         >
           {children}

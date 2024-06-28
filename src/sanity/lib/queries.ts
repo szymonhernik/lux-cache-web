@@ -3,6 +3,7 @@ import { groq } from 'next-sanity'
 const postQueryFields = `
     _id, 
     title, 
+    subtitle,
     artistList,
     publishedAt, 
     "slug": slug.current,
@@ -140,16 +141,7 @@ export const filterGroupsQuery = groq`{
 
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
-    _id, 
-    title, 
-    artistList,
-    publishedAt, 
-    "slug": slug.current,
-    coverImage,
-    coverVideo,
-    filters,
-    minimumTier,
-    ogDescription,
+    ${postQueryFields}
   }
 `
 
