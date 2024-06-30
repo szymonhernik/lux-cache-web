@@ -15,6 +15,7 @@ import {
   filterGroupsQuery,
   initialPostsQuery,
   morePostsQuery,
+  pageBySlugQuery,
   postBySlugQuery,
   postsQuery,
   settingsQuery
@@ -141,5 +142,13 @@ export function loadPost(slug: string) {
     postBySlugQuery,
     { slug },
     { next: { tags: [`post:${slug}`] } }
+  )
+}
+
+export function loadPage(slug: string) {
+  return loadQuery<any | null>(
+    pageBySlugQuery,
+    { slug },
+    { next: { tags: [`page:${slug}`] } }
   )
 }

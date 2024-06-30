@@ -1002,10 +1002,11 @@ export type FilterGroupsQueryResult = {
   }>
 }
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters,    minimumTier,    ogDescription,  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
+  subtitle: string | null
   artistList: Array<{
     artistRef?: {
       _ref: string
@@ -1020,27 +1021,23 @@ export type PostBySlugQueryResult = {
   publishedAt: string | null
   slug: string | null
   coverImage: {
-    asset?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-    }
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    alt?: string
-    _type: 'image'
+    asset: {
+      url: string | null
+    } | null
   } | null
   coverVideo: Video | null
-  filters: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'filterItem'
-  }> | null
   minimumTier: '0' | '1' | '2' | '3' | null
   ogDescription: string | null
+  filters: Array<{
+    slug: string | null
+  }> | null
+} | null
+// Variable: pageBySlugQuery
+// Query:   *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,  }
+export type PageBySlugQueryResult = {
+  _id: string
+  title: string | null
+  slug: string | null
 } | null
 // Variable: settingsQuery
 // Query:   *[_type == "settings"][0]{    ogImage  }

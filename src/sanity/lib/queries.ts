@@ -144,6 +144,13 @@ export const postBySlugQuery = groq`
     ${postQueryFields}
   }
 `
+export const pageBySlugQuery = groq`
+  *[_type == "page" && slug.current == $slug][0] {
+    _id,
+    title,
+    "slug": slug.current,
+  }
+`
 
 export const settingsQuery = groq`
   *[_type == "settings"][0]{
