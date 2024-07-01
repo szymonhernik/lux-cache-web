@@ -55,7 +55,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] routes - tabs
 - [x] Query page browse (infinite scroll)
 - [x] Clean the draft mode and typescript
-- [ ] TODO: Routing/post page (parallel route)
+- [x] Routing/post page (parallel route)
 - [x] List view
 - [x] Read user's tier access (front end)
 - [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
@@ -64,6 +64,10 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] dynamic search results (also in studio)
 - [x] see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
 - [x] render default two results for each search query so that it's not empty
+- [x] Image in post modal
+- [ ] TODO: Style article
+- [ ] TODO: Style pages
+- [ ] TODO: User login flow
 
 ### Supabase
 

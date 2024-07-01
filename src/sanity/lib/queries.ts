@@ -1,5 +1,13 @@
 import { groq } from 'next-sanity'
 
+const extendedAsset = `
+  _id,
+  url,
+  "width": metadata.dimensions.width,
+  "height": metadata.dimensions.height,
+  "lqip": metadata.lqip,
+`
+
 const postQueryFields = `
     _id, 
     title, 
@@ -7,8 +15,14 @@ const postQueryFields = `
     artistList,
     publishedAt, 
     "slug": slug.current,
-    coverImage{
-      asset->{url}
+    coverImage,
+    previewImage{
+      _type,
+      asset->{
+        _id,
+        url,
+        "lqip": metadata.lqip,
+      }
     },
     coverVideo,
     minimumTier,

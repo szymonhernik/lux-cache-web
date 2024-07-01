@@ -4,10 +4,18 @@ import cn from 'classnames'
 import s from './Input.module.css'
 import { urlForImage } from '@/sanity/lib/utils'
 import Image from 'next/image'
-import { SearchQueryResult } from '@/utils/types/sanity/sanity.types'
+
+interface ImageExpanded {
+  asset: {
+    _id: string
+    url: string | null
+    lqip: string | null
+  } | null
+  _type: 'image'
+}
 
 interface Props {
-  image?: SearchQueryResult['artists'][0]['image']
+  image?: ImageExpanded
   alt?: string
   width?: number
   height?: number
@@ -15,7 +23,7 @@ interface Props {
   classesWrapper?: string
   'data-sanity'?: string
 }
-const ImageBox = ({
+const ImageBoxExpanded = ({
   image,
   alt = 'Cover image',
   width = 600,
@@ -24,9 +32,18 @@ const ImageBox = ({
   classesWrapper,
   ...props
 }: Props) => {
+  // const imageUrl =
+  //   // @ts-ignore
+  //   image && urlForImage(image)?.height(height).width(width).fit('crop').url()
+
   const imageUrl =
-    // @ts-ignore
-    image && urlForImage(image)?.height(height).width(width).fit('crop').url()
+    image?.asset?.url && `${image.asset.url}?w=${width}&h=${height}`
+
+  const imageProps = {} as { blurDataURL?: string; placeholder: any }
+  if (image?.asset?.lqip) {
+    imageProps.blurDataURL = image.asset.lqip
+    imageProps.placeholder = 'blur'
+  }
 
   return (
     <div
@@ -41,10 +58,11 @@ const ImageBox = ({
           height={height}
           sizes={size}
           src={imageUrl}
+          {...imageProps}
         />
       )}
     </div>
   )
 }
 
-export default ImageBox
+export default ImageBoxExpanded

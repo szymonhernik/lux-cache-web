@@ -645,10 +645,20 @@ export type Post = {
     }
     hotspot?: SanityImageHotspot
     crop?: SanityImageCrop
-    alt?: string
     _type: 'image'
   }
   coverVideo?: Video
+  previewImage?: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  }
   filters?: Array<{
     _ref: string
     _type: 'reference'
@@ -827,7 +837,7 @@ export type MuxVideoAsset = {
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: ./src/sanity/lib/queries.ts
 // Variable: postsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type PostsQueryResult = {
   posts: Array<{
     _id: string
@@ -847,8 +857,22 @@ export type PostsQueryResult = {
     publishedAt: string | null
     slug: string | null
     coverImage: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
+    previewImage: {
+      _type: 'image'
       asset: {
+        _id: string
         url: string | null
+        lqip: string | null
       } | null
     } | null
     coverVideo: Video | null
@@ -860,7 +884,7 @@ export type PostsQueryResult = {
   }>
 }
 // Variable: initialPostsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type InitialPostsQueryResult = {
   posts: Array<{
     _id: string
@@ -880,8 +904,22 @@ export type InitialPostsQueryResult = {
     publishedAt: string | null
     slug: string | null
     coverImage: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
+    previewImage: {
+      _type: 'image'
       asset: {
+        _id: string
         url: string | null
+        lqip: string | null
       } | null
     } | null
     coverVideo: Video | null
@@ -893,7 +931,7 @@ export type InitialPostsQueryResult = {
   }>
 }
 // Variable: morePostsQuery
-// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type MorePostsQueryResult = {
   posts: Array<{
     _id: string
@@ -913,8 +951,22 @@ export type MorePostsQueryResult = {
     publishedAt: string | null
     slug: string | null
     coverImage: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      _type: 'image'
+    } | null
+    previewImage: {
+      _type: 'image'
       asset: {
+        _id: string
         url: string | null
+        lqip: string | null
       } | null
     } | null
     coverVideo: Video | null
@@ -1002,7 +1054,7 @@ export type FilterGroupsQueryResult = {
   }>
 }
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage{      asset->{url}    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }
+// Query:   *[_type == "post" && slug.current == $slug][0] {        _id,     title,     subtitle,    artistList,    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1021,8 +1073,22 @@ export type PostBySlugQueryResult = {
   publishedAt: string | null
   slug: string | null
   coverImage: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  } | null
+  previewImage: {
+    _type: 'image'
     asset: {
+      _id: string
       url: string | null
+      lqip: string | null
     } | null
   } | null
   coverVideo: Video | null
@@ -1082,7 +1148,6 @@ export type FilterExampleResult = {
       }
       hotspot?: SanityImageHotspot
       crop?: SanityImageCrop
-      alt?: string
       _type: 'image'
     } | null
     coverVideo: Video | null

@@ -185,20 +185,7 @@ export default defineType({
         'The main image for the post. Also displayed on social cards and search engine results.',
       name: 'coverImage',
       title: 'Cover Image',
-      fields: [
-        defineField({
-          name: 'alt',
-          type: 'string',
-          title: 'Alt text',
-          description: 'Alternative text for screenreaders.'
-        })
-      ],
-      preview: {
-        select: {
-          imageUrl: 'asset.url',
-          title: 'caption'
-        }
-      },
+
       validation: (rule) => rule.required()
     }),
     defineField({
@@ -206,6 +193,17 @@ export default defineType({
       name: 'coverVideo',
       group: 'media',
       type: 'video'
+    }),
+    defineField({
+      type: 'image',
+      group: 'media',
+      icon: ImageIcon,
+      description:
+        'The image for the display in the preview of the post. This image should not have any text on it.',
+      name: 'previewImage',
+      title: 'Preview Image',
+
+      validation: (rule) => rule.required()
     }),
 
     defineField({
