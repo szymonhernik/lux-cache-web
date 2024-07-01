@@ -5,7 +5,7 @@ interface Props {
   publishedAt: string | null | undefined
   filters:
     | Array<{
-        slug: string | null
+        slug: string | null | undefined
       }>
     | null
     | undefined

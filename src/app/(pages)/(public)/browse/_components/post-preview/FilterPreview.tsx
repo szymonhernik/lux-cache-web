@@ -1,7 +1,10 @@
 interface Props {
-  filters: Array<{
-    slug: string | null
-  }> | null
+  filters:
+    | Array<{
+        slug: string | null | undefined
+      }>
+    | null
+    | undefined
   variantClass?: string
 }
 export default function FiltersPreview(props: Props) {
