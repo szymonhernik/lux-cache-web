@@ -35,7 +35,7 @@ export function Modal({
 
   function onDismiss() {
     if (!onModalDisplayChange) {
-      router.back()
+      router.push('/browse')
       console.log('XXX')
     } else {
       console.log('Handle close modal')

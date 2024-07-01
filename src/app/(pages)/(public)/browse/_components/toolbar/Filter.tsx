@@ -3,7 +3,6 @@ import { draftMode } from 'next/headers'
 import FilterDialog from './FilterDialog'
 
 export default async function Filter() {
-  // freeze for 10 seconds
   const initial = await loadFilterGroups()
 
   // if (draftMode().isEnabled) {

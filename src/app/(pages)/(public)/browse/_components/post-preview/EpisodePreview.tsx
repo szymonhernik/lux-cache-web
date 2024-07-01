@@ -18,14 +18,17 @@ export default function EpisodePreview(props: Props) {
   const { title, publishedAt, filters, ogDescription, slug, subtitle } = data
 
   const handleModalDisplayChange = () => {
+    // console.log('Handle close modal')
+
     if (onModalDisplayChange) {
+      console.log('Handle close modal')
       onModalDisplayChange(false)
     } else {
       return null
     }
   }
 
-  console.log('filters', filters)
+  // console.log('filters', filters)
   const copyToClipboard = useCallback(() => {
     const postUrl = `${window.location.origin}/browse/${slug}`
     navigator.clipboard

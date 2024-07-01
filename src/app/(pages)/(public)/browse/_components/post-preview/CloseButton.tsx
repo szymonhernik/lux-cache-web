@@ -13,7 +13,7 @@ export default function CloseButton() {
       // }}
       onClick={() => {
         // router.back()
-        return router.push(`/browse}`)
+        return router.push(`/browse`)
       }}
     >
       close
