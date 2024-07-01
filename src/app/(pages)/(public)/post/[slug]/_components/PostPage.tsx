@@ -1,49 +1,89 @@
-// @ts-nocheck
+import { Button } from '@/components/shadcn/ui/button'
 import { PostPayload } from '@/utils/types/sanity'
 import { PostBySlugQueryResult } from '@/utils/types/sanity/sanity.types'
+import { BookmarkIcon } from '@radix-ui/react-icons'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import React from 'react'
+import FiltersPreview from '../../../browse/_components/post-preview/FilterPreview'
+import ContentOverview from './ContentOverview'
+import PostNavbar from './PostNavbar'
+import Link from 'next/link'
+import ContentHeadlines from './ContentHeadlines'
 
 export interface PostPageProps {
   data: PostBySlugQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
 }
 export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
-  const { title, publishedAt, artists } = data ?? {}
-
-  // Convert it to a Date object
-  const dateObj = publishedAt ? new Date(publishedAt) : ''
-
-  // Use Intl.DateTimeFormat to format the date in the desired style
-  const options = { day: 'numeric', month: 'long', year: 'numeric' }
-  // @ts-ignore
-  const formattedDate = new Intl.DateTimeFormat('en-US', options).format(
-    //@ts-ignore
-    dateObj
-  )
+  const { title, publishedAt, artistList, filters } = data ?? {}
 
   return (
-    <div className="max-w-screen-lg mx-auto mt-36 ">
-      <div className="flex flex-col gap-16 items-center w-full px-16">
-        <p className="text-sm tracking-tight">{formattedDate}</p>
-        <div className="w-full space-y-4">
-          <h1 className="text-3xl tracking-tight text-pretty font-semibold uppercase">
-            {title}
-          </h1>
-
-          {artists && artists.length > 0 && (
-            <p className="w-fit mx-auto italic ">
-              with
-              {artists.map((artist) => (
-                <React.Fragment key={artist._key}>
-                  {' '}
-                  <span className="">{artist.name}</span>
-                </React.Fragment>
-              ))}
-            </p>
-          )}
+    <article className="flex flex-col ">
+      {/* Post navbar */}
+      <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start">
+        <PostNavbar title={title} />
+      </div>
+      {/* Post content */}
+      <div className="*:max-w-3xl *:mx-auto mx-auto my-36 px-4  space-y-24 *:flex *:flex-col *:items-center  ">
+        <section className="gap-8 !max-w-4xl">
+          <ContentOverview publishedAt={publishedAt} filters={filters} />
+        </section>
+        <section className=" gap-16 items-center w-full  ">
+          <ContentHeadlines title={title} artistList={artistList} />
+        </section>
+        <div className="">
+          Contrary to popular belief, Lorem Ipsum is not simply random text. It
+          has roots in a piece of classical Latin literature from 45 BC, making
+          it over 2000 years old. Richard McClintock, a Latin professor at
+          Hampden-Sydney College in Virginia, looked up one of the more obscure
+          Latin words, consectetur, from a Lorem Ipsum passage, and going
+          through the cites of the word in classical literature, discovered the
+          undoubtable source. Lorem Ipsum comes from sections 1.10.32 and
+          1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and
+          Evil) by Cicero, written in 45 BC. This book is a treatise on the
+          theory of ethics, very popular during the Renaissance. The first line
+          of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in
+          section 1.10.32. Contrary to popular belief, Lorem Ipsum is not simply
+          random text. It has roots in a piece of classical Latin literature
+          from 45 BC, making it over 2000 years old. Richard McClintock, a Latin
+          professor at Hampden-Sydney College in Virginia, looked up one of the
+          more obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+          going through the cites of the word in classical literature,
+          discovered the undoubtable source.
+          <br />
+          <br />
+          Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de Finibus
+          Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero, written
+          in 45 BC. This book is a treatise on the theory of ethics, very
+          popular during the Renaissance. The first line of Lorem Ipsum, "Lorem
+          ipsum dolor sit amet..", comes from a line in section 1.10.32.
+          Contrary to popular belief, Lorem Ipsum is not simply random text. It
+          has roots in a piece of classical Latin literature from 45 BC, making
+          it over 2000 years old. Richard McClintock, a Latin professor at
+          Hampden-Sydney College in Virginia, looked up one of the more obscure
+          Latin words, consectetur, from a Lorem Ipsum passage, and going
+          through the cites of the word in classical literature, discovered the
+          undoubtable source. Lorem Ipsum comes from sections 1.10.32 and
+          1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes of Good and
+          Evil) by Cicero, written in 45 BC. This book is a treatise on the
+          theory of ethics, very popular during the Renaissance. The first line
+          of Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in
+          section 1.10.32. Contrary to popular belief, Lorem Ipsum is not simply
+          random text. It has roots in a piece of classical Latin literature
+          from 45 BC, making it over 2000 years old. Richard McClintock, a Latin
+          professor at Hampden-Sydney College in Virginia, looked up one of the
+          more obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+          going through the cites
+          <br />
+          <br />
+          of the word in classical literature, discovered the undoubtable
+          source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de
+          Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by Cicero,
+          written in 45 BC. This book is a treatise on the theory of ethics,
+          very popular during the Renaissance. The first line of Lorem Ipsum,
+          "Lorem ipsum dolor sit amet..", comes from a line in section 1.10.32.
         </div>
       </div>
-    </div>
+    </article>
   )
 }

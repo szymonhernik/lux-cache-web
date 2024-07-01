@@ -12,7 +12,14 @@ const postQueryFields = `
     _id, 
     title, 
     subtitle,
-    artistList,
+    artistList[]{
+    additionalContext,
+    _key,
+     artistRef->{
+      name,
+      "slug": slug.current,
+     }
+    },
     publishedAt, 
     "slug": slug.current,
     coverImage,

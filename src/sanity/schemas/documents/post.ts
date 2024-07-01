@@ -97,7 +97,6 @@ export default defineType({
         defineArrayMember({
           type: 'object',
           title: 'Artist Mention',
-
           name: 'artistMention',
           validation: (rule) => rule.required(),
           fields: [
@@ -274,9 +273,13 @@ export default defineType({
       type: 'array',
       of: [
         defineArrayMember({
-          type: 'templateText',
-          description: 'A text template for consistent formatting.'
+          type: 'introText',
+          description: 'Intro text.'
         }),
+        // defineArrayMember({
+        //   type: 'templateText',
+        //   description: 'A text template for consistent formatting.'
+        // }),
         defineArrayMember({
           type: 'postContent',
           description: 'The main body of the post content.'

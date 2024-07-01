@@ -70,6 +70,9 @@ export default defineType({
           // }
         ]
       }
+    }),
+    defineArrayMember({
+      type: 'templateText'
     })
   ]
 })

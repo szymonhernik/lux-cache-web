@@ -68,6 +68,8 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [ ] TODO: Style article
 - [ ] TODO: Style pages
 - [ ] TODO: User login flow
+- [ ] breadcrumbs (w/shadcn)
+- [ ] results, artist pages
 
 ### Supabase
 

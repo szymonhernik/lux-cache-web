@@ -45,6 +45,7 @@ import { youtube } from '@/sanity/schemas/objects/youTubeType'
 import { spotify } from '@/sanity/schemas/objects/spotifyType'
 import postFooter from '@/sanity/schemas/objects/postFooter'
 import pricing from '@/sanity/schemas/singletons/pricing'
+import introText from '@/sanity/schemas/objects/introText'
 
 export default defineConfig({
   basePath: '/studio',
@@ -70,6 +71,7 @@ export default defineConfig({
 
       // Objects
       blockContent,
+      introText,
       blockContentSimple,
       mainBody,
       faq,
@@ -79,6 +81,7 @@ export default defineConfig({
       blockContentAdvanced,
       postContent,
       pdfEmbed,
+
       video,
       audioInline,
       youtube,

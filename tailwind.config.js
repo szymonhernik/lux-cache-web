@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const plugin = require('tailwindcss/plugin')
+
 module.exports = {
   darkMode: ['class', '[data-theme="dark"]'],
   content: [
@@ -51,6 +53,9 @@ module.exports = {
         searchXPadding: 'var(--padding-x-searchbar)',
         toolbarHeight: 'var(--height-toolbar)',
         dynamicDisplayBar: 'var(--height-dynamic-display-bar)'
+      },
+      textShadow: {
+        DEFAULT: '0px 0px 4px rgba(0, 0, 0, 0.50);'
       },
       colors: {
         border: 'hsl(var(--border))',
@@ -129,5 +134,17 @@ module.exports = {
       }
     }
   },
-  plugins: [require('tailwindcss-animate')]
+  plugins: [
+    require('tailwindcss-animate'),
+    plugin(function ({ matchUtilities, theme }) {
+      matchUtilities(
+        {
+          'text-shadow': (value) => ({
+            textShadow: value
+          })
+        },
+        { values: theme('textShadow') }
+      )
+    })
+  ]
 }
