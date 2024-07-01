@@ -23,7 +23,7 @@ export default function LoadMore({
   isLoadingSubscriptions
 }: {
   initialPosts?: SinglePostType[]
-  view?: string | null
+  view: string | null
   onHover: (postId: string) => void
   userTier?: number
   isLoadingSubscriptions?: boolean

@@ -133,6 +133,7 @@ export default function ObservableGrid({
           {filters && (
             <LoadMore
               onHover={handleHover}
+              view={view}
               userTier={userTier}
               isLoadingSubscriptions={isLoading}
             />
