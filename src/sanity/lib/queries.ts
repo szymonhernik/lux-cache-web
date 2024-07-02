@@ -165,6 +165,18 @@ export const postBySlugQuery = groq`
     ${postQueryFields}
   }
 `
+
+export const postsByArtistSlugQuery = groq`
+  {
+    "artistInfo": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{
+    ...,
+      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {
+        ${postQueryFields}
+      }
+    }
+    
+  }
+`
 export const pageBySlugQuery = groq`
   *[_type == "page" && slug.current == $slug][0] {
     _id,

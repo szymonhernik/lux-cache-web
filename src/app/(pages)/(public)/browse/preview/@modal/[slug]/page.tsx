@@ -10,6 +10,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params
   const post = await loadPost(slug)
   const { data } = post || {}
+  console.log('data', data)
 
   if (!data) {
     // redirect to not found page

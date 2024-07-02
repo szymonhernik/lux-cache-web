@@ -24,7 +24,7 @@ import { Button } from '@/components/shadcn/ui/button'
 import VideoTest from './VideoTest'
 import clsx from 'clsx'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
-import { Modal } from '../../@modal/[slug]/modal'
+import { Modal } from '../../preview/@modal/[slug]/modal'
 import EpisodePreview from '../post-preview/EpisodePreview'
 
 export default function ListItem({

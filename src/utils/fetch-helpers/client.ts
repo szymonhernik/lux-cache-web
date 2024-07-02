@@ -74,7 +74,7 @@ const getFilteredPosts = async (tagsSelected: string[]) => {
 
 export const fetchSubscriptions = async () => {
   const supabase = createClient()
-  console.log('Fetching')
+  console.log('Fetching subscriptions')
 
   const userTierObject = await getUserTier(supabase)
   // frieze for 3 sec

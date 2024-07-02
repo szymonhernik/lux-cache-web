@@ -17,7 +17,7 @@ export default function PostWrapper({
   const searchParams = useSearchParams()
   const view = searchParams.get('view')
   const { hovered, ref } = useHover()
-  console.log('view:', view)
+  // console.log('view:', view)
 
   useEffect(() => {
     if (hovered) {

@@ -1,3 +1,3 @@
-import BrowsePage from './page'
+// import Page from './page'
 
-export default BrowsePage
+// export default Page

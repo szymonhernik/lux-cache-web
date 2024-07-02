@@ -11,6 +11,8 @@ export function Modal({
   children: React.ReactNode
   onModalDisplayChange?: (value: boolean) => void
 }) {
+  console.log('MODALLLLL MODALLLLLMODALLLLL')
+
   const router = useRouter()
   const dialogRef = useRef<ElementRef<'dialog'>>(null)
   const [mounted, setMounted] = useState(false)
