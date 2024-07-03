@@ -10,7 +10,7 @@ export default function ArtistsResults(props: Props) {
   return (
     <div className="flex flex-col gap-2 ">
       {artistsResults.map((artist) => (
-        <Link key={artist._id} href={`/artists/${artist.slug}`}>
+        <Link key={artist._id} href={`/browse/artists/${artist.slug}`}>
           <div className=" h-72 lg:h-56  group relative hover:bg-highlightGreen/20 w-full">
             {/* <div className="group- absolute h-56 w-[calc(100vw-2rem)] left-4 z-[-1]"></div> */}
             <div className=" py-8 h-full flex flex-col lg:flex-row gap-4 px-4 lg:px-searchXPadding">

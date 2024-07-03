@@ -43,7 +43,7 @@ export default async function BrowsePage({
             ) : !draftMode().isEnabled && data ? (
               <Suspense>
                 <ObservableGrid
-                  data={data}
+                  data={data.posts}
                   encodeDataAttribute={encodeDataAttribute}
                 />
               </Suspense>

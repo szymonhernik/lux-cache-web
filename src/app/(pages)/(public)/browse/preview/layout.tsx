@@ -10,7 +10,7 @@ export default function Layout({
       {children}
       {modal}
       {/* {props.modal} */}
-      <div id="modal-root" />
+      {/* <div id="modal-root" /> */}
     </div>
   )
 }

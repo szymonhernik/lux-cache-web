@@ -3,10 +3,7 @@ import { EpisodeSkeletonListView } from '@/components/ui/skeletons/skeletons'
 import ListItem from './ListItem'
 
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
-import {
-  InitialPostsQueryResult,
-  PostsQueryResult
-} from '@/utils/types/sanity/sanity.types'
+import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 
 import { Suspense, useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -15,29 +12,22 @@ import LoadMore from './LoadMore'
 import clsx from 'clsx'
 import PostWrapper from './PostWrapper'
 import { createClient } from '@/utils/supabase/client'
-import { useQuery } from '@tanstack/react-query'
-import { getSubscription, getUser, getUserTier } from '@/utils/supabase/queries'
-import { fetchSubscriptions } from '@/utils/fetch-helpers/client'
+
 import useSubscription from '@/utils/hooks/use-subscription-query'
 
 export interface ObservableGridProps {
-  data: InitialPostsQueryResult
+  data: InitialPostsQueryResult['posts']
   encodeDataAttribute?: EncodeDataAttributeCallback
+  resultsPage?: boolean
 }
-
-// export const fetchSubscriptions = async () => {
-//   const supabase = createClient()
-//   const userTierObject = await getUserTier(supabase)
-//   // frieze for 3 sec
-//   await new Promise((resolve) => setTimeout(resolve, 3000))
-//   return userTierObject?.userTier
-// }
 
 export default function ObservableGrid({
   data: dataProps,
-  encodeDataAttribute
+  encodeDataAttribute,
+  resultsPage
 }: ObservableGridProps) {
-  const { posts: initialPosts } = dataProps || {}
+  // const { posts: initialPosts } = dataProps || {}
+  const initialPosts = dataProps || []
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
@@ -49,20 +39,12 @@ export default function ObservableGrid({
     const getSession = async () => {
       const { data } = await supabase.auth.getSession()
       //   @ts-ignore
-      // sleep for 3 seconds
-
       setSessionExpiresAt(data.session?.expires_at)
     }
     getSession()
   }, [])
 
   const { data, isLoading } = useSubscription(sessionExpiresAt)
-
-  // const { data: subscriberData, isLoading } = useQuery({
-  //   queryKey: ['subscriptions', sessionExpiresAt],
-  //   staleTime: 5 * 60 * 1000, //  5 minutes
-  //   queryFn: fetchSubscriptions
-  // })
 
   const userTier = data ? data : 0
 
@@ -121,16 +103,18 @@ export default function ObservableGrid({
                   )
                 })}
               </GridWrapperDiv>
-              <LoadMore
-                initialPosts={initialPosts}
-                view={view}
-                userTier={userTier}
-                isLoadingSubscriptions={isLoading}
-                onHover={handleHover}
-              />
+              {!resultsPage && (
+                <LoadMore
+                  initialPosts={initialPosts}
+                  view={view}
+                  userTier={userTier}
+                  isLoadingSubscriptions={isLoading}
+                  onHover={handleHover}
+                />
+              )}
             </>
           )}
-          {filters && (
+          {filters && !resultsPage && (
             <LoadMore
               onHover={handleHover}
               view={view}

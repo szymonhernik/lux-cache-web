@@ -31,6 +31,7 @@ export default async function ArtistPage({
   // const { initialPosts } = data || {}
   // const { posts } = previewData || {}
   const { artistInfo } = data || {}
+  const posts = artistInfo?.posts
   return (
     <>
       <Suspense>
@@ -43,12 +44,13 @@ export default async function ArtistPage({
             {artistInfo && <ArtistNavbar artistInfo={artistInfo} />}
           </section>
           <section data-listattr={true} className="lg:grow lg:mb-16 ">
-            {data && (
+            {artistInfo && (
               <Suspense>
-                {/* <ObservableGrid
-                  data={data}
+                <ObservableGrid
+                  data={artistInfo.posts}
                   encodeDataAttribute={encodeDataAttribute}
-                /> */}
+                  resultsPage={true}
+                />
               </Suspense>
             )}
           </section>

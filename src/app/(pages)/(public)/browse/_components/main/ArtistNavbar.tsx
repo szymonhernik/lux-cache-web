@@ -1,5 +1,6 @@
 import ImageBox from '@/components/ui/ImageBox'
 import { PostsByArtistSlugQueryResult } from '@/utils/types/sanity/sanity.types'
+import Breadcrumbs from '../../../_components/Breadcrumbs'
 
 interface Props {
   artistInfo: PostsByArtistSlugQueryResult['artistInfo']
@@ -7,12 +8,21 @@ interface Props {
 export default function ArtistNavbar(props: Props) {
   const { artistInfo } = props
 
+  const pathnames = [
+    { name: 'browse', path: '/browse' },
+    { name: 'artists' },
+    { name: artistInfo?.name ? artistInfo.name : 'artist name' }
+  ]
+
   return (
     <>
-      <div className=" relative w-full bg-blue-500">
+      <div className=" relative w-full  h-full flex flex-col">
         {/* <div className="group- absolute h-56 w-[calc(100vw-2rem)] left-4 z-[-1]"></div> */}
-        <div className=" py-8 h-full flex flex-col lg:flex-row gap-4 px-4 ">
-          <div className="max-w-72 lg:w-72  bg-pink-300 rounded-full overflow-hidden ">
+
+        <Breadcrumbs pathnames={pathnames} />
+
+        <div className=" grow max-h-48 my-auto  flex flex-col lg:flex-row gap-4 px-4 ">
+          <div className=" m-4  aspect-[16/9]  bg-pink-300 rounded-full overflow-hidden ">
             <ImageBox
               image={artistInfo?.image}
               size="(max-width: 768px) 100vw, 30vw"
