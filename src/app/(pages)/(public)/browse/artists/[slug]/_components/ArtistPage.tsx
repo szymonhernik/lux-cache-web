@@ -37,7 +37,7 @@ export default async function ArtistPage({
       <Suspense>
         <BrowsePageWrapper>
           <div className="z-[10] sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-            <Toolbar />
+            <Toolbar resultsPage={true} />
           </div>
           <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[8]  lg:sticky top-0  left-0 bg-surface-brand">
             {/* <DynamicDisplayBar /> */}

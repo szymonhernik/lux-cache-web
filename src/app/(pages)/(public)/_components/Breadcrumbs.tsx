@@ -21,7 +21,7 @@ type Props = {
 export default function Breadcrumbs(props: Props) {
   const { pathnames } = props
   return (
-    <div className="p-4 ">
+    <div className=" text-shadow uppercase ">
       <Breadcrumb>
         <BreadcrumbList>
           {/* <BreadcrumbItem>

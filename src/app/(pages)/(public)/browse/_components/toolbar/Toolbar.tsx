@@ -4,16 +4,24 @@ import Filter from './Filter'
 import DisplaySelectedFilters from './DisplaySelectedFilters'
 import SwitchView from './SwitchView'
 
-export default async function Toolbar() {
+export default async function Toolbar({
+  resultsPage
+}: {
+  resultsPage?: boolean
+}) {
   return (
     <>
       <div className="flex items-center">
-        <Suspense fallback={<div>Loading...</div>}>
-          <Filter />
-        </Suspense>
-        <Suspense>
-          <DisplaySelectedFilters />
-        </Suspense>
+        {!resultsPage && (
+          <>
+            <Suspense fallback={<div>Loading...</div>}>
+              <Filter />
+            </Suspense>
+            <Suspense>
+              <DisplaySelectedFilters />
+            </Suspense>
+          </>
+        )}
       </div>
       <div className="flex items-center gap-4">
         <Suspense>

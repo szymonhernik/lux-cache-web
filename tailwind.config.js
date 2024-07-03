@@ -30,6 +30,9 @@ module.exports = {
         },
         'screen-wide-short': {
           raw: '(min-width: theme(screens.lg)) and (max-height: 800px)'
+        },
+        'screen-short': {
+          raw: '(max-height: 800px)'
         }
       },
       height: {
