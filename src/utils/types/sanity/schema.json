@@ -562,6 +562,37 @@
     }
   },
   {
+    "name": "video",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "video"
+          }
+        },
+        "videoLabel": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
+        },
+        "videoFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "mux.video"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "pdfEmbed",
     "type": "type",
     "value": {
@@ -4202,11 +4233,11 @@
         },
         "optional": true
       },
-      "coverVideo": {
+      "coverVideoMux": {
         "type": "objectAttribute",
         "value": {
           "type": "inline",
-          "name": "video"
+          "name": "coverVideo"
         },
         "optional": true
       },
@@ -4617,7 +4648,7 @@
     }
   },
   {
-    "name": "video",
+    "name": "coverVideo",
     "type": "type",
     "value": {
       "type": "object",
@@ -4626,15 +4657,8 @@
           "type": "objectAttribute",
           "value": {
             "type": "string",
-            "value": "video"
+            "value": "coverVideo"
           }
-        },
-        "videoLabel": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          },
-          "optional": true
         },
         "videoFile": {
           "type": "objectAttribute",

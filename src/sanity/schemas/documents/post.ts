@@ -189,9 +189,9 @@ export default defineType({
     }),
     defineField({
       title: 'Cover Video',
-      name: 'coverVideo',
+      name: 'coverVideoMux',
       group: 'media',
-      type: 'video'
+      type: 'coverVideo'
     }),
     defineField({
       type: 'image',

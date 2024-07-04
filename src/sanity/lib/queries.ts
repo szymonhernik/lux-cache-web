@@ -31,7 +31,16 @@ const postQueryFields = `
         "lqip": metadata.lqip,
       }
     },
-    coverVideo,
+    coverVideoMux{
+  		_type,
+	  	videoFile {
+        _type,
+        asset->{
+          playbackId,
+          "url": "https://stream.mux.com/" + playbackId
+        }
+      }
+    },
     minimumTier,
     ogDescription,
     filters[]->{

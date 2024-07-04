@@ -28,11 +28,14 @@ export default function PostWrapper({
     <div
       ref={ref}
       key={postId}
-      className={clsx('w-full  ', {
-        'aspect-[3/1] ': view === 'list',
-        'aspect-square lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)]':
-          !view
-      })}
+      className={clsx(
+        'w-full odd:bg-[#D4CACF] even:bg-surface-brand hover:opacity-80',
+        {
+          'aspect-[3/1] ': view === 'list',
+          'aspect-square lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)]':
+            !view
+        }
+      )}
     >
       {children}
     </div>

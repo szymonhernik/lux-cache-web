@@ -66,7 +66,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] render default two results for each search query so that it's not empty
 - [x] Image in post modal
 - [x] Results pages
-- [ ] TODO: Modal post link
+- [x] Modal post link
 - [ ] Style article
 - [ ] Style pages
 - [ ] User login flow
@@ -110,7 +110,7 @@ TODAY:
 - [ ] Make sure to check if you want to copy billing info and address to supabase users table
 - [ ] move the necessary queries to a queries file (use import 'server-only')
 - [x] Add authentication (w/ supabase)
-
+- [ ] videos via bunny cdn
 - [ ] Set up Stripe (checkout, api points, webhooks)
 - [ ] clean up billing info zod file (too much nesting and error scenarios)
 - [ ] "taint" (server-only)
@@ -157,3 +157,5 @@ sanity typegen generate
 mv schema.json sanity.types.ts src/utils/types/sanity/
 
 https://www.radix-ui.com/icons
+
+LC DRIVE: https://drive.google.com/drive/folders/1kj9jbNEVUXGrVBxxjjfxDBZ_7C-3HElE

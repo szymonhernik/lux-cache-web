@@ -46,6 +46,7 @@ import { spotify } from '@/sanity/schemas/objects/spotifyType'
 import postFooter from '@/sanity/schemas/objects/postFooter'
 import pricing from '@/sanity/schemas/singletons/pricing'
 import introText from '@/sanity/schemas/objects/introText'
+import coverVideo from '@/sanity/schemas/objects/coverVideo'
 
 export default defineConfig({
   basePath: '/studio',
@@ -81,7 +82,7 @@ export default defineConfig({
       blockContentAdvanced,
       postContent,
       pdfEmbed,
-
+      coverVideo,
       video,
       audioInline,
       youtube,

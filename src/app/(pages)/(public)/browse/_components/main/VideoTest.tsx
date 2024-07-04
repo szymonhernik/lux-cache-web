@@ -1,16 +1,27 @@
 import { testVidAsset } from '@/app/common/testasset'
 import MuxVideo from '@mux/mux-video-react'
 
-export default function VideoTest() {
-  return (
-    <MuxVideo
-      playbackId={testVidAsset.playbackId}
-      metadata={{
-        video_title: 'lux cache'
-      }}
-      muted
-      loop
-      // autoPlay
-    ></MuxVideo>
-  )
+interface Props {
+  video: any
+}
+export default function VideoTest(props: Props) {
+  const { video } = props
+  const playbackId = video?.asset?.playbackId
+
+  if (playbackId) {
+    return (
+      <MuxVideo
+        className="z-[10]"
+        playbackId={playbackId}
+        metadata={{
+          video_title: 'lux cache'
+        }}
+        muted
+        loop
+        autoPlay
+      ></MuxVideo>
+    )
+  } else {
+    return null
+  }
 }

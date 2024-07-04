@@ -7,6 +7,7 @@ type Props = {
 }
 export default function ArtistsResults(props: Props) {
   const { artistsResults } = props
+
   return (
     <div className="flex flex-col gap-2 ">
       {artistsResults.map((artist) => (
