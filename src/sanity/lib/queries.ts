@@ -167,22 +167,34 @@ export const postBySlugQuery = groq`
 `
 
 export const postsByArtistSlugQuery = groq`
-  {
-    "artistInfo": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{
+{ "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{
     ...,
       "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {
         ${postQueryFields}
       }
     }
+}
     
-  }
+`
+export const postsBySeriesSlugQuery = groq`
+ {
+"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{
+    ...,
+      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {
+        ${postQueryFields}
+      }
+    }
+      }
+    
 `
 export const pageBySlugQuery = groq`
+  
   *[_type == "page" && slug.current == $slug][0] {
     _id,
     title,
     "slug": slug.current,
   }
+
 `
 
 export const settingsQuery = groq`

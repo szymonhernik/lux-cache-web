@@ -1,37 +1,29 @@
 import {
-  InitialPostsQueryResult,
   PostsByArtistSlugQueryResult,
+  PostsBySeriesSlugQueryResult,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
-
-import { draftMode } from 'next/headers'
-
 import { Suspense } from 'react'
 import BrowsePageWrapper from '../../../_components/main/BrowsePageWrapper'
 import Toolbar from '../../../_components/toolbar/Toolbar'
-import DynamicDisplayBar from '../../../_components/main/DynamicDisplayBar'
-import BrowsePreview from '../../../_components/main/BrowsePreview'
 import ObservableGrid from '../../../_components/main/ObservableGrid'
 import ArtistNavbar from '../../../_components/main/ArtistNavbar'
+import SeriesNavbar from '../../../_components/main/SeriesNavbar'
 
 export interface BrowsePageProps {
-  data: PostsByArtistSlugQueryResult | null
+  data: PostsByArtistSlugQueryResult | PostsBySeriesSlugQueryResult | null
   previewData?: PostsQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
   isDraftMode?: boolean
 }
 
-export default async function ArtistPage({
+export default async function ResultsPage({
   data,
-  previewData,
-  encodeDataAttribute,
-  isDraftMode
+  encodeDataAttribute
 }: BrowsePageProps) {
-  // const { initialPosts } = data || {}
-  // const { posts } = previewData || {}
-  const { artistInfo } = data || {}
-  const posts = artistInfo?.posts
+  const { results } = data || {}
+
   return (
     <>
       <Suspense>
@@ -40,14 +32,19 @@ export default async function ArtistPage({
             <Toolbar resultsPage={true} />
           </div>
           <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[8]  lg:sticky top-0  left-0 bg-surface-brand">
-            {/* <DynamicDisplayBar /> */}
-            {artistInfo && <ArtistNavbar artistInfo={artistInfo} />}
+            {/* {artistContent}
+            {seriesContent} */}
+            {results?._type === 'artist' ? (
+              <ArtistNavbar results={results} />
+            ) : results?._type === 'series' ? (
+              <SeriesNavbar results={results} />
+            ) : null}
           </section>
           <section data-listattr={true} className="lg:grow lg:mb-16 ">
-            {artistInfo && (
+            {results?.posts && (
               <Suspense>
                 <ObservableGrid
-                  data={artistInfo.posts}
+                  data={results.posts}
                   encodeDataAttribute={encodeDataAttribute}
                   resultsPage={true}
                 />

@@ -65,11 +65,11 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] see if you need modal, if it's not better to have useState or simple dialog for preview of posts. then you can have redirect from post page, with search params added to view the dialog
 - [x] render default two results for each search query so that it's not empty
 - [x] Image in post modal
-- [ ] TODO: Style article
-- [ ] TODO: Style pages
-- [ ] TODO: User login flow
+- [x] Results pages
+- [ ] Style article
+- [ ] Style pages
+- [ ] User login flow
 - [ ] breadcrumbs (w/shadcn)
-- [ ] results, artist pages
 
 ### Supabase
 

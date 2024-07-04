@@ -1,6 +1,12 @@
 // import type { PortableTextBlock } from 'next-sanity'
 import type { Image, PortableTextBlock } from 'sanity'
-import { InitialPostsQueryResult, PostsQueryResult } from './sanity.types'
+import {
+  InitialPostsQueryResult,
+  PostsQueryResult,
+  SanityImageCrop,
+  SanityImageHotspot,
+  internalGroqTypeReferenceTo
+} from './sanity.types'
 
 export interface MenuItem {
   _type: string
@@ -85,3 +91,18 @@ export interface SettingsPayload {
 }
 
 export type SinglePostType = InitialPostsQueryResult['posts'][number]
+
+export interface ImageType {
+  asset?:
+    | {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean | undefined
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset' | undefined
+      }
+    | undefined
+  hotspot?: SanityImageHotspot | undefined
+  crop?: SanityImageCrop | undefined
+  alt?: string | undefined
+  _type: 'image'
+}

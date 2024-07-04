@@ -1116,9 +1116,9 @@ export type PostBySlugQueryResult = {
   }> | null
 } | null
 // Variable: postsByArtistSlugQuery
-// Query:   {    "artistInfo": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }
+// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
 export type PostsByArtistSlugQueryResult = {
-  artistInfo: {
+  results: {
     _id: string
     _type: 'artist'
     _createdAt: string
@@ -1186,8 +1186,61 @@ export type PostsByArtistSlugQueryResult = {
     }>
   } | null
 }
+// Variable: postsBySeriesSlugQuery
+// Query:  {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideo,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }    
+export type PostsBySeriesSlugQueryResult = {
+  results: {
+    _id: string
+    _type: 'series'
+    _createdAt: string
+    _updatedAt: string
+    _rev: string
+    title?: string
+    slug?: Slug
+    posts: Array<{
+      _id: string
+      title: string | null
+      subtitle: string | null
+      artistList: Array<{
+        additionalContext: string | null
+        _key: string
+        artistRef: {
+          name: string | null
+          slug: string | null
+        } | null
+      }> | null
+      publishedAt: string | null
+      slug: string | null
+      coverImage: {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        _type: 'image'
+      } | null
+      previewImage: {
+        _type: 'image'
+        asset: {
+          _id: string
+          url: string | null
+          lqip: string | null
+        } | null
+      } | null
+      coverVideo: Video | null
+      minimumTier: '0' | '1' | '2' | '3' | null
+      ogDescription: string | null
+      filters: Array<{
+        slug: string | null
+      }> | null
+    }>
+  } | null
+}
 // Variable: pageBySlugQuery
-// Query:   *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,  }
+// Query:     *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,  }
 export type PageBySlugQueryResult = {
   _id: string
   title: string | null

@@ -18,6 +18,7 @@ import {
   pageBySlugQuery,
   postBySlugQuery,
   postsByArtistSlugQuery,
+  postsBySeriesSlugQuery,
   postsQuery,
   settingsQuery
 } from '@/sanity/lib/queries'
@@ -27,6 +28,7 @@ import {
   InitialPostsQueryResult,
   PostBySlugQueryResult,
   PostsByArtistSlugQueryResult,
+  PostsBySeriesSlugQueryResult,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
@@ -103,6 +105,14 @@ export function loadArtistsPosts(slug: string) {
     { slug },
     // { next: { revalidate: 0 } }
     { next: { tags: [`post`, `artist:${slug}`] } }
+  )
+}
+export function loadSeriesPosts(slug: string) {
+  return loadQuery<PostsBySeriesSlugQueryResult | null>(
+    postsBySeriesSlugQuery,
+    { slug },
+    // { next: { revalidate: 0 } }
+    { next: { tags: [`post`, `series:${slug}`] } }
   )
 }
 export function loadFilterGroups() {

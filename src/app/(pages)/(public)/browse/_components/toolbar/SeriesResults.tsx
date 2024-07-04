@@ -9,7 +9,7 @@ export default function SeriesResults(props: Props) {
   return (
     <div className="flex flex-col gap-4 ">
       {seriesResults.map((series) => (
-        <Link href={`/series/${series.slug}`}>
+        <Link href={`/browse/results/series/${series.slug}`}>
           <div className="group space-y-1 ">
             <h2 key={series._id} className="group-hover:underline">
               {series.title}
