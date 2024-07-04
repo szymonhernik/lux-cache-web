@@ -8,8 +8,8 @@ import { Suspense } from 'react'
 import BrowsePageWrapper from '../../../_components/main/BrowsePageWrapper'
 import Toolbar from '../../../_components/toolbar/Toolbar'
 import ObservableGrid from '../../../_components/main/ObservableGrid'
-import ArtistNavbar from '../../../_components/main/ArtistNavbar'
-import SeriesNavbar from '../../../_components/main/SeriesNavbar'
+import ArtistNavbar from './ArtistNavbar'
+import SeriesNavbar from './SeriesNavbar'
 
 export interface BrowsePageProps {
   data: PostsByArtistSlugQueryResult | PostsBySeriesSlugQueryResult | null

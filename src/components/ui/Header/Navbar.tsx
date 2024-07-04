@@ -79,7 +79,7 @@ export default function Navbar() {
                     href={link.href}
                     onClick={(e) => {
                       if (link.href == '/browse') {
-                        console.log('pathname is browse')
+                        // console.log('pathname is browse')
                         e.preventDefault()
                         router.push('/browse')
                         router.refresh()

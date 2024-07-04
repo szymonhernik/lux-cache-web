@@ -1,7 +1,7 @@
 'use client'
 import ImageBox from '@/components/ui/ImageBox'
 
-import Breadcrumbs from '../../../_components/Breadcrumbs'
+import Breadcrumbs from '../../../../_components/Breadcrumbs'
 import { useState } from 'react'
 import { Cross1Icon } from '@radix-ui/react-icons'
 import { ImageType } from '@/utils/types/sanity'
@@ -22,8 +22,8 @@ export default function ArtistNavbar(props: Props) {
 
   const pathnames = [
     { name: 'browse', path: '/browse' },
-    { name: 'artists' },
-    { name: name ? name : 'artist name' }
+    // { name: 'artists' },
+    { name: name ? `RESULTS: ${name}` : 'artist name' }
   ]
 
   const handleBioClick = () => {
@@ -38,9 +38,9 @@ export default function ArtistNavbar(props: Props) {
           <Breadcrumbs pathnames={pathnames} />
         </div>
         <div className=" w-full  grow  py-4 flex flex-row items-center overflow-y-auto">
-          <div className="h-full w-1/2 max-w-72 md:max-w-auto lg:w-auto aspect-[16/9] md:h-full max-h-48 px-4">
-            {' '}
-            {image && (
+          {image && (
+            <div className="h-full w-1/2 max-w-60 md:max-w-auto lg:w-auto aspect-[16/9] md:h-full max-h-48 pl-4">
+              {' '}
               <ImageBox
                 image={image}
                 size="(max-width: 768px) 100vw, 30vw"
@@ -48,14 +48,14 @@ export default function ArtistNavbar(props: Props) {
                 width={504}
                 height={280}
               />
-            )}
-          </div>
-          <div className="  h-full max-h-48 pr-4">
-            {bio && (
-              <>
-                <h2 className="screen-short:pt-0 pt-4 text-lg font-semibold italic group-hover:underline">
-                  {name}
-                </h2>
+            </div>
+          )}
+          <div className=" pl-4 h-full max-h-48 pr-4">
+            <>
+              <h2 className="screen-short:pt-0 pt-4 text-lg font-semibold italic group-hover:underline">
+                {name}
+              </h2>
+              {bio && (
                 <button
                   className="underline "
                   onClick={() => {
@@ -64,8 +64,8 @@ export default function ArtistNavbar(props: Props) {
                 >
                   BIO
                 </button>
-              </>
-            )}
+              )}
+            </>
           </div>
         </div>
 

@@ -36,7 +36,7 @@ export default function NavbarCopy() {
 
   const filter = searchParams.get('filter')
 
-  console.log('filter', filter)
+  // console.log('filter', filter)
 
   return (
     <div className="z-[20]  w-full sticky top-0 left-0 lg:w-navbarDesktop lg:static  bg-secondary ">

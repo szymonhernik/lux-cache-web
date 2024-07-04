@@ -34,19 +34,24 @@ export default function ObservableGrid({
   const [hoveredPostId, setHoveredPostId] = useState<string | null>(null)
 
   const supabase = createClient()
-  const [sessionExpiresAt, setSessionExpiresAt] = useState(null)
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null)
   useEffect(() => {
     const getSession = async () => {
-      const { data } = await supabase.auth.getSession()
-      //   @ts-ignore
-      setSessionExpiresAt(data.session?.expires_at)
+      const { data: sessionData } = await supabase.auth.getSession()
+      if (sessionData.session?.expires_at) {
+        setSessionExpiresAt(sessionData.session.expires_at)
+      } else {
+        return null
+      }
     }
     getSession()
   }, [])
 
-  const { data, isLoading } = useSubscription(sessionExpiresAt)
+  const { data: userTier = 0, isLoading } = useSubscription(sessionExpiresAt)
 
-  const userTier = data ? data : 0
+  // console.log('userTier:', userTier)
+
+  // const userTier = data ? data : 0
 
   const handleHover = useCallback((postId: string | null) => {
     setHoveredPostId(postId)

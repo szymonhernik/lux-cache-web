@@ -66,6 +66,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] render default two results for each search query so that it's not empty
 - [x] Image in post modal
 - [x] Results pages
+- [ ] TODO: Modal post link
 - [ ] Style article
 - [ ] Style pages
 - [ ] User login flow
@@ -114,6 +115,7 @@ TODAY:
 - [ ] clean up billing info zod file (too much nesting and error scenarios)
 - [ ] "taint" (server-only)
 - [ ] Error management (w/ Sentry) https://www.youtube.com/watch?v=FmezY-vYlkg
+- [ ] Feedback button (w/ Sentry https://www.youtube.com/watch?v=8CdKgnErqQM)
 - [ ] Analytics (posthog)
 - [ ] Ratelimiting (upstash)
 

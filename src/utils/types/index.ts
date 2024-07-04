@@ -1,18 +1,18 @@
-import { Tables } from 'types_db';
+import { Tables } from 'types_db'
 
-type Subscription = Tables<'subscriptions'>;
-type Product = Tables<'products'>;
-type Price = Tables<'prices'>;
+type Subscription = Tables<'subscriptions'>
+type Product = Tables<'products'>
+type Price = Tables<'prices'>
 interface ProductWithPrices extends Product {
-  prices: Price[];
+  prices: Price[]
 }
 interface PriceWithProduct extends Price {
-  products: Product | null;
+  products: Product | null
 }
 
 interface ExtendedProductMetadata {
-  index?: string;
-  trial_allowed?: string;
+  index?: string
+  trial_allowed?: string
 }
 
 // Omit the original 'metadata' from Product and add the new one.
@@ -21,23 +21,25 @@ interface ExtendedProductMetadata {
 // };
 
 interface SubscriptionWithProduct extends Subscription {
-  prices: PriceWithProduct | null;
+  prices: PriceWithProduct | null
 }
 
 type SubscriptionWithPriceAndProduct = Subscription & {
   prices:
     | (Price & {
-        products: Product | null;
+        products: Product | null
       })
-    | null;
-};
+    | null
+}
 
-type BillingInterval = 'lifetime' | 'year' | 'month';
+type BillingInterval = 'lifetime' | 'year' | 'month'
 
 type CheckoutResponse = {
-  errorRedirect?: string;
-  sessionId?: string;
-};
+  errorRedirect?: string
+  sessionId?: string
+}
+
+export type CanAcessType = boolean | null
 
 export type {
   SubscriptionWithPriceAndProduct,
@@ -49,7 +51,7 @@ export type {
   PriceWithProduct,
   SubscriptionWithProduct,
   CheckoutResponse
-};
+}
 
 // type ExtendedProduct = Product & {
 //   metadata: {

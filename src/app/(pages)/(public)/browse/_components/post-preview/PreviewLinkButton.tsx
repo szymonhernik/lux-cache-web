@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 
 export default function PreviewLinkButton({ slug }: { slug: string | null }) {
   const copyToClipboard = useCallback(() => {
-    const postUrl = `${window.location.origin}/browse/${slug}`
+    const postUrl = `${window.location.origin}/browse/preview/${slug}`
     navigator.clipboard
       .writeText(postUrl)
       .then(() => {

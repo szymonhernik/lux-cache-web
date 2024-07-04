@@ -50,12 +50,7 @@ export default function ListItem({
     rootMargin: '100px 0%'
   })
 
-  const canAccess =
-    userTier && item.minimumTier
-      ? canAccessPost(userTier, item.minimumTier)
-      : 'loading'
-
-  // console.log('canAccess', canAccess)
+  const canAccess = canAccessPost(userTier, item.minimumTier)
 
   // const pathName = usePathname()
   //  Simple check to detect if JS is enabled
@@ -109,11 +104,12 @@ export default function ListItem({
 
             <p>{item.title}</p>
             <p>{item.minimumTier}</p>
-            {isLoading || canAccess === 'loading' ? (
+            {canAccess ? <p>Can access</p> : <p>Cannot access</p>}
+            {/* {isLoading ? (
               <p>loading...</p>
             ) : (
               <p>can access: {canAccess ? 'Yes' : 'No'}</p>
-            )}
+            )} */}
 
             {/* <Link
             className="z-[10]"

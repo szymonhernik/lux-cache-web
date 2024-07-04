@@ -3,7 +3,7 @@ import {
   Slug
 } from '@/utils/types/sanity/sanity.types'
 
-import Breadcrumbs from '../../../_components/Breadcrumbs'
+import Breadcrumbs from '../../../../_components/Breadcrumbs'
 
 interface Props {
   results: PostsBySeriesSlugQueryResult['results']
@@ -14,8 +14,7 @@ export default function SeriesNavbar(props: Props) {
   const slug = results?.slug
   const pathnames = [
     { name: 'browse', path: '/browse' },
-    { name: 'series' },
-    { name: title ? title : 'series title' }
+    { name: title ? `RESULTS: ${title}` : 'series title' }
   ]
 
   return (

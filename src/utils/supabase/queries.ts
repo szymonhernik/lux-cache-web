@@ -36,6 +36,7 @@ export const getUserTier = cache(async (supabase: SupabaseClient) => {
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
     .maybeSingle()
+  console.log('subscription in getUserTier', subscription)
 
   if (error) {
     console.error('Error fetching subscription:', error)
@@ -46,6 +47,9 @@ export const getUserTier = cache(async (supabase: SupabaseClient) => {
     const productId = subscription.prices.products.id
     const productName = subscription.prices.products.name
     const userTier = (subscriptionTiers as SubscriptionTiers)[productId] ?? 0 // Default to Free (0) if not found
+    console.log('productId', productId)
+    console.log('productName', productName)
+    console.log('userTier in getUserTier', userTier)
     return { userTier, productName }
   }
 

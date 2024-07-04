@@ -12,10 +12,11 @@ import PreviewLinkButton from './PreviewLinkButton'
 import AccessInfo from './AccessInfo'
 import ImageBox from '@/components/ui/ImageBox'
 import ImageBoxExpanded from '@/components/ui/ImageBoxExpanded'
+import { CanAcessType } from '@/utils/types'
 
 type Props = {
   data: SinglePostType
-  canAccess?: boolean | 'loading'
+  canAccess: CanAcessType
   onModalDisplayChange?: (value: boolean) => void
 }
 export default function EpisodePreview(props: Props) {
@@ -34,7 +35,7 @@ export default function EpisodePreview(props: Props) {
 
   const handleModalDisplayChange = () => {
     if (onModalDisplayChange) {
-      console.log('Handle close modal')
+      // console.log('Handle close modal')
       onModalDisplayChange(false)
     } else {
       return null
@@ -56,9 +57,11 @@ export default function EpisodePreview(props: Props) {
             size="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         )}
-        <div className="rounded-md z-[10] bg-black  w-4/5 md:h-[70%] text-white py-8 px-6 font-semibold text-sm space-y-4">
-          <AccessInfo minimumTier={minimumTier} canAccess={canAccess} />
-        </div>
+        {!canAccess && (
+          <div className="rounded-md z-[10] bg-black  w-4/5 md:h-[70%] text-white py-8 px-6 font-semibold text-sm space-y-4">
+            <AccessInfo minimumTier={minimumTier} canAccess={canAccess} />
+          </div>
+        )}
       </div>
       {/* Textual */}
       <div className="p-4 md:p-8 flex flex-col z-10 bg-white pb-16 mb-16 md:grow md:w-1/2">
@@ -89,12 +92,35 @@ export default function EpisodePreview(props: Props) {
           <div>
             <p className="font-neue">{ogDescription}</p>
           </div>
-          <Button disabled size={'lgIcon'} className="self-center">
-            <LockClosedIcon className="w-5 h-5" /> <span>Read</span>
-          </Button>
+
+          <PostReadButton canAccess={canAccess} slug={slug} />
           <PreviewLinkButton slug={slug} />
         </div>
       </div>
     </div>
   )
+}
+
+function PostReadButton({
+  canAccess,
+  slug
+}: {
+  canAccess: CanAcessType
+  slug: string | null
+}) {
+  if (canAccess) {
+    return (
+      <Link href={`/post/${slug}`} className="self-center">
+        <Button className="" size={'lgIcon'}>
+          Read
+        </Button>
+      </Link>
+    )
+  } else {
+    return (
+      <Button disabled size={'lgIcon'} className="self-center">
+        <LockClosedIcon className="w-5 h-5" /> <span>Read</span>
+      </Button>
+    )
+  }
 }

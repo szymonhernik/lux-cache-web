@@ -11,8 +11,6 @@ export function Modal({
   children: React.ReactNode
   onModalDisplayChange?: (value: boolean) => void
 }) {
-  console.log('MODALLLLL MODALLLLLMODALLLLL')
-
   const router = useRouter()
   const dialogRef = useRef<ElementRef<'dialog'>>(null)
   const [mounted, setMounted] = useState(false)
@@ -38,9 +36,9 @@ export function Modal({
   function onDismiss() {
     if (!onModalDisplayChange) {
       router.push('/browse')
-      console.log('XXX')
+      // console.log('XXX')
     } else {
-      console.log('Handle close modal')
+      // console.log('Handle close modal')
 
       handleModalDisplayChange()
     }

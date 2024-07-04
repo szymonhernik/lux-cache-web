@@ -18,7 +18,7 @@ export default function TestQuery() {
         )
     }
   )
-  console.log('isFetching: ', isFetching)
+  // console.log('isFetching: ', isFetching)
 
   const handleClick = () => {
     router.refresh()

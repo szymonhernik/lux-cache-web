@@ -24,31 +24,24 @@ export default function Breadcrumbs(props: Props) {
     <div className=" text-shadow uppercase ">
       <Breadcrumb>
         <BreadcrumbList>
-          {/* <BreadcrumbItem>
-                    <BreadcrumbLink href="/browse">Browse</BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>Artists</BreadcrumbItem>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                    <BreadcrumbPage>Nkisi Mavinga</BreadcrumbPage>
-                </BreadcrumbItem> */}
           {pathnames &&
             pathnames.map((pathname, index) => (
-              <BreadcrumbItem key={index}>
-                {pathname.path ? (
-                  <BreadcrumbLink href={pathname.path}>
-                    {pathname.name}
-                  </BreadcrumbLink>
-                ) : index !== pathnames.length - 1 ? (
-                  <>{pathname.name}</>
-                ) : (
-                  index === pathnames.length - 1 && (
-                    <BreadcrumbPage>{pathname.name}</BreadcrumbPage>
-                  )
-                )}
+              <>
+                <BreadcrumbItem key={index}>
+                  {pathname.path ? (
+                    <BreadcrumbLink href={pathname.path}>
+                      {pathname.name}
+                    </BreadcrumbLink>
+                  ) : index !== pathnames.length - 1 ? (
+                    <>{pathname.name}</>
+                  ) : (
+                    index === pathnames.length - 1 && (
+                      <BreadcrumbPage>{pathname.name}</BreadcrumbPage>
+                    )
+                  )}
+                </BreadcrumbItem>
                 {index < pathnames.length - 1 && <BreadcrumbSeparator />}
-              </BreadcrumbItem>
+              </>
             ))}
         </BreadcrumbList>
       </Breadcrumb>

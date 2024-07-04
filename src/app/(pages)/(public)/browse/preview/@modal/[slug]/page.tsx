@@ -20,10 +20,9 @@ export default async function Page({ params }: { params: { slug: string } }) {
   const supabase = createClient()
   const subscriptionTier = await getUserTier(supabase)
   const userTier = subscriptionTier?.userTier
-  const canAccess =
-    userTier && data?.minimumTier
-      ? canAccessPost(userTier, data.minimumTier)
-      : 'loading'
+  const canAccess = canAccessPost(userTier, data.minimumTier)
+
+  console.log('canAccess SSR:', canAccess)
 
   return <ModalPage data={data} canAccess={canAccess} />
 }
