@@ -27,7 +27,6 @@ export default function ArtistNavbar(props: Props) {
   ]
 
   const handleBioClick = () => {
-    console.log('bio clicked')
     setShowBio(!showBio)
   }
 

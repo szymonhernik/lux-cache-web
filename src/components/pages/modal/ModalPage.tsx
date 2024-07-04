@@ -10,8 +10,6 @@ type ModalProps = {
   canAccess: CanAcessType
 }
 export default function ModalPage(props: ModalProps) {
-  console.log('Modal Modal')
-
   const { data, canAccess } = props
   return (
     <Suspense fallback={<h1>Loading..</h1>}>
