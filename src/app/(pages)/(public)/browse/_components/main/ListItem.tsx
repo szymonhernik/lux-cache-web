@@ -26,6 +26,7 @@ import clsx from 'clsx'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 import { Modal } from '../../preview/@modal/[slug]/modal'
 import EpisodePreview from '../post-preview/EpisodePreview'
+import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
 
 export default function ListItem({
   item,
@@ -87,7 +88,7 @@ export default function ListItem({
           setModalOpen(true)
         }}
         className={clsx(
-          `hover:cursor-pointer lg:opacity-80 hover:opacity-100 relative h-full   flex flex-col   transition-all duration-200 hover:bg-opacity-50`,
+          `hover:cursor-pointer lg:opacity-80 hover:opacity-100 relative h-full   flex flex-col   transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
           !view && entry?.isIntersecting && 'bg-green-300',
           view === 'list' && ' pt-8 pl-10 pr-4 ',
           !view && 'items-center justify-center'
@@ -98,7 +99,7 @@ export default function ListItem({
         <div
           ref={ref}
           className={clsx('absolute inset-y-0  z-[-1000]', {
-            'lg:-inset-x-[800px]': !view,
+            'lg:-inset-x-[120px]': !view,
             'inset-x-0': view === 'list'
           })}
         ></div>
@@ -108,20 +109,18 @@ export default function ListItem({
             setModalOpen(true)
           }}
         > */}
-        <div className="absolute z-[0] top-0 left-0 w-full h-full *:text-left ">
-          {!view && item?.coverVideoMux?.videoFile?.asset && (
-            <img
-              // @ts-ignore
-              src={`https://image.mux.com/${item.coverVideoMux.videoFile.asset?.playbackId}/thumbnail.png?width=5&time=0`}
-              className="absolute w-full h-full "
-            />
-          )}
-        </div>
-        {view && <h1 className="uppercase font-semibold ">{item.title}</h1>}
 
-        {!view && entry?.isIntersecting && item.coverVideoMux?.videoFile && (
-          <VideoTest video={item.coverVideoMux.videoFile} />
+        {!view && item?.previewVideo?.generatedBase64 && (
+          <img
+            src={item.previewVideo.generatedBase64}
+            className="h-full w-full blur-[32px] scale-150  z-[-1] object-cover absolute top-0 right-0 bottom-0 left-0"
+          />
         )}
+
+        {!view && entry?.isIntersecting && item?.previewVideo && (
+          <PreviewVideo previewVideo={item.previewVideo} />
+        )}
+        {view && <h1 className="uppercase font-semibold ">{item.title}</h1>}
         {/* </Link> */}
         {/* </button> */}
       </div>

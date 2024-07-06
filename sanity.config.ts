@@ -47,6 +47,7 @@ import postFooter from '@/sanity/schemas/objects/postFooter'
 import pricing from '@/sanity/schemas/singletons/pricing'
 import introText from '@/sanity/schemas/objects/introText'
 import coverVideo from '@/sanity/schemas/objects/coverVideo'
+import { cloudinarySchemaPlugin } from 'sanity-plugin-cloudinary'
 
 export default defineConfig({
   basePath: '/studio',
@@ -109,6 +110,7 @@ export default defineConfig({
       }
     }),
     muxInput(),
+    cloudinarySchemaPlugin(),
 
     // Vision is a tool that lets you query your content with GROQ in the studio
     // https://www.sanity.io/docs/the-vision-plugin

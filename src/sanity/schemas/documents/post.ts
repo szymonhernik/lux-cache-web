@@ -193,6 +193,29 @@ export default defineType({
       group: 'media',
       type: 'coverVideo'
     }),
+
+    defineField({
+      name: 'previewVideo',
+      title: 'Preview Video',
+      type: 'object',
+      fields: [
+        defineField({
+          title: 'Generated Base64',
+          type: 'string',
+          name: 'generatedBase64',
+          description:
+            'Please provide a base64 string for the video preview, extracted from the first frame of the video, 25px x 25px',
+          validation: (rule) => rule.required()
+        }),
+        defineField({
+          type: 'cloudinary.asset',
+          name: 'video',
+          description: 'This asset is served from Cloudinary',
+          validation: (rule) => rule.required()
+        })
+      ],
+      validation: (rule) => rule.required()
+    }),
     defineField({
       type: 'image',
       group: 'media',

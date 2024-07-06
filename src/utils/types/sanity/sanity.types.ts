@@ -683,6 +683,10 @@ export type Post = {
     _type: 'image'
   }
   coverVideoMux?: CoverVideo
+  previewVideo?: {
+    generatedBase64?: string
+    video?: CloudinaryAsset
+  }
   previewImage?: {
     asset?: {
       _ref: string
@@ -850,6 +854,48 @@ export type Slug = {
   source?: string
 }
 
+export type CloudinaryAssetContextCustom = {
+  _type: 'cloudinary.assetContextCustom'
+  alt?: string
+  caption?: string
+}
+
+export type CloudinaryAssetDerived = {
+  _type: 'cloudinary.assetDerived'
+  raw_transformation?: string
+  url?: string
+  secure_url?: string
+}
+
+export type CloudinaryAsset = {
+  _type: 'cloudinary.asset'
+  public_id?: string
+  resource_type?: string
+  type?: string
+  format?: string
+  version?: number
+  url?: string
+  secure_url?: string
+  width?: number
+  height?: number
+  bytes?: number
+  duration?: number
+  tags?: Array<string>
+  created_at?: string
+  derived?: Array<
+    {
+      _key: string
+    } & CloudinaryAssetDerived
+  >
+  access_mode?: string
+  context?: CloudinaryAssetContext
+}
+
+export type CloudinaryAssetContext = {
+  _type: 'cloudinary.assetContext'
+  custom?: CloudinaryAssetContextCustom
+}
+
 export type MuxVideo = {
   _type: 'mux.video'
   asset?: {
@@ -868,10 +914,57 @@ export type MuxVideoAsset = {
   filename?: string
   thumbTime?: number
 }
+
+export type AllSanitySchemaTypes =
+  | SanityImagePaletteSwatch
+  | SanityImagePalette
+  | SanityImageDimensions
+  | Geopoint
+  | PostFooter
+  | Spotify
+  | Youtube
+  | AudioInline
+  | Video
+  | PdfEmbed
+  | PostContent
+  | BlockContentAdvanced
+  | TemplateText
+  | MentorsGallery
+  | AsyncList
+  | Faq
+  | MainBody
+  | BlockContentSimple
+  | IntroText
+  | BlockContent
+  | Series
+  | Plan
+  | Templates
+  | FilterGroup
+  | FilterItem
+  | Page
+  | Pricing
+  | Settings
+  | Home
+  | Post
+  | SanityFileAsset
+  | CoverVideo
+  | Artist
+  | SanityImageCrop
+  | SanityImageHotspot
+  | SanityImageAsset
+  | SanityAssetSourceData
+  | SanityImageMetadata
+  | Slug
+  | CloudinaryAssetContextCustom
+  | CloudinaryAssetDerived
+  | CloudinaryAsset
+  | CloudinaryAssetContext
+  | MuxVideo
+  | MuxVideoAsset
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: ./src/sanity/lib/queries.ts
 // Variable: postsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideoMux{  		_type,	  	videoFile {        _type,        asset->{          playbackId,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    coverVideoMux{  		_type,      ...,	  	videoFile {        _type,        ...,        asset->{          playbackId,          ...,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type PostsQueryResult = {
   posts: Array<{
     _id: string
@@ -906,6 +999,15 @@ export type PostsQueryResult = {
         lqip: string | null
       } | null
     } | null
+    previewVideo: {
+      generatedBase64: string | null
+      video: {
+        _key: null
+        _type: 'cloudinary.asset'
+        format: string | null
+        public_id: string | null
+      } | null
+    } | null
     coverVideoMux: {
       _type: 'coverVideo'
       videoFile: {
@@ -921,7 +1023,7 @@ export type PostsQueryResult = {
   }>
 }
 // Variable: initialPostsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideoMux{  		_type,	  	videoFile {        _type,        asset->{          playbackId,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    coverVideoMux{  		_type,      ...,	  	videoFile {        _type,        ...,        asset->{          playbackId,          ...,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type InitialPostsQueryResult = {
   posts: Array<{
     _id: string
@@ -956,6 +1058,15 @@ export type InitialPostsQueryResult = {
         lqip: string | null
       } | null
     } | null
+    previewVideo: {
+      generatedBase64: string | null
+      video: {
+        _key: null
+        _type: 'cloudinary.asset'
+        format: string | null
+        public_id: string | null
+      } | null
+    } | null
     coverVideoMux: {
       _type: 'coverVideo'
       videoFile: {
@@ -971,7 +1082,7 @@ export type InitialPostsQueryResult = {
   }>
 }
 // Variable: morePostsQuery
-// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideoMux{  		_type,	  	videoFile {        _type,        asset->{          playbackId,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    coverVideoMux{  		_type,      ...,	  	videoFile {        _type,        ...,        asset->{          playbackId,          ...,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type MorePostsQueryResult = {
   posts: Array<{
     _id: string
@@ -1004,6 +1115,15 @@ export type MorePostsQueryResult = {
         _id: string
         url: string | null
         lqip: string | null
+      } | null
+    } | null
+    previewVideo: {
+      generatedBase64: string | null
+      video: {
+        _key: null
+        _type: 'cloudinary.asset'
+        format: string | null
+        public_id: string | null
       } | null
     } | null
     coverVideoMux: {
@@ -1097,7 +1217,7 @@ export type FilterGroupsQueryResult = {
   }>
 }
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideoMux{  		_type,	  	videoFile {        _type,        asset->{          playbackId,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }
+// Query:   *[_type == "post" && slug.current == $slug][0] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    coverVideoMux{  		_type,      ...,	  	videoFile {        _type,        ...,        asset->{          playbackId,          ...,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1131,6 +1251,15 @@ export type PostBySlugQueryResult = {
       lqip: string | null
     } | null
   } | null
+  previewVideo: {
+    generatedBase64: string | null
+    video: {
+      _key: null
+      _type: 'cloudinary.asset'
+      format: string | null
+      public_id: string | null
+    } | null
+  } | null
   coverVideoMux: {
     _type: 'coverVideo'
     videoFile: {
@@ -1145,7 +1274,7 @@ export type PostBySlugQueryResult = {
   }> | null
 } | null
 // Variable: postsByArtistSlugQuery
-// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideoMux{  		_type,	  	videoFile {        _type,        asset->{          playbackId,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
+// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    coverVideoMux{  		_type,      ...,	  	videoFile {        _type,        ...,        asset->{          playbackId,          ...,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
 export type PostsByArtistSlugQueryResult = {
   results: {
     _id: string
@@ -1206,6 +1335,15 @@ export type PostsByArtistSlugQueryResult = {
           lqip: string | null
         } | null
       } | null
+      previewVideo: {
+        generatedBase64: string | null
+        video: {
+          _key: null
+          _type: 'cloudinary.asset'
+          format: string | null
+          public_id: string | null
+        } | null
+      } | null
       coverVideoMux: {
         _type: 'coverVideo'
         videoFile: {
@@ -1222,7 +1360,7 @@ export type PostsByArtistSlugQueryResult = {
   } | null
 }
 // Variable: postsBySeriesSlugQuery
-// Query:  {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    coverVideoMux{  		_type,	  	videoFile {        _type,        asset->{          playbackId,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }    
+// Query:  {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    coverVideoMux{  		_type,      ...,	  	videoFile {        _type,        ...,        asset->{          playbackId,          ...,          "url": "https://stream.mux.com/" + playbackId        }      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }    
 export type PostsBySeriesSlugQueryResult = {
   results: {
     _id: string
@@ -1263,6 +1401,15 @@ export type PostsBySeriesSlugQueryResult = {
           _id: string
           url: string | null
           lqip: string | null
+        } | null
+      } | null
+      previewVideo: {
+        generatedBase64: string | null
+        video: {
+          _key: null
+          _type: 'cloudinary.asset'
+          format: string | null
+          public_id: string | null
         } | null
       } | null
       coverVideoMux: {

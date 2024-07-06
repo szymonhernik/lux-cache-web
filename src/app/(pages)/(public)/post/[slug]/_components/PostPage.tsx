@@ -9,13 +9,21 @@ import ContentOverview from './ContentOverview'
 import PostNavbar from './PostNavbar'
 import Link from 'next/link'
 import ContentHeadlines from './ContentHeadlines'
+import VideoThroughCDNTest from './VideoThroughCDNTest'
 
 export interface PostPageProps {
   data: PostBySlugQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
 }
 export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
-  const { title, publishedAt, artistList, filters } = data ?? {}
+  const {
+    title,
+    publishedAt,
+    artistList,
+    filters,
+    coverVideoMux,
+    previewVideo
+  } = data ?? {}
 
   return (
     <article className="flex flex-col ">
@@ -25,6 +33,11 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
       </div>
       {/* Post content */}
       <div className="*:max-w-3xl *:mx-auto mx-auto my-36 px-4  space-y-24 *:flex *:flex-col *:items-center  ">
+        {previewVideo && (
+          <section>
+            <VideoThroughCDNTest previewVideo={previewVideo} />
+          </section>
+        )}
         <section className="gap-8 !max-w-4xl">
           <ContentOverview publishedAt={publishedAt} filters={filters} />
         </section>

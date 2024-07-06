@@ -31,12 +31,24 @@ const postQueryFields = `
         "lqip": metadata.lqip,
       }
     },
+    previewVideo {
+      generatedBase64,
+      video {
+        _key,
+        _type,
+        format, 
+        public_id
+      }
+    },
     coverVideoMux{
   		_type,
+      ...,
 	  	videoFile {
         _type,
+        ...,
         asset->{
           playbackId,
+          ...,
           "url": "https://stream.mux.com/" + playbackId
         }
       }

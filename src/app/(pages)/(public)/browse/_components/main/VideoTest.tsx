@@ -11,7 +11,7 @@ export default function VideoTest(props: Props) {
   if (playbackId) {
     return (
       <MuxVideo
-        className="z-[10]"
+        className="z-[10] w-full h-full"
         playbackId={playbackId}
         metadata={{
           video_title: 'lux cache'

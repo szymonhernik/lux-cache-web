@@ -70,6 +70,7 @@
     "resend": "^3.2.0",
     "rxjs": "7.8.1",
     "sanity": "3.40.0",
+    "sanity-plugin-cloudinary": "^1.1.3",
     "sanity-plugin-mux-input": "^2.3.4",
     "server-only": "0.0.1",
     "sonner": "^1.5.0",
