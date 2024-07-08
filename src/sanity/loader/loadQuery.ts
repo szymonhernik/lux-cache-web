@@ -16,6 +16,7 @@ import {
   initialPostsQuery,
   morePostsQuery,
   pageBySlugQuery,
+  postBySlugModalQuery,
   postBySlugQuery,
   postsByArtistSlugQuery,
   postsBySeriesSlugQuery,
@@ -26,6 +27,7 @@ import { client } from '@/sanity/lib/client'
 import {
   FilterGroupsQueryResult,
   InitialPostsQueryResult,
+  PostBySlugModalQueryResult,
   PostBySlugQueryResult,
   PostsByArtistSlugQueryResult,
   PostsBySeriesSlugQueryResult,
@@ -161,6 +163,13 @@ export function loadMorePosts(
 export function loadPost(slug: string) {
   return loadQuery<PostBySlugQueryResult | null>(
     postBySlugQuery,
+    { slug },
+    { next: { tags: [`post:${slug}`] } }
+  )
+}
+export function loadPostModal(slug: string) {
+  return loadQuery<PostBySlugModalQueryResult | null>(
+    postBySlugModalQuery,
     { slug },
     { next: { tags: [`post:${slug}`] } }
   )

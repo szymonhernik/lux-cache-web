@@ -2,11 +2,11 @@ import EpisodePreview from '@/app/(pages)/(public)/browse/_components/post-previ
 import { Modal } from '@/app/(pages)/(public)/browse/preview/@modal/[slug]/modal'
 import { CanAcessType } from '@/utils/types'
 
-import { PostBySlugQueryResult } from '@/utils/types/sanity/sanity.types'
+import { PostBySlugModalQueryResult } from '@/utils/types/sanity/sanity.types'
 import { Suspense } from 'react'
 
 type ModalProps = {
-  data: PostBySlugQueryResult
+  data: PostBySlugModalQueryResult
   canAccess: CanAcessType
 }
 export default function ModalPage(props: ModalProps) {
@@ -14,7 +14,6 @@ export default function ModalPage(props: ModalProps) {
   return (
     <Suspense fallback={<h1>Loading..</h1>}>
       <Modal>
-        {/* @ts-ignore */}
         {data && <EpisodePreview data={data} canAccess={canAccess} />}
       </Modal>
     </Suspense>

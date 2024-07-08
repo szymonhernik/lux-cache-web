@@ -88,8 +88,8 @@ export default function ListItem({
           setModalOpen(true)
         }}
         className={clsx(
-          `hover:cursor-pointer lg:opacity-80 hover:opacity-100 relative h-full   flex flex-col   transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
-          !view && entry?.isIntersecting && 'bg-green-300',
+          `hover:cursor-pointer opacity-90 hover:opacity-70 relative h-full   flex flex-col   transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
+          !view && entry?.isIntersecting && '',
           view === 'list' && ' pt-8 pl-10 pr-4 ',
           !view && 'items-center justify-center'
         )}
@@ -110,9 +110,9 @@ export default function ListItem({
           }}
         > */}
 
-        {!view && item?.previewVideo?.generatedBase64 && (
+        {!view && item?.coverImage?.asset?.lqip && (
           <img
-            src={item.previewVideo.generatedBase64}
+            src={item.coverImage?.asset.lqip}
             className="h-full w-full blur-[32px] scale-150  z-[-1] object-cover absolute top-0 right-0 bottom-0 left-0"
           />
         )}

@@ -1,5 +1,5 @@
 interface Props {
-  minimumTier: '0' | '1' | '2' | '3' | null
+  minimumTier: '0' | '1' | '2' | '3'
   canAccess: boolean | null
 }
 

@@ -593,6 +593,30 @@
     }
   },
   {
+    "name": "coverVideo",
+    "type": "type",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "coverVideo"
+          }
+        },
+        "videoFile": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "inline",
+            "name": "mux.video"
+          },
+          "optional": true
+        }
+      }
+    }
+  },
+  {
     "name": "pdfEmbed",
     "type": "type",
     "value": {
@@ -4171,6 +4195,23 @@
         },
         "optional": true
       },
+      "previewVideo": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "object",
+          "attributes": {
+            "video": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "inline",
+                "name": "cloudinary.asset"
+              },
+              "optional": true
+            }
+          }
+        },
+        "optional": true
+      },
       "coverImage": {
         "type": "objectAttribute",
         "value": {
@@ -4228,38 +4269,6 @@
                 "type": "string",
                 "value": "image"
               }
-            }
-          }
-        },
-        "optional": true
-      },
-      "coverVideoMux": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "inline",
-          "name": "coverVideo"
-        },
-        "optional": true
-      },
-      "previewVideo": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "object",
-          "attributes": {
-            "generatedBase64": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "string"
-              },
-              "optional": true
-            },
-            "video": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "inline",
-                "name": "cloudinary.asset"
-              },
-              "optional": true
             }
           }
         },
@@ -4668,30 +4677,6 @@
           "name": "sanity.assetSourceData"
         },
         "optional": true
-      }
-    }
-  },
-  {
-    "name": "coverVideo",
-    "type": "type",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "coverVideo"
-          }
-        },
-        "videoFile": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "inline",
-            "name": "mux.video"
-          },
-          "optional": true
-        }
       }
     }
   },

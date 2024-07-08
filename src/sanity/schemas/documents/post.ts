@@ -176,37 +176,26 @@ export default defineType({
       },
       validation: (rule) => rule.required()
     }),
-    defineField({
-      type: 'image',
-      group: 'media',
-      icon: ImageIcon,
-      description:
-        'The main image for the post. Also displayed on social cards and search engine results.',
-      name: 'coverImage',
-      title: 'Cover Image',
 
-      validation: (rule) => rule.required()
-    }),
-    defineField({
-      title: 'Cover Video',
-      name: 'coverVideoMux',
-      group: 'media',
-      type: 'coverVideo'
-    }),
+    // defineField({
+    //   title: 'Cover Video',
+    //   name: 'coverVideoMux',
+    //   group: 'media',
+    //   type: 'coverVideo'
+    // }),
 
     defineField({
       name: 'previewVideo',
       title: 'Preview Video',
       type: 'object',
       fields: [
-        defineField({
-          title: 'Generated Base64',
-          type: 'string',
-          name: 'generatedBase64',
-          description:
-            'Please provide a base64 string for the video preview, extracted from the first frame of the video, 25px x 25px',
-          validation: (rule) => rule.required()
-        }),
+        // defineField({
+        //   title: 'Generated Base64',
+        //   type: 'string',
+        //   name: 'generatedBase64',
+        //   description:
+        //     'Please provide a base64 string for the video preview, extracted from the first frame of the video, 25px x 25px'
+        // }),
         defineField({
           type: 'cloudinary.asset',
           name: 'video',
@@ -218,12 +207,23 @@ export default defineType({
     }),
     defineField({
       type: 'image',
+      name: 'coverImage',
+      title: 'Cover Image',
+      group: 'media',
+      icon: ImageIcon,
+      description:
+        'The main image for the post. Also displayed on social cards and search engine results.',
+
+      validation: (rule) => rule.required()
+    }),
+    defineField({
+      type: 'image',
+      name: 'previewImage',
+      title: 'Preview Image',
       group: 'media',
       icon: ImageIcon,
       description:
         'The image for the display in the preview of the post. This image should not have any text on it.',
-      name: 'previewImage',
-      title: 'Preview Image',
 
       validation: (rule) => rule.required()
     }),

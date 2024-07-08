@@ -13,9 +13,17 @@ import AccessInfo from './AccessInfo'
 import ImageBox from '@/components/ui/ImageBox'
 import ImageBoxExpanded from '@/components/ui/ImageBoxExpanded'
 import { CanAcessType } from '@/utils/types'
+import {
+  InitialPostsQueryResult,
+  PostBySlugModalQueryResult,
+  PostsQueryResult
+} from '@/utils/types/sanity/sanity.types'
 
 type Props = {
-  data: SinglePostType
+  data:
+    | PostBySlugModalQueryResult
+    | InitialPostsQueryResult['posts'][number]
+    | PostsQueryResult['posts'][number] // this is used in draft mode
   canAccess: CanAcessType
   onModalDisplayChange?: (value: boolean) => void
 }
@@ -29,9 +37,8 @@ export default function EpisodePreview(props: Props) {
     slug,
     subtitle,
     minimumTier,
-    coverImage,
     previewImage
-  } = data
+  } = data || {}
 
   const handleModalDisplayChange = () => {
     if (onModalDisplayChange) {
@@ -57,7 +64,7 @@ export default function EpisodePreview(props: Props) {
             size="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         )}
-        {!canAccess && (
+        {!canAccess && minimumTier && (
           <div className="rounded-md z-[10] bg-black  w-4/5 md:h-[70%] text-white py-8 px-6 font-semibold text-sm space-y-4">
             <AccessInfo minimumTier={minimumTier} canAccess={canAccess} />
           </div>
@@ -93,8 +100,12 @@ export default function EpisodePreview(props: Props) {
             <p className="font-neue">{ogDescription}</p>
           </div>
 
-          <PostReadButton canAccess={canAccess} slug={slug} />
-          <PreviewLinkButton slug={slug} />
+          {slug && (
+            <>
+              <PostReadButton canAccess={canAccess} slug={slug} />
+              <PreviewLinkButton slug={slug} />
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -22,7 +22,14 @@ const postQueryFields = `
     },
     publishedAt, 
     "slug": slug.current,
-    coverImage,
+    coverImage{
+      _type,
+      asset->{
+        _id,
+        url,
+        "lqip": metadata.lqip,
+      }
+    },
     previewImage{
       _type,
       asset->{
@@ -38,19 +45,6 @@ const postQueryFields = `
         _type,
         format, 
         public_id
-      }
-    },
-    coverVideoMux{
-  		_type,
-      ...,
-	  	videoFile {
-        _type,
-        ...,
-        asset->{
-          playbackId,
-          ...,
-          "url": "https://stream.mux.com/" + playbackId
-        }
       }
     },
     minimumTier,
@@ -183,7 +177,57 @@ export const filterGroupsQuery = groq`{
 
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
-    ${postQueryFields}
+    _id, 
+    title, 
+    subtitle,
+    artistList[]{
+      additionalContext,
+      _key,
+      artistRef->{
+        name,
+        "slug": slug.current,
+      }
+    },
+    publishedAt, 
+    "slug": slug.current,
+    coverImage,
+    minimumTier,
+    ogDescription,
+    filters[]->{
+      "slug": slug.current
+    },
+  }
+`
+
+export const postBySlugModalQuery = groq`
+  *[_type == "post" && slug.current == $slug][0] {
+    _id, 
+    title, 
+    subtitle,
+    artistList[]{
+      additionalContext,
+      _key,
+      artistRef->{
+        name,
+        "slug": slug.current,
+      }
+    },
+    publishedAt, 
+    "slug": slug.current,
+    coverImage,
+    previewImage{
+      _type,
+      asset->{
+        _id,
+        url,
+        "lqip": metadata.lqip,
+      }
+    },
+    minimumTier,
+    ogDescription,
+    filters[]->{
+      "slug": slug.current
+    },
   }
 `
 

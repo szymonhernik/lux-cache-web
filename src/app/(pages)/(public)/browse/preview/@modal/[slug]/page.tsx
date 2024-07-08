@@ -1,4 +1,4 @@
-import { loadPost } from '@/sanity/loader/loadQuery'
+import { loadPostModal } from '@/sanity/loader/loadQuery'
 
 import ModalPage from '@/components/pages/modal/ModalPage'
 import { createClient } from '@/utils/supabase/server'
@@ -8,7 +8,7 @@ import { notFound } from 'next/navigation'
 
 export default async function Page({ params }: { params: { slug: string } }) {
   const { slug } = params
-  const post = await loadPost(slug)
+  const post = await loadPostModal(slug)
   const { data } = post || {}
 
   if (!data) {
