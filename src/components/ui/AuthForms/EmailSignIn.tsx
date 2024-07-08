@@ -62,12 +62,12 @@ export default function EmailSignIn({
       {allowPassword && (
         <>
           <p>
-            <Link href="/signin/password_signin" className="font-light text-sm">
+            <Link href="/signin/password_signin" className=" ">
               Sign in with email and password
             </Link>
           </p>
           <p>
-            <Link href="/signin/signup" className="font-light text-sm">
+            <Link href="/signin/signup" className=" ">
               Don't have an account? Sign up
             </Link>
           </p>

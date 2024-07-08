@@ -24,8 +24,7 @@ const links = [
   { name: 'pricing', href: '/pricing' },
   { name: 'FAQ', href: '/faq' },
   // { name: 'mentoring', href: '/mentoring' },
-  { name: 'contact', href: '/contact' },
-  { name: 'account', href: '/account' }
+  { name: 'contact', href: '/contact' }
 ]
 
 export default function Navbar() {
@@ -50,7 +49,7 @@ export default function Navbar() {
         </div>
         <button
           type="button"
-          className="group absolute right-0 top-0 flex h-navbar-mobile items-center gap-x-2 px-4 lg:hidden"
+          className="group absolute left-0 top-0 flex h-navbar-mobile items-center gap-x-2 px-4 lg:hidden"
           onClick={() => setIsOpen(!isOpen)}
         >
           <Hamburger
@@ -60,6 +59,10 @@ export default function Navbar() {
             toggle={setIsOpen}
           />
         </button>
+        {/* <div className="fixed lg:hidden top-0 right-0 lg:right-navbarWidth z-[100] lg:z-[10] min-h-[4rem] flex items-center">
+          <LoginButtonTest />
+        </div> */}
+
         <div
           className={clsx(
             'overflow-y-auto lg:static  lg:flex lg:flex-col lg:justify-center lg:h-[calc(100vh-8rem)]',
@@ -108,9 +111,6 @@ export default function Navbar() {
               <a href="">
                 <span>↳</span> instagram
               </a>
-            </div>
-            <div className="">
-              <LoginButtonTest />
             </div>
           </nav>
         </div>

@@ -29,9 +29,12 @@ export async function SignOut(formData: FormData) {
       'Hmm... Something went wrong.',
       'You could not be signed out.'
     )
-  }
+  } else {
+    revalidatePath('/')
+    return getStatusRedirect('/', 'Success', 'You are now signed out.')
 
-  return '/signin'
+    // return getStatusRedirect('/pricing', '', 'You are now signed out.')
+  }
 }
 
 export async function signInWithEmail(formData: FormData) {
@@ -89,11 +92,11 @@ export async function signInWithEmail(formData: FormData) {
   return redirectPath
 }
 
-export async function requestPasswordUpdate(formData: FormData) {
+export async function requestPasswordUpdate(values: { email: string }) {
   const callbackURL = getURL('/auth/reset_password')
 
   // Get form data
-  const email = String(formData.get('email')).trim()
+  const email = String(values.email).trim()
   let redirectPath: string
 
   if (!isValidEmail(email)) {
@@ -134,10 +137,13 @@ export async function requestPasswordUpdate(formData: FormData) {
   return redirectPath
 }
 
-export async function signInWithPassword(formData: FormData) {
+export async function signInWithPassword(values: {
+  email: string
+  password: string
+}) {
   const cookieStore = cookies()
-  const email = String(formData.get('email')).trim()
-  const password = String(formData.get('password')).trim()
+  const email = String(values.email).trim()
+  const password = String(values.password).trim()
   let redirectPath: string
 
   const supabase = createClient()
@@ -154,7 +160,11 @@ export async function signInWithPassword(formData: FormData) {
     )
   } else if (data.user) {
     cookieStore.set('preferredSignInView', 'password_signin', { path: '/' })
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.')
+    redirectPath = getStatusRedirect(
+      '/browse/',
+      'Success!',
+      'You are now signed in.'
+    )
     // refresh the route to update the user state
     revalidatePath('/')
   } else {
@@ -168,11 +178,11 @@ export async function signInWithPassword(formData: FormData) {
   return redirectPath
 }
 
-export async function signUp(formData: FormData) {
+export async function signUp(values: { email: string; password: string }) {
   const callbackURL = getURL('/auth/callback')
 
-  const email = String(formData.get('email')).trim()
-  const password = String(formData.get('password')).trim()
+  const email = String(values.email).trim()
+  const password = String(values.password).trim()
   let redirectPath: string
 
   if (!isValidEmail(email)) {

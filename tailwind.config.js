@@ -55,7 +55,8 @@ module.exports = {
       inset: {
         searchXPadding: 'var(--padding-x-searchbar)',
         toolbarHeight: 'var(--height-toolbar)',
-        dynamicDisplayBar: 'var(--height-dynamic-display-bar)'
+        dynamicDisplayBar: 'var(--height-dynamic-display-bar)',
+        navbarWidth: 'var(--width-navbar)'
       },
       textShadow: {
         DEFAULT: '0px 0px 4px rgba(0, 0, 0, 0.50);'
@@ -79,6 +80,7 @@ module.exports = {
         },
         secondary: {
           DEFAULT: 'hsl(var(--surface-secondary))',
+          inverted: 'hsl(var(--surface-secondary-inverted))',
           foreground: 'hsl(var(--secondary-foreground))'
         },
         destructive: {

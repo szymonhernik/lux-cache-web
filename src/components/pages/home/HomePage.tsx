@@ -20,6 +20,8 @@ export default function HomePage({ data, encodeDataAttribute }: HomePageProps) {
   return (
     <main className="container mt-16 lg:mt-4 mx-auto grid grid-cols-1 ">
       <h1>Home page</h1>
+      <Link href="/signin/password_signin">Log in </Link>
+      <Link href="/signin/update_password">Update Password</Link>
     </main>
   )
 }

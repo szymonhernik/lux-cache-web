@@ -73,9 +73,9 @@ export const updateSession = async (request: NextRequest) => {
   } = await supabase.auth.getUser()
 
   // People with user account and logged in when visiting luxcache.com see browse page on homepage
-  // if (user && request.nextUrl.pathname === '/') {
-  //   return NextResponse.redirect(new URL('/browse', request.url))
-  // }
+  if (user && request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/browse', request.url))
+  }
 
   if (!user && request.nextUrl.pathname.startsWith('/account')) {
     return NextResponse.redirect(new URL('/signin', request.url))

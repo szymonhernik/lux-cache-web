@@ -6,6 +6,19 @@ import { handleRequest } from '@/utils/auth-helpers/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/shadcn/ui/form'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { Input } from '@/components/shadcn/ui/input'
 
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
@@ -13,6 +26,9 @@ interface ForgotPasswordProps {
   redirectMethod: string
   disableButton?: boolean
 }
+const formSchema = z.object({
+  email: z.string().email({ message: 'Please enter a valid email address.' })
+})
 
 export default function ForgotPassword({
   allowEmail,
@@ -22,60 +38,80 @@ export default function ForgotPassword({
   const router = redirectMethod === 'client' ? useRouter() : null
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: ''
+    }
+  })
+
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   setIsSubmitting(true) // Disable the button while the request is being handled
+  //   await handleRequest(e, requestPasswordUpdate, router)
+  //   setIsSubmitting(false)
+  // }
+  const handleReset = async (values: { email: string }) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
-    await handleRequest(e, requestPasswordUpdate, router)
-    setIsSubmitting(false)
+    try {
+      const redirectUrl: string = await requestPasswordUpdate(values)
+      if (router) {
+        router.push(redirectUrl)
+      }
+    } catch (error) {
+      console.error('Login failed', error)
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <div className="my-8">
-      <form
-        noValidate={true}
-        className="mb-4"
-        onSubmit={(e) => handleSubmit(e)}
-      >
-        <div className="grid gap-2">
-          <div className="grid gap-1">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              placeholder="name@example.com"
-              type="email"
-              name="email"
-              autoCapitalize="none"
-              autoComplete="email"
-              autoCorrect="off"
-              className="w-full p-3 rounded-md bg-zinc-800"
-            />
-          </div>
+    <div className="flex flex-col gap-8 my-8">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(handleReset)} className=" space-y-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="">Email</FormLabel>
+                <FormControl>
+                  <Input
+                    className="py-4 "
+                    placeholder="user@example.com"
+                    {...field}
+                  />
+                </FormControl>
+                <FormDescription>
+                  We will send you an email to this address with a link to reset
+                  your password.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button
             type="submit"
-            className="mt-1"
+            className="w-fit"
             isLoading={isSubmitting}
             disabled={disableButton}
           >
             Send Email
           </Button>
-        </div>
-      </form>
-      <p>
-        <Link href="/signin/password_signin" className="font-light text-sm">
-          Sign in with email and password
-        </Link>
-      </p>
-      {allowEmail && (
+        </form>
+      </Form>
+      <div>
         <p>
-          <Link href="/signin/email_signin" className="font-light text-sm">
-            Sign in via magic link
+          <Link href="/signin/password_signin" className="text-sm">
+            Sign in with email and password
           </Link>
         </p>
-      )}
-      <p>
-        <Link href="/signin/signup" className="font-light text-sm">
-          Don't have an account? Sign up
-        </Link>
-      </p>
+        <p>
+          <Link href="/signin/signup" className="text-sm">
+            Don't have an account? Sign up
+          </Link>
+        </p>
+      </div>
     </div>
   )
 }

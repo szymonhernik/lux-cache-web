@@ -16,11 +16,11 @@ type OAuthProviders = {
 
 export default function OauthSignIn() {
   const oAuthProviders: OAuthProviders[] = [
-    {
-      name: 'github',
-      displayName: 'GitHub',
-      icon: <FaGithub className="h-5 w-5" />
-    },
+    // {
+    //   name: 'github',
+    //   displayName: 'GitHub',
+    //   icon: <FaGithub className="h-5 w-5" />
+    // },
     {
       name: 'google',
       displayName: 'Google',
@@ -42,15 +42,20 @@ export default function OauthSignIn() {
   }
 
   return (
-    <div className="mt-8">
+    <div className="mt-4 flex flex-col md:flex-row gap-2">
       {oAuthProviders.map((provider) => (
         <form
           key={provider.name}
-          className="pb-2"
+          className="grow"
           onSubmit={(e) => handleSubmit(e)}
         >
           <input type="hidden" name="provider" value={provider.name} />
-          <Button type="submit" className="w-full" isLoading={isSubmitting}>
+          <Button
+            variant={'outline'}
+            type="submit"
+            className="w-full font-normal"
+            isLoading={isSubmitting}
+          >
             <span className="mr-2">{provider.icon}</span>
             <span>{provider.displayName}</span>
           </Button>
