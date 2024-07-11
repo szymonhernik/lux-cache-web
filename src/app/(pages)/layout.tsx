@@ -48,6 +48,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
 
         {/* <Footer /> */}
       </div>
+      <div id="modal-root" />
       <Suspense>
         <Toaster />
       </Suspense>

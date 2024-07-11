@@ -60,11 +60,14 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: ''
+      email: ''
     }
   })
-  const handleSignup = async (values: { email: string; password: string }) => {
+  const handleSignup = async (values: {
+    email: string
+    password: string
+    confirmPassword: string
+  }) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
       const redirectUrl: string = await signUp(values)

@@ -119,9 +119,12 @@ export async function requestPasswordUpdate(values: { email: string }) {
       error.message,
       'Please try again.'
     )
+    // revalidatePath('/signin/forgot_password')
+
+    // return redirect('/signin/password_signin')
   } else if (data) {
     redirectPath = getStatusRedirect(
-      '/signin/forgot_password',
+      '/browse',
       'Success!',
       'Please check your email for a password reset link. You may now close this tab.',
       true
@@ -237,19 +240,9 @@ export async function signUp(values: { email: string; password: string }) {
   return redirectPath
 }
 
-export async function updatePassword(formData: FormData) {
-  const password = String(formData.get('password')).trim()
-  const passwordConfirm = String(formData.get('passwordConfirm')).trim()
+export async function updatePassword(values: { password: string }) {
+  const password = String(values.password).trim()
   let redirectPath: string
-
-  // Check that the password and confirmation match
-  if (password !== passwordConfirm) {
-    redirectPath = getErrorRedirect(
-      '/signin/update_password',
-      'Your password could not be updated.',
-      'Passwords do not match.'
-    )
-  }
 
   const supabase = createClient()
   const { error, data } = await supabase.auth.updateUser({
@@ -264,7 +257,7 @@ export async function updatePassword(formData: FormData) {
     )
   } else if (data.user) {
     redirectPath = getStatusRedirect(
-      '/',
+      '/browse',
       'Success!',
       'Your password has been updated.'
     )

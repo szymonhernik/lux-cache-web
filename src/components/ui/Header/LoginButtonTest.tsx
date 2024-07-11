@@ -68,10 +68,31 @@ export default function LoginButtonTest() {
             <div className="w-80 py-4 pl-8 pr-4 mt-16 text-sm space-y-8">
               <p className="font-semibold">{session.user.email}</p>
 
-              <ul className="space-y-1">
-                <li>Account</li>
-                <li>Bookmarked</li>
-                <li>Help</li>
+              <ul
+                className="space-y-1"
+                onClick={() => {
+                  setOpenAccountPanel(false)
+                }}
+              >
+                <Link href="/account">
+                  <li>Account</li>
+                </Link>
+                <Link
+                  href="/bookmarked"
+                  onClick={() => {
+                    setOpenAccountPanel(false)
+                  }}
+                >
+                  <li>Bookmarked</li>
+                </Link>
+                <Link
+                  href="/help"
+                  onClick={() => {
+                    setOpenAccountPanel(false)
+                  }}
+                >
+                  <li>Help</li>
+                </Link>
               </ul>
               <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
                 <button type="submit">Log out</button>

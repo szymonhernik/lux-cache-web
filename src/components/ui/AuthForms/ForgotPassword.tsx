@@ -45,18 +45,15 @@ export default function ForgotPassword({
     }
   })
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   setIsSubmitting(true) // Disable the button while the request is being handled
-  //   await handleRequest(e, requestPasswordUpdate, router)
-  //   setIsSubmitting(false)
-  // }
   const handleReset = async (values: { email: string }) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
       const redirectUrl: string = await requestPasswordUpdate(values)
-      if (router) {
-        router.push(redirectUrl)
-      }
+      window.location.replace(redirectUrl)
+      // if (router) {
+      //   router.push(redirectUrl)
+      //   router.refresh()
+      // }
     } catch (error) {
       console.error('Login failed', error)
     } finally {

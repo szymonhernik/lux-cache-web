@@ -6,7 +6,6 @@ export default function RootLayout(props: {
     <>
       {props.children}
       {props.login}
-      <div id="modal-root" />
     </>
   )
 }
