@@ -5,6 +5,7 @@
 
 import {
   BlockElementIcon,
+  CalendarIcon,
   DocumentsIcon,
   FilterIcon,
   ProjectsIcon,
@@ -117,6 +118,15 @@ export const pageStructure = (
               .params({ artistId })
           )
       )
+    const filteredPostsByDate = S.listItem()
+      .title('Posts By Date')
+      .icon(CalendarIcon)
+      .child(
+        S.documentList()
+          .title('Posts by Date')
+          .filter('_type == "post"')
+          .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])
+      )
     const filteredPostsBySeries = S.listItem()
       .title('Posts By Series')
       .icon(SchemaIcon)
@@ -140,7 +150,8 @@ export const pageStructure = (
           .items([
             filteredPostsByTag,
             filteredPostsByAuthor,
-            filteredPostsBySeries
+            filteredPostsBySeries,
+            filteredPostsByDate
           ])
       )
     const allPosts = S.listItem().title('All Posts').icon(ProjectsIcon).child(
