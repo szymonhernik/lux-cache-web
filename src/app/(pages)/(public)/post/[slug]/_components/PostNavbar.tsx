@@ -1,22 +1,38 @@
 import { Button } from '@/components/shadcn/ui/button'
 import { BookmarkIcon } from '@radix-ui/react-icons'
+import BookmarkButton from './BookmarkButton'
+import { createClient } from '@/utils/supabase/server'
+import { getUser } from '@/utils/supabase/queries'
 
 interface Props {
   title: string | null | undefined
+  post_id: string
 }
-export default function PostNavbar(props: Props) {
-  const { title } = props
+export default async function PostNavbar(props: Props) {
+  const { title, post_id } = props
+  const supabase = createClient()
+  const user = await getUser(supabase)
+
+  const { data: bookmarks } = await supabase
+    .from('bookmarks')
+    .select('*')
+    .eq('post_id', post_id)
+
+  const userHasBookmarked = bookmarks && bookmarks.length > 0 ? true : false
+
   return (
     <>
       <div className="flex gap-2">
-        <Button>PDF</Button>
-        <Button
-          variant={'outline'}
-          className="flex items-center gap-1 leading-2 "
-        >
-          <BookmarkIcon width={16} height={16} />{' '}
-          <span className="hidden md:block">Bookmark</span>
-        </Button>
+        {user && post_id && (
+          <>
+            <Button>PDF</Button>
+            <BookmarkButton
+              post_id={post_id}
+              bookmarks={bookmarks}
+              userHasBookmarked={userHasBookmarked}
+            />
+          </>
+        )}
       </div>
       <h1 className="text-shadow text-sm font-semibold">{title}</h1>
     </>

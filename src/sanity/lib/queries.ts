@@ -230,7 +230,16 @@ export const postBySlugModalQuery = groq`
     },
   }
 `
+export const bookmarkedQuery = groq`
+  *[_type =="post" && defined(slug) && _id in $ids] {
+    _id,
+    title,
+    coverImage,
+    subtitle,
+    "slug": slug.current
+  }
 
+`
 export const postsByArtistSlugQuery = groq`
 { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{
     ...,

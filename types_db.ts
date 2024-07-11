@@ -11,21 +11,21 @@ export type Database = {
     Tables: {
       bookmarks: {
         Row: {
-          blog_id: string | null
           created_at: string
           id: number
+          post_id: string
           user_id: string
         }
         Insert: {
-          blog_id?: string | null
           created_at?: string
           id?: number
+          post_id: string
           user_id: string
         }
         Update: {
-          blog_id?: string | null
           created_at?: string
           id?: number
+          post_id?: string
           user_id?: string
         }
         Relationships: [

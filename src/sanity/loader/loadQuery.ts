@@ -12,6 +12,7 @@ import {
   SettingsPayload
 } from '@/utils/types/sanity'
 import {
+  bookmarkedQuery,
   filterGroupsQuery,
   initialPostsQuery,
   morePostsQuery,
@@ -25,6 +26,7 @@ import {
 } from '@/sanity/lib/queries'
 import { client } from '@/sanity/lib/client'
 import {
+  BookmarkedQueryResult,
   FilterGroupsQueryResult,
   InitialPostsQueryResult,
   PostBySlugModalQueryResult,
@@ -100,7 +102,13 @@ export function loadPosts() {
     { next: { tags: ['post'] } }
   )
 }
-
+export function loadBookmarkedPosts(ids = [] as Array<string>) {
+  return loadQuery<BookmarkedQueryResult | null>(
+    bookmarkedQuery,
+    { ids },
+    { next: { revalidate: 0 } }
+  )
+}
 export function loadArtistsPosts(slug: string) {
   return loadQuery<PostsByArtistSlugQueryResult | null>(
     postsByArtistSlugQuery,

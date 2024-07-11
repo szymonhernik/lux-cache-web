@@ -1258,6 +1258,25 @@ export type PostBySlugModalQueryResult = {
     slug: string | null
   }> | null
 } | null
+// Variable: bookmarkedQuery
+// Query:   *[_type =="post" && defined(slug) && _id in $ids] {    _id,    title,    coverImage,    subtitle,    "slug": slug.current  }
+export type BookmarkedQueryResult = Array<{
+  _id: string
+  title: string | null
+  coverImage: {
+    asset?: {
+      _ref: string
+      _type: 'reference'
+      _weak?: boolean
+      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+    }
+    hotspot?: SanityImageHotspot
+    crop?: SanityImageCrop
+    _type: 'image'
+  } | null
+  subtitle: string | null
+  slug: string | null
+}>
 // Variable: postsByArtistSlugQuery
 // Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
 export type PostsByArtistSlugQueryResult = {

@@ -3,7 +3,7 @@ import { PostPayload } from '@/utils/types/sanity'
 import { PostBySlugQueryResult } from '@/utils/types/sanity/sanity.types'
 import { BookmarkIcon } from '@radix-ui/react-icons'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
-import React from 'react'
+import React, { Suspense } from 'react'
 import FiltersPreview from '../../../browse/_components/post-preview/FilterPreview'
 import ContentOverview from './ContentOverview'
 import PostNavbar from './PostNavbar'
@@ -16,13 +16,15 @@ export interface PostPageProps {
   encodeDataAttribute?: EncodeDataAttributeCallback
 }
 export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
-  const { title, publishedAt, artistList, filters } = data ?? {}
+  const { _id, title, publishedAt, artistList, filters } = data ?? {}
 
   return (
     <article className="flex flex-col ">
       {/* Post navbar */}
       <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start">
-        <PostNavbar title={title} />
+        <Suspense fallback={<h1>Loading navbar</h1>}>
+          {_id && <PostNavbar title={title} post_id={_id} />}
+        </Suspense>
       </div>
       {/* Post content */}
       <div className="*:max-w-3xl *:mx-auto mx-auto my-36 px-4  space-y-24 *:flex *:flex-col *:items-center  ">
