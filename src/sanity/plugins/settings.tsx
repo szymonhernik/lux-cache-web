@@ -111,7 +111,9 @@ export const pageStructure = (
           .child((artistId) =>
             S.documentList()
               .title('Posts')
-              .filter('_type == "post" && $artistId == artist._ref')
+              .filter(
+                '_type == "post" && $artistId in artistList[].artistRef._ref'
+              )
               .params({ artistId })
           )
       )
@@ -124,7 +126,7 @@ export const pageStructure = (
           .child((seriesId) =>
             S.documentList()
               .title('Posts')
-              .filter('_type == "post" && $seriesId == series._ref')
+              .filter('_type == "post" && $seriesId in series[]._ref')
               .params({ seriesId })
           )
       )
