@@ -12,7 +12,7 @@ export default function FiltersPreview(props: Props) {
   return (
     <>
       {filters && filters.length > 0 ? (
-        <div className={`mt-2 flex gap-2`}>
+        <div className={`mt-2 flex gap-2 justify-center`}>
           {filters?.map((filter) => (
             <p
               className={`border-[1px]  px-2 py-1 w-fit border-black rounded-full min-h-8 flex items-center justify-center ${variantClass}`}

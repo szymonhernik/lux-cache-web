@@ -196,6 +196,7 @@ export const postBySlugQuery = groq`
     filters[]->{
       "slug": slug.current
     },
+    pageContent
   }
 `
 

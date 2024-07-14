@@ -1185,7 +1185,7 @@ export type FilterGroupsQueryResult = {
   }>
 }
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent  }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1216,6 +1216,20 @@ export type PostBySlugQueryResult = {
   filters: Array<{
     slug: string | null
   }> | null
+  pageContent: Array<
+    | ({
+        _key: string
+      } & IntroText)
+    | ({
+        _key: string
+      } & PdfEmbed)
+    | ({
+        _key: string
+      } & PostContent)
+    | ({
+        _key: string
+      } & PostFooter)
+  > | null
 } | null
 // Variable: postBySlugModalQuery
 // Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },  }
