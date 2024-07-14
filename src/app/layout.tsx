@@ -8,7 +8,7 @@ import { getURL } from '@/utils/helpers'
 import { Providers } from '@/components/providers/providers'
 import QueryWrapper from '../components/providers/QueryWrapper'
 
-const suisse = localFont({
+export const suisse = localFont({
   src: [
     {
       path: '../fonts/SuisseIntl-Regular-WebTrial.woff2',

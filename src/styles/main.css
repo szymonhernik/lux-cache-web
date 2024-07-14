@@ -118,6 +118,11 @@ p a {
   @apply hover:underline;
 }
 
+em {
+  font-style: italic;
+  font-family: sans-serif;
+}
+
 .animated {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
