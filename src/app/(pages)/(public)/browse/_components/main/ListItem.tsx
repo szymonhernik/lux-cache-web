@@ -1,32 +1,22 @@
 'use client'
 
 import { useHover, useIntersection } from '@mantine/hooks'
-import Link from 'next/link'
+
 import { useEffect, useState } from 'react'
-import { testVidAsset } from '@/app/common/testasset'
+
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import {
   InitialPostsQueryResult,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle
-} from '@/components/shadcn/ui/dialog'
-import { Button } from '@/components/shadcn/ui/button'
-import VideoTest from './VideoTest'
+import { useRouter, useSearchParams } from 'next/navigation'
 import clsx from 'clsx'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 import { Modal } from '../../preview/@modal/[slug]/modal'
 import EpisodePreview from '../post-preview/EpisodePreview'
 import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
+import Image from 'next/image'
 
 export default function ListItem({
   item,
@@ -88,27 +78,20 @@ export default function ListItem({
           setModalOpen(true)
         }}
         className={clsx(
-          `hover:cursor-pointer opacity-90 hover:opacity-70 relative h-full   flex flex-col   transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
+          `hover:cursor-pointer opacity-90 hover:opacity-70 relative h-full   flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
           !view && entry?.isIntersecting && '',
-          view === 'list' && ' pt-8 pl-10 pr-4 ',
+          view === 'list' && ' py-8 px-8  ',
           !view && 'items-center justify-center'
         )}
       >
         {/* This div serves as a workaround to prematurely trigger the 'inView' class in a horizontally scrollable div. Normally, setting ref on a container with overflow would apply 'inView' to all child elements on mobile. This happens because the container's height on mobile wraps all content, making all children effectively 'in view'. This hack specifically targets only the necessary elements without affecting others by using negative inset values and a low z-index. It is preventing unwanted rendering of video tags for all elements. */}
-
         <div
           ref={ref}
           className={clsx('absolute inset-y-0  z-[-1000]', {
             'lg:-inset-x-[120px]': !view,
-            'inset-x-0': view === 'list'
+            'inset-x-0 ': view === 'list'
           })}
         ></div>
-        {/* <VideoTest video={item.coverVideoMux} /> */}
-        {/* <button
-          onClick={() => {
-            setModalOpen(true)
-          }}
-        > */}
 
         {!view && item?.coverImage?.asset?.lqip && (
           <img
@@ -120,9 +103,22 @@ export default function ListItem({
         {!view && entry?.isIntersecting && item?.previewVideo && (
           <PreviewVideo previewVideo={item.previewVideo} />
         )}
-        {view && <h1 className="uppercase font-semibold ">{item.title}</h1>}
-        {/* </Link> */}
-        {/* </button> */}
+        {view && (
+          <>
+            <div className="flex-1 pr-4">
+              <h1 className="uppercase font-semibold ">{item.title}</h1>
+            </div>
+            {item?.coverImage?.asset?.url && (
+              <Image
+                className="aspect-square  object-cover w-24 h-24 sm:w-36 sm:h-36 lg:hidden"
+                src={item.coverImage?.asset.url}
+                alt={''}
+                width={160}
+                height={160}
+              />
+            )}
+          </>
+        )}
       </div>
       {modalOpen && (
         <Modal onModalDisplayChange={handleModalClose}>
