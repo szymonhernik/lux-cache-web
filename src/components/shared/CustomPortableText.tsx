@@ -8,7 +8,6 @@ import type { Image } from 'sanity'
 import ImageBoxArticle from './ImageBoxArticle'
 import { TimelineSection } from './TimelineSection'
 import YouTubeEmbed from './YouTubeEmbed'
-import { suisse } from '@/app/layout'
 
 export function CustomPortableText({
   paragraphClasses,
