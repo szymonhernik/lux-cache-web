@@ -24,6 +24,7 @@ export const useInfinitePost = (
   //   : { lastPublishedAt, lastId, limit }
   // sort selectedFiltersArray alphabetically so that whatever order the user selects the filters in, the query key will be the same
   const sortedSelectedFiltersArray = sortSelectedFilters(selectedFiltersArray)
+
   return useInfiniteQuery({
     queryKey: ['infinite', sortedSelectedFiltersArray],
     staleTime: 4 * (60 * 1000), // 4 minutes

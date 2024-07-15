@@ -26,6 +26,7 @@ const fetchMorePosts = async (
   }
 ) => {
   // console.log('selectedFiltersArray: ', selectedFiltersArray)
+  // await new Promise((resolve) => setTimeout(resolve, 3000))
 
   const result: MorePostsQueryResult = await client.fetch(morePostsQuery, {
     selectedFiltersArray: selectedFiltersArray,

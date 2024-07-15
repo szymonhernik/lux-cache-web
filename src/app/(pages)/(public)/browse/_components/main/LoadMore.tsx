@@ -14,6 +14,11 @@ import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import { limitNumber } from '@/utils/fetch-helpers/client'
 import PostWrapper from './PostWrapper'
+import {
+  EpisodeSkeleton,
+  EpisodeSkeletonListView,
+  EpisodesSkeletonTwo
+} from '@/components/ui/skeletons/skeletons'
 
 export default function LoadMore({
   initialPosts,
@@ -61,10 +66,20 @@ export default function LoadMore({
   )
 
   useEffect(() => {
-    if (inViewport && !isFetchingNextPage) {
+    console.log('isFetchingNextPage', isFetchingNextPage)
+    console.log('isFetching', isFetching)
+    console.log('isLoading', isLoading)
+
+    if (inViewport && !isFetchingNextPage && isDesktop) {
       fetchNextPage()
     }
   }, [inViewport])
+
+  const handleLoadMore = () => {
+    if (!isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }
 
   useEffect(() => {
     if (isDesktop && data && data.pages.length > 0 && filters) {
@@ -101,12 +116,60 @@ export default function LoadMore({
         ))}
       {/* if the last page in data has less than 8 results stop rendering load more  */}
       {data && data.pages[data.pages.length - 1].length < limitNumber ? (
-        <div className="text-center">No more posts to load</div>
-      ) : isLoading ? (
-        <div>Loading...</div>
+        <p></p>
+      ) : isFetchingNextPage ? (
+        <>
+          {/* <EpisodeSkeletonListView /> */}
+          <div className=" flex flex-col ">
+            {/* <div className=" grow bg-blue-500 h-[calc((80vh-4rem)/2)] w-[calc((80vh-4rem)/2)]"> */}
+            <EpisodeSkeleton />
+            {/* </div> */}
+            {/* <div className="  grow bg-blue-200 h-[calc((80vh-4rem)/2)] w-[calc((80vh-4rem)/2)]"> */}{' '}
+            <div className="screen-wide-short:hidden">
+              <EpisodeSkeleton />
+            </div>
+            {/* </div> */}
+          </div>
+        </>
       ) : (
-        <div ref={container}>load more</div>
+        <>
+          <button
+            ref={container}
+            className="  hidden lg:block w-full items-center text-center hover:underline bg-surface-brand"
+          >
+            Load more
+          </button>
+
+          <button
+            onClick={handleLoadMore}
+            className="bg-white lg:hidden w-full py-6 text-center hover:underline bg-gradient-to-b from-neutral-400"
+          >
+            Load more
+          </button>
+        </>
       )}
+      {/* {data &&
+      data.pages[data.pages.length - 1].length <
+        limitNumber ? null : isLoading || isFetchingNextPage ? ( // <div className="text-center">No more posts to load</div>
+        // <div>Loading...</div>
+        // <div></div>
+        <EpisodesSkeletonTwo />
+      ) : (
+        <>
+          <button
+            onClick={handleLoadMore}
+            className="bg-white lg:hidden w-full py-6 text-center hover:underline bg-gradient-to-b from-neutral-400"
+          >
+            Load more
+          </button>
+          <button
+            ref={container}
+            className="bg-white hidden lg:block w-full py-6 text-center hover:underline bg-gradient-to-b from-neutral-400"
+          >
+            Load more
+          </button>
+        </>
+      )} */}
     </>
   )
 }
