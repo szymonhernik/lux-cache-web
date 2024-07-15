@@ -4,10 +4,14 @@ import {
   type PortableTextComponents
 } from 'next-sanity'
 import type { Image } from 'sanity'
+import s from './CustomPortableText.module.css'
 
 import ImageBoxArticle from './ImageBoxArticle'
 import { TimelineSection } from './TimelineSection'
 import YouTubeEmbed from './YouTubeEmbed'
+import SpotifyEmbed from './SpotifyEmbed'
+import AudioInlineMux from './AudioInlineMux'
+import VideoMuxInline from './VideoMuxInline'
 
 export function CustomPortableText({
   paragraphClasses,
@@ -22,19 +26,19 @@ export function CustomPortableText({
         return <p className={paragraphClasses}>{children}</p>
       },
       h1: ({ children }) => (
-        <h1 className="pt-8 pb-2 text-3xl font-semibold ">{children}</h1>
+        <h1 className="pt-8 text-3xl font-semibold ">{children}</h1>
       ),
       h2: ({ children }) => (
-        <h2 className="pt-8 pb-2 text-2xl font-semibold ">{children}</h2>
+        <h2 className="pt-8 text-2xl font-semibold ">{children}</h2>
       ),
       h3: ({ children }) => (
-        <h3 className="pt-8 pb-2 text-xl font-semibold ">{children}</h3>
+        <h3 className="pt-8 text-xl font-semibold ">{children}</h3>
       ),
       h4: ({ children }) => (
-        <h4 className="pt-8 pb-2 text-lg font-semibold ">{children}</h4>
+        <h4 className="pt-8 text-lg font-semibold ">{children}</h4>
       ),
       h5: ({ children }) => (
-        <h5 className="pt-8 pb-2 text-base font-semibold ">{children}</h5>
+        <h5 className="pt-8 text-base font-semibold ">{children}</h5>
       )
       //   blockquote: ({ children }) => (
       //     <blockquote className="italic border-l-4 border-gray-300 pl-4">
@@ -80,9 +84,23 @@ export function CustomPortableText({
       introText: ({ value }) => {
         // Assuming value.body contains the content for introText
         return (
-          <div className="intro-text">
+          <div className={`intro-text space-y-4 ${s.emphasis}`}>
+            <PortableText value={value.body} components={components} />
+          </div>
+        )
+      },
+      templateText: ({ value }) => {
+        return (
+          <div className={`template-text  `}>
             <PortableText value={value.body} />
           </div>
+        )
+      },
+      audioInline: ({ value }) => {
+        return (
+          <>
+            <AudioInlineMux value={value} />
+          </>
         )
       },
       imageInline: ({ value }) => {
@@ -102,19 +120,25 @@ export function CustomPortableText({
             sizeClass = 'w-full md:w-1/2'
         }
         return (
-          <div className={`py-6 space-y-2 mx-auto text-center`}>
+          <div className={`py-4 space-y-2 mx-auto text-center`}>
             <ImageBoxArticle
               image={value}
               alt={alt}
               classesWrapper={`relative mx-auto ${sizeClass}`}
             />
-            {caption && <div className="text-sm text-gray-600">{caption}</div>}
+            {caption && (
+              <div className="text-sm text-neutral-500 max-w-xl mx-auto">
+                {caption}
+              </div>
+            )}
           </div>
         )
       },
+      video: ({ value }) => <VideoMuxInline value={value} />,
       //   audioInline: ({ value }) => <AudioEmbed src={value.url} />,
       //   video: ({ value }) => <VideoEmbed src={value.url} />,
       youtube: ({ value }) => <YouTubeEmbed url={value.url} />,
+      spotify: ({ value }) => <SpotifyEmbed url={value.url} />,
       //   spotify: ({ value }) => <SpotifyEmbed url={value.url} />,
       timeline: ({ value }) => {
         const { items } = value || {}
@@ -122,15 +146,17 @@ export function CustomPortableText({
       },
       postContent: ({ value }) => {
         return (
-          <div className="post-content space-y-2">
+          <div className="post-content space-y-5">
             <PortableText value={value.body} components={components} />
           </div>
         )
       },
       postFooter: ({ value }) => {
         return (
-          <div className="post-footer">
-            <PortableText value={value.body} />
+          <div className="post-footer space-y-2 mt-16">
+            ~ <br></br>
+            <br></br>
+            <PortableText value={value.postFooterContent} />
           </div>
         )
       },
@@ -140,7 +166,7 @@ export function CustomPortableText({
         value: Image & { alt?: string; caption?: string }
       }) => {
         return (
-          <div className="my-6 space-y-2">
+          <div className="my-6 space-y-2 ">
             <ImageBoxArticle
               image={value}
               alt={value.alt}

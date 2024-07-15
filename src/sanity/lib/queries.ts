@@ -196,7 +196,43 @@ export const postBySlugQuery = groq`
     filters[]->{
       "slug": slug.current
     },
-    pageContent
+    pageContent[]{
+      ...,
+      _type == 'introText' => {
+        ...,
+        body[] {
+          ...,
+          _type == 'templateText' => {
+            ...,
+            "body": @->.body
+          },
+        }
+      },
+      _type == 'postContent' => {
+      ...,
+        body[] {
+        ...,
+          _type == 'audioInline' => {
+            ...,
+            audioFile {
+              ...,
+              asset-> {
+                playbackId
+              }
+            }
+          },
+          _type == 'video' => {
+            ...,
+            videoFile {
+              ...,
+              asset-> {
+                playbackId
+              }
+            }
+          }
+        }
+      }
+    }
   }
 `
 

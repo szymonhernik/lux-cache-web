@@ -16,6 +16,11 @@ export default defineType({
       title: 'Audio file',
       name: 'audioFile',
       type: 'mux.video'
+    }),
+    defineField({
+      name: 'downloadUrl',
+      title: 'Download URL',
+      type: 'url'
     })
   ]
 })

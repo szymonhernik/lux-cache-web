@@ -35,6 +35,11 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
     (block) => block._type !== 'introText'
   )
 
+  console.log(
+    'pageContent',
+    pageContent?.find((block) => block._type === 'introText')
+  )
+
   return (
     <>
       <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start">
@@ -51,11 +56,8 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
             <FiltersPreview filters={filters} variantClass={'text-xs '} />
 
             {introTextBlocks && introTextBlocks.length > 0 && (
-              <div className="intro-text-container">
-                <CustomPortableText
-                  paragraphClasses="font-neue text-lg md:text-xl text-left"
-                  value={introTextBlocks}
-                />
+              <div className="intro-text-container font-neue text-lg md:text-xl text-left">
+                <CustomPortableText value={introTextBlocks} />
               </div>
             )}
             <Button className="w-fit">Downloads</Button>
