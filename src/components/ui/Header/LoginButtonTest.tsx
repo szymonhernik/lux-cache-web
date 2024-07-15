@@ -60,7 +60,7 @@ export default function LoginButtonTest() {
               setOpenAccountPanel(!openAccountPanel)
             }}
           >
-            <p className="h-12 opacity-0">Account</p>
+            <p className="h-12  opacity-0">Account</p>
 
             <ChevronRightOwn />
           </button>
@@ -107,9 +107,11 @@ export default function LoginButtonTest() {
             setOpenAccountPanel(!openAccountPanel)
           }}
         >
-          <p className="h-12">Account</p>
+          <p className="h-12 pt-1 lg:pt-0">Account</p>
 
-          <ChevronLeftOwn />
+          <div className="hidden lg:block">
+            <ChevronLeftOwn />
+          </div>
         </button>
       )}
     </div>

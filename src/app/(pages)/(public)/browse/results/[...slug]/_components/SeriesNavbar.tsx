@@ -23,8 +23,9 @@ export default function SeriesNavbar(props: Props) {
         <div className="  p-4">
           <Breadcrumbs pathnames={pathnames} />
         </div>
-        <div className=" w-full  grow  py-4 flex flex-row items-center overflow-y-auto">
-          {title && <h2>{title}</h2>}
+        <div className="w-full  p-4    items-center overflow-y-auto">
+          <p className="text-neutral-500">results for:</p>
+          {title && <h2 className="italic font-semibold">{title}</h2>}
         </div>
       </div>
     </>

@@ -15,7 +15,7 @@ export default function ArtistsResults(props: Props) {
           <div className=" h-72 lg:h-56  group relative hover:bg-highlightGreen/20 w-full">
             {/* <div className="group- absolute h-56 w-[calc(100vw-2rem)] left-4 z-[-1]"></div> */}
             <div className=" py-8 h-full flex flex-col lg:flex-row gap-4 px-4 lg:px-searchXPadding">
-              <div className="w-full lg:w-72  bg-pink-300 rounded-full overflow-hidden ">
+              <div className="w-72  lg:w-72  bg-pink-300 rounded-full overflow-hidden ">
                 <ImageBox
                   image={artist.image}
                   size="(max-width: 768px) 100vw, 30vw"

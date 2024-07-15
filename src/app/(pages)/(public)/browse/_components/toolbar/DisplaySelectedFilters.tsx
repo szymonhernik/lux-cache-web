@@ -27,7 +27,7 @@ export default function DisplaySelectedFilters() {
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 fixed lg:static lg:flex-row lg:ml-2 top-[9rem] right-[1rem] flex-col justify-end">
       {filtersArray?.map((filter) => (
         <div
           key={filter}

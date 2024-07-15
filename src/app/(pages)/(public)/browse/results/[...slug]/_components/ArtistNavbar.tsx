@@ -38,7 +38,7 @@ export default function ArtistNavbar(props: Props) {
         </div>
         <div className=" w-full  grow  py-4 flex flex-row items-center overflow-y-auto">
           {image && (
-            <div className="h-full w-1/2 max-w-60 md:max-w-auto lg:w-auto aspect-[16/9] md:h-full max-h-48 pl-4">
+            <div className="h-full w-1/2 max-w-52 md:max-w-auto lg:w-auto aspect-[16/9] md:h-full max-h-48 pl-4">
               {' '}
               <ImageBox
                 image={image}
