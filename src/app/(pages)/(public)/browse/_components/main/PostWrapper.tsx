@@ -1,3 +1,4 @@
+import { PreviewVideoType } from '@/utils/types/sanity'
 import { useHover } from '@mantine/hooks'
 import clsx from 'clsx'
 import { useSearchParams } from 'next/navigation'
@@ -5,12 +6,18 @@ import { useEffect } from 'react'
 
 export default function PostWrapper({
   children,
+  postPreviewVideo,
+  onHover,
   postId,
-  onHover
+
+  isDesktop
 }: {
   children: React.ReactNode
+  postPreviewVideo: any
   postId: string
-  onHover: (postId: string) => void
+
+  onHover: (previewVideoPassed: PreviewVideoType) => void
+  isDesktop: boolean
 }) {
   // console.log('key:', postId)
 
@@ -20,10 +27,13 @@ export default function PostWrapper({
   // console.log('view:', view)
 
   useEffect(() => {
-    if (hovered) {
-      onHover(postId)
+    if (hovered && isDesktop && view === 'list') {
+      // console.log('hovered')
+      // console.log('on video: ', postPreviewVideo)
+
+      onHover(postPreviewVideo)
     }
-  }, [hovered])
+  }, [hovered, isDesktop, view])
   return (
     <div
       ref={ref}

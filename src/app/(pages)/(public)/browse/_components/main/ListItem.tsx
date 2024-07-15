@@ -17,6 +17,7 @@ import { Modal } from '../../preview/@modal/[slug]/modal'
 import EpisodePreview from '../post-preview/EpisodePreview'
 import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
 import Image from 'next/image'
+import { LockClosedIcon } from '@radix-ui/react-icons'
 
 export default function ListItem({
   item,
@@ -78,7 +79,7 @@ export default function ListItem({
           setModalOpen(true)
         }}
         className={clsx(
-          `hover:cursor-pointer opacity-90 hover:opacity-70 relative h-full   flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
+          `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full   flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
           !view && entry?.isIntersecting && '',
           view === 'list' && ' py-8 px-8  ',
           !view && 'items-center justify-center'
@@ -93,6 +94,13 @@ export default function ListItem({
           })}
         ></div>
 
+        {!view && !canAccess && (
+          <div className="absolute top-3 right-3 p-2 shadow  bg-opacity-50 backdrop-blur group-hover:bg-neutral-200 transition-colors  ">
+            {' '}
+            <LockClosedIcon className="min-w-4 min-h-4" />
+          </div>
+        )}
+
         {!view && item?.coverImage?.asset?.lqip && (
           <img
             src={item.coverImage?.asset.lqip}
@@ -105,8 +113,11 @@ export default function ListItem({
         )}
         {view && (
           <>
-            <div className="flex-1 pr-4">
+            <div className="flex-1 pr-4 flex items-start gap-2">
               <h1 className="uppercase font-semibold ">{item.title}</h1>
+              {!canAccess && (
+                <LockClosedIcon className="mt-[2px] min-w-[18px] min-h-[18px] " />
+              )}
             </div>
             {item?.coverImage?.asset?.url && (
               <Image

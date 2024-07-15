@@ -1,6 +1,6 @@
 'use client'
 
-import { SinglePostType } from '@/utils/types/sanity'
+import { PreviewVideoType, SinglePostType } from '@/utils/types/sanity'
 import { useInViewport } from '@mantine/hooks'
 import { Suspense, useEffect, useRef, useState } from 'react'
 import ListItem from './ListItem'
@@ -20,13 +20,17 @@ export default function LoadMore({
   view,
   onHover,
   userTier,
-  isLoadingSubscriptions
+  isLoadingSubscriptions,
+  onFirstFilteredPost,
+  isDesktop
 }: {
   initialPosts?: SinglePostType[]
   view: string | null
-  onHover: (postId: string) => void
+  onHover: (previewVideo: PreviewVideoType) => void
   userTier?: number
   isLoadingSubscriptions?: boolean
+  onFirstFilteredPost?: (firstFilteredPost: PreviewVideoType) => void // Add this prop
+  isDesktop: boolean
 }) {
   const { ref: container, inViewport } = useInViewport()
 
@@ -62,13 +66,28 @@ export default function LoadMore({
     }
   }, [inViewport])
 
+  useEffect(() => {
+    if (isDesktop && data && data.pages.length > 0 && filters) {
+      const firstPost = data.pages[0][0]
+
+      if (onFirstFilteredPost && firstPost && firstPost.previewVideo) {
+        onFirstFilteredPost(firstPost.previewVideo)
+      }
+    }
+  }, [data, isDesktop])
+
   return (
     <>
       {data &&
         data.pages.map((page, index) => (
           <GridWrapperDiv key={index} view={view}>
             {page.map((post) => (
-              <PostWrapper postId={post._id} onHover={onHover}>
+              <PostWrapper
+                postPreviewVideo={post.previewVideo}
+                postId={post._id}
+                onHover={onHover}
+                isDesktop={isDesktop}
+              >
                 <Suspense>
                   <ListItem
                     item={post}
@@ -83,6 +102,8 @@ export default function LoadMore({
       {/* if the last page in data has less than 8 results stop rendering load more  */}
       {data && data.pages[data.pages.length - 1].length < limitNumber ? (
         <div className="text-center">No more posts to load</div>
+      ) : isLoading ? (
+        <div>Loading...</div>
       ) : (
         <div ref={container}>load more</div>
       )}

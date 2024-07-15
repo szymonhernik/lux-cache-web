@@ -106,3 +106,13 @@ export interface ImageType {
   alt?: string | undefined
   _type: 'image'
 }
+
+export interface PreviewVideoType {
+  generatedBase64: null
+  video: {
+    _key: null
+    _type: 'cloudinary.asset'
+    format: string | null
+    public_id: string | null
+  } | null
+}

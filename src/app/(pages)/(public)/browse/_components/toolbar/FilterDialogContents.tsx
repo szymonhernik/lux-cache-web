@@ -136,7 +136,7 @@ export default function FilterDialogContents(props: Props) {
                 // onClick={() => {
                 //   router.push(`${pathname}?filter=${tagsSelected.join(',')}`)
                 // }}
-                size={'xl'}
+                size={'lg'}
               >
                 Apply
               </Button>
@@ -153,7 +153,7 @@ export default function FilterDialogContents(props: Props) {
               </Button>
             </DialogClose>
           ) : (
-            <Button disabled={true} size={'xl'}>
+            <Button disabled={true} size={'lg'}>
               Apply
             </Button>
           )}
