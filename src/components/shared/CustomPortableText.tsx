@@ -81,6 +81,25 @@ export function CustomPortableText({
       }
     },
     types: {
+      pdfEmbed: ({ value }) => {
+        return (
+          <>
+            {value.pdfFile.asset.url && (
+              <div className="embed-pdf w-full ">
+                <iframe
+                  src={value.pdfFile.asset.url}
+                  className="w-full min-h-[80vh]"
+                ></iframe>
+                {value.pdfFile.asset.originalFilename && (
+                  <caption className="text-sm block mt-6 font-semibold text-gray-500">
+                    {value.pdfFile.asset.originalFilename}
+                  </caption>
+                )}
+              </div>
+            )}
+          </>
+        )
+      },
       introText: ({ value }) => {
         // Assuming value.body contains the content for introText
         return (

@@ -198,6 +198,16 @@ export const postBySlugQuery = groq`
     },
     pageContent[]{
       ...,
+      _type == 'pdfEmbed' => {
+        ...,
+        pdfFile {
+          ...,
+          asset-> {
+          url,
+          originalFilename
+          }
+        }
+      },
       _type == 'introText' => {
         ...,
         body[] {
