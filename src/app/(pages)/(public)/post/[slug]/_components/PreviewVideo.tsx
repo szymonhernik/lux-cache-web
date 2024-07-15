@@ -18,7 +18,13 @@ export default function PreviewVideo(props: Props) {
   if (video && video.public_id && video.format) {
     return (
       <>
-        <video className="h-full w-full" playsInline autoPlay muted loop>
+        <video
+          className="h-full w-full min-w-screen lg:min-w-auto"
+          playsInline
+          autoPlay
+          muted
+          loop
+        >
           <source
             src={`https://cloud-lc.b-cdn.net/video/upload/w_500/q_80/f_webm/${video.public_id}.webm`}
             type="video/webm"
