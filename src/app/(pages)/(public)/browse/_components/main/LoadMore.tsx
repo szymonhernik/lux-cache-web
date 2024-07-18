@@ -27,7 +27,8 @@ export default function LoadMore({
   userTier,
   isLoadingSubscriptions,
   onFirstFilteredPost,
-  isDesktop
+  isDesktop,
+  isTouchDevice
 }: {
   initialPosts?: SinglePostType[]
   view: string | null
@@ -36,6 +37,7 @@ export default function LoadMore({
   isLoadingSubscriptions?: boolean
   onFirstFilteredPost?: (firstFilteredPost: PreviewVideoType) => void // Add this prop
   isDesktop: boolean
+  isTouchDevice: boolean
 }) {
   const { ref: container, inViewport } = useInViewport()
 
@@ -106,6 +108,7 @@ export default function LoadMore({
                 <Suspense>
                   <ListItem
                     isDesktop={isDesktop}
+                    isTouchDevice={isTouchDevice}
                     item={post}
                     isLoading={isLoadingSubscriptions}
                     userTier={userTier}

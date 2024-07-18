@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from 'react'
 
 interface Props {
   isDesktop: boolean
-  fullyInView?: boolean | undefined
+  isTouchDevice: boolean
   isHovered?: boolean
-  postId?: string
+  fullyInView?: boolean | undefined
+  isTouched?: boolean
   previewVideo: {
     video: {
       _key: null
@@ -17,7 +18,14 @@ interface Props {
   }
 }
 export default function PreviewVideo(props: Props) {
-  const { previewVideo, isHovered, postId, fullyInView, isDesktop } = props
+  const {
+    previewVideo,
+    isTouched,
+    fullyInView,
+    isDesktop,
+    isHovered,
+    isTouchDevice
+  } = props
 
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -29,9 +37,9 @@ export default function PreviewVideo(props: Props) {
   }
 
   useEffect(() => {
-    if (!isDesktop) {
+    if (isTouchDevice) {
       if (fullyInView == true) {
-        if (isHovered) {
+        if (isTouched || isHovered) {
           videoRef.current?.play()
         } else {
           videoRef.current?.pause()
@@ -51,7 +59,7 @@ export default function PreviewVideo(props: Props) {
           playsInline
           muted
           loop
-          autoPlay={isDesktop ? true : false}
+          autoPlay={!isTouchDevice ? true : false}
           // autoPlay
           onLoadedData={handleVideoLoad}
         >

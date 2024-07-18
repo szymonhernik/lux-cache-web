@@ -1,8 +1,8 @@
 'use client'
 
-import { useFocusWithin, useHover, useIntersection } from '@mantine/hooks'
+import { useIntersection } from '@mantine/hooks'
 
-import { use, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import {
@@ -21,6 +21,7 @@ import { LockClosedIcon } from '@radix-ui/react-icons'
 
 export default function ListItem({
   item,
+  isTouchDevice,
   encodeDataAttribute,
   userTier,
   isLoading,
@@ -33,6 +34,7 @@ export default function ListItem({
   userTier?: number
   isLoading?: boolean
   isDesktop: boolean
+  isTouchDevice: boolean
 }) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
@@ -40,23 +42,24 @@ export default function ListItem({
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
 
+  const [fullyInView, setFullyInView] = useState(false)
+  const [isTouched, setIsTouched] = useState(false)
   const [isHovered, setIsHovered] = useState(false)
 
+  // intersection observer used to detect if the item is even partly in the viewport
   const { ref, entry } = useIntersection({
-    threshold: 0.0, // Customize the threshold as needed
+    threshold: 0.0,
     rootMargin: '100px 0%'
   })
 
-  const { ref: ref2, entry: entryFull } = useIntersection({
+  // intersection observer used to detect if the item is fully (=100%) in the viewport to trigger the video
+  const { ref: fullViewRef, entry: entryFull } = useIntersection({
     rootMargin: '0% 0%',
-    threshold: 1
+    threshold: 0.8
   })
-
-  const [fullyInView, setFullyInView] = useState(false)
 
   const canAccess = canAccessPost(userTier, item.minimumTier)
 
-  // const pathName = usePathname()
   //  Simple check to detect if JS is enabled
   const [js, setJs] = useState(false)
   useEffect(() => {
@@ -65,14 +68,13 @@ export default function ListItem({
   }, [])
 
   useEffect(() => {
-    console.log(fullyInView)
-
     if (entryFull?.isIntersecting) {
       setFullyInView(true)
     } else {
       setFullyInView(false)
     }
   }, [entryFull?.isIntersecting])
+
   const handleModalClose = () => {
     setModalOpen(false)
   }
@@ -91,13 +93,13 @@ export default function ListItem({
   }, [])
 
   useEffect(() => {
-    if (!isDesktop && !entry?.isIntersecting) {
-      setIsHovered(false)
+    if (isTouchDevice && !entry?.isIntersecting) {
+      setIsTouched(false)
     }
   }, [entry?.isIntersecting])
 
   const handleTouchStart = () => {
-    setIsHovered(true)
+    setIsTouched(true)
   }
 
   return (
@@ -106,16 +108,22 @@ export default function ListItem({
         onClick={() => {
           setModalOpen(true)
         }}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            setModalOpen(true)
+          }
+        }}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
         onTouchStart={handleTouchStart}
-        // onTouchEnd={handleTouchEnd}
         tabIndex={0}
         className={clsx(
-          `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full focus:ring focus:ring-violet-300  flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
+          `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full focus:opacity-70 focus:-outline-offset-2 focus:outline-lime-500 focus:outline  flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
           !view && entry?.isIntersecting && '',
           view === 'list' && ' py-8 px-8  ',
           !view && 'items-center justify-center'
         )}
-        ref={ref2}
+        ref={fullViewRef}
       >
         {/* This div serves as a workaround to prematurely trigger the 'inView' class in a horizontally scrollable div. Normally, setting ref on a container with overflow would apply 'inView' to all child elements on mobile. This happens because the container's height on mobile wraps all content, making all children effectively 'in view'. This hack specifically targets only the necessary elements without affecting others by using negative inset values and a low z-index. It is preventing unwanted rendering of video tags for all elements. */}
         <div
@@ -140,9 +148,10 @@ export default function ListItem({
           />
         )}
 
-        {!view && item?.coverImage?.asset?.url && !isDesktop && (
+        {/* On mobile and tablet breakpoints render image in the background*/}
+        {!view && isTouchDevice && item?.coverImage?.asset?.url && (
           <Image
-            className="h-full w-full aspect-square object-cover  z-[-1] absolute top-0 right-0 bottom-0 left-0 lg:hidden"
+            className="h-full w-full aspect-square object-cover  z-[-1] absolute top-0 right-0 bottom-0 left-0 "
             src={item.coverImage?.asset.url}
             alt={''}
             width={400}
@@ -150,30 +159,33 @@ export default function ListItem({
           />
         )}
 
-        {/* {!view && shouldRenderVideo && item?.previewVideo && (
-          <PreviewVideo previewVideo={item.previewVideo} />
-        )} */}
-
-        {!view && isDesktop && entry?.isIntersecting && item?.previewVideo && (
-          <PreviewVideo
-            previewVideo={item.previewVideo}
-            isDesktop={isDesktop}
-          />
-        )}
-
         {!view &&
-          !isDesktop &&
-          isHovered &&
+          !isTouchDevice &&
           entry?.isIntersecting &&
           item?.previewVideo && (
             <PreviewVideo
-              isHovered={isHovered}
+              isTouchDevice={isTouchDevice}
+              previewVideo={item.previewVideo}
+              isDesktop={isDesktop}
+            />
+          )}
+        {/* when on touch devices render preview video only if the element has been touched */}
+        {/* this prevents the video from being added when the user quickly scrolls through the page */}
+
+        {!view &&
+          isTouchDevice &&
+          isTouched &&
+          entry?.isIntersecting &&
+          item?.previewVideo && (
+            <PreviewVideo
+              isTouched={isTouched}
+              isTouchDevice={isTouchDevice}
               isDesktop={isDesktop}
               previewVideo={item.previewVideo}
-              postId={item._id}
               fullyInView={fullyInView}
             />
           )}
+
         {view && (
           <>
             <div className="flex-1 pr-4 flex items-start gap-2 ">

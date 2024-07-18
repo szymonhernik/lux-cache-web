@@ -38,6 +38,7 @@ export default function ObservableGrid({
   const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null)
   const hoverTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const isDesktop = useMediaQuery('(min-width: 1024px)')
+  const isTouchDevice = useMediaQuery('(hover: none) and (pointer: coarse)')
 
   const [activePreviewVideo, setActivePreviewVideo] = useState<any>(null)
 
@@ -112,6 +113,7 @@ export default function ObservableGrid({
                 {/* {hoveredPostId} */}
                 {activePreviewVideo && (
                   <PreviewVideo
+                    isTouchDevice={isTouchDevice}
                     isDesktop={isDesktop}
                     key={activePreviewVideo.video.public_id}
                     previewVideo={activePreviewVideo}
@@ -143,6 +145,7 @@ export default function ObservableGrid({
                       <Suspense fallback={<h1>Loading</h1>}>
                         <ListItem
                           isDesktop={isDesktop}
+                          isTouchDevice={isTouchDevice}
                           item={post}
                           userTier={userTier}
                           isLoading={isLoading}
@@ -157,6 +160,7 @@ export default function ObservableGrid({
                 <LoadMore
                   initialPosts={initialPosts}
                   view={view}
+                  isTouchDevice={isTouchDevice}
                   userTier={userTier}
                   isLoadingSubscriptions={isLoading}
                   onHover={handleHover}
@@ -168,6 +172,7 @@ export default function ObservableGrid({
           )}
           {filters && !resultsPage && (
             <LoadMore
+              isTouchDevice
               view={view}
               userTier={userTier}
               isLoadingSubscriptions={isLoading}

@@ -26,10 +26,10 @@ module.exports = {
       },
       screens: {
         'screen-wide-tall': {
-          raw: '(min-width: theme(screens.lg)) and (min-height: 801px)'
+          raw: '(min-width: theme(screens.lg)) and (min-height: 701px)'
         },
         'screen-wide-short': {
-          raw: '(min-width: theme(screens.lg)) and (max-height: 800px)'
+          raw: '(min-width: theme(screens.lg)) and (max-height: 700px)'
         },
         'screen-short': {
           raw: '(max-height: 800px)'
