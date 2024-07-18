@@ -24,9 +24,7 @@ export default function DraftModeGrid(props: {
                 //   data-sanity={encodeDataAttribute?.('title')}
                 className={`w-full lg:w-[calc((80vh-4rem)/2)]  screen-wide-short:w-[calc(80vh-4rem)] aspect-square  `}
               >
-                <Suspense>
-                  <ListItem item={post} />
-                </Suspense>
+                <Suspense>{/* <ListItem item={post} /> */}</Suspense>
               </div>
             )
           })}
