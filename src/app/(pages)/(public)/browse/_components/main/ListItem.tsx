@@ -23,7 +23,8 @@ export default function ListItem({
   item,
   encodeDataAttribute,
   userTier,
-  isLoading
+  isLoading,
+  isDesktop
 }: {
   item:
     | InitialPostsQueryResult['posts'][number]
@@ -31,6 +32,7 @@ export default function ListItem({
   encodeDataAttribute?: EncodeDataAttributeCallback
   userTier?: number
   isLoading?: boolean
+  isDesktop: boolean
 }) {
   const router = useRouter()
   const [modalOpen, setModalOpen] = useState(false)
@@ -68,9 +70,25 @@ export default function ListItem({
       window.removeEventListener('keydown', handleEscape)
     }
   }, [])
-  // if (item.coverVideoMux) {
-  //   console.log(item.coverVideoMux)
-  // }
+
+  const [shouldRenderVideo, setShouldRenderVideo] = useState(false)
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | undefined
+    if (isDesktop && entry?.isIntersecting) {
+      setShouldRenderVideo(true)
+    } else {
+      if (entry?.isIntersecting) {
+        timeoutId = setTimeout(() => {
+          setShouldRenderVideo(true)
+        }, 1000)
+      } else {
+        clearTimeout(timeoutId)
+        setShouldRenderVideo(false)
+      }
+    }
+    return () => clearTimeout(timeoutId)
+  }, [entry?.isIntersecting])
 
   return (
     <>
@@ -108,7 +126,7 @@ export default function ListItem({
           />
         )}
 
-        {!view && entry?.isIntersecting && item?.previewVideo && (
+        {!view && shouldRenderVideo && item?.previewVideo && (
           <PreviewVideo previewVideo={item.previewVideo} />
         )}
         {view && (

@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 interface Props {
   previewVideo: {
     video: {
@@ -13,17 +15,24 @@ interface Props {
 export default function PreviewVideo(props: Props) {
   const { previewVideo } = props
 
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+
   const video = previewVideo?.video
+
+  const handleVideoLoad = () => {
+    setIsVideoLoaded(true)
+  }
 
   if (video && video.public_id && video.format) {
     return (
       <>
         <video
-          className="h-full w-full min-w-screen lg:min-w-auto"
+          className={`h-full w-full min-w-screen lg:min-w-auto ${!isVideoLoaded ? 'hidden' : ''}`}
           playsInline
           autoPlay
           muted
           loop
+          onLoadedData={handleVideoLoad}
         >
           <source
             src={`https://cloud-lc.b-cdn.net/video/upload/w_500/q_80/f_webm/${video.public_id}.webm`}

@@ -105,6 +105,7 @@ export default function LoadMore({
               >
                 <Suspense>
                   <ListItem
+                    isDesktop={isDesktop}
                     item={post}
                     isLoading={isLoadingSubscriptions}
                     userTier={userTier}

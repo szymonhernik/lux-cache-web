@@ -140,6 +140,7 @@ export default function ObservableGrid({
                     >
                       <Suspense fallback={<h1>Loading</h1>}>
                         <ListItem
+                          isDesktop={isDesktop}
                           item={post}
                           userTier={userTier}
                           isLoading={isLoading}
