@@ -66,9 +66,9 @@ export default function LoadMore({
   )
 
   useEffect(() => {
-    console.log('isFetchingNextPage', isFetchingNextPage)
-    console.log('isFetching', isFetching)
-    console.log('isLoading', isLoading)
+    // console.log('isFetchingNextPage', isFetchingNextPage)
+    // console.log('isFetching', isFetching)
+    // console.log('isLoading', isLoading)
 
     if (inViewport && !isFetchingNextPage && isDesktop) {
       fetchNextPage()

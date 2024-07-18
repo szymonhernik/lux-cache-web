@@ -1,8 +1,8 @@
 'use client'
 
-import { useHover, useIntersection } from '@mantine/hooks'
+import { useFocusWithin, useHover, useIntersection } from '@mantine/hooks'
 
-import { useEffect, useState } from 'react'
+import { use, useEffect, useState } from 'react'
 
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import {
@@ -39,10 +39,20 @@ export default function ListItem({
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
+
+  const [isHovered, setIsHovered] = useState(false)
+
   const { ref, entry } = useIntersection({
     threshold: 0.0, // Customize the threshold as needed
     rootMargin: '100px 0%'
   })
+
+  const { ref: ref2, entry: entryFull } = useIntersection({
+    rootMargin: '0% 0%',
+    threshold: 1
+  })
+
+  const [fullyInView, setFullyInView] = useState(false)
 
   const canAccess = canAccessPost(userTier, item.minimumTier)
 
@@ -54,6 +64,15 @@ export default function ListItem({
     setModalOpen(false)
   }, [])
 
+  useEffect(() => {
+    console.log(fullyInView)
+
+    if (entryFull?.isIntersecting) {
+      setFullyInView(true)
+    } else {
+      setFullyInView(false)
+    }
+  }, [entryFull?.isIntersecting])
   const handleModalClose = () => {
     setModalOpen(false)
   }
@@ -71,24 +90,15 @@ export default function ListItem({
     }
   }, [])
 
-  const [shouldRenderVideo, setShouldRenderVideo] = useState(false)
-
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | undefined
-    if (isDesktop && entry?.isIntersecting) {
-      setShouldRenderVideo(true)
-    } else {
-      if (entry?.isIntersecting) {
-        timeoutId = setTimeout(() => {
-          setShouldRenderVideo(true)
-        }, 1000)
-      } else {
-        clearTimeout(timeoutId)
-        setShouldRenderVideo(false)
-      }
+    if (!isDesktop && !entry?.isIntersecting) {
+      setIsHovered(false)
     }
-    return () => clearTimeout(timeoutId)
   }, [entry?.isIntersecting])
+
+  const handleTouchStart = () => {
+    setIsHovered(true)
+  }
 
   return (
     <>
@@ -96,12 +106,16 @@ export default function ListItem({
         onClick={() => {
           setModalOpen(true)
         }}
+        onTouchStart={handleTouchStart}
+        // onTouchEnd={handleTouchEnd}
+        tabIndex={0}
         className={clsx(
-          `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full   flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
+          `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full focus:ring focus:ring-violet-300  flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
           !view && entry?.isIntersecting && '',
           view === 'list' && ' py-8 px-8  ',
           !view && 'items-center justify-center'
         )}
+        ref={ref2}
       >
         {/* This div serves as a workaround to prematurely trigger the 'inView' class in a horizontally scrollable div. Normally, setting ref on a container with overflow would apply 'inView' to all child elements on mobile. This happens because the container's height on mobile wraps all content, making all children effectively 'in view'. This hack specifically targets only the necessary elements without affecting others by using negative inset values and a low z-index. It is preventing unwanted rendering of video tags for all elements. */}
         <div
@@ -126,12 +140,43 @@ export default function ListItem({
           />
         )}
 
-        {!view && shouldRenderVideo && item?.previewVideo && (
-          <PreviewVideo previewVideo={item.previewVideo} />
+        {!view && item?.coverImage?.asset?.url && !isDesktop && (
+          <Image
+            className="h-full w-full aspect-square object-cover  z-[-1] absolute top-0 right-0 bottom-0 left-0 lg:hidden"
+            src={item.coverImage?.asset.url}
+            alt={''}
+            width={400}
+            height={400}
+          />
         )}
+
+        {/* {!view && shouldRenderVideo && item?.previewVideo && (
+          <PreviewVideo previewVideo={item.previewVideo} />
+        )} */}
+
+        {!view && isDesktop && entry?.isIntersecting && item?.previewVideo && (
+          <PreviewVideo
+            previewVideo={item.previewVideo}
+            isDesktop={isDesktop}
+          />
+        )}
+
+        {!view &&
+          !isDesktop &&
+          isHovered &&
+          entry?.isIntersecting &&
+          item?.previewVideo && (
+            <PreviewVideo
+              isHovered={isHovered}
+              isDesktop={isDesktop}
+              previewVideo={item.previewVideo}
+              postId={item._id}
+              fullyInView={fullyInView}
+            />
+          )}
         {view && (
           <>
-            <div className="flex-1 pr-4 flex items-start gap-2">
+            <div className="flex-1 pr-4 flex items-start gap-2 ">
               <h1 className="uppercase font-semibold ">{item.title}</h1>
               {!canAccess && (
                 <LockClosedIcon className="mt-[2px] min-w-[18px] min-h-[18px] " />

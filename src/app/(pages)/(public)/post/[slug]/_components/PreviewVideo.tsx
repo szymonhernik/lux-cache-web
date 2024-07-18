@@ -1,8 +1,12 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 interface Props {
+  isDesktop: boolean
+  fullyInView?: boolean | undefined
+  isHovered?: boolean
+  postId?: string
   previewVideo: {
     video: {
       _key: null
@@ -13,9 +17,10 @@ interface Props {
   }
 }
 export default function PreviewVideo(props: Props) {
-  const { previewVideo } = props
+  const { previewVideo, isHovered, postId, fullyInView, isDesktop } = props
 
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   const video = previewVideo?.video
 
@@ -23,15 +28,31 @@ export default function PreviewVideo(props: Props) {
     setIsVideoLoaded(true)
   }
 
+  useEffect(() => {
+    if (!isDesktop) {
+      if (fullyInView == true) {
+        if (isHovered) {
+          videoRef.current?.play()
+        } else {
+          videoRef.current?.pause()
+        }
+      } else {
+        videoRef.current?.pause()
+      }
+    }
+  }, [fullyInView])
+
   if (video && video.public_id && video.format) {
     return (
       <>
         <video
+          ref={videoRef}
           className={`h-full w-full min-w-screen lg:min-w-auto ${!isVideoLoaded ? 'hidden' : ''}`}
           playsInline
-          autoPlay
           muted
           loop
+          autoPlay={isDesktop ? true : false}
+          // autoPlay
           onLoadedData={handleVideoLoad}
         >
           <source
@@ -48,5 +69,3 @@ export default function PreviewVideo(props: Props) {
     )
   }
 }
-// https://stream.mux.com/abcd1234/capped-1080p.mp4
-// https://stream.mux.com/lRE02tg8pyThyQnKsI02qp81bBlzgtLCRwVCUThlj5l7E

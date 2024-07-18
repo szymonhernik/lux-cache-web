@@ -17,6 +17,7 @@ import useSubscription from '@/utils/hooks/use-subscription-query'
 import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
 import { useMediaQuery } from '@/utils/hooks/use-media-query'
 import { PreviewVideoType } from '@/utils/types/sanity'
+import { HoverProvider } from './HoverProvider'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult['posts']
@@ -111,6 +112,7 @@ export default function ObservableGrid({
                 {/* {hoveredPostId} */}
                 {activePreviewVideo && (
                   <PreviewVideo
+                    isDesktop={isDesktop}
                     key={activePreviewVideo.video.public_id}
                     previewVideo={activePreviewVideo}
                   />
