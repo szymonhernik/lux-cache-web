@@ -36,19 +36,19 @@ export default function PreviewVideo(props: Props) {
     setIsVideoLoaded(true)
   }
 
-  useEffect(() => {
-    if (isTouchDevice) {
-      if (fullyInView == true) {
-        if (isTouched || isHovered) {
-          videoRef.current?.play()
-        } else {
-          videoRef.current?.pause()
-        }
-      } else {
-        videoRef.current?.pause()
-      }
-    }
-  }, [fullyInView])
+  // useEffect(() => {
+  //   if (isTouchDevice) {
+  //     if (fullyInView == true) {
+  //       if (isTouched || isHovered) {
+  //         videoRef.current?.play()
+  //       } else {
+  //         videoRef.current?.pause()
+  //       }
+  //     } else {
+  //       videoRef.current?.pause()
+  //     }
+  //   }
+  // }, [fullyInView])
 
   if (video && video.public_id && video.format) {
     return (
@@ -59,7 +59,8 @@ export default function PreviewVideo(props: Props) {
           playsInline
           muted
           loop
-          autoPlay={!isTouchDevice ? true : false}
+          // autoPlay={!isTouchDevice ? true : false}
+          autoPlay
           // autoPlay
           onLoadedData={handleVideoLoad}
         >

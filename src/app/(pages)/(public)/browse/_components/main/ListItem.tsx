@@ -42,9 +42,9 @@ export default function ListItem({
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
 
-  const [fullyInView, setFullyInView] = useState(false)
-  const [isTouched, setIsTouched] = useState(false)
-  const [isHovered, setIsHovered] = useState(false)
+  // const [fullyInView, setFullyInView] = useState(false)
+  // const [isTouched, setIsTouched] = useState(false)
+  // const [isHovered, setIsHovered] = useState(false)
 
   // intersection observer used to detect if the item is even partly in the viewport
   const { ref, entry } = useIntersection({
@@ -67,13 +67,13 @@ export default function ListItem({
     setModalOpen(false)
   }, [])
 
-  useEffect(() => {
-    if (entryFull?.isIntersecting) {
-      setFullyInView(true)
-    } else {
-      setFullyInView(false)
-    }
-  }, [entryFull?.isIntersecting])
+  // useEffect(() => {
+  //   if (entryFull?.isIntersecting) {
+  //     setFullyInView(true)
+  //   } else {
+  //     setFullyInView(false)
+  //   }
+  // }, [entryFull?.isIntersecting])
 
   const handleModalClose = () => {
     setModalOpen(false)
@@ -92,15 +92,30 @@ export default function ListItem({
     }
   }, [])
 
-  useEffect(() => {
-    if (isTouchDevice && !entry?.isIntersecting) {
-      setIsTouched(false)
-    }
-  }, [entry?.isIntersecting])
+  // useEffect(() => {
+  //   if (isTouchDevice && !entry?.isIntersecting) {
+  //     setIsTouched(false)
+  //   }
+  // }, [entry?.isIntersecting])
 
-  const handleTouchStart = () => {
-    setIsTouched(true)
-  }
+  // const handleTouchStart = () => {
+  //   setIsTouched(true)
+  // }
+
+  const [shouldRenderVideo, setShouldRenderVideo] = useState(false)
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout | undefined
+    if (entryFull?.isIntersecting) {
+      timeoutId = setTimeout(() => {
+        setShouldRenderVideo(true)
+      }, 1000)
+    } else {
+      clearTimeout(timeoutId)
+      setShouldRenderVideo(false)
+    }
+    return () => clearTimeout(timeoutId)
+  }, [entryFull?.isIntersecting])
 
   return (
     <>
@@ -113,9 +128,7 @@ export default function ListItem({
             setModalOpen(true)
           }
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        onTouchStart={handleTouchStart}
+        // onTouchStart={handleTouchStart}
         tabIndex={0}
         className={clsx(
           `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full focus:opacity-70 focus:-outline-offset-2 focus:outline-lime-500 focus:outline  flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
@@ -172,7 +185,15 @@ export default function ListItem({
         {/* when on touch devices render preview video only if the element has been touched */}
         {/* this prevents the video from being added when the user quickly scrolls through the page */}
 
-        {!view &&
+        {!view && isTouchDevice && shouldRenderVideo && item?.previewVideo && (
+          <PreviewVideo
+            isTouchDevice={isTouchDevice}
+            previewVideo={item.previewVideo}
+            isDesktop={isDesktop}
+          />
+        )}
+
+        {/* {!view &&
           isTouchDevice &&
           isTouched &&
           entry?.isIntersecting &&
@@ -184,7 +205,7 @@ export default function ListItem({
               previewVideo={item.previewVideo}
               fullyInView={fullyInView}
             />
-          )}
+          )} */}
 
         {view && (
           <>
