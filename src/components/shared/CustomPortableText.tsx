@@ -12,13 +12,14 @@ import YouTubeEmbed from './YouTubeEmbed'
 import SpotifyEmbed from './SpotifyEmbed'
 import AudioInlineMux from './AudioInlineMux'
 import VideoMuxInline from './VideoMuxInline'
+import { PageContent } from '@/utils/types/sanity'
 
 export function CustomPortableText({
   paragraphClasses,
   value
 }: {
   paragraphClasses?: string
-  value: PortableTextBlock[]
+  value: any[]
 }) {
   const components: PortableTextComponents = {
     block: {
@@ -40,21 +41,8 @@ export function CustomPortableText({
       h5: ({ children }) => (
         <h5 className="pt-8 text-base font-semibold ">{children}</h5>
       )
-      //   blockquote: ({ children }) => (
-      //     <blockquote className="italic border-l-4 border-gray-300 pl-4">
-      //       {children}
-      //     </blockquote>
-      //   )
     },
-    // list: ({ children, value }) =>
 
-    //   value === 'bullet' ? (
-    //     <ul className="something">{children}</ul>
-    //   ) : value === 'number' ? (
-    //     <ol className="list-decimal">{children}</ol>
-    //   ) : (
-    //     <ul>{children}</ul>
-    //   ),
     list: {
       bullet: ({ children }) => (
         <ul className="list-disc list-inside py-4 ml-4">{children}</ul>

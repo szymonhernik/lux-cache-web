@@ -557,6 +557,13 @@
             "name": "mux.video"
           },
           "optional": true
+        },
+        "downloadUrl": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          },
+          "optional": true
         }
       }
     }

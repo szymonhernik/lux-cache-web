@@ -188,6 +188,17 @@ export const postBySlugQuery = groq`
         "slug": slug.current,
       }
     },
+    downloadFiles[] {
+      ...,
+      fileForDownload {
+        asset->{
+          url,
+          size,
+          originalFilename,
+          _id
+        }
+      }
+    },
     publishedAt, 
     "slug": slug.current,
     coverImage,

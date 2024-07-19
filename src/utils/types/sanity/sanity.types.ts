@@ -105,6 +105,7 @@ export type AudioInline = {
   _type: 'audioInline'
   audioLabel?: string
   audioFile?: MuxVideo
+  downloadUrl?: string
 }
 
 export type Video = {
@@ -1185,7 +1186,7 @@ export type FilterGroupsQueryResult = {
   }>
 }
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent[]{      ...,      _type == 'pdfEmbed' => {        ...,        pdfFile {          ...,          asset-> {          url,          originalFilename          }        }      },      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1197,6 +1198,19 @@ export type PostBySlugQueryResult = {
       name: string | null
       slug: string | null
     } | null
+  }> | null
+  downloadFiles: Array<{
+    fileTitle?: string
+    fileForDownload: {
+      asset: {
+        url: string | null
+        size: number | null
+        originalFilename: string | null
+        _id: string
+      } | null
+    } | null
+    _type: 'fileAsset'
+    _key: string
   }> | null
   publishedAt: string | null
   slug: string | null
@@ -1217,18 +1231,174 @@ export type PostBySlugQueryResult = {
     slug: string | null
   }> | null
   pageContent: Array<
-    | ({
+    | {
         _key: string
-      } & IntroText)
-    | ({
+        _type: 'introText'
+        body: Array<
+          | {
+              _key: string
+              _type: 'reference'
+              _ref: string
+              _weak?: boolean
+            }
+          | {
+              children?: Array<
+                | {
+                    asset?: {
+                      _ref: string
+                      _type: 'reference'
+                      _weak?: boolean
+                      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+                    }
+                    hotspot?: SanityImageHotspot
+                    crop?: SanityImageCrop
+                    _type: 'inlineicon'
+                    _key: string
+                  }
+                | {
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }
+              >
+              style?: 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+              listItem?: 'bullet'
+              markDefs?: Array<{
+                href?: string
+                _type: 'link'
+                _key: string
+              }>
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        > | null
+      }
+    | {
         _key: string
-      } & PdfEmbed)
-    | ({
+        _type: 'pdfEmbed'
+        pdfFile: {
+          asset: {
+            url: string | null
+            originalFilename: string | null
+          } | null
+          _type: 'file'
+        } | null
+      }
+    | {
         _key: string
-      } & PostContent)
-    | ({
+        _type: 'postContent'
+        body: Array<
+          | {
+              _key: string
+              _type: 'audioInline'
+              audioLabel?: string
+              audioFile: {
+                _type: 'mux.video'
+                asset: null
+              } | null
+              downloadUrl?: string
+            }
+          | {
+              children?: Array<{
+                marks?: Array<string>
+                text?: string
+                _type: 'span'
+                _key: string
+              }>
+              style?: 'blockquote' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'normal'
+              listItem?: 'bullet' | 'number'
+              markDefs?: Array<{
+                href?: string
+                _type: 'link'
+                _key: string
+              }>
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+          | {
+              asset?: {
+                _ref: string
+                _type: 'reference'
+                _weak?: boolean
+                [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+              }
+              hotspot?: SanityImageHotspot
+              crop?: SanityImageCrop
+              alt?: string
+              caption?: string
+              size?: 'default' | 'medium' | 'small' | 'wide'
+              _type: 'imageInline'
+              _key: string
+            }
+          | {
+              _key: string
+              _type: 'spotify'
+              url?: string
+            }
+          | {
+              _key: string
+              _type: 'video'
+              videoLabel?: string
+              videoFile: {
+                _type: 'mux.video'
+                asset: null
+              } | null
+            }
+          | {
+              _key: string
+              _type: 'youtube'
+              url?: string
+            }
+        > | null
+      }
+    | {
         _key: string
-      } & PostFooter)
+        _type: 'postFooter'
+        postFooterContent?: Array<
+          | {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              _key: string
+              [internalGroqTypeReferenceTo]?: 'templates'
+            }
+          | {
+              children?: Array<
+                | {
+                    asset?: {
+                      _ref: string
+                      _type: 'reference'
+                      _weak?: boolean
+                      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+                    }
+                    hotspot?: SanityImageHotspot
+                    crop?: SanityImageCrop
+                    _type: 'inlineicon'
+                    _key: string
+                  }
+                | {
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }
+              >
+              style?: 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+              listItem?: 'bullet'
+              markDefs?: Array<{
+                href?: string
+                _type: 'link'
+                _key: string
+              }>
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        >
+      }
   > | null
 } | null
 // Variable: postBySlugModalQuery

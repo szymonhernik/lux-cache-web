@@ -2,6 +2,7 @@
 import type { Image, PortableTextBlock } from 'sanity'
 import {
   InitialPostsQueryResult,
+  PostBySlugQueryResult,
   PostsQueryResult,
   SanityImageCrop,
   SanityImageHotspot,
@@ -116,3 +117,16 @@ export interface PreviewVideoType {
     public_id: string | null
   } | null
 }
+
+export type UpdatedPostBySlugQueryResult = Omit<
+  PostBySlugQueryResult,
+  'pageContent'
+> & {
+  pageContent: PortableTextBlock[] | null
+}
+
+// export type PageContent = PostBySlugQueryResult['title']
+// Conditional type to extract the 'title' type
+// type TitleType = PostBySlugQueryResult extends { title: infer T } ? T : never
+type TitleType = NonNullable<PostBySlugQueryResult>['title']
+export type PageContent = NonNullable<PostBySlugQueryResult>['pageContent']
