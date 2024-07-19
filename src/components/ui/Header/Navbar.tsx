@@ -34,8 +34,8 @@ export default function Navbar() {
   const close = () => setIsOpen(false)
 
   return (
-    <div className="z-[20]  w-full sticky top-0 left-0 lg:w-navbarDesktop lg:static  bg-secondary ">
-      <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around ">
+    <div className="z-[20]  w-full sticky top-0  right-0 lg:w-navbarDesktop lg:static  bg-secondary ">
+      <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around md:w-navbarDesktop">
         <div className="flex h-navbar-mobile items-center px-4 py-4 lg:h-navbar">
           <Link
             href="/"
