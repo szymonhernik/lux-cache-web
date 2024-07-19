@@ -129,7 +129,12 @@ export default function LoginButtonTest() {
     //   </SheetContent>
     // </Sheet>
     <div className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl `}>
-      <Link href="/signin/password_signin">Sign In</Link>
+      <Link href="/signin/password_signin" className="hidden sm:block">
+        Sign In
+      </Link>
+      <a href="/signin" className="sm:hidden ">
+        Sign In
+      </a>
     </div>
   )
 }
