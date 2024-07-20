@@ -71,6 +71,8 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [ ] Style pages
 - [x] User login flow
 - [x] breadcrumbs (w/shadcn)
+- [ ] after login the browse page doesnt get updated subscription data.
+- [ ] toaster is below dialog
 
 ### Supabase
 
