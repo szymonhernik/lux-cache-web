@@ -73,6 +73,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] breadcrumbs (w/shadcn)
 - [ ] after login the browse page doesnt get updated subscription data.
 - [ ] toaster is below dialog
+- [ ] when you click login and the password is good and then try to close the modal is not closing but going back to the same modal and then you need to click again and only then it closes
 
 ### Supabase
 

@@ -42,7 +42,7 @@ export function ModalLogin({
     ? createPortal(
         <dialog
           ref={dialogRef}
-          className="m-0 h-screen w-screen bg-black/80 flex justify-center items-center "
+          className="m-0 h-screen w-screen bg-black/80 flex justify-center items-center z-[100]"
           onClose={onDismiss}
         >
           <div className="bg-white flex flex-col gap-1">

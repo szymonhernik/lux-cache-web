@@ -44,7 +44,7 @@ export default async function BrowsePage({
               <Suspense>
                 <ObservableGrid
                   data={data.posts}
-                  key={Math.random()}
+                  // key={Math.random()}
                   encodeDataAttribute={encodeDataAttribute}
                 />
               </Suspense>

@@ -51,17 +51,19 @@ export default function PasswordSignIn({
     try {
       const redirectUrl: string = await signInWithPassword(values)
       if (router) {
-        router.push(redirectUrl)
+        router.replace(redirectUrl)
+        router.refresh()
+        // promise freeze for two seconds
+
         // window.location.reload()
 
-        // redirectToPath('/browse')
+        // redirectToPath(redirectUrl)
       }
+      // return await redirectToPath(redirectUrl)
     } catch (error) {
       console.error('Login failed', error)
-    } finally {
-      setIsSubmitting(false)
-      // revalidatePath('/browse')
     }
+    setIsSubmitting(false)
   }
 
   return (
