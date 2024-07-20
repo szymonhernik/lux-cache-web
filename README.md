@@ -42,7 +42,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 ### Front-end
 
 - [x] Reset styles
-- [ ] Horizontal scrolling browse page
+- [x] Horizontal scrolling browse page
 - [x] Design switching between list and grid view on mobile
 - [x] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
 - [ ] add color variables
@@ -58,7 +58,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] Routing/post page (parallel route)
 - [x] List view
 - [x] Read user's tier access (front end)
-- [ ] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
+- [x] See what can be put in middleware and what on pages routes (authorization: https://www.youtube.com/watch?v=kbCzZzXTjuw)
 - [x] Fetch function for initial posts — render static browse, all posts filtered should be dynamic (api route)
 - [x] filters results
 - [x] dynamic search results (also in studio)
@@ -67,24 +67,23 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] Image in post modal
 - [x] Results pages
 - [x] Modal post link
-- [ ] Style article
+- [x] Style article
 - [ ] Style pages
-- [ ] User login flow
-- [ ] breadcrumbs (w/shadcn)
-- [ ] TODO: seperate queries for project items
+- [x] User login flow
+- [x] breadcrumbs (w/shadcn)
 
 ### Supabase
 
 - [x] Set up database (w/ supabase)
-- [ ] add Google and Discord providers
+- [x] add Google and Discord providers
   - [x] google
   - [x] discord
-- [ ] adding bookmarks (after setting up CMS)
+- [x] adding bookmarks (after setting up CMS)
 - [x] user_roles — try custom jwt token (assign user_roles for admins and editors)
 - [x] Learn managing migrations between local and remote instance of db (good example of syncing in both direction https://www.youtube.com/watch?v=2SXK0TOsdNY&t=1733s)
 - [x] set custom jwt token again and
 - [x] add resend function in webhooks
-- [ ] fetch subscription data in routes (not JWT)
+- [x] fetch subscription data in routes (not JWT)
 
 ### Sanity CMS
 
@@ -108,11 +107,11 @@ TODAY:
 - [ ] Check how bandwidth is counted with exporting pdfs
 - [ ] create admin login with full access to page
 - [ ] fix reset password supabase email template (use the one written in the previous lc project)
-- [ ] Make sure to check if you want to copy billing info and address to supabase users table
-- [ ] move the necessary queries to a queries file (use import 'server-only')
+- [ ] Make sure to check if you want to copy billing info and address to supabase users table (NO!)
+- [x] move the necessary queries to a queries file (use import 'server-only')
 - [x] Add authentication (w/ supabase)
-- [ ] videos via bunny cdn
-- [ ] Set up Stripe (checkout, api points, webhooks)
+- [x] videos via bunny cdn
+- [x] Set up Stripe (checkout, api points, webhooks)
 - [ ] clean up billing info zod file (too much nesting and error scenarios)
 - [ ] "taint" (server-only)
 - [ ] Error management (w/ Sentry) https://www.youtube.com/watch?v=FmezY-vYlkg

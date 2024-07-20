@@ -36,7 +36,6 @@ export default function LoginButtonTest() {
     }
     getSession()
   }, [pathname])
-  console.log('session', session)
 
   return session ? (
     // <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
@@ -57,7 +56,7 @@ export default function LoginButtonTest() {
           <button
             className=" self-end py-4 pr-6 pl-4 flex flex-col items-end text-xl hover:cursor-pointer"
             onClick={() => {
-              setOpenAccountPanel(!openAccountPanel)
+              setOpenAccountPanel(false)
             }}
           >
             <p className="h-12  opacity-0">Account</p>
@@ -94,7 +93,13 @@ export default function LoginButtonTest() {
                   <li>Help</li>
                 </Link>
               </ul>
-              <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
+              <form
+                onSubmit={(e) => {
+                  handleRequest(e, SignOut, router)
+
+                  setOpenAccountPanel(false)
+                }}
+              >
                 <button type="submit">Log out</button>
               </form>
             </div>
@@ -104,7 +109,7 @@ export default function LoginButtonTest() {
         <button
           className=" self-end py-4 pr-6 pl-4 flex flex-col items-end text-xl hover:cursor-pointer"
           onClick={() => {
-            setOpenAccountPanel(!openAccountPanel)
+            setOpenAccountPanel(true)
           }}
         >
           <p className="h-12 pt-1 lg:pt-0">Account</p>
@@ -116,25 +121,16 @@ export default function LoginButtonTest() {
       )}
     </div>
   ) : (
-    // <Sheet>
-    //   <SheetTrigger>Account</SheetTrigger>
-    //   <SheetContent>
-    //     <SheetHeader>
-    //       <SheetTitle>Are you absolutely sure?</SheetTitle>
-    //       <SheetDescription>
-    //         This action cannot be undone. This will permanently delete your
-    //         account and remove your data from our servers.
-    //       </SheetDescription>
-    //     </SheetHeader>
-    //   </SheetContent>
-    // </Sheet>
     <div className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl `}>
-      <Link href="/signin/password_signin" className="hidden sm:block">
+      <Link href="/signin/password_signin" className="">
+        Sign In
+      </Link>
+      {/* <Link href="/signin/password_signin" className="hidden sm:block">
         Sign In
       </Link>
       <a href="/signin" className="sm:hidden ">
         Sign In
-      </a>
+      </a> */}
     </div>
   )
 }

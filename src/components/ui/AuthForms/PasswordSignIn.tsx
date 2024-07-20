@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signInWithPassword } from '@/utils/auth-helpers/server'
+import { redirectToPath, signInWithPassword } from '@/utils/auth-helpers/server'
 import { handleRequest } from '@/utils/auth-helpers/client'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
@@ -52,11 +52,15 @@ export default function PasswordSignIn({
       const redirectUrl: string = await signInWithPassword(values)
       if (router) {
         router.push(redirectUrl)
+        // window.location.reload()
+
+        // redirectToPath('/browse')
       }
     } catch (error) {
       console.error('Login failed', error)
     } finally {
       setIsSubmitting(false)
+      // revalidatePath('/browse')
     }
   }
 

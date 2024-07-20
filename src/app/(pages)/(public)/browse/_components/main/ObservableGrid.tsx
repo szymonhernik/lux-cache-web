@@ -5,7 +5,15 @@ import ListItem from './ListItem'
 import type { EncodeDataAttributeCallback } from '@sanity/react-loader'
 import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 
-import { Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import {
+  Fragment,
+  Suspense,
+  use,
+  useCallback,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import LoadMore from './LoadMore'
@@ -45,6 +53,7 @@ export default function ObservableGrid({
   useEffect(() => {
     const getSession = async () => {
       const { data: sessionData } = await supabase.auth.getSession()
+
       if (sessionData.session?.expires_at) {
         setSessionExpiresAt(sessionData.session.expires_at)
       } else {
@@ -136,23 +145,25 @@ export default function ObservableGrid({
                   // console.log('post:', post._id)
 
                   return (
-                    <PostWrapper
-                      postPreviewVideo={post.previewVideo}
-                      postId={post._id}
-                      onHover={handleHover}
-                      isDesktop={isDesktop}
-                    >
-                      <Suspense fallback={<h1>Loading</h1>}>
-                        <ListItem
-                          isDesktop={isDesktop}
-                          isTouchDevice={isTouchDevice}
-                          item={post}
-                          userTier={userTier}
-                          isLoading={isLoading}
-                          encodeDataAttribute={encodeDataAttribute}
-                        />
-                      </Suspense>
-                    </PostWrapper>
+                    <Fragment key={`${post._id}_${index} `}>
+                      <PostWrapper
+                        postPreviewVideo={post.previewVideo}
+                        postId={post._id}
+                        onHover={handleHover}
+                        isDesktop={isDesktop}
+                      >
+                        <Suspense fallback={<h1>Loading</h1>}>
+                          <ListItem
+                            isDesktop={isDesktop}
+                            isTouchDevice={isTouchDevice}
+                            item={post}
+                            userTier={userTier}
+                            isLoading={isLoading}
+                            encodeDataAttribute={encodeDataAttribute}
+                          />
+                        </Suspense>
+                      </PostWrapper>
+                    </Fragment>
                   )
                 })}
               </GridWrapperDiv>
