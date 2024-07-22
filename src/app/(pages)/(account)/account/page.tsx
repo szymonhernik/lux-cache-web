@@ -33,7 +33,7 @@ export default async function Account() {
     <>
       <h1 className="text-2xl font-extrabold ">Account</h1>
 
-      <div className=" divide-y flex flex-col gap-8 *:pt-8">
+      <div className="divide-y flex flex-col gap-8 *:pt-8">
         {/* <CustomerPortalForm subscription={subscription} /> */}
 
         {/* <BillingInfoSupabase

@@ -25,18 +25,18 @@ export default async function Page() {
   return (
     <>
       <h1 className="text-2xl font-extrabold ">Subscription</h1>
-      <div className="mt-8">
+      <div className="divide-y flex flex-col gap-8 *:pt-8">
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
               <BillingInfoFetchZod subscription={subscription} />
             </Suspense>
-            {/* <Suspense fallback={<BillingInfoScheleton />}>
+            <Suspense fallback={<BillingInfoScheleton />}>
               <PremiumPlansPanel
                 products={products ?? []}
                 subscription={subscription}
               />
-            </Suspense> */}
+            </Suspense>
           </>
         ) : (
           // TODO: Consider having some kind of user's info here? maybe if someone had a subscription and then canceled it, they could still see their info here

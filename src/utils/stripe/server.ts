@@ -91,7 +91,7 @@ export async function detachPaymentMethod(
 export async function updateSubscriptionPlan(
   subscriptionId: string,
   newPriceId: string,
-  redirectPath: string = '/account'
+  redirectPath: string = '/redirect?url=/account'
 ) {
   try {
     const existingSubscriptionItems = await stripe.subscriptionItems.list({

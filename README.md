@@ -28,6 +28,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 
 - [ ] don't show premium plans panel in account for users without a current subscription
 - [ ] see why you are getting three trial end and three customers get added when subscribing to stripe
+- [ ] make sure someone can't open two checkouts and subscribe to two plans (maybe in stripe disable mutliple subscription)
 
 ### Customer emails
 
