@@ -18,6 +18,7 @@ import {
   ProductMetadataSchema,
   SubscriptionItemSchema
 } from '../types/zod/types'
+import { AddressType } from '@/app/(pages)/(account)/account/_components/UpdateBillingAddress'
 
 export async function retrieveProducts() {
   try {
@@ -38,7 +39,50 @@ export async function retrieveProducts() {
     throw new Error('Could not retrieve products.')
   }
 }
-
+export async function updateCustomerBillingAddress(
+  subscriptionId: string,
+  address: AddressType,
+  redirectPath: string = '/account/subscription'
+) {
+  // TODO: Add zod validation for address
+  try {
+    const existingSubscription =
+      await stripe.subscriptions.retrieve(subscriptionId)
+    if (existingSubscription) {
+      const customerId = existingSubscription.customer as string
+      const customer = await stripe.customers.update(customerId, {
+        // @ts-ignore
+        address: address
+      })
+      if (customer) {
+        return getStatusRedirect(
+          redirectPath,
+          'Success!',
+          'Your address has been updated.'
+        )
+      } else {
+        return getErrorRedirect(
+          redirectPath,
+          'Unable to update address.',
+          'Please try again later or contact a system administrator.'
+        )
+      }
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'Unable to update address.',
+        'Please try again later or contact a system administrator'
+      )
+    }
+  } catch (error) {
+    console.error(error)
+    return getErrorRedirect(
+      redirectPath,
+      'Unable to update address.',
+      'Please try again later or contact a system administrator.'
+    )
+  }
+}
 export async function retrievePaymentMethods(customerId: string) {
   try {
     const paymentMethods = await stripe.customers.listPaymentMethods(customerId)
@@ -68,6 +112,46 @@ export async function detachPaymentMethod(
       return getErrorRedirect(
         redirectPath,
         'Unable to detach payment method.',
+        'Please try again later or contact a system administrator.'
+      )
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      return getErrorRedirect(
+        redirectPath,
+        error.message,
+        'Please try again later or contact a system administrator.'
+      )
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'An unknown error occurred.',
+        'Please try again later or contact a system administrator.'
+      )
+    }
+  }
+}
+
+export async function updateSubscription(
+  subscriptionId: string,
+  redirectPath: string = '/redirect?url=/account',
+  action: string
+) {
+  try {
+    const subscription = await stripe.subscriptions.update(subscriptionId, {
+      cancel_at_period_end:
+        action === 'cancel' ? true : action === 'renew' ? false : true
+    })
+    if (subscription) {
+      return getStatusRedirect(
+        redirectPath,
+        'Success!',
+        'Your subscription has been updated.'
+      )
+    } else {
+      return getErrorRedirect(
+        redirectPath,
+        'Unable to update subscription.',
         'Please try again later or contact a system administrator.'
       )
     }

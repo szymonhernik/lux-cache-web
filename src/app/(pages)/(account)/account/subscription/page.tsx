@@ -11,6 +11,8 @@ import {
   getUser,
   getUserDetails
 } from '@/utils/supabase/queries'
+import BillingAddress from '../_components/BillingAddress'
+import UpdateBillingAddress from '../_components/UpdateBillingAddress'
 
 export default async function Page() {
   const supabase = createClient()
@@ -37,9 +39,13 @@ export default async function Page() {
                 subscription={subscription}
               />
             </Suspense>
+            <UpdateBillingAddress subscription={subscription} />
+            {/* <Suspense fallback={<BillingInfoScheleton />}>
+
+              <BillingAddress />
+            </Suspense> */}
           </>
         ) : (
-          // TODO: Consider having some kind of user's info here? maybe if someone had a subscription and then canceled it, they could still see their info here
           <div>
             You do not have an active subscription. Please{' '}
             <Link href="/pricing" className="underline">

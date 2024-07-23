@@ -1,8 +1,11 @@
 'use client'
 
 import { Button } from '@/components/shadcn/ui/button'
-import Card from '@/components/ui/Card'
-import { updateSubscriptionPlan } from '@/utils/stripe/server'
+
+import {
+  updateSubscription,
+  updateSubscriptionPlan
+} from '@/utils/stripe/server'
 import { ProductWithPrices, SubscriptionWithProduct } from '@/utils/types'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -17,6 +20,8 @@ import {
   DialogTrigger
 } from '@/components/shadcn/ui/dialog'
 import Link from 'next/link'
+import Card from '@/components/ui/Card'
+import clsx from 'clsx'
 
 interface Props {
   products: ProductWithPrices[]
@@ -28,6 +33,8 @@ export default function PremiumPlansPanel(props: Props) {
 
   console.log('subscription', subscription)
 
+  const isScheduledForCancellation = subscription?.cancel_at_period_end
+
   const price = subscription?.prices
   let priceString = null
   if (price) {
@@ -38,35 +45,68 @@ export default function PremiumPlansPanel(props: Props) {
     }).format((price.unit_amount || 0) / 100)
   }
 
-  return (
-    <Card title="Plan type">
-      <div className="border p-4 rounded-md bg-white space-y-4">
-        <div className="space-y-1">
-          <div className="flex justify-between">
-            <p className="font-semibold">
-              {subscription?.prices?.products?.name}
-            </p>
-            <p className="font-semibold">
-              {priceString} {` `}
-              <span className="font-normal text-secondary-foreground">
-                (VAT incl.)
-              </span>
+  if (!isScheduledForCancellation) {
+    return (
+      <Card title="Plan type">
+        <div className={clsx(`border p-4 rounded-md bg-white space-y-4`)}>
+          <div className="space-y-1">
+            <div className="flex justify-between">
+              <p className="font-semibold">
+                {subscription?.prices?.products?.name}
+              </p>
+              <p className="font-semibold">
+                {priceString} {` `}
+                <span className="font-normal text-secondary-foreground">
+                  (VAT incl.)
+                </span>
+              </p>
+            </div>
+            <p className="text-sm text-secondary-foreground">
+              Next charge date:{` `}
+              {formatDate(subscription?.current_period_end)}
             </p>
           </div>
-          <p className="text-sm text-secondary-foreground">
-            Next charge date:{` `}
-            {formatDate(subscription?.current_period_end)}
-          </p>
+          <hr />
+          <div>
+            <PlansDialog products={products} subscription={subscription} />
+            {` `} or <CancelSubscriptionDialog subscription={subscription} />
+          </div>
         </div>
-        <hr />
-        <div>
-          <PlansDialog products={products} subscription={subscription} />
-          {` `} or <CancelSubscriptionDialog />
+        {/* <div className="mt-8 mb-4 text-xl font-semibold">Plans</div> */}
+      </Card>
+    )
+  } else {
+    return (
+      <Card title="Plan type">
+        <div className={clsx(`border p-4 rounded-md bg-yellow-50 space-y-4`)}>
+          <div className="space-y-1">
+            <div className="flex justify-between">
+              <p className="font-semibold">
+                {subscription?.prices?.products?.name}
+              </p>
+              <p className="font-semibold">
+                {priceString} {` `}
+                <span className="font-normal text-secondary-foreground">
+                  (VAT incl.)
+                </span>
+              </p>
+            </div>
+          </div>
+          <hr />
+          {subscription.cancel_at && (
+            <div>
+              <p className="text-sm text-secondary-foreground">
+                Your subscription has been planned for cancellation on{' '}
+                {formatDate(subscription?.cancel_at)}. You will no longer be
+                billed after the next billing date.
+              </p>
+            </div>
+          )}
+          <RenewSubscriptionDialog subscription={subscription} />
         </div>
-      </div>
-      {/* <div className="mt-8 mb-4 text-xl font-semibold">Plans</div> */}
-    </Card>
-  )
+      </Card>
+    )
+  }
 }
 
 const formatDate = (dateString: string | undefined) => {
@@ -122,7 +162,6 @@ function PlansDialog({
     if (redirectUrl) {
       router.push(redirectUrl)
       router.refresh()
-      setOpen(false)
     }
     setIsSubmitting(false)
     setOpen(false)
@@ -250,22 +289,114 @@ function PlansDialog({
   )
 }
 
-function CancelSubscriptionDialog() {
+function CancelSubscriptionDialog({
+  subscription
+}: {
+  subscription: SubscriptionWithProduct | null
+}) {
+  const [open, setOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
+  const currentPath = usePathname()
+
+  const handleCancelSubscription = async (
+    subscriptionId: string | undefined
+  ) => {
+    setIsSubmitting(true)
+    if (!subscriptionId) {
+      return
+    }
+    const redirectUrl = await updateSubscription(
+      subscriptionId,
+      currentPath,
+      'cancel'
+    )
+    if (redirectUrl) {
+      router.push(redirectUrl)
+      router.refresh()
+    }
+    setIsSubmitting(false)
+    setOpen(false)
+  }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="underline">
         Cancel current subscription
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>
+            Are you sure you want to cancel your subscription?
+          </DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Your subscription and the premium features will remain available to
+            you until the end of the billing period. After your subscription is
+            cancelled your premium features will be cancelled but your bookmarks
+            and account information stay.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4"></div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
+        <DialogFooter className="sm:justify-start">
+          <Button variant={'outline'} onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => handleCancelSubscription(subscription?.id)}>
+            Yes, unsubscribe
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+function RenewSubscriptionDialog({
+  subscription
+}: {
+  subscription: SubscriptionWithProduct | null
+}) {
+  const [open, setOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const router = useRouter()
+  const currentPath = usePathname()
+
+  const handleCancelSubscription = async (
+    subscriptionId: string | undefined
+  ) => {
+    setIsSubmitting(true)
+    if (!subscriptionId) {
+      return
+    }
+    const redirectUrl = await updateSubscription(
+      subscriptionId,
+      currentPath,
+      'renew'
+    )
+    if (redirectUrl) {
+      router.push(redirectUrl)
+      router.refresh()
+    }
+    setIsSubmitting(false)
+    setOpen(false)
+  }
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild className="">
+        <Button variant={'outline'}>Renew subscription</Button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>
+            Are you sure you want to renew your subscription?
+          </DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4"></div>
+        <DialogFooter className="sm:justify-start">
+          <Button variant={'outline'} onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button onClick={() => handleCancelSubscription(subscription?.id)}>
+            Yes, renew my subscription
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
