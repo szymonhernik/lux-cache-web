@@ -20,6 +20,7 @@ import {
   AlertTitle
 } from '@/components/shadcn/ui/alert'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function CheckoutForm(props: {
   priceWithTrial: boolean
@@ -40,6 +41,7 @@ export default function CheckoutForm(props: {
   // console.log('next url: ', process.env.NEXT_PUBLIC_SITE_URL)
 
   // console.log('priceWithTrial', priceWithTrial);
+  const queryClient = useQueryClient()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission
@@ -61,12 +63,13 @@ export default function CheckoutForm(props: {
         // router.push(`/?ts=${Date.now()}`);
         setIsSuccess(true)
         const returnUrl = getStatusRedirect(
-          getURL('/redirect?url=/browse'),
+          '/browse',
           'Success!',
           'Your payment was successful!'
         )
         router.push(returnUrl)
         router.refresh()
+        queryClient.invalidateQueries({ queryKey: ['subscription'] })
       } else {
         // const returnUrl = getErrorRedirect(
         //   getURL('/pricing'),

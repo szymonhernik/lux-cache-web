@@ -65,6 +65,8 @@ export default function ObservableGrid({
 
   const { data: userTier = 0, isLoading } = useSubscription(sessionExpiresAt)
 
+  console.log('userTier:', userTier)
+
   const handleHover = useCallback(
     (previewVideo: PreviewVideoType) => {
       if (isDesktop && view === 'list') {
