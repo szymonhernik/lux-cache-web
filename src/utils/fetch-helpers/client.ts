@@ -76,7 +76,7 @@ const getFilteredPosts = async (tagsSelected: string[]) => {
 export const fetchSubscriptions = async () => {
   const supabase = createClient()
   console.log('Fetching subscriptions')
-  await new Promise((resolve) => setTimeout(resolve, 5000))
+  // await new Promise((resolve) => setTimeout(resolve, 5000))
 
   const userTierObject = await getUserTier(supabase)
 
