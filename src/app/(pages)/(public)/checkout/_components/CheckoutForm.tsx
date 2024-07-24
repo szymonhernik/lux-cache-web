@@ -7,9 +7,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
-import { getErrorRedirect, getStatusRedirect, getURL } from '@/utils/helpers'
 
 import PromotionCodeForm from './PromotionCodeForm'
 import OrderSummary from './OrderSummary'
@@ -141,11 +139,9 @@ export function SuccessfulPayment() {
           Congratulations, your payment was processed successfully.
         </p>
         <div className="mt-6">
-          <Button variant={'outline'}>
-            <Link href="/browse" prefetch={false}>
-              Go to Browse page
-            </Link>
-          </Button>
+          <Link href="/browse">
+            <Button variant={'outline'}>Go to Browse page</Button>
+          </Link>
         </div>
       </div>
     </div>
