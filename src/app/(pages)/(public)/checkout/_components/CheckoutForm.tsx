@@ -61,7 +61,7 @@ export default function CheckoutForm(props: {
         // router.push(`/?ts=${Date.now()}`);
         setIsSuccess(true)
         const returnUrl = getStatusRedirect(
-          getURL('/browse'),
+          getURL('/redirect?url=/browse'),
           'Success!',
           'Your payment was successful!'
         )
