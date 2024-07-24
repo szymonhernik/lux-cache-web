@@ -67,7 +67,7 @@ export default function CheckoutForm(props: {
           'Success!',
           'Your payment was successful!'
         )
-        queryClient.invalidateQueries({ queryKey: ['subscription'] })
+        // queryClient.invalidateQueries({ queryKey: ['subscription'] })
         router.push(returnUrl)
         router.refresh()
       } else {
