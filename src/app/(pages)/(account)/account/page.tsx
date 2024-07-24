@@ -26,7 +26,7 @@ export default async function Account() {
   //   .single()
 
   if (!user) {
-    return redirect('/signin')
+    return redirect('/signin/password_signin')
   }
 
   return (

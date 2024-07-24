@@ -78,7 +78,9 @@ export const updateSession = async (request: NextRequest) => {
   }
 
   if (!user && request.nextUrl.pathname.startsWith('/account')) {
-    return NextResponse.redirect(new URL('/signin', request.url))
+    return NextResponse.redirect(
+      new URL('/signin/password_signin', request.url)
+    )
   }
 
   try {
