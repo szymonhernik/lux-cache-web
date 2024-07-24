@@ -54,44 +54,45 @@ export default function OrderSummary(props: {
   return (
     <div className="grow">
       <h1 className="font-bold text-xl mb-4">Order Summary</h1>
-
-      <div className="bg-neutral-100 rounded p-4 w-full gap-4 flex flex-col">
-        <div>
-          <p className="font-semibold text-2xl">{lineItems[0]?.name}</p>
-        </div>
-        {trialEndDate && userCanTrial && (
-          <div className="flex justify-between ">
-            <div>
-              <p className="font-semibold text-xl">Billed after trial</p>
-              <p>({trialEndDate})</p>
+      {lineItems && lineItems[0] && currency && (
+        <div className="bg-neutral-100 rounded p-4 w-full gap-4 flex flex-col">
+          <div>
+            <p className="font-semibold text-2xl">{lineItems[0]?.name}</p>
+          </div>
+          {trialEndDate && userCanTrial && (
+            <div className="flex justify-between ">
+              <div>
+                <p className="font-semibold text-xl">Billed after trial</p>
+                <p>({trialEndDate})</p>
+              </div>
+              <p className="">{formatPrice('unitAmount', currency)}</p>
             </div>
-            <p className="">{formatPrice('unitAmount', currency)}</p>
+          )}
+          <div className="*:flex *:justify-between ">
+            <div className="">
+              <p>Subtotal </p>
+              <p>{formatPrice('amountSubtotal', currency)}</p>
+            </div>
+            <div className="">
+              <p className=" ">Discounted </p>
+              <p className="text-gray-400">
+                - {formatPrice('amountDiscount', currency)}
+              </p>
+            </div>
+            <div className="mt-5">
+              <p className="font-bold">Total due today: </p>
+              <p>{calculateTotalDueToday()}</p>
+            </div>
           </div>
-        )}
-        <div className="*:flex *:justify-between ">
-          <div className="">
-            <p>Subtotal </p>
-            <p>{formatPrice('amountSubtotal', currency)}</p>
-          </div>
-          <div className="">
-            <p className=" ">Discounted </p>
-            <p className="text-gray-400">
-              - {formatPrice('amountDiscount', currency)}
+          {daysTrial && !userCanTrial && (
+            <p className="text-sm text-zinc-200">
+              You are not allowed to trial anymore.
             </p>
-          </div>
-          <div className="mt-5">
-            <p className="font-bold">Total due today: </p>
-            <p>{calculateTotalDueToday()}</p>
-          </div>
-        </div>
-        {daysTrial && !userCanTrial && (
-          <p className="text-sm text-zinc-200">
-            You are not allowed to trial anymore.
-          </p>
-        )}
+          )}
 
-        {/* <div className="font-bold flex justify-between"></div> */}
-      </div>
+          {/* <div className="font-bold flex justify-between"></div> */}
+        </div>
+      )}
     </div>
   )
 }

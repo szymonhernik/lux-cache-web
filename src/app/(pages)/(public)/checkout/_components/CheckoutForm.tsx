@@ -9,11 +9,17 @@ import { useState } from 'react'
 
 import { revalidatePath } from 'next/cache'
 import Link from 'next/link'
-import { getStatusRedirect } from '@/utils/helpers'
+import { getErrorRedirect, getStatusRedirect, getURL } from '@/utils/helpers'
 
 import PromotionCodeForm from './PromotionCodeForm'
 import OrderSummary from './OrderSummary'
 import { Button } from '@/components/shadcn/ui/button'
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle
+} from '@/components/shadcn/ui/alert'
+import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
 export default function CheckoutForm(props: {
   priceWithTrial: boolean
@@ -29,6 +35,10 @@ export default function CheckoutForm(props: {
   const [messageBody, setMessageBody] = useState('')
 
   // console.log('lineItems', lineItems);
+
+  // console.log('ENVIRONMENT: ', process.env.NODE_ENV)
+  // console.log('next url: ', process.env.NEXT_PUBLIC_SITE_URL)
+
   // console.log('priceWithTrial', priceWithTrial);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -50,40 +60,50 @@ export default function CheckoutForm(props: {
         // router.refresh();
         // router.push(`/?ts=${Date.now()}`);
         setIsSuccess(true)
+        const returnUrl = getStatusRedirect(
+          getURL('/browse'),
+          'Success!',
+          'Your payment was successful!'
+        )
+        router.push(returnUrl)
+        router.refresh()
       } else {
+        // const returnUrl = getErrorRedirect(
+        //   getURL('/pricing'),
+        //   'Unable to complete the purchase.',
+        //   result.error.message || 'An error occurred'
+        // )
+        // router.push(returnUrl)
         setMessageBody(result.error.message || 'An error occurred')
       }
     })
   }
   return (
     <div className="flex flex-col gap-16 ">
-      {!isSuccess ? (
-        <>
-          <div className="flex flex-col gap-8">
-            <OrderSummary daysTrial={daysTrial} userCanTrial={userCanTrial} />
+      <>
+        <div className="flex flex-col gap-8">
+          <OrderSummary daysTrial={daysTrial} userCanTrial={userCanTrial} />
 
-            <PromotionCodeForm />
+          <PromotionCodeForm />
+        </div>
+        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-8">
+          <div>
+            <h1 className="text-xl font-bold mb-4">Billing information</h1>
+            <AddressElement options={{ mode: 'billing' }} />
           </div>
-          <form
-            onSubmit={(e) => handleSubmit(e)}
-            className="flex flex-col gap-8"
+          <div>
+            <h1 className="text-xl font-bold  mb-4">Payment information</h1>
+            <PaymentElement />
+          </div>
+          <div
+            id="messages"
+            role="alert"
+            className="text-red-500"
+            style={messageBody ? { display: 'block' } : { display: 'none' }}
           >
-            <div>
-              <h1 className="text-xl font-bold mb-4">Billing information</h1>
-              <AddressElement options={{ mode: 'billing' }} />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold  mb-4">Payment information</h1>
-              <PaymentElement />
-              <div
-                id="messages"
-                role="alert"
-                style={messageBody ? { display: 'block' } : {}}
-              >
-                {messageBody}
-              </div>
-            </div>
-
+            <AlertDestructive message={messageBody} />
+          </div>
+          <div className="space-x-2">
             <Button
               className="w-fit"
               isLoading={isSubmitting}
@@ -92,29 +112,22 @@ export default function CheckoutForm(props: {
             >
               {isSubmitting ? 'Processing' : 'Pay'}
             </Button>
-          </form>
-        </>
-      ) : (
-        <div>
-          <h1 className="text-xl font-bold mb-4">Success</h1>
-          <p>Your payment was successful.</p>
-          <div className="flex flex-col underline">
-            <Link href="/account">Go to account</Link>
-            <a
-              href="/"
-              onClick={(e) => {
-                // e.preventDefault();
-                // window.location.reload();
-
-                // router.refresh();
-                router.push('/')
-              }}
-            >
-              Close
-            </a>
+            <Button variant="outline" className="w-fit" disabled={isSubmitting}>
+              <Link href="/">Cancel</Link>
+            </Button>
           </div>
-        </div>
-      )}
+        </form>
+      </>
     </div>
+  )
+}
+
+export function AlertDestructive({ message }: { message: string }) {
+  return (
+    <Alert variant="destructive">
+      <ExclamationTriangleIcon className="h-4 w-4" />
+      <AlertTitle>Error</AlertTitle>
+      <AlertDescription>{message}</AlertDescription>
+    </Alert>
   )
 }

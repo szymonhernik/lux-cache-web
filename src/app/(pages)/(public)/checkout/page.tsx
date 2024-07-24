@@ -65,14 +65,6 @@ export default async function CheckoutPage({
   return (
     <div className="max-w-screen-sm mx-auto flex flex-col gap-4 py-36">
       <CustomStripeCheckout price={price} userDetails={userDetails} />
-      {/* <div className=" border-white-2 border p-4">
-        <h1 className="text-xl font-semibold">Checkout</h1>
-        {price?.products?.name && <h2>{price.products.name}</h2>}
-        {price?.interval && <h2>Interval: {price.interval}</h2>}
-      </div> */}
-      <Button className="font-semibold  w-fit">
-        <Link href="/">Cancel</Link>
-      </Button>
     </div>
   )
 }

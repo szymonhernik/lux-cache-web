@@ -578,7 +578,7 @@ export async function customCheckoutWithStripe(
       ],
       // @ts-ignore
       ui_mode: 'custom',
-      return_url: 'http://localhost:3000/'
+      return_url: getURL()
     }
 
     console.log(
