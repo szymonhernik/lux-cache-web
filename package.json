@@ -48,6 +48,7 @@
     "@sanity/react-loader": "1.9.17",
     "@sanity/ui": "2.1.6",
     "@sanity/vision": "3.40.0",
+    "@sentry/nextjs": "^8",
     "@stripe/react-stripe-js": "^2.7.0",
     "@stripe/stripe-js": "3.0.7",
     "@supabase/ssr": "^0.1.0",
