@@ -15,6 +15,7 @@ import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword'
 import SignUp from '@/components/ui/AuthForms/Signup'
 import Separator from '@/components/ui/AuthForms/Separator'
 import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn'
+import { ModalRadix } from '../../../_components/modal-radix'
 
 export default async function LoginModal({
   params,
@@ -49,12 +50,9 @@ export default async function LoginModal({
 
   return (
     <Suspense>
-      <ModalLogin>
+      <ModalRadix>
         <div className="flex justify-center p-4  bg-white pb-24">
           <div className="flex flex-col justify-between max-w-96 w-[90vw] p-3 m-auto  ">
-            {/* <div className="flex justify-center pb-12 ">
-          <Logo width="64px" height="64px" />
-        </div> */}
             <Card
               title={
                 viewProp === 'forgot_password'
@@ -104,7 +102,7 @@ export default async function LoginModal({
             </Card>
           </div>
         </div>
-      </ModalLogin>
+      </ModalRadix>
     </Suspense>
   )
 }
