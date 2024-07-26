@@ -2,11 +2,12 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import { cookies } from 'next/headers'
+import { cookies, headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getURL, getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 import { getAuthTypes } from '@/utils/auth-helpers/settings'
 import { revalidatePath } from 'next/cache'
+import { ratelimit } from '../upstash/ratelimit'
 
 function isValidEmail(email: string) {
   var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
@@ -381,6 +382,21 @@ export async function updatePasswordInAccount(formData: FormData) {
   const password = String(formData.get('password')).trim()
   const passwordConfirm = String(formData.get('passwordConfirm')).trim()
   let redirectPath: string
+
+  const ip = headers().get('x-forwarded-for')
+
+  console.log('ip address:', ip)
+
+  const { success } = await ratelimit.limit(ip ?? 'anonymous')
+
+  if (!success) {
+    redirectPath = getErrorRedirect(
+      '/account',
+      'For security purposes you can only update your password twice every 5 minutes.',
+      'Please try again later.'
+    )
+    return redirectPath
+  }
 
   // Check that the password and confirmation match
   if (password !== passwordConfirm) {
