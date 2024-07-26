@@ -34,6 +34,7 @@ export function ModalRadix({ children }: { children: React.ReactNode }) {
           <DialogContent
             onEscapeKeyDown={onDismiss}
             onInteractOutside={onDismiss}
+            // className="fixed inset-0 flex items-center justify-center bg-black/80 z-[40]"
             className={` ${s.DialogContent} `}
           >
             <div className="bg-white flex flex-col gap-1">

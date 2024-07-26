@@ -80,6 +80,13 @@
   box-sizing: inherit;
 }
 
+#sentry-feedback {
+  --z-index: 20;
+}
+.widget__actor {
+  z-index: 20;
+}
+
 *:focus:not(ol) {
   /* @apply outline-none ring-2 ring-pink-500 ring-opacity-50; */
 }
