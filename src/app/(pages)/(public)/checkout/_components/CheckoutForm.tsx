@@ -5,7 +5,7 @@ import {
   useCustomCheckout
 } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import Link from 'next/link'
 
@@ -18,6 +18,16 @@ import {
   AlertTitle
 } from '@/components/shadcn/ui/alert'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
+
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
+} from '@/components/shadcn/ui/dialog'
+import { Progress } from '@/components/shadcn/ui/progress'
 
 export default function CheckoutForm(props: {
   priceWithTrial: boolean
@@ -32,13 +42,6 @@ export default function CheckoutForm(props: {
   const [isSuccess, setIsSuccess] = useState(false)
   const [messageBody, setMessageBody] = useState('')
 
-  // console.log('lineItems', lineItems);
-
-  // console.log('ENVIRONMENT: ', process.env.NODE_ENV)
-  // console.log('next url: ', process.env.NEXT_PUBLIC_SITE_URL)
-
-  // console.log('priceWithTrial', priceWithTrial);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     // if can't confirm don't allow form submission
     if (!canConfirm) {
@@ -49,14 +52,9 @@ export default function CheckoutForm(props: {
     e.preventDefault()
     setIsSubmitting(true)
 
-    //  confirm() method returns a Promise that resolves to an object with one of the following types
-    //  { session: CheckoutSession }
-    //  { error: StripeError }
     confirm().then((result) => {
       setIsSubmitting(false)
       if (result.session) {
-        // router.refresh();
-        // router.push(`/?ts=${Date.now()}`);
         setIsSuccess(true)
       } else {
         setMessageBody(result.error.message || 'An error occurred')
@@ -135,14 +133,8 @@ export function SuccessfulPayment() {
         <h1 className="mt-4 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
           Payment Successful!
         </h1>
-        <p className="mt-4 text-muted-foreground">
-          Congratulations, your payment was processed successfully.
-        </p>
-        <div className="mt-6">
-          <Link href="/browse">
-            <Button variant={'outline'}>Go to Browse page</Button>
-          </Link>
-        </div>
+
+        <ProgressCoundown />
       </div>
     </div>
   )
@@ -165,5 +157,30 @@ function CircleCheckIcon(props: React.SVGProps<SVGSVGElement>) {
       <circle cx="12" cy="12" r="10" />
       <path d="m9 12 2 2 4-4" />
     </svg>
+  )
+}
+
+export function ProgressCoundown() {
+  const router = useRouter()
+  const [countdown, setCountdown] = useState(5)
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prevCount) => prevCount - 1)
+    }, 1000)
+    if (countdown === 0) {
+      clearInterval(timer)
+      router.push('/browse')
+      router.refresh()
+    }
+    return () => clearInterval(timer)
+  }, [countdown])
+  return (
+    <div className="mt-4">
+      Redirecting in {countdown} seconds You will be redirected to the next page
+      shortly. Please don't close this page.
+      <div className="flex justify-center mt-6">
+        <Progress value={(countdown / 5) * 100} className="w-full " />
+      </div>
+    </div>
   )
 }
