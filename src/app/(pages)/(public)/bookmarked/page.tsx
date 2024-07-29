@@ -4,6 +4,7 @@ import { createClient } from '@/utils/supabase/server'
 import { BookmarkedQueryResult } from '@/utils/types/sanity/sanity.types'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import BookmarksLayout from './_components/BookmarksLayout'
 
 export default async function Page() {
   const supabase = createClient()
@@ -29,35 +30,37 @@ export default async function Page() {
 
   if (bookmarks && bookmarks.length > 0) {
     const ids = bookmarks.map((bookmark) => bookmark.post_id)
+    // freeze for 3 seconds to show skeleton
     const bookmarkedPosts = await loadBookmarkedPosts(ids)
     posts = bookmarkedPosts.data
   }
 
   return (
-    <section className="flex flex-col">
-      <div className="mx-auto container my-36 px-4  space-y-8  ">
-        {posts && posts.length > 0 ? (
-          posts.map((post) => {
-            if (post.slug) {
-              return (
-                <Link key={post._id} href={`/post/${post.slug}`}>
-                  <h2 className="font-semibold hover:underline">
-                    {post.title}
-                  </h2>
-                </Link>
-              )
-            } else {
-              return (
-                <h2 key={post._id} className="font-semibold">
-                  {post.title}
-                </h2>
-              )
-            }
-          })
-        ) : (
-          <h1>No bookmarks</h1>
-        )}
-      </div>
-    </section>
+    <BookmarksLayout posts={posts} />
+    // <section className="flex flex-col">
+    //   <div className="mx-auto container my-36 px-4  space-y-8  ">
+    //     {posts && posts.length > 0 ? (
+    //       posts.map((post) => {
+    //         if (post.slug) {
+    //           return (
+    //             <Link key={post._id} href={`/post/${post.slug}`}>
+    //               <h2 className="font-semibold hover:underline">
+    //                 {post.title}
+    //               </h2>
+    //             </Link>
+    //           )
+    //         } else {
+    //           return (
+    //             <h2 key={post._id} className="font-semibold">
+    //               {post.title}
+    //             </h2>
+    //           )
+    //         }
+    //       })
+    //     ) : (
+    //       <h1>No bookmarks</h1>
+    //     )}
+    //   </div>
+    // </section>
   )
 }

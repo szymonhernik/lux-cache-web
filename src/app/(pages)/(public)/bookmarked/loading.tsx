@@ -1,9 +1,10 @@
+import { BookmarkedItemSkeleton } from '@/components/ui/skeletons/skeletons'
+
 export default function Loading() {
   return (
-    <section className="flex flex-col">
-      <div className="mx-auto container my-36 px-4  space-y-8  ">
-        <h1>Loading your bookmarks...</h1>
-      </div>
-    </section>
+    <div className="my-36 max-w-2xl mx-auto divide-y grid gap-4 px-4">
+      <BookmarkedItemSkeleton />
+      <BookmarkedItemSkeleton />
+    </div>
   )
 }

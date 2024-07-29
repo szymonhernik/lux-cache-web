@@ -25,3 +25,21 @@ export function EpisodesSkeletonTwo() {
     </>
   )
 }
+
+export function BookmarkedItemSkeleton() {
+  return (
+    <div className="flex justify-between gap-4 py-4 tracking-tight p-2 overflow-hidden relative">
+      <div className="flex-1">
+        <div
+          className={`relative overflow-hidden font-semibold text-lg uppercase text-primary-foreground bg-gray-300 rounded h-6 w-3/4 ${shimmer}`}
+        ></div>
+        <div
+          className={`relative overflow-hidden text-sm w-full sm:w-1/4 text-tertiary-foreground uppercase bg-gray-300 rounded h-4 mt-2 ${shimmer}`}
+        ></div>
+      </div>
+      <div
+        className={`relative overflow-hidden gap-2 w-28 h-28 bg-gray-300 rounded ${shimmer}`}
+      ></div>
+    </div>
+  )
+}
