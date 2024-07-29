@@ -174,7 +174,10 @@ export const filterGroupsQuery = groq`{
     }
   }
 }`
-
+export const pricesQuery = groq`
+  *[_type == "pricing"][0]{
+    ...,
+  }`
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {
     _id, 

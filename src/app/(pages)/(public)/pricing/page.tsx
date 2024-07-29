@@ -1,4 +1,5 @@
 import Pricing from '@/components/ui/Pricing/Pricing'
+import { loadPrices } from '@/sanity/loader/loadQuery'
 import { createClient } from '@/utils/supabase/server'
 import { ProductWithPrices } from '@/utils/types'
 import { ProductMetadataSchema } from '@/utils/types/zod/types'
@@ -9,6 +10,8 @@ export default async function PricingPage() {
   const {
     data: { user }
   } = await supabase.auth.getUser()
+
+  const pricesDetails = await loadPrices()
 
   const { data: subscription, error } = await supabase
     .from('subscriptions')
@@ -33,14 +36,9 @@ export default async function PricingPage() {
     .select('can_trial')
     .single()
 
-  // const trialProduct = products.find(product => {
-  //   // find product that has metadata trial_allowed: true
-  //   return product.metadata && product.metadata.trial_allowed;
-  // }
-  // console.log('trialProduct', trialProduct);
-
   return (
     <Pricing
+      data={pricesDetails.data}
       user={user}
       products={products ?? []}
       subscription={subscription}

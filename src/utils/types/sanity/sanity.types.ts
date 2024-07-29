@@ -1185,6 +1185,22 @@ export type FilterGroupsQueryResult = {
     }> | null
   }>
 }
+// Variable: pricesQuery
+// Query:   *[_type == "pricing"][0]{    ...,  }
+export type PricesQueryResult = {
+  _id: string
+  _type: 'pricing'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  title?: string
+  plansFeatures?: Array<{
+    planName?: string
+    planDescription?: BlockContentSimple
+    _type: 'planObject'
+    _key: string
+  }>
+} | null
 // Variable: postBySlugQuery
 // Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent[]{      ...,      _type == 'pdfEmbed' => {        ...,        pdfFile {          ...,          asset-> {          url,          originalFilename          }        }      },      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
 export type PostBySlugQueryResult = {
@@ -1596,7 +1612,7 @@ export type PostsBySeriesSlugQueryResult = {
   } | null
 }
 // Variable: pageBySlugQuery
-// Query:     *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    pageContent[]{      ...,      _type == 'postContent' => {        ...,      }    }  }
+// Query:     *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    pageContent[]{      ...,      _type == 'mainBody' => {        ...,      },      _type == 'faq' => {        ...,      }    }  }
 export type PageBySlugQueryResult = {
   _id: string
   title: string | null

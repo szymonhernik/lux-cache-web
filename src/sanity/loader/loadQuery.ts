@@ -22,6 +22,7 @@ import {
   postsByArtistSlugQuery,
   postsBySeriesSlugQuery,
   postsQuery,
+  pricesQuery,
   settingsQuery
 } from '@/sanity/lib/queries'
 import { client } from '@/sanity/lib/client'
@@ -33,7 +34,8 @@ import {
   PostBySlugQueryResult,
   PostsByArtistSlugQueryResult,
   PostsBySeriesSlugQueryResult,
-  PostsQueryResult
+  PostsQueryResult,
+  PricesQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
 const serverClient = client.withConfig({
@@ -173,6 +175,13 @@ export function loadPost(slug: string) {
     postBySlugQuery,
     { slug },
     { next: { tags: [`post:${slug}`] } }
+  )
+}
+export function loadPrices() {
+  return loadQuery<PricesQueryResult | null>(
+    pricesQuery,
+    {},
+    { next: { tags: [`pricing`] } }
   )
 }
 export function loadPostModal(slug: string) {

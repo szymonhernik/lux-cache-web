@@ -10,7 +10,6 @@ export interface PageProps {
 }
 export function PageLayout({ data, encodeDataAttribute }: PageProps) {
   const { title, slug, pageContent } = data ?? {}
-  console.log('pageContent', pageContent)
 
   return (
     <>
