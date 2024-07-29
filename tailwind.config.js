@@ -21,7 +21,7 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sans: ['var(--font-suisse)'],
+        sansSerif: ['var(--font-suisse)'],
         neue: ['var(--font-suisseNeue)']
       },
       screens: {
@@ -83,6 +83,11 @@ module.exports = {
           inverted: 'hsl(var(--surface-secondary-inverted))',
           foreground: 'hsl(var(--secondary-foreground))'
         },
+        tertiary: {
+          DEFAULT: 'hsl(var(--tertiary))',
+          foreground: 'hsl(var(--tertiary-foreground))'
+        },
+
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))'
