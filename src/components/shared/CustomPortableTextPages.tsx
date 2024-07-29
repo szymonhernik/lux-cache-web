@@ -57,10 +57,10 @@ export function CustomPortableTextPages({
 
     list: {
       bullet: ({ children }) => (
-        <ul className="list-disc list-inside py-4 ml-4">{children}</ul>
+        <ul className="list-disc list-inside py-4 text-sm">{children}</ul>
       ),
       number: ({ children }) => (
-        <ol className="list-decimal list-inside py-4 ml-4">{children}</ol>
+        <ol className="list-decimal list-inside py-4 text-sm">{children}</ol>
       )
     },
     listItem: {
@@ -100,7 +100,7 @@ export function CustomPortableTextPages({
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="px-4 py-4 lg:py-8 "
+                className="px-4 py-4 lg:py-8 w-full md:w-3/4 mx-auto"
               >
                 <AccordionTrigger className="font-semibold ">
                   {faqItem.question}
