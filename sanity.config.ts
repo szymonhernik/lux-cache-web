@@ -48,11 +48,35 @@ import pricing from '@/sanity/schemas/singletons/pricing'
 import introText from '@/sanity/schemas/objects/introText'
 import coverVideo from '@/sanity/schemas/objects/coverVideo'
 import { cloudinarySchemaPlugin } from 'sanity-plugin-cloudinary'
+import { getURL } from '@/utils/helpers'
 
 export default defineConfig({
   basePath: '/studio',
   projectId,
   dataset,
+  document: {
+    // prev is the result from previous plugins and thus can be composed
+    productionUrl: async (prev, context) => {
+      // context includes the client and other details
+      const { getClient, dataset, document } = context
+      const client = getClient({ apiVersion: '2023-06-21' })
+
+      if (document._type === 'post') {
+        const slug = await client.fetch(
+          `*[_type == 'post' && _id == $postId][0].slug.current`,
+          { postId: document._id }
+        )
+
+        const url = getURL(
+          `/studio/presentation/post/${document._id}?preview=/post/${slug}`
+        )
+        // http://localhost:3000/studio/presentation/post/5b38fdf8-aae7-4e0c-a196-407e5e6989b7?preview=/post/delve-james-rand
+        return url
+      }
+
+      return prev
+    }
+  },
   // Add and edit the content schema in the './sanity/schema' folder
   schema: {
     types: [

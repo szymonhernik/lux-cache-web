@@ -5,6 +5,8 @@ import { PostPage } from './_components/PostPage'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { getUser } from '@/utils/supabase/queries'
+import { Suspense } from 'react'
+import PostNavbar from './_components/PostNavbar'
 
 type Props = {
   params: { slug: string }
@@ -12,9 +14,9 @@ type Props = {
 export default async function ProjectSlugRoute({ params }: Props) {
   const initial = await loadPost(params.slug)
 
-  // if (draftMode().isEnabled) {
-  //   return <PostPreview params={params} initial={initial} />
-  // }
+  if (draftMode().isEnabled) {
+    return <PostPreview params={params} initial={initial} />
+  }
 
   if (!initial.data) {
     notFound()
@@ -22,5 +24,16 @@ export default async function ProjectSlugRoute({ params }: Props) {
   const supabase = createClient()
   const user = await getUser(supabase)
 
-  return <PostPage data={initial.data} />
+  return (
+    <>
+      <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start z-[10]">
+        <Suspense fallback={<h1>Loading navbar</h1>}>
+          {initial.data._id && (
+            <PostNavbar title={initial.data.title} post_id={initial.data._id} />
+          )}
+        </Suspense>
+      </div>
+      <PostPage data={initial.data} />
+    </>
+  )
 }

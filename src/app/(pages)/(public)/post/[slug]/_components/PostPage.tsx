@@ -35,11 +35,6 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
 
   return (
     <>
-      <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start z-[10]">
-        <Suspense fallback={<h1>Loading navbar</h1>}>
-          {_id && <PostNavbar title={title} post_id={_id} />}
-        </Suspense>
-      </div>
       <article className="max-w-4xl mx-auto">
         {/* Post content */}
         <div className=" mx-auto my-36 px-4  space-y-24  ">
