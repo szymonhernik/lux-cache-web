@@ -383,16 +383,18 @@ export async function updatePasswordInAccount(formData: FormData) {
   const passwordConfirm = String(formData.get('passwordConfirm')).trim()
   let redirectPath: string
 
-  const ip = headers().get('x-forwarded-for')
+  // const ip = headers().get('x-forwarded-for')
+  const ja4 = headers().get('x-vercel-ja4-digest')
 
-  console.log('ip address:', ip)
+  // console.log('ip address:', ip)
+  console.log('ja4:', ja4)
 
-  const { success } = await ratelimit.limit(ip ?? 'anonymous')
+  const { success } = await ratelimit.limit(ja4 ?? 'anonymous')
 
   if (!success) {
     redirectPath = getErrorRedirect(
       '/account',
-      'For security purposes you can only update your password twice every 5 minutes.',
+      'For security purposes you can attempt at updating your password three times every 5 minutes.',
       'Please try again later.'
     )
     return redirectPath
