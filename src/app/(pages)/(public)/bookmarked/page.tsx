@@ -9,7 +9,7 @@ export default async function Page() {
   const supabase = createClient()
   const user = await getUser(supabase)
   if (!user) {
-    redirect('/signin')
+    redirect('/redirect?url=/signin/password_signin')
   }
   const { data: bookmarks, error } = await supabase
     .from('bookmarks')

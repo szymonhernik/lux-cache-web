@@ -183,7 +183,7 @@ export default function Pricing({
                     onClick={(e) => {
                       {
                         !subscription && !user
-                          ? router.push('/signin')
+                          ? router.push('/signin/signup')
                           : !subscription && user
                             ? router.push('/checkout' + '?priceId=' + price.id)
                             : router.push('/account')

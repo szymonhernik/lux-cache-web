@@ -42,7 +42,7 @@ export default async function CheckoutPage({
   const user = await getUser(supabase)
 
   if (!user) {
-    return redirect('/signin')
+    return redirect('/redirect?url=/signin/password_signin')
   }
 
   // check if the user has a subscription
