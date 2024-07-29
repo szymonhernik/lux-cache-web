@@ -27,25 +27,25 @@ export default function CustomCheckoutProviderWrapper(props: {
     )
   }
 
-  useEffect(() => {
-    // Check if a checkout page is already open
-    const isCheckoutOpen = localStorage.getItem('checkoutOpen')
-    if (isCheckoutOpen) {
-      alert(
-        'A checkout page is already open in another tab. Please close it first.'
-      )
-      // Redirect to another page or close this tab
-      window.location.href = '/browse' // or some other appropriate action
-    } else {
-      // Set the flag in localStorage
-      localStorage.setItem('checkoutOpen', 'true')
-    }
+  // useEffect(() => {
+  //   // Check if a checkout page is already open
+  //   const isCheckoutOpen = localStorage.getItem('checkoutOpen')
+  //   if (isCheckoutOpen) {
+  //     alert(
+  //       'A checkout page is already open in another tab. Please close it first.'
+  //     )
+  //     // Redirect to another page or close this tab
+  //     window.location.href = '/browse' // or some other appropriate action
+  //   } else {
+  //     // Set the flag in localStorage
+  //     localStorage.setItem('checkoutOpen', 'true')
+  //   }
 
-    // Clean up function to remove the flag when the component is unmounted
-    return () => {
-      localStorage.removeItem('checkoutOpen')
-    }
-  }, [])
+  //   // Clean up function to remove the flag when the component is unmounted
+  //   return () => {
+  //     localStorage.removeItem('checkoutOpen')
+  //   }
+  // }, [])
 
   return (
     <CustomCheckoutProvider stripe={stripePromise} options={{ clientSecret }}>

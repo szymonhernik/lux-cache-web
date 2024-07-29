@@ -28,7 +28,7 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 
 - [ ] don't show premium plans panel in account for users without a current subscription
 - [ ] see why you are getting three trial end and three customers get added when subscribing to stripe
-- [ ] make sure someone can't open two checkouts and subscribe to two plans (maybe in stripe disable mutliple subscription)
+- [x] make sure someone can't open two checkouts and subscribe to two plans (maybe in stripe disable mutliple subscription)
 
 ### Customer emails
 
@@ -46,11 +46,11 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [x] Horizontal scrolling browse page
 - [x] Design switching between list and grid view on mobile
 - [x] grid that works in Arc doesnt work anywhere else. make rows by hand depending on the height viewport.
-- [ ] add color variables
+- [x] add color variables
 - [x] mobile menu: not closing after clicking on the link
 - [x] Search dialog with sample data fetch (server side-reading searchParams)
 - [x] clean up the code
-- [ ] Create pages for search results
+- [x] Create pages for search results
 - [x] Create pages for artists.
 - [x] "infinite scroll" (w/ tanstack infinite scroll lib)
 - [x] routes - tabs
@@ -72,9 +72,9 @@ Template repo: https://github.com/vercel/nextjs-subscription-payments
 - [ ] Style pages
 - [x] User login flow
 - [x] breadcrumbs (w/shadcn)
-- [ ] after login the browse page doesnt get updated subscription data.
-- [ ] toaster is below dialog
-- [ ] when you click login and the password is good and then try to close the modal is not closing but going back to the same modal and then you need to click again and only then it closes
+- [x] after login the browse page doesnt get updated subscription data.
+- [x] toaster is below dialog
+- [x] when you click login and the password is good and then try to close the modal is not closing but going back to the same modal and then you need to click again and only then it closes (switch from router.push to router.replace)
 
 ### Supabase
 
@@ -118,10 +118,10 @@ TODAY:
 - [x] Set up Stripe (checkout, api points, webhooks)
 - [ ] clean up billing info zod file (too much nesting and error scenarios)
 - [ ] "taint" (server-only)
-- [ ] Error management (w/ Sentry) https://www.youtube.com/watch?v=FmezY-vYlkg
-- [ ] Feedback button (w/ Sentry https://www.youtube.com/watch?v=8CdKgnErqQM)
+- [x] Error management (w/ Sentry) https://www.youtube.com/watch?v=FmezY-vYlkg
+- [x] Feedback button (w/ Sentry https://www.youtube.com/watch?v=8CdKgnErqQM)
 - [ ] Analytics (posthog)
-- [ ] Ratelimiting (upstash)
+- [x] Ratelimiting (upstash)
 
 ### Before going into production
 
@@ -129,7 +129,7 @@ TODAY:
 - [ ] Configure resend with Lux Cache email
 - [ ] cookies info and how it works
 - [ ] Mux billing and card details
-- [ ] run videos and audio through bunny cdn
+- [x] run videos and audio through bunny cdn
 - [ ] https://www.youtube.com/watch?v=nSOmL2DxzbU (using posthog)
 
 #### Future improvements
