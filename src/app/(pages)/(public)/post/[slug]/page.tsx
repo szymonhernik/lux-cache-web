@@ -4,9 +4,10 @@ import PostPreview from './_components/PostPreview'
 import { PostPage } from './_components/PostPage'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { getUser } from '@/utils/supabase/queries'
+import { getUser, getUserTier } from '@/utils/supabase/queries'
 import { Suspense } from 'react'
 import PostNavbar from './_components/PostNavbar'
+import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 
 type Props = {
   params: { slug: string }
@@ -23,6 +24,13 @@ export default async function ProjectSlugRoute({ params }: Props) {
   }
   const supabase = createClient()
   const user = await getUser(supabase)
+  const userTierObject = await getUserTier(supabase)
+  const userTier = userTierObject?.userTier
+  const canAccess = canAccessPost(userTier, initial.data.minimumTier)
+
+  if (!canAccess) {
+    redirect(`/browse/preview/${params.slug}`)
+  }
 
   return (
     <>

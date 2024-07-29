@@ -29,7 +29,7 @@
     --secondary-foreground: 0 0% 45%;
 
     --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
+    --muted-foreground: 240 3.8% 86.1%;
 
     --accent: 240 4.8% 95.9%;
     --accent-foreground: 240 5.9% 10%;
@@ -91,9 +91,9 @@
   /* @apply outline-none ring-2 ring-pink-500 ring-opacity-50; */
 }
 
-*:focus:not(ol) {
+/* *:focus:not(ol) {
   @apply outline-none ring-2 ring-black ring-opacity-50;
-}
+} */
 
 html {
   height: 100%;

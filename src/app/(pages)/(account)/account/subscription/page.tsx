@@ -31,14 +31,15 @@ export default async function Page() {
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
-              <BillingInfoFetchZod subscription={subscription} />
-            </Suspense>
-            <Suspense fallback={<BillingInfoScheleton />}>
               <PremiumPlansPanel
                 products={products ?? []}
                 subscription={subscription}
               />
             </Suspense>
+            <Suspense fallback={<BillingInfoScheleton />}>
+              <BillingInfoFetchZod subscription={subscription} />
+            </Suspense>
+
             <UpdateBillingAddress subscription={subscription} />
             {/* <Suspense fallback={<BillingInfoScheleton />}>
 

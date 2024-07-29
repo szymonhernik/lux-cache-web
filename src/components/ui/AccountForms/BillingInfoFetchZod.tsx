@@ -52,7 +52,7 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
         subscriptionId,
         { expand: ['default_payment_method'] }
       )
-      console.log('customer payment method', existingSubscription)
+
       if (existingSubscription) {
         const validatedData = SubscriptionSchema.safeParse(existingSubscription)
 

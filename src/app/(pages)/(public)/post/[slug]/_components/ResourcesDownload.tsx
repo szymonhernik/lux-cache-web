@@ -38,8 +38,6 @@ export default function ResourcesDownload(props: PropsType) {
     return sizeInMB.toFixed(2) + ' MB'
   }
 
-  console.log('downloadFiles', downloadFiles)
-
   return (
     <Dialog>
       <DialogTrigger>

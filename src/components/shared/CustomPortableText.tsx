@@ -158,6 +158,13 @@ export function CustomPortableText({
           </div>
         )
       },
+      mainBody: ({ value }) => {
+        return (
+          <div className="post-content space-y-5">
+            <PortableText value={value.body} components={components} />
+          </div>
+        )
+      },
       postFooter: ({ value }) => {
         return (
           <div className="post-footer space-y-2 mt-16">

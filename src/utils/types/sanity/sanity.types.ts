@@ -1596,11 +1596,158 @@ export type PostsBySeriesSlugQueryResult = {
   } | null
 }
 // Variable: pageBySlugQuery
-// Query:     *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,  }
+// Query:     *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    pageContent[]{      ...,      _type == 'postContent' => {        ...,      }    }  }
 export type PageBySlugQueryResult = {
   _id: string
   title: string | null
   slug: string | null
+  pageContent: Array<
+    | {
+        _key: string
+        _type: 'faq'
+        faqItems?: Array<{
+          question?: string
+          answer?: Array<
+            | ({
+                _key: string
+              } & TemplateText)
+            | {
+                children?: Array<
+                  | {
+                      asset?: {
+                        _ref: string
+                        _type: 'reference'
+                        _weak?: boolean
+                        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+                      }
+                      hotspot?: SanityImageHotspot
+                      crop?: SanityImageCrop
+                      _type: 'inlineicon'
+                      _key: string
+                    }
+                  | {
+                      marks?: Array<string>
+                      text?: string
+                      _type: 'span'
+                      _key: string
+                    }
+                >
+                style?: 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+                listItem?: 'bullet'
+                markDefs?: Array<{
+                  href?: string
+                  _type: 'link'
+                  _key: string
+                }>
+                level?: number
+                _type: 'block'
+                _key: string
+              }
+          >
+          _type: 'faqItem'
+          _key: string
+        }>
+      }
+    | {
+        _key: string
+        _type: 'mainBody'
+        body?: Array<
+          | ({
+              _key: string
+            } & TemplateText)
+          | {
+              children?: Array<
+                | {
+                    asset?: {
+                      _ref: string
+                      _type: 'reference'
+                      _weak?: boolean
+                      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+                    }
+                    hotspot?: SanityImageHotspot
+                    crop?: SanityImageCrop
+                    _type: 'inlineicon'
+                    _key: string
+                  }
+                | {
+                    marks?: Array<string>
+                    text?: string
+                    _type: 'span'
+                    _key: string
+                  }
+              >
+              style?: 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+              listItem?: 'bullet'
+              markDefs?: Array<{
+                href?: string
+                _type: 'link'
+                _key: string
+              }>
+              level?: number
+              _type: 'block'
+              _key: string
+            }
+        >
+      }
+    | {
+        _key: string
+        _type: 'mentorsGallery'
+        galleryItems?: Array<{
+          name?: string
+          image?: {
+            asset?: {
+              _ref: string
+              _type: 'reference'
+              _weak?: boolean
+              [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+            }
+            hotspot?: SanityImageHotspot
+            crop?: SanityImageCrop
+            alt?: string
+            _type: 'image'
+          }
+          description?: Array<
+            | ({
+                _key: string
+              } & TemplateText)
+            | {
+                children?: Array<
+                  | {
+                      asset?: {
+                        _ref: string
+                        _type: 'reference'
+                        _weak?: boolean
+                        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+                      }
+                      hotspot?: SanityImageHotspot
+                      crop?: SanityImageCrop
+                      _type: 'inlineicon'
+                      _key: string
+                    }
+                  | {
+                      marks?: Array<string>
+                      text?: string
+                      _type: 'span'
+                      _key: string
+                    }
+                >
+                style?: 'h1' | 'h2' | 'h3' | 'h4' | 'normal'
+                listItem?: 'bullet'
+                markDefs?: Array<{
+                  href?: string
+                  _type: 'link'
+                  _key: string
+                }>
+                level?: number
+                _type: 'block'
+                _key: string
+              }
+          >
+          _type: 'galleryItem'
+          _key: string
+        }>
+      }
+  > | null
 } | null
 // Variable: settingsQuery
 // Query:   *[_type == "settings"][0]{    ogImage  }

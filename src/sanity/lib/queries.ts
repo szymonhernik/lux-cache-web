@@ -325,6 +325,15 @@ export const pageBySlugQuery = groq`
     _id,
     title,
     "slug": slug.current,
+    pageContent[]{
+      ...,
+      _type == 'mainBody' => {
+        ...,
+      },
+      _type == 'faq' => {
+        ...,
+      }
+    }
   }
 
 `

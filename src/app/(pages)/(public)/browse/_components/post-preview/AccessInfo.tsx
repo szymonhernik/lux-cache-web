@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 interface Props {
   minimumTier: '0' | '1' | '2' | '3'
   canAccess: boolean | null
@@ -28,7 +30,9 @@ export default function AccessInfo(props: Props) {
   return (
     <>
       <p>This content is for: {accessibleTitles}</p>
-      <button className="underline">Subscribe</button>
+      <Link href={'/pricing'} className="underline">
+        Subscribe
+      </Link>
     </>
   )
 }

@@ -68,7 +68,7 @@ export default function LoginButtonTest() {
               <p className="font-semibold">{session.user.email}</p>
 
               <ul
-                className="space-y-1"
+                className="flex flex-col gap-1"
                 onClick={() => {
                   setOpenAccountPanel(false)
                 }}

@@ -39,7 +39,7 @@ export const getUserTier = cache(async (supabase: SupabaseClient) => {
 
   if (error) {
     console.error('Error fetching subscription:', error)
-    return null // Return Free tier in case of error
+    return { userTier: 0, productName: 'free' }
   }
 
   if (subscription) {
