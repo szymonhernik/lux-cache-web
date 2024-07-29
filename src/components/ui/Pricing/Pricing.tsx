@@ -229,13 +229,12 @@ export default function Pricing({
                       )}
                     </Button>
                     {plansFeatures && plansFeatures[index].planDescription && (
+                      // @ts-ignore
                       <CustomPortableTextPages
-                        paragraphClasses=""
+                        // @ts-ignore
                         value={plansFeatures[index].planDescription}
                       />
                     )}
-
-                    {/* <p className="mt-4 text-zinc-300">{product.description}</p> */}
 
                     {!subscription &&
                       metadata.trial_allowed &&
