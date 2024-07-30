@@ -143,6 +143,7 @@ export default function BillingInfo({
 
   return (
     <Card
+      // key={Math.random()}
       title="Payment Method"
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
@@ -166,6 +167,7 @@ export default function BillingInfo({
                     // if !showPaymentElement show DisplayPaymentData
                     // Display available cards
                     <DisplayPaymentData
+                      key={Math.random()}
                       subscriptionId={subscriptionId}
                       paymentMethods={paymentMethods}
                       subscriptionDefaultPaymentMethodId={
