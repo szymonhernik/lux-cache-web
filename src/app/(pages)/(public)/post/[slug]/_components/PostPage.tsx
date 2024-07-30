@@ -39,8 +39,9 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
         {/* Post content */}
         <div className=" mx-auto my-36 px-4  space-y-24  ">
           <section className="gap-8 text-center  space-y-4">
-            {/* <ContentOverview publishedAt={publishedAt} filters={filters} /> */}
-            <p className="text-sm tracking-tight">May 21, 2024</p>
+            {publishedAt && (
+              <p className="text-sm tracking-tight">{publishedAt}</p>
+            )}
             <FiltersPreview filters={filters} variantClass={'text-xs '} />
 
             {introTextBlocks && introTextBlocks.length > 0 && (

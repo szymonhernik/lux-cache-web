@@ -3,6 +3,7 @@ import Link from 'next/link'
 interface Props {
   title: string | null | undefined
   subtitle: string | null | undefined
+
   artistList:
     | Array<{
         _key: string
