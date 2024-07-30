@@ -65,11 +65,11 @@ export default function PreviewVideo(props: Props) {
           onLoadedData={handleVideoLoad}
         >
           <source
-            src={`https://cloud-lc.b-cdn.net/video/upload/w_500/q_80/f_webm/${video.public_id}.webm`}
+            src={`https://cloud-lc.b-cdn.net/video/upload/w_400/q_70/f_webm/${video.public_id}.webm`}
             type="video/webm"
           />
           <source
-            src={`https://cloud-lc.b-cdn.net/video/upload/w_500/q_80/f_mp4/${video.public_id}.mp4`}
+            src={`https://cloud-lc.b-cdn.net/video/upload/w_400/q_70/f_mp4/${video.public_id}.mp4`}
             type="video/mp4"
           />
           Your browser does not support the video tag.

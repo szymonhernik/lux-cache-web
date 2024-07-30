@@ -102,7 +102,7 @@ export default function PremiumPlansPanel(props: Props) {
               </p>
             </div>
           )}
-          <RenewSubscriptionDialog subscription={subscription} />
+          {/* <RenewSubscriptionDialog subscription={subscription} /> */}
         </div>
       </Card>
     )
@@ -328,7 +328,7 @@ function CancelSubscriptionDialog({
           <DialogTitle>
             Are you sure you want to cancel your subscription?
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="text-secondary-foreground">
             Your subscription and the premium features will remain available to
             you until the end of the billing period. After your subscription is
             cancelled your premium features will be cancelled but your bookmarks

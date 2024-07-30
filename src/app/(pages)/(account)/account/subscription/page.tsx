@@ -14,6 +14,8 @@ import {
 import BillingAddress from '../_components/BillingAddress'
 import UpdateBillingAddress from '../_components/UpdateBillingAddress'
 
+export const dynamic = 'force-dynamic'
+
 export default async function Page() {
   const supabase = createClient()
 

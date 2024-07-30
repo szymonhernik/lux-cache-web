@@ -14,6 +14,10 @@ const coreConfig = {
       {
         protocol: 'https',
         hostname: 'res.cloudinary.io'
+      },
+      {
+        protocol: 'https',
+        hostname: 'cloud-lc.b-cdn.net'
       }
     ]
   },
