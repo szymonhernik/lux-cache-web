@@ -255,7 +255,7 @@ export async function updateSubscriptionPlan(
 export async function updateSubscriptionDefaultPaymentMethod(
   defaultPaymentMethodId: string,
   subscriptionId: string,
-  redirectPath: string = '/account'
+  redirectPath: string = '/account/subscription'
 ) {
   // Create a checkout session in Stripe
   try {
