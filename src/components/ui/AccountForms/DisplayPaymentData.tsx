@@ -50,6 +50,7 @@ export default function DisplayPaymentData({
       }
       onCardsUpdate()
       router.push(redirectUrl)
+      router.refresh()
     } catch (error) {
       console.error('Error processing payment method action:', error)
     } finally {
