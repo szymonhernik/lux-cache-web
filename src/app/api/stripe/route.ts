@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
         Authorization: `Bearer ${process.env.STRIPE_SECRET_KEY}`
       }
     })
-    console.log('response', response)
 
     const data = await response.json()
     return NextResponse.json(data)

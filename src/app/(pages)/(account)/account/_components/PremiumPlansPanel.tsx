@@ -31,7 +31,7 @@ interface Props {
 export default function PremiumPlansPanel(props: Props) {
   const { products, subscription } = props
 
-  console.log('subscription', subscription)
+  // console.log('subscription', subscription)
 
   const isScheduledForCancellation = subscription?.cancel_at_period_end
 

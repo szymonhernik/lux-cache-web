@@ -26,6 +26,7 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
   if (!subscription) {
     return null
   }
+  console.log('BBBB')
 
   let defaultPaymentMethodData = null
   let stripeCustomerId = null
@@ -83,7 +84,6 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
               return
             }
 
-            console.log('Retrieved backup data')
             const retrieveBackupPaymentMethod =
               await stripe.paymentMethods.retrieve(
                 validatedStripeCustomerData.data.invoice_settings

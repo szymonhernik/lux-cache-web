@@ -10,7 +10,7 @@ export default function Page({
     error_description: string
   }
 }) {
-  console.log('searchParams', searchParams)
+  // console.log('searchParams', searchParams)
   //   searchParams {
   //     url: '/browse?status=Success!',
   //     status_description: 'You are now signed in.'
