@@ -12,6 +12,7 @@ export default async function PostNavbar(props: Props) {
   const { title, post_id } = props
   const supabase = createClient()
   const user = await getUser(supabase)
+  //freeze for 3 seconds
 
   const { data: bookmarks } = await supabase
     .from('bookmarks')

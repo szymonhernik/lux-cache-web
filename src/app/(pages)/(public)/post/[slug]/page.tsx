@@ -8,12 +8,14 @@ import { getUser, getUserTier } from '@/utils/supabase/queries'
 import { Suspense } from 'react'
 import PostNavbar from './_components/PostNavbar'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
+import { LoadingSpinner } from '@/components/Spinner'
 
 type Props = {
   params: { slug: string }
 }
 export default async function ProjectSlugRoute({ params }: Props) {
   const initial = await loadPost(params.slug)
+  // freeze for 20 sec
 
   if (draftMode().isEnabled) {
     return <PostPreview params={params} initial={initial} />
@@ -27,7 +29,6 @@ export default async function ProjectSlugRoute({ params }: Props) {
   const userTierObject = await getUserTier(supabase)
   const userTier = userTierObject?.userTier
   const canAccess = canAccessPost(userTier, initial.data.minimumTier)
-
   if (!canAccess) {
     redirect(`/browse/preview/${params.slug}`)
   }
@@ -35,7 +36,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
   return (
     <>
       <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start z-[10]">
-        <Suspense fallback={<h1>Loading navbar</h1>}>
+        <Suspense fallback={<LoadingSpinner className="animate-spin " />}>
           {initial.data._id && (
             <PostNavbar title={initial.data.title} post_id={initial.data._id} />
           )}
