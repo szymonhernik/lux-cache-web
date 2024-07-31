@@ -35,7 +35,6 @@ export default async function PostNavbar(props: Props) {
           </>
         )}
       </div>
-      <h1 className="text-shadow text-sm font-semibold">{title}</h1>
     </>
   )
 }

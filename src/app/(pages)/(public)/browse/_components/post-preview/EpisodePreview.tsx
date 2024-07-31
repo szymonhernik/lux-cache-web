@@ -121,7 +121,12 @@ function PostReadButton({
 }) {
   if (canAccess) {
     return (
-      <Link href={`/post/${slug}`} className="self-center">
+      <Link
+        href={`/post/${slug}`}
+        className="self-center"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
         <Button className="" size={'lgIcon'}>
           Read
         </Button>
