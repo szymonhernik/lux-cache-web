@@ -42,7 +42,11 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
             {publishedAt && (
               <p className="text-sm tracking-tight">{publishedAt}</p>
             )}
-            <FiltersPreview filters={filters} variantClass={'text-xs '} />
+            <FiltersPreview
+              filters={filters}
+              variantClass={'text-xs '}
+              variantWrapperClass={'justify-center'}
+            />
 
             {introTextBlocks && introTextBlocks.length > 0 && (
               <div className="intro-text-container font-neue text-lg md:text-xl text-left">

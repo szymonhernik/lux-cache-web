@@ -84,6 +84,7 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       siteName: meta.title
     },
+    themeColor: '#FAFAFA',
     twitter: {
       card: 'summary_large_image',
       site: '@Vercel',
