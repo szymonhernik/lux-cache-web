@@ -24,6 +24,7 @@ export default function LoginButtonTest() {
   const supabase = createClient()
   const router = useRouter()
   const pathname = usePathname()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const [openAccountPanel, setOpenAccountPanel] = useState(false)
 
@@ -37,14 +38,20 @@ export default function LoginButtonTest() {
     getSession()
   }, [pathname])
 
+  const handleLogout = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoggingOut(true)
+    try {
+      const result = await SignOut(new FormData(e.target as HTMLFormElement))
+      router.push(result)
+    } catch (error) {
+      console.error('Logout error:', error)
+    }
+    setOpenAccountPanel(false)
+    setIsLoggingOut(false)
+  }
+
   return session ? (
-    // <form onSubmit={(e) => handleRequest(e, SignOut, router)}>
-    //   <button type="submit" className={s.link}>
-    //     Sign out
-    //   </button>
-    // </form>
-    // <button onClick={()=> {}}>Account</button>
-    // <button>Account</button>
     <div
       className={clsx(' ', {
         'w-screen h-screen text-white bg-black backdrop-blur-sm bg-opacity-50 flex  justify-end ':
@@ -93,14 +100,10 @@ export default function LoginButtonTest() {
                   <li>Help</li>
                 </Link>
               </ul>
-              <form
-                onSubmit={(e) => {
-                  handleRequest(e, SignOut, router)
-
-                  setOpenAccountPanel(false)
-                }}
-              >
-                <button type="submit">Log out</button>
+              <form onSubmit={handleLogout}>
+                <button type="submit" disabled={isLoggingOut}>
+                  {isLoggingOut ? 'Logging out...' : 'Log out'}
+                </button>
               </form>
             </div>
           )}
