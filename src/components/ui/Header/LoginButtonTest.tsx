@@ -117,9 +117,7 @@ export default function LoginButtonTest() {
         >
           <p className="h-12 pt-1 lg:pt-0">Account</p>
 
-          <div className="hidden lg:block">
-            <ChevronLeftOwn />
-          </div>
+          <div className="hidden lg:block">{/* <ChevronLeftOwn /> */}</div>
         </button>
       )}
     </div>

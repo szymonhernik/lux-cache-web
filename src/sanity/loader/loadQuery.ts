@@ -146,7 +146,7 @@ export function loadInitalPosts(paginationParams: {
       lastId: paginationParams.lastId,
       limit: paginationParams.limit
     },
-    { next: { tags: ['post'] } }
+    { next: { tags: ['post', 'home'] } }
   )
 }
 

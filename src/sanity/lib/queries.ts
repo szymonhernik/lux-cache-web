@@ -64,7 +64,15 @@ export const postsQuery = groq`{
 export const initialPostsQuery = groq`{
   "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {
     ${postQueryFields}
-  }
+  },
+  "highlight": *[_type == "home"][0]{
+    highlight->{
+      _type,
+      "slug": slug.current,
+      coverImage,
+      title,
+    },
+  },
 }`
 
 export const morePostsQuery = groq`{

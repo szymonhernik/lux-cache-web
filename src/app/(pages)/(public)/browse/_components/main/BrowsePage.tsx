@@ -35,7 +35,7 @@ export default async function BrowsePage({
             <Toolbar />
           </div>
           <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[8]  lg:sticky top-0  left-0 bg-surface-brand">
-            <DynamicDisplayBar />
+            {data && <DynamicDisplayBar data={data.highlight} />}
           </section>
           <section data-listattr={true} className="lg:grow lg:mb-16 ">
             {draftMode().isEnabled ? (
