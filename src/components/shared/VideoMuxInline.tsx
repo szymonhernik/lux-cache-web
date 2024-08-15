@@ -9,7 +9,7 @@ export default function VideoMuxInline({ value }: { value: any }) {
             playbackId={value.videoFile.asset.playbackId}
             accent-color="#000000"
           />
-          {value.videoLabel && <caption>{value.videoLabel}</caption>}
+          {value.videoLabel && <p>{value.videoLabel}</p>}
         </div>
       )}
     </>

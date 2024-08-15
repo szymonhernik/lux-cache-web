@@ -75,13 +75,13 @@ export function CustomPortableText({
             {value.pdfFile.asset.url && (
               <div className="embed-pdf w-full ">
                 <iframe
-                  src={value.pdfFile.asset.url}
-                  className="w-full min-h-[80vh]"
+                  src={`${value.pdfFile.asset.url}#view=FitH`}
+                  className="w-full aspect-[3/4] max-w-full"
                 ></iframe>
                 {value.pdfFile.asset.originalFilename && (
-                  <caption className="text-sm block mt-6 font-semibold text-gray-500">
+                  <p className="text-sm mx-auto text-center block mt-6 font-semibold text-gray-500">
                     {value.pdfFile.asset.originalFilename}
-                  </caption>
+                  </p>
                 )}
               </div>
             )}
