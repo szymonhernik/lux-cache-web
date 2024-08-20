@@ -10,6 +10,11 @@ import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import { limitNumber } from '@/utils/fetch-helpers/client'
 import PostWrapper from './PostWrapper'
+import {
+  EpisodeSkeleton,
+  EpisodeSkeletonListView,
+  EpisodesSkeletonTwo
+} from '@/components/ui/skeletons/skeletons'
 
 export default function LoadMore({
   initialPosts,
@@ -30,7 +35,7 @@ export default function LoadMore({
   isDesktop: boolean
   isTouchDevice: boolean
 }) {
-  const { ref: loadMoreRef, inViewport } = useInViewport()
+  const { ref, inViewport } = useInViewport()
 
   const searchParams = useSearchParams()
   const filters = searchParams.get('filter')
@@ -53,7 +58,6 @@ export default function LoadMore({
   useEffect(() => {
     console.log('inViewport', inViewport)
     if (inViewport && !isFetchingNextPage && isDesktop) {
-      console.log('Fetching new')
       fetchNextPage()
     }
   }, [inViewport])
@@ -100,16 +104,14 @@ export default function LoadMore({
           </GridWrapperDiv>
         ))}
       {/* if the last page in data has less than 8 results stop rendering load more  */}
-      {data && data.pages[data.pages.length - 1].length < limitNumber ? (
-        <p></p>
-      ) : (
+      {data && data.pages[data.pages.length - 1].length < limitNumber ? null : (
         <>
-          <button
-            ref={loadMoreRef}
-            className="hidden lg:block w-full  items-center text-center hover:underline bg-surface-brand"
-          >
-            Loading...
-          </button>
+          <div ref={ref} className="hidden lg:flex flex-col ">
+            <EpisodeSkeleton />
+            <div className="screen-wide-short:hidden">
+              <EpisodeSkeleton />
+            </div>
+          </div>
 
           <button
             onClick={handleLoadMore}
