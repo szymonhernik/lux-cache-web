@@ -12,7 +12,6 @@ import YouTubeEmbed from './YouTubeEmbed'
 import SpotifyEmbed from './SpotifyEmbed'
 import AudioInlineMux from './AudioInlineMux'
 import VideoMuxInline from './VideoMuxInline'
-import { PageContent } from '@/utils/types/sanity'
 
 export function CustomPortableText({
   paragraphClasses,

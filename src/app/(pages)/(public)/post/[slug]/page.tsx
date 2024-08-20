@@ -8,7 +8,6 @@ import { getUser, getUserTier } from '@/utils/supabase/queries'
 import { Suspense } from 'react'
 import PostNavbar from './_components/PostNavbar'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
-import { LoadingSpinner } from '@/components/Spinner'
 import { Button } from '@/components/shadcn/ui/button'
 
 type Props = {

@@ -14,7 +14,7 @@ export default function FiltersPreview(props: Props) {
     <>
       {filters && filters.length > 0 ? (
         <div
-          className={`mt-2 flex flex-wrap justify-start gap-2 ${variantWrapperClass}`}
+          className={`mt-2 mb-6 flex flex-wrap justify-start gap-2 ${variantWrapperClass}`}
         >
           {filters?.map((filter) => (
             <p

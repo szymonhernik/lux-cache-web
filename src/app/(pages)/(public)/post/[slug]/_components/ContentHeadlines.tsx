@@ -19,7 +19,7 @@ interface Props {
 export default function ContentHeadlines(props: Props) {
   const { title, artistList, subtitle } = props
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-2">
       <h1 className="text-center text-3xl tracking-tight text-pretty font-semibold uppercase">
         {title}
       </h1>
