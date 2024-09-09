@@ -1,0 +1,5 @@
+.hamburgerIcon > div > div {
+  height: 2px !important;
+  width: 38px !important;
+  left: 5px !important;
+}

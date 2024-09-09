@@ -1,17 +1,14 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Hamburger from 'hamburger-react'
 import Link from 'next/link'
-import SignInOutLink from './SignInOutLink'
 import Logo from '@/components/icons/Logo'
 
-import { User } from '@supabase/supabase-js'
 import clsx from 'clsx'
 import { usePathname, useRouter } from 'next/navigation'
-import { handleRequest } from '@/utils/auth-helpers/client'
-import { SignOut } from '@/utils/auth-helpers/server'
-import LoginButtonTest from './LoginButtonTest'
+
+import s from './Navbar.module.css'
 
 // interface NavbarProps {
 //   user: User | null
@@ -34,34 +31,36 @@ export default function Navbar() {
   const close = () => setIsOpen(false)
 
   return (
-    <div className="z-[20]  w-full sticky top-0  right-0 lg:w-navbarDesktop lg:static  bg-secondary ">
-      <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around md:w-navbarDesktop">
+    <div
+      className={` z-[20]  w-full sticky top-0  right-0 lg:w-navbarDesktop lg:static  bg-secondary `}
+    >
+      <div className="sticky top-0 right-0 z-10 flex w-full flex-col  lg:bottom-0 lg:z-auto lg:space-around lg:w-navbarDesktop">
         <div className="flex h-navbar-mobile items-center px-4 py-4 lg:h-navbar">
           <Link
             href="/"
-            className="group flex w-min mx-auto items-center justify-center gap-x-2.5"
+            className="group flex w-fit mx-auto items-center justify-center gap-x-2.5 bg-secondary"
             onClick={close}
           >
-            <div className="bg-secondary ">
-              <Logo />
+            <div className="hidden lg:block">
+              <Logo width="140" height="50" />
+            </div>
+            <div className="block lg:hidden">
+              <Logo width="100" height="40" />
             </div>
           </Link>
         </div>
         <button
           type="button"
-          className="group absolute left-0 top-0 flex h-navbar-mobile items-center gap-x-2 px-4 lg:hidden"
+          className={`${s.hamburgerIcon} group absolute left-0 top-0 flex h-navbar-mobile items-center gap-x-2 px-4 lg:hidden`}
           onClick={() => setIsOpen(!isOpen)}
         >
           <Hamburger
-            size={24}
+            size={32}
             color="#000"
             toggled={isOpen}
             toggle={setIsOpen}
           />
         </button>
-        {/* <div className="fixed lg:hidden top-0 right-0 lg:right-navbarWidth z-[100] lg:z-[10] min-h-[4rem] flex items-center">
-          <LoginButtonTest />
-        </div> */}
 
         <div
           className={clsx(
@@ -73,7 +72,7 @@ export default function Navbar() {
             }
           )}
         >
-          <nav className="space-y-8 p-4 ">
+          <nav className="space-y-8 p-4 lg:-mt-16 ">
             <div className="space-y-4">
               {links.map((link) => {
                 return (
@@ -90,7 +89,7 @@ export default function Navbar() {
                       setIsOpen(!isOpen)
                     }}
                     className={clsx(
-                      'flex  grow items-center text-xl gap-2  ',
+                      'flex  grow items-center text-2xl gap-2  ',
                       {
                         'text-primary-foreground': pathname === link.href
                       },
