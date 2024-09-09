@@ -115,7 +115,7 @@ export default function LoginButtonTest() {
             setOpenAccountPanel(true)
           }}
         >
-          <p className="h-12 pt-1 lg:pt-0">Account</p>
+          <p className="h-12 pt-1 lg:pt-0 uppercase italic">Account</p>
 
           <div className="hidden lg:block">{/* <ChevronLeftOwn /> */}</div>
         </button>

@@ -97,7 +97,7 @@ export default function EpisodePreview(props: Props) {
           </div>
 
           <div>
-            <p className="font-neue">{ogDescription}</p>
+            <p className="font-neue italic">{ogDescription}</p>
           </div>
 
           {slug && (
@@ -128,14 +128,14 @@ function PostReadButton({
         target="_blank"
       >
         <Button className="" size={'lgIcon'}>
-          Read
+          Open
         </Button>
       </Link>
     )
   } else {
     return (
       <Button disabled size={'lgIcon'} className="self-center">
-        <LockClosedIcon className="w-5 h-5" /> <span>Read</span>
+        <LockClosedIcon className="w-5 h-5" /> <span>Open</span>
       </Button>
     )
   }
