@@ -84,12 +84,12 @@ export default function LoginButtonTest() {
                   <li>Account</li>
                 </Link>
                 <Link
-                  href="/bookmarked"
+                  href="/bookmarks"
                   onClick={() => {
                     setOpenAccountPanel(false)
                   }}
                 >
-                  <li>Bookmarked</li>
+                  <li>Bookmarks</li>
                 </Link>
                 <Link
                   href="/help"

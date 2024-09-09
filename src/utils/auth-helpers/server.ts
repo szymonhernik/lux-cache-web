@@ -437,3 +437,39 @@ export async function updatePasswordInAccount(formData: FormData) {
 
   return redirectPath
 }
+
+export async function removeBookmark(formData: FormData) {
+  const postId = formData.get('postId') as string
+
+  const supabase = createClient()
+
+  try {
+    const { error } = await supabase
+      .from('bookmarks')
+      .delete()
+      .eq('post_id', postId)
+
+    if (error) {
+      return getErrorRedirect(
+        '/bookmarks',
+        'Bookmark could not be removed.',
+        error.message
+      )
+    }
+
+    // Revalidate the bookmarks page to reflect the changes
+    revalidatePath('/bookmarks')
+    return getStatusRedirect(
+      '/bookmarks',
+      'Success!',
+      'Bookmark has been removed.'
+    )
+  } catch (error) {
+    console.error('Error removing bookmark:', error)
+    return getErrorRedirect(
+      '/bookmarks',
+      'Hmm... Something went wrong.',
+      'Bookmark could not be removed.'
+    )
+  }
+}

@@ -35,32 +35,5 @@ export default async function Page() {
     posts = bookmarkedPosts.data
   }
 
-  return (
-    <BookmarksLayout posts={posts} />
-    // <section className="flex flex-col">
-    //   <div className="mx-auto container my-36 px-4  space-y-8  ">
-    //     {posts && posts.length > 0 ? (
-    //       posts.map((post) => {
-    //         if (post.slug) {
-    //           return (
-    //             <Link key={post._id} href={`/post/${post.slug}`}>
-    //               <h2 className="font-semibold hover:underline">
-    //                 {post.title}
-    //               </h2>
-    //             </Link>
-    //           )
-    //         } else {
-    //           return (
-    //             <h2 key={post._id} className="font-semibold">
-    //               {post.title}
-    //             </h2>
-    //           )
-    //         }
-    //       })
-    //     ) : (
-    //       <h1>No bookmarks</h1>
-    //     )}
-    //   </div>
-    // </section>
-  )
+  return <BookmarksLayout posts={posts} />
 }
