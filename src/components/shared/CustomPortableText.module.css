@@ -1,3 +1,36 @@
 .emphasis em {
   @apply font-neue;
 }
+
+.pdfWrapper {
+  @apply relative;
+}
+
+@media (min-width: 1300px) {
+  .pdfWrapper {
+    max-width: 64rem;
+    width: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+/* .pdfWrapper {
+  position: relative;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .pdfWrapper {
+    max-width: 48rem;
+    width: 115%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 1280px) {
+  .pdfWrapper {
+    max-width: 64rem;
+  }
+} */

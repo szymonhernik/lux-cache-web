@@ -212,7 +212,14 @@ export const postBySlugQuery = groq`
     },
     publishedAt, 
     "slug": slug.current,
-    coverImage,
+    coverImage{
+      _type,
+      asset->{
+        _id,
+        url,
+        "lqip": metadata.lqip,
+      }
+    },
     minimumTier,
     ogDescription,
     filters[]->{

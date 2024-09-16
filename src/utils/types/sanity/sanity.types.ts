@@ -1220,7 +1220,7 @@ export type PricesQueryResult = {
   }>
 } | null
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage,    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent[]{      ...,      _type == 'pdfEmbed' => {        ...,        pdfFile {          ...,          asset-> {          url,          originalFilename          }        }      },      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent[]{      ...,      _type == 'pdfEmbed' => {        ...,        pdfFile {          ...,          asset-> {          url,          originalFilename          }        }      },      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1249,15 +1249,12 @@ export type PostBySlugQueryResult = {
   publishedAt: string | null
   slug: string | null
   coverImage: {
-    asset?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-    }
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
     _type: 'image'
+    asset: {
+      _id: string
+      url: string | null
+      lqip: string | null
+    } | null
   } | null
   minimumTier: '0' | '1' | '2' | '3' | null
   ogDescription: string | null
