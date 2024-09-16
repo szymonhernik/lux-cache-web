@@ -18,6 +18,7 @@ import {
   PostBySlugModalQueryResult,
   PostsQueryResult
 } from '@/utils/types/sanity/sanity.types'
+import Image from 'next/image'
 
 type Props = {
   data:
@@ -55,23 +56,40 @@ export default function EpisodePreview(props: Props) {
 
       <div className="bg-yellow-200 md:grow md:w-1/2 min-h-[30dvh]  h-[30dvh] md:h-[80dvh] flex items-center justify-center sticky  top-0 left-0 z-[0]">
         {previewImage && (
-          <ImageBoxExpanded
-            image={previewImage}
-            alt="Image preview of the post"
-            classesWrapper="absolute z-[0] top-0 left-0 h-full"
-            width={600}
-            height={600}
-            size="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
+          <>
+            <div className="w-full overflow-hidden absolute z-[0] top-0 left-0 h-full">
+              {previewImage?.asset?.lqip && (
+                <img
+                  src={previewImage.asset.lqip}
+                  className="h-full w-full blur-[32px] scale-150  z-[-1] object-cover absolute top-0 right-0 bottom-0 left-0"
+                />
+              )}
+            </div>
+            <div className="relative w-full h-full z-[1]">
+              {previewImage?.asset?.url && (
+                <div className="absolute inset-0 flex items-center justify-center p-4">
+                  <div className="relative w-full h-full max-w-full max-h-full">
+                    <Image
+                      className="object-contain"
+                      alt={''}
+                      layout="fill"
+                      src={previewImage.asset.url}
+                      sizes="(max-width: 768px) 90vw, 40vw"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          </>
         )}
         {!canAccess && minimumTier && (
-          <div className="rounded-md z-[10] bg-black  w-4/5 md:h-[70%] text-white py-8 px-6 font-semibold text-sm space-y-4">
+          <div className="absolute rounded-md z-[10] bg-black  w-[calc(100%-2rem)]  md:h-[80%] h-3/4  text-white py-8 px-6 font-semibold text-sm space-y-4">
             <AccessInfo minimumTier={minimumTier} canAccess={canAccess} />
           </div>
         )}
       </div>
       {/* Textual */}
-      <div className="p-4 md:p-8 flex flex-col z-10 bg-white pb-16 mb-16 md:grow md:w-1/2">
+      <div className="p-4 md:p-8 h-full flex flex-col z-10 bg-white pb-16 mb-16 md:grow md:w-1/2">
         <div className="w-full text-right md:sticky md:top-8 md:right-0">
           {onModalDisplayChange ? (
             <button

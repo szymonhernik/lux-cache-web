@@ -51,15 +51,17 @@ const ImageBoxExpanded = ({
       data-sanity={props['data-sanity']}
     >
       {imageUrl && (
-        <Image
-          className="absolute h-full w-full object-cover"
-          alt={alt}
-          width={width}
-          height={height}
-          sizes={size}
-          src={imageUrl}
-          {...imageProps}
-        />
+        <div>
+          <Image
+            className="absolute h-full w-full object-cover"
+            alt={alt}
+            width={width}
+            height={height}
+            sizes={size}
+            src={imageUrl}
+            {...imageProps}
+          />
+        </div>
       )}
     </div>
   )
