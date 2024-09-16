@@ -146,21 +146,18 @@ export default function ListItem({
             'inset-x-0 ': view === 'list'
           })}
         ></div>
-
         {!view && !canAccess && (
           <div className="absolute top-3 right-3 p-2 shadow  bg-opacity-50 backdrop-blur group-hover:bg-neutral-200 transition-colors  ">
             {' '}
             <LockClosedIcon className="min-w-4 min-h-4" />
           </div>
         )}
-
         {!view && item?.coverImage?.asset?.lqip && (
           <img
             src={item.coverImage?.asset.lqip}
             className="h-full w-full blur-[32px] scale-150  z-[-1] object-cover absolute top-0 right-0 bottom-0 left-0"
           />
         )}
-
         {/* On mobile and tablet breakpoints render image in the background*/}
         {!view && isTouchDevice && item?.coverImage?.asset?.url && (
           <Image
@@ -171,7 +168,6 @@ export default function ListItem({
             height={400}
           />
         )}
-
         {!view &&
           !isTouchDevice &&
           entry?.isIntersecting &&
@@ -184,7 +180,6 @@ export default function ListItem({
           )}
         {/* when on touch devices render preview video only if the element has been touched */}
         {/* this prevents the video from being added when the user quickly scrolls through the page */}
-
         {!view && isTouchDevice && shouldRenderVideo && item?.previewVideo && (
           <PreviewVideo
             isTouchDevice={isTouchDevice}
@@ -192,7 +187,6 @@ export default function ListItem({
             isDesktop={isDesktop}
           />
         )}
-
         {/* {!view &&
           isTouchDevice &&
           isTouched &&
@@ -206,25 +200,34 @@ export default function ListItem({
               fullyInView={fullyInView}
             />
           )} */}
-
         {view && (
-          <>
-            <div className="flex-1 pr-4 flex items-start gap-2 ">
-              <h1 className="uppercase font-semibold ">{item.title}</h1>
-              {!canAccess && (
-                <LockClosedIcon className="mt-[2px] min-w-[18px] min-h-[18px] " />
+          <div className="w-full flex flex-col gap-4">
+            <div className="flex justify-between ">
+              <div className="flex-1 pr-4 flex items-start gap-2 ">
+                <h1 className="uppercase font-semibold ">{item.title}</h1>
+                {!canAccess && (
+                  <LockClosedIcon className="mt-[2px] min-w-[18px] min-h-[18px] " />
+                )}
+              </div>
+              {item?.coverImage?.asset?.url && (
+                <Image
+                  className="aspect-square  object-cover w-24 h-24 sm:w-36 sm:h-36 lg:hidden"
+                  src={item.coverImage?.asset.url}
+                  alt={''}
+                  width={160}
+                  height={160}
+                />
               )}
             </div>
-            {item?.coverImage?.asset?.url && (
-              <Image
-                className="aspect-square  object-cover w-24 h-24 sm:w-36 sm:h-36 lg:hidden"
-                src={item.coverImage?.asset.url}
-                alt={''}
-                width={160}
-                height={160}
-              />
-            )}
-          </>
+            <div>
+              <h3 className="uppercase text-secondary-foreground font-semibold text-xs mb-1">
+                Description
+              </h3>
+              <p className="font-neue italic text-sm max-w-4xl">
+                {item.ogDescription}
+              </p>
+            </div>
+          </div>
         )}
       </div>
       {modalOpen && (

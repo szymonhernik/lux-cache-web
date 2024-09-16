@@ -41,7 +41,7 @@ export default function PostWrapper({
       className={clsx(
         'w-full odd:bg-[#D4CACF] even:bg-surface-brand hover:opacity-80',
         {
-          'lg:aspect-[3/1]  lg:max-h-64 ': view === 'list',
+          '  ': view === 'list',
           'aspect-square lg:w-[calc((80vh-4rem)/2)] screen-wide-short:w-[calc(80vh-4rem)]':
             !view
         }
