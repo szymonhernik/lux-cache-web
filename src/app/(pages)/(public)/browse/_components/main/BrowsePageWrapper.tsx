@@ -14,7 +14,7 @@ export default function BrowsePageWrapper({
   return (
     <div
       className={clsx(
-        ' lg:max-w-[calc(100vw-var(--width-navbar))] lg:w-[calc(100vw-var(--width-navbar))] flex flex-col  bg-surface-brand ',
+        ' lg:max-w-[calc(100vw-var(--width-navbar))]  flex flex-col  bg-surface-brand ',
         {
           'lg:h-auto  ': listView === 'list',
           'lg:max-h-screen lg:h-screen ': !listView
