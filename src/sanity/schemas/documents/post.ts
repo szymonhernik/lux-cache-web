@@ -228,6 +228,7 @@ export default defineType({
       of: [{ type: 'reference', to: { type: 'filterItem' } }],
       validation: (rule) => rule.required()
     }),
+
     defineField({
       name: 'downloadFiles',
       type: 'array',
@@ -276,6 +277,31 @@ export default defineType({
       ]
     }),
     defineField({
+      name: 'episodePDF',
+      title: 'Downloadable PDF File',
+      type: 'object',
+      group: ['media', 'content'],
+      fields: [
+        defineField({
+          name: 'file',
+          type: 'file',
+          title: 'PDF File',
+          description: 'Paste your PDF here',
+          options: {
+            accept: 'application/pdf'
+          },
+          validation: (rule) => rule.required()
+        }),
+        defineField({
+          name: 'embedOnPage',
+          type: 'boolean',
+          title: 'Embed on page',
+          description: 'Select if you want the PDF to be embedded on the page',
+          initialValue: false
+        })
+      ]
+    }),
+    defineField({
       name: 'pageContent',
       title: 'Page Content',
       group: 'content',
@@ -296,10 +322,10 @@ export default defineType({
           type: 'postContent',
           description: 'The main body of the post content.'
         }),
-        defineArrayMember({
-          type: 'pdfEmbed',
-          description: 'Embed a PDF document within the post.'
-        }),
+        // defineArrayMember({
+        //   type: 'pdfEmbed',
+        //   description: 'Embed a PDF document within the post.'
+        // }),
         defineArrayMember({
           type: 'postFooter'
         })

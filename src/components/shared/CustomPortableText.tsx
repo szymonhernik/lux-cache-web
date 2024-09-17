@@ -68,27 +68,27 @@ export function CustomPortableText({
       }
     },
     types: {
-      pdfEmbed: ({ value }) => {
-        return (
-          <>
-            {value.pdfFile.asset.url && (
-              <div className="embed-pdf w-full">
-                <div className={s.pdfWrapper}>
-                  <iframe
-                    src={`${value.pdfFile.asset.url}#view=FitH`}
-                    className="w-full aspect-[3/4] max-w-none"
-                  ></iframe>
-                </div>
-                {value.pdfFile.asset.originalFilename && (
-                  <p className="text-sm mx-auto text-center block mt-6 font-semibold text-gray-500">
-                    {value.pdfFile.asset.originalFilename}
-                  </p>
-                )}
-              </div>
-            )}
-          </>
-        )
-      },
+      // pdfEmbed: ({ value }) => {
+      //   return (
+      //     <>
+      //       {value.pdfFile.asset.url && (
+      //         <div className="embed-pdf w-full">
+      //           <div className={s.pdfWrapper}>
+      //             <iframe
+      //               src={`${value.pdfFile.asset.url}#view=FitH`}
+      //               className="w-full aspect-[3/4] max-w-none"
+      //             ></iframe>
+      //           </div>
+      //           {value.pdfFile.asset.originalFilename && (
+      //             <p className="text-sm mx-auto text-center block mt-6 font-semibold text-gray-500">
+      //               {value.pdfFile.asset.originalFilename}
+      //             </p>
+      //           )}
+      //         </div>
+      //       )}
+      //     </>
+      //   )
+      // },
       introText: ({ value }) => {
         // Assuming value.body contains the content for introText
         return (

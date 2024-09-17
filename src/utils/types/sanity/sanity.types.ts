@@ -712,6 +712,18 @@ export type Post = {
     _type: 'fileAsset'
     _key: string
   }>
+  episodePDF?: {
+    file?: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+      }
+      _type: 'file'
+    }
+    embedOnPage?: boolean
+  }
   pageContent?: Array<
     | ({
         _key: string
@@ -719,9 +731,6 @@ export type Post = {
     | ({
         _key: string
       } & PostContent)
-    | ({
-        _key: string
-      } & PdfEmbed)
     | ({
         _key: string
       } & PostFooter)
@@ -1185,7 +1194,7 @@ export type PricesQueryResult = {
   }>
 } | null
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    pageContent[]{      ...,      _type == 'pdfEmbed' => {        ...,        pdfFile {          ...,          asset-> {          url,          originalFilename          }        }      },      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    episodePDF {      embedOnPage,      file {          ...,          asset-> {          url,          originalFilename          }        },     },    pageContent[]{      ...,      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1226,6 +1235,16 @@ export type PostBySlugQueryResult = {
   filters: Array<{
     slug: string | null
   }> | null
+  episodePDF: {
+    embedOnPage: boolean | null
+    file: {
+      asset: {
+        url: string | null
+        originalFilename: string | null
+      } | null
+      _type: 'file'
+    } | null
+  } | null
   pageContent: Array<
     | {
         _key: string
@@ -1270,17 +1289,6 @@ export type PostBySlugQueryResult = {
               _key: string
             }
         > | null
-      }
-    | {
-        _key: string
-        _type: 'pdfEmbed'
-        pdfFile: {
-          asset: {
-            url: string | null
-            originalFilename: string | null
-          } | null
-          _type: 'file'
-        } | null
       }
     | {
         _key: string

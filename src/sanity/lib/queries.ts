@@ -217,18 +217,18 @@ export const postBySlugQuery = groq`
     filters[]->{
       "slug": slug.current
     },
-    pageContent[]{
-      ...,
-      _type == 'pdfEmbed' => {
-        ...,
-        pdfFile {
+    episodePDF {
+      embedOnPage,
+      file {
           ...,
           asset-> {
           url,
           originalFilename
           }
-        }
-      },
+        }, 
+    },
+    pageContent[]{
+      ...,
       _type == 'introText' => {
         ...,
         body[] {

@@ -7,6 +7,7 @@ import ContentHeadlines from './ContentHeadlines'
 import { CustomPortableText } from '@/components/shared/CustomPortableText'
 import ResourcesDownload from './ResourcesDownload'
 import Image from 'next/image'
+import { EpisodePDF } from './EpisodePDF'
 
 export interface PostPageProps {
   data: PostBySlugQueryResult | null
@@ -23,15 +24,16 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
     filters,
     subtitle,
     pageContent,
-    downloadFiles
+    downloadFiles,
+    episodePDF
   } = data ?? {}
 
   const introTextBlocks = pageContent?.filter(
     (block) => block._type === 'introText'
   )
-  const embededPdfBlock = pageContent?.filter(
-    (block) => block._type === 'pdfEmbed'
-  )
+  // const embededPdfBlock = pageContent?.filter(
+  //   (block) => block._type === 'pdfEmbed'
+  // )
 
   const remainingContent = pageContent?.filter(
     (block) => block._type !== 'introText' && block._type !== 'pdfEmbed'
@@ -81,10 +83,8 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
             )}
             <ResourcesDownload downloadFiles={downloadFiles} />
           </section>
-          {embededPdfBlock && embededPdfBlock.length > 0 && (
-            <div className="">
-              <CustomPortableText value={embededPdfBlock} />
-            </div>
+          {episodePDF?.embedOnPage && episodePDF?.file && (
+            <EpisodePDF file={episodePDF.file} />
           )}
 
           {remainingContent && remainingContent.length > 0 && (
