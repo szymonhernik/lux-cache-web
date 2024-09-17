@@ -6,6 +6,7 @@ import { getUser } from '@/utils/supabase/queries'
 
 import DisabledButtons from './DisabledButtons'
 import DownloadPDFButton from './DownloadPDFButton'
+import BackButton from './BackButton'
 
 interface Props {
   title: string | null | undefined
@@ -34,6 +35,7 @@ export default async function PostNavbar(props: Props) {
       <div className="flex gap-2">
         {user && post_id && (
           <>
+            <BackButton />
             {pdfUrl && <DownloadPDFButton url={pdfUrl} />}
             <BookmarkButton
               post_id={post_id}
@@ -45,7 +47,4 @@ export default async function PostNavbar(props: Props) {
       </div>
     </>
   )
-}
-export function BackButton() {
-  return <Button>Back</Button>
 }

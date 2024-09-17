@@ -2,6 +2,7 @@
 import { Button } from '@/components/shadcn/ui/button'
 import { BookmarkIcon } from '@radix-ui/react-icons'
 import { toast } from 'sonner'
+import BackButton from './BackButton'
 
 export default function DisabledButtons() {
   const informUser = () => {
@@ -10,6 +11,7 @@ export default function DisabledButtons() {
   }
   return (
     <div className="flex gap-2">
+      <BackButton />
       <Button onClick={informUser}>PDF</Button>
       <Button
         variant={'outline'}

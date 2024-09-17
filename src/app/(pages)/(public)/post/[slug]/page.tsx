@@ -10,6 +10,7 @@ import PostNavbar from './_components/PostNavbar'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 import { Button } from '@/components/shadcn/ui/button'
 import { BookmarkIcon } from '@radix-ui/react-icons'
+import BackButton from './_components/BackButton'
 
 type Props = {
   params: { slug: string }
@@ -39,6 +40,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
         <Suspense
           fallback={
             <div className="flex gap-2">
+              <BackButton />
               <Button disabled={true}>PDF</Button>
               <Button
                 variant={'outline'}
