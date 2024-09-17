@@ -94,7 +94,7 @@ export default function ResourcesDownload(props: PropsType) {
           <DialogTitle className="mx-auto font-normal text-base">
             Downloads
           </DialogTitle>
-          <DialogDescription className="mx-auto w-full max-w-md font-semibold text-primary-foreground text-base">
+          <DialogDescription className="mx-auto w-full max-w-md font-semibold text-primary-foreground text-base space-y-4">
             {downloadFiles && downloadFiles.length > 0
               ? downloadFiles.map((file) => {
                   const assetUrl = file.fileForDownload?.asset?.url
