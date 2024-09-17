@@ -691,17 +691,6 @@ export type Post = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-  previewImage?: {
-    asset?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-    }
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  }
   filters?: Array<{
     _ref: string
     _type: 'reference'
@@ -963,7 +952,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: ./src/sanity/lib/queries.ts
 // Variable: postsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type PostsQueryResult = {
   posts: Array<{
     _id: string
@@ -980,14 +969,6 @@ export type PostsQueryResult = {
     publishedAt: string | null
     slug: string | null
     coverImage: {
-      _type: 'image'
-      asset: {
-        _id: string
-        url: string | null
-        lqip: string | null
-      } | null
-    } | null
-    previewImage: {
       _type: 'image'
       asset: {
         _id: string
@@ -1012,7 +993,7 @@ export type PostsQueryResult = {
   }>
 }
 // Variable: initialPostsQuery
-// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    },  "highlight": *[_type == "home"][0]{    highlight->{      _type,      "slug": slug.current,      coverImage,      title,    },  },}
+// Query: {  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    },  "highlight": *[_type == "home"][0]{    highlight->{      _type,      "slug": slug.current,      coverImage,      title,    },  },}
 export type InitialPostsQueryResult = {
   posts: Array<{
     _id: string
@@ -1029,14 +1010,6 @@ export type InitialPostsQueryResult = {
     publishedAt: string | null
     slug: string | null
     coverImage: {
-      _type: 'image'
-      asset: {
-        _id: string
-        url: string | null
-        lqip: string | null
-      } | null
-    } | null
-    previewImage: {
       _type: 'image'
       asset: {
         _id: string
@@ -1079,7 +1052,7 @@ export type InitialPostsQueryResult = {
   } | null
 }
 // Variable: morePostsQuery
-// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
+// Query: {  "posts": *[    _type == "post" &&      ( !defined($lastPublishedAt) || (      publishedAt < $lastPublishedAt      || (publishedAt == $lastPublishedAt && _id < $lastId)    )) &&     (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...20] {        _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    }}
 export type MorePostsQueryResult = {
   posts: Array<{
     _id: string
@@ -1096,14 +1069,6 @@ export type MorePostsQueryResult = {
     publishedAt: string | null
     slug: string | null
     coverImage: {
-      _type: 'image'
-      asset: {
-        _id: string
-        url: string | null
-        lqip: string | null
-      } | null
-    } | null
-    previewImage: {
       _type: 'image'
       asset: {
         _id: string
@@ -1433,7 +1398,7 @@ export type PostBySlugQueryResult = {
   > | null
 } | null
 // Variable: postBySlugModalQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage,    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },  }
+// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },  }
 export type PostBySlugModalQueryResult = {
   _id: string
   title: string | null
@@ -1449,17 +1414,6 @@ export type PostBySlugModalQueryResult = {
   publishedAt: string | null
   slug: string | null
   coverImage: {
-    asset?: {
-      _ref: string
-      _type: 'reference'
-      _weak?: boolean
-      [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
-    }
-    hotspot?: SanityImageHotspot
-    crop?: SanityImageCrop
-    _type: 'image'
-  } | null
-  previewImage: {
     _type: 'image'
     asset: {
       _id: string
@@ -1493,7 +1447,7 @@ export type BookmarkedQueryResult = Array<{
   slug: string | null
 }>
 // Variable: postsByArtistSlugQuery
-// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
+// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
 export type PostsByArtistSlugQueryResult = {
   results: {
     _id: string
@@ -1543,14 +1497,6 @@ export type PostsByArtistSlugQueryResult = {
           lqip: string | null
         } | null
       } | null
-      previewImage: {
-        _type: 'image'
-        asset: {
-          _id: string
-          url: string | null
-          lqip: string | null
-        } | null
-      } | null
       previewVideo: {
         generatedBase64: null
         video: {
@@ -1569,7 +1515,7 @@ export type PostsByArtistSlugQueryResult = {
   } | null
 }
 // Variable: postsBySeriesSlugQuery
-// Query:  {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }    
+// Query:  {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }    
 export type PostsBySeriesSlugQueryResult = {
   results: {
     _id: string
@@ -1594,14 +1540,6 @@ export type PostsBySeriesSlugQueryResult = {
       publishedAt: string | null
       slug: string | null
       coverImage: {
-        _type: 'image'
-        asset: {
-          _id: string
-          url: string | null
-          lqip: string | null
-        } | null
-      } | null
-      previewImage: {
         _type: 'image'
         asset: {
           _id: string

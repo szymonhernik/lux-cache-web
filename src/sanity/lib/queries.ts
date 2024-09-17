@@ -30,14 +30,6 @@ const postQueryFields = `
         "lqip": metadata.lqip,
       }
     },
-    previewImage{
-      _type,
-      asset->{
-        _id,
-        url,
-        "lqip": metadata.lqip,
-      }
-    },
     previewVideo {
       generatedBase64,
       video {
@@ -290,8 +282,8 @@ export const postBySlugModalQuery = groq`
     },
     publishedAt, 
     "slug": slug.current,
-    coverImage,
-    previewImage{
+
+    coverImage{
       _type,
       asset->{
         _id,

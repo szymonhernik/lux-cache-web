@@ -216,17 +216,6 @@ export default defineType({
 
       validation: (rule) => rule.required()
     }),
-    defineField({
-      type: 'image',
-      name: 'previewImage',
-      title: 'Preview Image',
-      group: 'media',
-      icon: ImageIcon,
-      description:
-        'The image for the display in the preview of the post. This image should not have any text on it.',
-
-      validation: (rule) => rule.required()
-    }),
 
     defineField({
       name: 'filters',
