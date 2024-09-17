@@ -44,11 +44,11 @@ export default function ResourcesDownload(props: PropsType) {
     return sizeInMB.toFixed(2) + ' MB'
   }
   const replaceUrl = (url: string) => {
-    const originalUrl = 'https://cdn.sanity.io/files/ikrxgij3/production/'
-    const newUrl = 'https://cloud-lc-documents.b-cdn.net/'
+    const originalUrl = 'https://cdn.sanity.io/'
+    const newUrl = 'https://cloud-lc-files.b-cdn.net/'
     return url.replace(originalUrl, newUrl)
   }
-  console.log(downloadFiles)
+  // console.log(downloadFiles)
 
   return (
     <Dialog>
@@ -73,6 +73,7 @@ export default function ResourcesDownload(props: PropsType) {
                       >
                         <a
                           href={replaceUrl(file.fileForDownload.asset.url)}
+                          // href={file.fileForDownload.asset.url}
                           download
                           className="flex gap-2 justify-between items-center "
                         >
