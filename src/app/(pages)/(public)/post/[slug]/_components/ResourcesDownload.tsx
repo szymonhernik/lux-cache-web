@@ -10,6 +10,12 @@ import {
   DialogDescription,
   DialogTitle
 } from '@/components/shadcn/ui/dialog'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
+} from '@/components/shadcn/ui/tooltip'
 
 type PropsType = {
   downloadFiles:
@@ -37,6 +43,12 @@ export default function ResourcesDownload(props: PropsType) {
     const sizeInMB = sizeInBytes / (1024 * 1024)
     return sizeInMB.toFixed(2) + ' MB'
   }
+  const replaceUrl = (url: string) => {
+    const originalUrl = 'https://cdn.sanity.io/files/ikrxgij3/production/'
+    const newUrl = 'https://cloud-lc-documents.b-cdn.net/'
+    return url.replace(originalUrl, newUrl)
+  }
+  console.log(downloadFiles)
 
   return (
     <Dialog>
@@ -45,30 +57,55 @@ export default function ResourcesDownload(props: PropsType) {
           Downloads ({downloadFiles ? downloadFiles.length : 0})
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-11/12  bg-neutral-300 rounded-none sm:rounded-none max-w-3xl ">
-        <DialogHeader className="sm:text-center gap-16 py-16">
+      <DialogContent className="w-11/12  bg-neutral-300 rounded-none sm:rounded-none max-w-3xl  ">
+        <DialogHeader className="sm:text-center gap-16 py-16 overflow-x-auto">
           <DialogTitle className="mx-auto font-normal text-base">
             Downloads
           </DialogTitle>
-          <DialogDescription className="mx-auto w-full  max-w-96 font-semibold text-primary-foreground text-base">
+          <DialogDescription className="mx-auto w-full max-w-md font-semibold text-primary-foreground text-base">
             {downloadFiles && downloadFiles.length > 0
               ? downloadFiles.map((file) => {
                   if (file.fileForDownload?.asset?.url) {
                     return (
                       <div
                         key={file._key}
-                        className="border rounded-md border-black w-full p-8   "
+                        className="border rounded-md border-black w-full p-8"
                       >
                         <a
-                          href={file.fileForDownload.asset.url}
+                          href={replaceUrl(file.fileForDownload.asset.url)}
                           download
-                          className="flex gap-2 justify-between"
+                          className="flex gap-2 justify-between items-center "
                         >
-                          <div>
-                            {file.fileForDownload.asset.originalFilename} (
-                            {convertBytesToMB(file.fileForDownload.asset.size)})
-                          </div>{' '}
-                          <div className="flex items-center ">
+                          <div className="flex-1 min-w-0">
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <div className="truncate">
+                                    {
+                                      file.fileForDownload.asset
+                                        .originalFilename
+                                    }
+                                  </div>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                  <p>
+                                    {
+                                      file.fileForDownload.asset
+                                        .originalFilename
+                                    }
+                                  </p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                            <div className="text-sm text-gray-600">
+                              (
+                              {convertBytesToMB(
+                                file.fileForDownload.asset.size
+                              )}
+                              )
+                            </div>
+                          </div>
+                          <div className="flex-shrink-0">
                             <DownloadIcon />
                           </div>
                         </a>
