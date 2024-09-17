@@ -1,0 +1,12 @@
+.pdfWrapper {
+  @apply relative;
+}
+
+@media (min-width: 1300px) {
+  .pdfWrapper {
+    max-width: 64rem;
+    width: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

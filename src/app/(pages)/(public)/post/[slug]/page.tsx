@@ -53,7 +53,11 @@ export default async function ProjectSlugRoute({ params }: Props) {
           }
         >
           {initial.data._id && (
-            <PostNavbar title={initial.data.title} post_id={initial.data._id} />
+            <PostNavbar
+              title={initial.data.title}
+              post_id={initial.data._id}
+              pdfUrl={initial.data.episodePDF?.file?.asset?.url}
+            />
           )}
         </Suspense>
 
