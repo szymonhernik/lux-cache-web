@@ -75,6 +75,7 @@ export default function ResourcesDownload(props: PropsType) {
 
     // Trigger the download
     const link = document.createElement('a')
+    link.target = '_blank'
     link.href = bunnyCdnUrl
     link.download = filename
     document.body.appendChild(link)
@@ -108,10 +109,9 @@ export default function ResourcesDownload(props: PropsType) {
                         key={file._key}
                         className="border rounded-md border-black w-full p-8"
                       >
-                        <div
-                          onClick={() =>
-                            handleDownload(assetUrl, assetFilename, assetSize)
-                          }
+                        <a
+                          href={replaceUrl(assetUrl, assetSize)}
+                          target="_blank"
                           className="flex gap-2 justify-between items-center cursor-pointer"
                         >
                           <div className="flex-1 min-w-0">
@@ -134,7 +134,7 @@ export default function ResourcesDownload(props: PropsType) {
                           <div className="flex-shrink-0">
                             <DownloadIcon />
                           </div>
-                        </div>
+                        </a>
                       </div>
                     )
                   }
