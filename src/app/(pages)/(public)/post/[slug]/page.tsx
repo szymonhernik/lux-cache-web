@@ -17,9 +17,6 @@ type Props = {
 export default async function ProjectSlugRoute({ params }: Props) {
   const initial = await loadPost(params.slug)
 
-  // freeze for 20 sec
-  await new Promise((resolve) => setTimeout(resolve, 4000))
-
   if (draftMode().isEnabled) {
     return <PostPreview params={params} initial={initial} />
   }
