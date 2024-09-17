@@ -1,3 +1,5 @@
+'use client'
+import { useMediaQuery } from '@/utils/hooks/use-media-query'
 import s from './EpisodePDF.module.css'
 
 type Props = {
@@ -11,9 +13,11 @@ type Props = {
 }
 
 export function EpisodePDF({ file }: Props) {
+  const isTouchDevice = useMediaQuery('(hover: none) and (pointer: coarse)')
+
   return (
     <>
-      {file.asset?.url && (
+      {file.asset?.url && !isTouchDevice && (
         <div className="embed-pdf w-full">
           <div className={s.pdfWrapper}>
             <iframe
