@@ -33,24 +33,29 @@ export function Countdown() {
   const [seconds, setSeconds] = useState(0)
 
   useEffect(() => {
-    const target = new Date('01/11/2024 23:59:59')
+    const target = new Date('12/01/2024 00:00:00')
 
     const interval = setInterval(() => {
       const now = new Date()
       const difference = target.getTime() - now.getTime()
 
       const d = Math.floor(difference / (1000 * 60 * 60 * 24))
-      setDays(d)
-
       const h = Math.floor(
         (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
       )
-      setHours(h)
+      const m = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60))
+      const s = Math.floor((difference % (1000 * 60)) / 1000)
 
-      if (d <= 0 && h <= 0) {
+      setDays(d)
+      setHours(h)
+      setMinutes(m)
+      setSeconds(s)
+
+      if (difference < 0) {
         setPartyTime(true)
+        clearInterval(interval)
       }
-    }, 0)
+    }, 1000)
 
     return () => clearInterval(interval)
   }, [])
@@ -63,12 +68,13 @@ export function Countdown() {
         </>
       ) : (
         <>
-          <div className="timer-wrapper w-full h-[95vh] flex flex-col  gap-1 justify-center items-center font-semibold text-xs uppercase">
+          <div className="timer-wrapper w-full h-[95vh] flex flex-col gap-1 justify-center items-center font-semibold text-xs uppercase">
             <p>Lux Cache </p>
-            <p>Premiere on 1 November 2024 </p>
-            <div className="timer-inner flex  ">
+            <p>Premiere on 1 December 2024 </p>
+            <div className="timer-inner flex">
               <span className="time">
-                {days} days, {hours} hours left
+                {days} days, {hours} hours, {minutes} minutes, {seconds} seconds
+                left
               </span>
             </div>
           </div>
