@@ -43,12 +43,44 @@ export default function ResourcesDownload(props: PropsType) {
     const sizeInMB = sizeInBytes / (1024 * 1024)
     return sizeInMB.toFixed(2) + ' MB'
   }
-  const replaceUrl = (url: string) => {
-    const originalUrl = 'https://cdn.sanity.io/'
-    const newUrl = 'https://cloud-lc-files.b-cdn.net/'
-    return url.replace(originalUrl, newUrl)
+
+  const replaceUrl = (url: string, size: number | null): string => {
+    try {
+      const originalUrl = 'https://cdn.sanity.io/'
+      const regularPullZone = 'https://cloud-lc-files.b-cdn.net/'
+      const largePullZone = 'https://cloud-lc-large-files.b-cdn.net/'
+
+      // Determine which pull zone to use based on file size
+      const newUrl =
+        size && size > 10 * 1024 * 1024 ? largePullZone : regularPullZone
+
+      // Extract the path from the original URL
+      const path = new URL(url).pathname
+
+      // Construct the new URL with the appropriate Bunny CDN domain and the original path
+      return `${newUrl}${path.startsWith('/') ? path.slice(1) : path}`
+    } catch (error) {
+      console.error('Error replacing URL:', error)
+      return url // Return the original URL if there's an error
+    }
   }
-  // console.log(downloadFiles)
+
+  const handleDownload = (
+    url: string,
+    filename: string,
+    size: number | null
+  ) => {
+    const bunnyCdnUrl = replaceUrl(url, size)
+    console.log('Downloading from:', bunnyCdnUrl)
+
+    // Trigger the download
+    const link = document.createElement('a')
+    link.href = bunnyCdnUrl
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
 
   return (
     <Dialog>
@@ -65,54 +97,48 @@ export default function ResourcesDownload(props: PropsType) {
           <DialogDescription className="mx-auto w-full max-w-md font-semibold text-primary-foreground text-base">
             {downloadFiles && downloadFiles.length > 0
               ? downloadFiles.map((file) => {
-                  if (file.fileForDownload?.asset?.url) {
+                  const assetUrl = file.fileForDownload?.asset?.url
+                  const assetSize = file.fileForDownload?.asset?.size
+                  const assetFilename =
+                    file.fileForDownload?.asset?.originalFilename
+
+                  if (assetUrl && assetSize !== undefined && assetFilename) {
                     return (
                       <div
                         key={file._key}
                         className="border rounded-md border-black w-full p-8"
                       >
-                        <a
-                          href={replaceUrl(file.fileForDownload.asset.url)}
-                          // href={file.fileForDownload.asset.url}
-                          download
-                          className="flex gap-2 justify-between items-center "
+                        <div
+                          onClick={() =>
+                            handleDownload(assetUrl, assetFilename, assetSize)
+                          }
+                          className="flex gap-2 justify-between items-center cursor-pointer"
                         >
                           <div className="flex-1 min-w-0">
                             <TooltipProvider>
                               <Tooltip>
                                 <TooltipTrigger asChild>
                                   <div className="truncate">
-                                    {
-                                      file.fileForDownload.asset
-                                        .originalFilename
-                                    }
+                                    {assetFilename}
                                   </div>
                                 </TooltipTrigger>
                                 <TooltipContent>
-                                  <p>
-                                    {
-                                      file.fileForDownload.asset
-                                        .originalFilename
-                                    }
-                                  </p>
+                                  <p>{assetFilename}</p>
                                 </TooltipContent>
                               </Tooltip>
                             </TooltipProvider>
                             <div className="text-sm text-gray-600">
-                              (
-                              {convertBytesToMB(
-                                file.fileForDownload.asset.size
-                              )}
-                              )
+                              ({convertBytesToMB(assetSize)})
                             </div>
                           </div>
                           <div className="flex-shrink-0">
                             <DownloadIcon />
                           </div>
-                        </a>
+                        </div>
                       </div>
                     )
                   }
+                  return null
                 })
               : 'No downloads available'}
           </DialogDescription>
