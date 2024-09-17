@@ -31,12 +31,9 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
   const introTextBlocks = pageContent?.filter(
     (block) => block._type === 'introText'
   )
-  // const embededPdfBlock = pageContent?.filter(
-  //   (block) => block._type === 'pdfEmbed'
-  // )
 
   const remainingContent = pageContent?.filter(
-    (block) => block._type !== 'introText' && block._type !== 'pdfEmbed'
+    (block) => block._type !== 'introText'
   )
 
   return (
