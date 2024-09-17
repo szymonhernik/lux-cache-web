@@ -89,7 +89,7 @@ export default function EpisodePreview(props: Props) {
         )}
       </div>
       {/* Textual */}
-      <div className="p-4 md:p-8 h-full flex flex-col z-10 bg-white pb-16 mb-16 md:grow md:w-1/2">
+      <div className="p-4 md:p-8  flex flex-col z-10 bg-white pb-16 mb-16 md:grow md:w-1/2">
         <div className="w-full text-right md:sticky md:top-8 md:right-0">
           {onModalDisplayChange ? (
             <button
