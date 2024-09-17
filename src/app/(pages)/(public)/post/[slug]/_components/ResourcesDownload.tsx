@@ -40,8 +40,10 @@ export default function ResourcesDownload(props: PropsType) {
 
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button className="w-fit ">Downloads</Button>
+      <DialogTrigger asChild>
+        <Button className="w-fit ">
+          Downloads ({downloadFiles ? downloadFiles.length : 0})
+        </Button>
       </DialogTrigger>
       <DialogContent className="w-11/12  bg-neutral-300 rounded-none sm:rounded-none max-w-3xl ">
         <DialogHeader className="sm:text-center gap-16 py-16">

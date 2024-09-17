@@ -46,3 +46,6 @@ export default async function PostNavbar(props: Props) {
     </>
   )
 }
+export function BackButton() {
+  return <Button>Back</Button>
+}
