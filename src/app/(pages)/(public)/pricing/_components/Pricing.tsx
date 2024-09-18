@@ -16,7 +16,7 @@ import {
   SubscriptionWithProduct
 } from '@/utils/types'
 import Link from 'next/link'
-import ConditionalWrapper from '../ConditionalWrapper'
+import ConditionalWrapper from '../../../../../components/ui/ConditionalWrapper'
 import {
   Avatar,
   AvatarFallback,
@@ -26,6 +26,8 @@ import { Button } from '@/components/shadcn/ui/button'
 import { PricesQueryResult } from '@/utils/types/sanity/sanity.types'
 import { CustomPortableText } from '@/components/shared/CustomPortableText'
 import { CustomPortableTextPages } from '@/components/shared/CustomPortableTextPages'
+import clsx from 'clsx'
+import { toast } from 'sonner'
 
 interface Props {
   data: PricesQueryResult | null
@@ -57,40 +59,40 @@ export default function Pricing({
   const [priceIdLoading, setPriceIdLoading] = useState<string>()
   const currentPath = usePathname()
 
-  const handleStripeCheckout = async (price: Price) => {
-    setPriceIdLoading(price.id)
+  // const handleStripeCheckout = async (price: Price) => {
+  //   setPriceIdLoading(price.id)
 
-    if (!user) {
-      setPriceIdLoading(undefined)
-      return router.push('/signin/signup')
-    }
+  //   if (!user) {
+  //     setPriceIdLoading(undefined)
+  //     return router.push('/signin/signup')
+  //   }
 
-    const { errorRedirect, sessionId } = await checkoutWithStripe(
-      price,
-      currentPath
-    )
+  //   const { errorRedirect, sessionId } = await checkoutWithStripe(
+  //     price,
+  //     currentPath
+  //   )
 
-    if (errorRedirect) {
-      setPriceIdLoading(undefined)
-      return router.push(errorRedirect)
-    }
+  //   if (errorRedirect) {
+  //     setPriceIdLoading(undefined)
+  //     return router.push(errorRedirect)
+  //   }
 
-    if (!sessionId) {
-      setPriceIdLoading(undefined)
-      return router.push(
-        getErrorRedirect(
-          currentPath,
-          'An unknown error occurred.',
-          'Please try again later or contact a system administrator.'
-        )
-      )
-    }
+  //   if (!sessionId) {
+  //     setPriceIdLoading(undefined)
+  //     return router.push(
+  //       getErrorRedirect(
+  //         currentPath,
+  //         'An unknown error occurred.',
+  //         'Please try again later or contact a system administrator.'
+  //       )
+  //     )
+  //   }
 
-    const stripe = await getStripe()
-    stripe?.redirectToCheckout({ sessionId })
+  //   const stripe = await getStripe()
+  //   stripe?.redirectToCheckout({ sessionId })
 
-    setPriceIdLoading(undefined)
-  }
+  //   setPriceIdLoading(undefined)
+  // }
 
   return (
     <>
@@ -236,29 +238,35 @@ export default function Pricing({
                       />
                     )}
 
-                    {!subscription &&
-                      metadata.trial_allowed &&
-                      userCanTrial && (
-                        <Button
-                          type="button"
-                          size={'xl'}
-                          onClick={(e) => {
-                            {
-                              !subscription && !user
-                                ? router.push('/signin/signup')
-                                : !subscription && user
-                                  ? router.push(
-                                      '/checkout' + '?priceId=' + price.id
-                                    )
-                                  : router.push('/account')
-                            }
-                          }}
-                          isLoading={priceIdLoading === price.id}
-                          className="block mx-auto  text-sm font-semibold text-center text-white rounded-md "
-                        >
-                          Try with Free Trial
-                        </Button>
-                      )}
+                    {metadata.trial_allowed && (
+                      <Button
+                        type="button"
+                        size={'xl'}
+                        // disabled={!!user && !userCanTrial}
+                        onClick={(e) => {
+                          if (!user) {
+                            router.push('/signin/signup')
+                          } else if (user && !userCanTrial) {
+                            toast.info(
+                              'You have already used your free trial or you have had a subscription before.'
+                            )
+                          } else if (!subscription) {
+                            router.push('/checkout' + '?priceId=' + price.id)
+                          } else {
+                            router.push('/account')
+                          }
+                        }}
+                        isLoading={priceIdLoading === price.id}
+                        className={clsx(
+                          `block mx-auto  text-sm font-semibold text-center text-white rounded-md `,
+                          !!user &&
+                            !userCanTrial &&
+                            'bg-disabled text-disabled-foreground cursor-not-allowed hover:bg-disabled hover:text-disabled-foreground'
+                        )}
+                      >
+                        Try with Free Trial
+                      </Button>
+                    )}
                   </div>
                 </div>
               )
