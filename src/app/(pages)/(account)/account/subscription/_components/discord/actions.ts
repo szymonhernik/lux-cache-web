@@ -8,7 +8,16 @@ import {
 import { getSubscription } from '@/utils/supabase/queries'
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
+const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET!
+const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!
 const REDIRECT_URI = `${process.env.NEXT_PUBLIC_SITE_URL}/api/discord`
+const DISCORD_API_ENDPOINT = 'https://discord.com/api/v10'
+const DISCORD_BOT_PERMISSIONS = process.env.DISCORD_BOT_PERMISSIONS!
+
+// TODO:
+// make sure if the dicord account is already in the server that you don't try to add them again
+// don't add to supabase db if assigning roles fails
+// keep discord role in sync with user's subscription status (webhooks?)
 
 export async function getDiscordConnectionStatus() {
   const supabase = createClient()
@@ -46,7 +55,134 @@ export async function disconnectDiscord() {
 
 export async function initiateDiscordConnection() {
   const scope = 'identify guilds.join'
-  return `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`
+
+  return `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&permissions=${DISCORD_BOT_PERMISSIONS}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`
+}
+
+async function exchangeCodeForToken(code: string) {
+  const response = await fetch(`${DISCORD_API_ENDPOINT}/oauth2/token`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: DISCORD_CLIENT_ID,
+      client_secret: DISCORD_CLIENT_SECRET,
+      code,
+      grant_type: 'authorization_code',
+      redirect_uri: REDIRECT_URI
+    })
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to exchange code for token')
+  }
+
+  return response.json()
+}
+
+async function getDiscordUserInfo(accessToken: string) {
+  const response = await fetch(`${DISCORD_API_ENDPOINT}/users/@me`, {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  })
+
+  if (!response.ok) {
+    throw new Error('Failed to get Discord user info')
+  }
+
+  return response.json()
+}
+
+async function addUserToDiscordServer(userId: string, accessToken: string) {
+  const guildId = process.env.DISCORD_GUILD_ID!
+  console.log('Attempting to add user to guild:', guildId)
+
+  const response = await fetch(
+    `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`,
+    {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ access_token: accessToken })
+    }
+  )
+
+  if (!response.ok) {
+    const errorBody = await response.text()
+    // console.error('Discord API Error:', response.status, errorBody)
+    // console.error('Request details:', {
+    //   guildId,
+    //   userId,
+    //   endpoint: `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`
+    // })
+    throw new Error(
+      `Failed to add user to Discord server: ${response.status} ${errorBody}`
+    )
+  }
+}
+
+async function assignDiscordRoles(userId: string, tier: string) {
+  const guildId = process.env.DISCORD_GUILD_ID!
+  const roleId = getRoleIdForTier(tier)
+
+  //   console.log(
+  //     `Attempting to assign role for user ${userId}, tier: ${tier}, roleId: ${roleId}`
+  //   )
+
+  try {
+    const response = await fetch(
+      `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${roleId}`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+      }
+    )
+
+    if (!response.ok) {
+      const errorBody = await response.text()
+      console.error('Discord API Error:', response.status, errorBody)
+      //   console.error('Request details:', {
+      //     guildId,
+      //     userId,
+      //     roleId,
+      //     tier,
+      //     endpoint: `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${roleId}`
+      //   })
+
+      if (response.status === 403) {
+        throw new Error(
+          'Bot lacks necessary permissions to assign roles. Please check bot permissions in Discord server settings.'
+        )
+      } else {
+        throw new Error(
+          `Failed to assign Discord role: ${response.status} ${errorBody}`
+        )
+      }
+    }
+
+    // console.log(`Successfully assigned role ${roleId} to user ${userId}`)
+  } catch (error) {
+    console.error('Error assigning Discord role:', error)
+    throw error
+  }
+}
+
+function getRoleIdForTier(tier: string): string {
+  console.log(`Getting role ID for tier: ${tier}`)
+  let roleId: string
+  switch (tier.toLowerCase()) {
+    case 'premium subscriber':
+      roleId = process.env.DISCORD_PREMIUM_ROLE_ID!
+      break
+    case 'subscriber':
+      roleId = process.env.DISCORD_PRO_ROLE_ID!
+      break
+    //   TODO: change defualt to free (no tier)
+    default:
+      roleId = process.env.DISCORD_BASIC_ROLE_ID!
+  }
+  console.log(`Role ID for tier ${tier}: ${roleId}`)
+  return roleId
 }
 
 export async function connectDiscord(code: string) {
@@ -58,21 +194,31 @@ export async function connectDiscord(code: string) {
 
   if (userError || !user) throw new Error('User not authenticated')
 
-  // TODO: Implement Discord OAuth token exchange
-  // const tokenResponse = await exchangeCodeForToken(code)
-  // const discordUser = await getDiscordUserInfo(tokenResponse.access_token)
+  try {
+    // Test bot permissions first
+    await testDiscordBotPermissions()
 
-  // Update user's Discord info in Supabase
-  await updateDiscordIntegration(user.id, {
-    connection_status: true,
-    discord_id: 'discordUser.id', // Replace with actual Discord user ID
-    connected_at: new Date().toISOString()
-  })
+    const tokenResponse = await exchangeCodeForToken(code)
+    const discordUser = await getDiscordUserInfo(tokenResponse.access_token)
 
-  const subscription = await getSubscription(supabase)
-  if (subscription) {
-    // TODO: Implement Discord role assignment based on subscription tier
-    // await assignDiscordRoles(discordUser.id, subscription.price?.product?.name)
+    await addUserToDiscordServer(discordUser.id, tokenResponse.access_token)
+
+    await updateDiscordIntegration(user.id, {
+      connection_status: true,
+      discord_id: discordUser.id,
+      connected_at: new Date().toISOString()
+    })
+
+    const subscription = await getSubscription(supabase)
+    if (subscription?.prices?.products?.name) {
+      await assignDiscordRoles(
+        discordUser.id,
+        subscription.prices.products.name
+      )
+    }
+  } catch (error) {
+    console.error('Error in connectDiscord:', error)
+    throw error
   }
 }
 
@@ -80,3 +226,49 @@ export async function connectDiscord(code: string) {
 // async function exchangeCodeForToken(code: string) { ... }
 // async function getDiscordUserInfo(accessToken: string) { ... }
 // async function assignDiscordRoles(userId: string, tier: string) { ... }
+
+async function testDiscordBotPermissions() {
+  const guildId = process.env.DISCORD_GUILD_ID!
+  console.log('Testing bot permissions for guild:', guildId)
+
+  const response = await fetch(`${DISCORD_API_ENDPOINT}/guilds/${guildId}`, {
+    headers: {
+      Authorization: `Bot ${DISCORD_BOT_TOKEN}`
+    }
+  })
+
+  if (!response.ok) {
+    const errorBody = await response.text()
+    console.error('Discord API Error:', response.status, errorBody)
+    throw new Error(`Failed to get guild info: ${response.status} ${errorBody}`)
+  }
+
+  const guildInfo = await response.json()
+  console.log('Guild Info:', guildInfo)
+  return guildInfo
+}
+
+async function checkUserInServer(guildId: string, userId: string) {
+  const response = await fetch(
+    `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`,
+    {
+      headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+    }
+  )
+
+  if (response.status === 404) {
+    console.log(`User ${userId} is not in the server ${guildId}`)
+    return false
+  }
+
+  if (!response.ok) {
+    const errorBody = await response.text()
+    console.error('Error checking user in server:', response.status, errorBody)
+    throw new Error(
+      `Failed to check user in server: ${response.status} ${errorBody}`
+    )
+  }
+
+  console.log(`User ${userId} is in the server ${guildId}`)
+  return true
+}
