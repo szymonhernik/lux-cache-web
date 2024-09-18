@@ -31,7 +31,7 @@ export default async function Page() {
     <>
       <h1 className="text-2xl font-extrabold ">Subscription</h1>
       <div className="divide-y flex flex-col gap-8 *:pt-8">
-        {/* <DiscordIntegration /> */}
+        <DiscordIntegration />
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
