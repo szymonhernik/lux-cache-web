@@ -100,7 +100,7 @@ export function CustomPortableTextPages({
               <AccordionItem
                 key={index}
                 value={`item-${index}`}
-                className="px-4 py-4 lg:py-8 w-full md:w-3/4 mx-auto"
+                className="px-4 py-4 lg:py-8 w-full md:w-3/4 mx-auto "
               >
                 <AccordionTrigger className="font-semibold ">
                   {faqItem.question}
