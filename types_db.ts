@@ -61,6 +61,38 @@ export type Database = {
           },
         ]
       }
+      discord_integration: {
+        Row: {
+          connected_at: string | null
+          connection_status: boolean | null
+          discord_id: string | null
+          id: string
+          user_id: string | null
+        }
+        Insert: {
+          connected_at?: string | null
+          connection_status?: boolean | null
+          discord_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Update: {
+          connected_at?: string | null
+          connection_status?: boolean | null
+          discord_id?: string | null
+          id?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discord_integration_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       prices: {
         Row: {
           active: boolean | null
