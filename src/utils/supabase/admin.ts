@@ -20,6 +20,36 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 )
 
+export async function getDiscordIntegration(userId: string) {
+  const { data, error } = await supabaseAdmin
+    .from('discord_integration')
+    .select('connection_status')
+    .eq('user_id', userId)
+    .single()
+
+  if (error) {
+    console.error('Error fetching Discord integration:', error)
+    return null
+  }
+
+  return data
+}
+
+export async function updateDiscordIntegration(
+  userId: string,
+  updateData: Partial<Tables<'discord_integration'>>
+) {
+  const { error } = await supabaseAdmin.from('discord_integration').upsert({
+    user_id: userId,
+    ...updateData
+  })
+
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw error
+  }
+}
+
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,

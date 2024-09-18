@@ -13,6 +13,7 @@ import {
 } from '@/utils/supabase/queries'
 import BillingAddress from '../_components/BillingAddress'
 import UpdateBillingAddress from '../_components/UpdateBillingAddress'
+import DiscordIntegration from './_components/discord/DiscordIntegration'
 
 export const dynamic = 'force-dynamic'
 
@@ -30,6 +31,7 @@ export default async function Page() {
     <>
       <h1 className="text-2xl font-extrabold ">Subscription</h1>
       <div className="divide-y flex flex-col gap-8 *:pt-8">
+        <DiscordIntegration />
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
