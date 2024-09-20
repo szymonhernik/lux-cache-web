@@ -30,7 +30,7 @@ export async function getDiscordConnectionStatus() {
     console.error('Error getting user:', userError)
     return false
   }
-
+  // admin action
   const discordIntegration = await getDiscordIntegration(user.id)
   return discordIntegration?.connection_status ?? false
 }
@@ -43,7 +43,7 @@ export async function disconnectDiscord() {
   } = await supabase.auth.getUser()
 
   if (userError || !user) throw new Error('User not authenticated')
-
+  // admin action
   await updateDiscordIntegration(user.id, {
     connection_status: false,
     discord_id: null,
