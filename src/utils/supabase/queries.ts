@@ -9,6 +9,7 @@ import { redirect } from 'next/navigation'
 import { Tables } from 'types_db'
 import { getErrorRedirect } from '../helpers'
 import subscriptionTiers, { SubscriptionTiers } from '../stripe/products'
+import { loadPrices } from '@/sanity/loader/loadQuery'
 
 type User = Tables<'users'>
 export const getUser = cache(async (supabase: SupabaseClient) => {
@@ -75,6 +76,11 @@ export const getUserDetails = cache(async (supabase: SupabaseClient) => {
     .single()
   return userDetails as User
 })
+
+// export const getPricesDetails = cache(async () => {
+//   const pricesDetails = await loadPrices()
+//   return pricesDetails
+// })
 
 // get price and product info from stripe based on the price id
 export const getPrice = cache(
