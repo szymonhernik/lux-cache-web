@@ -23,7 +23,8 @@
     "supabase:generate-seed": "npx supabase db dump --data-only -f supabase/seed.sql",
     "supabase:push": "npx supabase db push",
     "supabase:pull": "npx supabase db pull",
-    "supabase:migration-up": "npx supabase migration up"
+    "supabase:migration-up": "npx supabase migration up",
+    "discord-bot": "ts-node src/discord/discord_bot/index.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -59,9 +60,11 @@
     "@tanstack/react-query-devtools": "^5.40.1",
     "@upstash/ratelimit": "^2.0.1",
     "@upstash/redis": "^1.33.0",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
+    "discord.js": "^14.16.2",
     "hamburger-react": "^2.5.0",
     "jose": "^5.3.0",
     "locate": "link:@/sanity/plugins/locate",
@@ -107,6 +110,7 @@
     "prettier": "^3.3.2",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "supabase": "^1.176.2",
+    "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   }
 }

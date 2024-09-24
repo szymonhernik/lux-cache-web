@@ -39,10 +39,10 @@ export async function updateDiscordIntegration(
   userId: string,
   updateData: Partial<Tables<'discord_integration'>>
 ) {
-  const { error } = await supabaseAdmin
-    .from('discord_integration')
-    .update(updateData)
-    .eq('user_id', userId)
+  const { error } = await supabaseAdmin.from('discord_integration').upsert({
+    user_id: userId,
+    ...updateData
+  })
 
   if (error) {
     console.error('Error updating Discord integration:', error)
@@ -262,6 +262,22 @@ const copyBillingDetailsToCustomer = async (
     throw new Error(`Customer update failed: ${updateError.message}`)
 }
 
+const manageDiscordRoles = async (
+  customerId: string,
+  subscription: Stripe.Subscription
+) => {
+  const { data: discordIntegration, error: discordIntegrationError } =
+    await supabaseAdmin
+      .from('discord_integration')
+      .select('*')
+      .eq('user_id', customerId)
+      .single()
+  console.log('error:', discordIntegrationError)
+  //just log things for now
+  console.log('discordIntegration', discordIntegration)
+  console.log('subscription', subscription)
+}
+
 const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
@@ -392,6 +408,7 @@ export {
   deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  manageDiscordRoles
   // retrieveCustomerInStripe
 }

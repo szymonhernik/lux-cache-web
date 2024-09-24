@@ -5,7 +5,8 @@ import {
   upsertPriceRecord,
   manageSubscriptionStatusChange,
   deleteProductRecord,
-  deletePriceRecord
+  deletePriceRecord,
+  manageDiscordRoles
 } from '@/utils/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
@@ -71,6 +72,18 @@ export async function POST(req: Request) {
         case 'customer.subscription.created':
 
         case 'customer.subscription.updated':
+          // if the user has a discord integration, update the roles
+          // first get the user id, maybe by customer id
+          const customerId = event.data.object.customer as string
+          manageDiscordRoles(
+            customerId,
+            event.data.object as Stripe.Subscription
+          )
+
+        // then check the discord_integration if the connection_status is true for the user
+        // if it is, then update the roles
+        // if not, do nothing
+
         // TO DO: Trigger manageSubscriptionStatusChange to update the billing details in supabase
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription

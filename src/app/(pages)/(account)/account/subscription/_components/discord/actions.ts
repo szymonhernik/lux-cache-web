@@ -73,6 +73,41 @@ export async function initiateDiscordConnection() {
   return `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&permissions=${DISCORD_BOT_PERMISSIONS}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`
 }
 
+export async function connectDiscord(code: string) {
+  const supabase = createClient() // Create a Supabase client instance
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser() // Get the authenticated user
+
+  if (userError || !user) throw new Error('User not authenticated') // Throw an error if the user is not authenticated
+
+  try {
+    const tokenResponse = await exchangeCodeForToken(code) // Exchange the authorization code for an access token
+    const discordUser = await getDiscordUserInfo(tokenResponse.access_token) // Get the Discord user info using the access token
+
+    await addUserToDiscordServer(discordUser.id, tokenResponse.access_token) // Add the user to the Discord server
+
+    const subscription = await getSubscription(supabase) // Get the user's subscription details
+    if (subscription?.prices?.products?.name) {
+      await assignDiscordRoles(
+        discordUser.id,
+        subscription.prices.products.name
+      ) // Assign Discord roles based on the user's subscription tier
+    }
+
+    // Update the Discord integration status in the database only if the above operations succeed
+    await updateDiscordIntegration(user.id, {
+      connection_status: true,
+      discord_id: discordUser.id,
+      connected_at: new Date().toISOString()
+    })
+  } catch (error) {
+    console.error('Error in connectDiscord:', error) // Log any errors that occur
+    throw error // Rethrow the error to be handled by the caller
+  }
+}
+
 async function exchangeCodeForToken(code: string) {
   const response = await fetch(`${DISCORD_API_ENDPOINT}/oauth2/token`, {
     method: 'POST',
@@ -123,12 +158,6 @@ async function addUserToDiscordServer(userId: string, accessToken: string) {
 
   if (!response.ok) {
     const errorBody = await response.text()
-    // console.error('Discord API Error:', response.status, errorBody)
-    // console.error('Request details:', {
-    //   guildId,
-    //   userId,
-    //   endpoint: `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`
-    // })
     throw new Error(
       `Failed to add user to Discord server: ${response.status} ${errorBody}`
     )
@@ -138,12 +167,57 @@ async function addUserToDiscordServer(userId: string, accessToken: string) {
 async function assignDiscordRoles(userId: string, tier: string) {
   const guildId = process.env.DISCORD_GUILD_ID!
   const roleId = getRoleIdForTier(tier)
-
-  //   console.log(
-  //     `Attempting to assign role for user ${userId}, tier: ${tier}, roleId: ${roleId}`
-  //   )
+  const rolesToRemove = [
+    process.env.DISCORD_SUPPORTER_ROLE_ID!,
+    process.env.DISCORD_SUBSCRIBER_ROLE_ID!,
+    process.env.DISCORD_PREMIUM_ROLE_ID!
+  ]
 
   try {
+    // Fetch current roles of the user
+    const memberResponse = await fetch(
+      `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`,
+      {
+        headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+      }
+    )
+
+    if (!memberResponse.ok) {
+      const errorBody = await memberResponse.text()
+      throw new Error(
+        `Failed to fetch user roles: ${memberResponse.status} ${errorBody}`
+      )
+    }
+
+    const memberData = await memberResponse.json()
+    const currentRoles = memberData.roles
+
+    // Remove specified roles if they exist
+    for (const role of rolesToRemove) {
+      if (currentRoles.includes(role)) {
+        const removeRoleResponse = await fetch(
+          `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${role}`,
+          {
+            method: 'DELETE',
+            headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+          }
+        )
+
+        if (!removeRoleResponse.ok) {
+          const errorBody = await removeRoleResponse.text()
+          console.error(
+            'Discord API Error:',
+            removeRoleResponse.status,
+            errorBody
+          )
+          throw new Error(
+            `Failed to remove Discord role: ${removeRoleResponse.status} ${errorBody}`
+          )
+        }
+      }
+    }
+
+    // Assign the new role
     const response = await fetch(
       `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${roleId}`,
       {
@@ -155,13 +229,6 @@ async function assignDiscordRoles(userId: string, tier: string) {
     if (!response.ok) {
       const errorBody = await response.text()
       console.error('Discord API Error:', response.status, errorBody)
-      //   console.error('Request details:', {
-      //     guildId,
-      //     userId,
-      //     roleId,
-      //     tier,
-      //     endpoint: `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${roleId}`
-      //   })
 
       if (response.status === 403) {
         throw new Error(
@@ -173,8 +240,6 @@ async function assignDiscordRoles(userId: string, tier: string) {
         )
       }
     }
-
-    // console.log(`Successfully assigned role ${roleId} to user ${userId}`)
   } catch (error) {
     console.error('Error assigning Discord role:', error)
     throw error
@@ -197,92 +262,4 @@ function getRoleIdForTier(tier: string): string {
   }
   console.log(`Role ID for tier ${tier}: ${roleId}`)
   return roleId
-}
-
-export async function connectDiscord(code: string) {
-  const supabase = createClient()
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser()
-
-  if (userError || !user) throw new Error('User not authenticated')
-
-  try {
-    // Test bot permissions first
-    await testDiscordBotPermissions()
-
-    const tokenResponse = await exchangeCodeForToken(code)
-    const discordUser = await getDiscordUserInfo(tokenResponse.access_token)
-
-    await addUserToDiscordServer(discordUser.id, tokenResponse.access_token)
-
-    await updateDiscordIntegration(user.id, {
-      connection_status: true,
-      discord_id: discordUser.id,
-      connected_at: new Date().toISOString()
-    })
-
-    const subscription = await getSubscription(supabase)
-    if (subscription?.prices?.products?.name) {
-      await assignDiscordRoles(
-        discordUser.id,
-        subscription.prices.products.name
-      )
-    }
-  } catch (error) {
-    console.error('Error in connectDiscord:', error)
-    throw error
-  }
-}
-
-// Helper functions (to be implemented later)
-// async function exchangeCodeForToken(code: string) { ... }
-// async function getDiscordUserInfo(accessToken: string) { ... }
-// async function assignDiscordRoles(userId: string, tier: string) { ... }
-
-async function testDiscordBotPermissions() {
-  const guildId = process.env.DISCORD_GUILD_ID!
-  console.log('Testing bot permissions for guild:', guildId)
-
-  const response = await fetch(`${DISCORD_API_ENDPOINT}/guilds/${guildId}`, {
-    headers: {
-      Authorization: `Bot ${DISCORD_BOT_TOKEN}`
-    }
-  })
-
-  if (!response.ok) {
-    const errorBody = await response.text()
-    console.error('Discord API Error:', response.status, errorBody)
-    throw new Error(`Failed to get guild info: ${response.status} ${errorBody}`)
-  }
-
-  const guildInfo = await response.json()
-  console.log('Guild Info:', guildInfo)
-  return guildInfo
-}
-
-async function checkUserInServer(guildId: string, userId: string) {
-  const response = await fetch(
-    `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`,
-    {
-      headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
-    }
-  )
-
-  if (response.status === 404) {
-    console.log(`User ${userId} is not in the server ${guildId}`)
-    return false
-  }
-
-  if (!response.ok) {
-    const errorBody = await response.text()
-    console.error('Error checking user in server:', response.status, errorBody)
-    throw new Error(
-      `Failed to check user in server: ${response.status} ${errorBody}`
-    )
-  }
-
-  console.log(`User ${userId} is in the server ${guildId}`)
-  return true
 }

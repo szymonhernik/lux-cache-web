@@ -75,7 +75,8 @@ export default function DiscordIntegration({
           {discordConnectionStatusResult.error}
         </div>
       ) : discordConnectionStatusResult.status ? (
-        <Button onClick={handleDisconnect}>Disconnect Discord</Button>
+        // <Button onClick={handleDisconnect}>Disconnect Discord</Button>
+        <p>Please contact support to disconnect your Discord account.</p>
       ) : (
         <Button
           onClick={handleConnect}
