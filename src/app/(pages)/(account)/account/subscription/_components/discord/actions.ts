@@ -6,6 +6,8 @@ import {
   updateDiscordIntegration
 } from '@/utils/supabase/admin'
 import { getSubscription } from '@/utils/supabase/queries'
+import { cache } from 'react'
+import { SupabaseClient } from '@supabase/supabase-js'
 
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET!
@@ -19,36 +21,48 @@ const DISCORD_BOT_PERMISSIONS = process.env.DISCORD_BOT_PERMISSIONS!
 // don't add to supabase db if assigning roles fails
 // keep discord role in sync with user's subscription status (webhooks?)
 
-export async function getDiscordConnectionStatus() {
-  const supabase = createClient()
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser()
+export const getDiscordConnectionStatus = cache(
+  async (supabase: SupabaseClient) => {
+    const { data: discordIntegration, error } = await supabase
+      .from('discord_integration')
+      .select('*')
+      .maybeSingle()
 
-  if (userError || !user) {
-    console.error('Error getting user:', userError)
-    return false
+    if (error) {
+      console.error('Error fetching Discord integration:', error)
+      return { status: false, error: 'Error fetching Discord integration' }
+    }
+
+    return {
+      status: discordIntegration?.connection_status ?? false,
+      error: null
+    }
   }
-  // admin action
-  const discordIntegration = await getDiscordIntegration(user.id)
-  return discordIntegration?.connection_status ?? false
-}
+)
 
-export async function disconnectDiscord() {
+export async function disconnectDiscord(userId: string) {
   const supabase = createClient()
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser()
+  const { error, data } = await supabase
+    .from('discord_integration')
+    .update({
+      connection_status: false,
+      discord_id: null,
+      connected_at: null
+    })
+    .eq('user_id', userId)
+    .select()
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw new Error('Failed to update Discord integration')
+  }
 
-  if (userError || !user) throw new Error('User not authenticated')
-  // admin action
-  await updateDiscordIntegration(user.id, {
-    connection_status: false,
-    discord_id: null,
-    connected_at: null
-  })
+  if (!data) {
+    console.error('No record found to update')
+    throw new Error('No record found to update')
+  }
+  if (data.length === 1 && data[0].connection_status === false) {
+    console.log('Discord integration updated. user disconnected')
+  }
 
   // TODO: Implement Discord API call to remove user from server or roles
 }

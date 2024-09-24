@@ -39,10 +39,10 @@ export async function updateDiscordIntegration(
   userId: string,
   updateData: Partial<Tables<'discord_integration'>>
 ) {
-  const { error } = await supabaseAdmin.from('discord_integration').upsert({
-    user_id: userId,
-    ...updateData
-  })
+  const { error } = await supabaseAdmin
+    .from('discord_integration')
+    .update(updateData)
+    .eq('user_id', userId)
 
   if (error) {
     console.error('Error updating Discord integration:', error)

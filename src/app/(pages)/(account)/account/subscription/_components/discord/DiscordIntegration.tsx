@@ -9,25 +9,22 @@ import {
   initiateDiscordConnection
 } from './actions'
 import { useToast } from '@/components/ui/Toasts/use-toast'
+import { useRouter } from 'next/navigation'
 
-export default function DiscordIntegration() {
-  const [isConnected, setIsConnected] = useState(false)
-  // const [isLoading, setIsLoading] = useState(true)
+export default function DiscordIntegration({
+  discordConnectionStatusResult,
+  userId
+}: {
+  discordConnectionStatusResult: {
+    status: boolean | null
+    error: string | null
+  }
+  userId: string
+}) {
+  // TODO: when stripe subscription updates
+  // TODO: when discord account is removed by hand in discord
   const { toast } = useToast()
-
-  // useEffect(() => {
-  //   getDiscordConnectionStatus()
-  //     .then(setIsConnected)
-  //     .catch((error) => {
-  //       console.error('Error fetching Discord connection status:', error)
-  //       toast({
-  //         title: 'Failed to fetch Discord status',
-  //         variant: 'destructive'
-  //       })
-  //     })
-  //     .finally(() => setIsLoading(false))
-  // }, [toast])
-
+  const router = useRouter()
   const handleConnect = async () => {
     try {
       const url = await initiateDiscordConnection()
@@ -43,8 +40,8 @@ export default function DiscordIntegration() {
 
   const handleDisconnect = async () => {
     try {
-      await disconnectDiscord()
-      setIsConnected(false)
+      await disconnectDiscord(userId)
+      router.refresh()
       toast({ title: 'Discord disconnected successfully' })
     } catch (error) {
       console.error('Error disconnecting Discord:', error)
@@ -55,7 +52,11 @@ export default function DiscordIntegration() {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Discord Integration</h2>
-      {isConnected ? (
+      {discordConnectionStatusResult.error ? (
+        <div className="text-red-500">
+          {discordConnectionStatusResult.error}
+        </div>
+      ) : discordConnectionStatusResult.status ? (
         <Button onClick={handleDisconnect}>Disconnect Discord</Button>
       ) : (
         <Button onClick={handleConnect}>Connect Discord</Button>

@@ -14,24 +14,34 @@ import {
 import BillingAddress from '../_components/BillingAddress'
 import UpdateBillingAddress from '../_components/UpdateBillingAddress'
 import DiscordIntegration from './_components/discord/DiscordIntegration'
+import { getDiscordConnectionStatus } from './_components/discord/actions'
 
 export const dynamic = 'force-dynamic'
 
 export default async function Page() {
   const supabase = createClient()
 
-  const [products, subscription] = await Promise.all([
-    // getUser(supabase),
-    // getUserDetails(supabase),
-    getProducts(supabase),
-    getSubscription(supabase)
-  ])
+  const [user, products, subscription, discordConnectionStatusResult] =
+    await Promise.all([
+      getUser(supabase),
+      getProducts(supabase),
+      getSubscription(supabase),
+      getDiscordConnectionStatus(supabase)
+    ])
+  const discordConnectionStatus = discordConnectionStatusResult.status
+  const discordConnectionError = discordConnectionStatusResult.error
+  console.log('discordConnectionStatusResult', discordConnectionStatusResult)
 
   return (
     <>
       <h1 className="text-2xl font-extrabold ">Subscription</h1>
       <div className="divide-y flex flex-col gap-8 *:pt-8">
-        <DiscordIntegration />
+        {user?.id && (
+          <DiscordIntegration
+            discordConnectionStatusResult={discordConnectionStatusResult}
+            userId={user?.id}
+          />
+        )}
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
