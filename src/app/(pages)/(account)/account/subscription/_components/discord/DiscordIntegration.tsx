@@ -10,6 +10,8 @@ import {
 } from './actions'
 import { useToast } from '@/components/ui/Toasts/use-toast'
 import { useRouter } from 'next/navigation'
+import { Badge } from '@/components/shadcn/ui/Badge'
+import clsx from 'clsx'
 
 export default function DiscordIntegration({
   discordConnectionStatusResult,
@@ -51,7 +53,23 @@ export default function DiscordIntegration({
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Discord Integration</h2>
+      <div className="flex flex-row items-center gap-2 mb-4">
+        <h2 className="text-lg font-bold">Discord Integration</h2>
+        <Badge
+          className={clsx(
+            ' ',
+            discordConnectionStatusResult.status
+              ? 'bg-green-200 hover:bg-green-200'
+              : ''
+          )}
+          variant={
+            discordConnectionStatusResult.status ? 'default' : 'secondary'
+          }
+        >
+          {discordConnectionStatusResult.status ? 'Connected' : 'Not Connected'}
+        </Badge>
+      </div>
+
       {discordConnectionStatusResult.error ? (
         <div className="text-red-500">
           {discordConnectionStatusResult.error}
@@ -59,7 +77,12 @@ export default function DiscordIntegration({
       ) : discordConnectionStatusResult.status ? (
         <Button onClick={handleDisconnect}>Disconnect Discord</Button>
       ) : (
-        <Button onClick={handleConnect}>Connect Discord</Button>
+        <Button
+          onClick={handleConnect}
+          className="bg-[#5865F2] hover:bg-[#5865F2] hover:brightness-110"
+        >
+          Connect Discord
+        </Button>
       )}
     </div>
   )
