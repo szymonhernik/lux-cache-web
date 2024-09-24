@@ -266,16 +266,34 @@ const manageDiscordRoles = async (
   customerId: string,
   subscription: Stripe.Subscription
 ) => {
+  // get the user id from the customers table and then get the discord integration status having the user id
+  const { data: userData, error: userError } = await supabaseAdmin
+    .from('customers')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .single()
+  console.log('userData', userData)
+  if (userError) throw new Error(`User lookup failed: ${userError.message}`)
+  const userId = userData.id
   const { data: discordIntegration, error: discordIntegrationError } =
     await supabaseAdmin
       .from('discord_integration')
-      .select('*')
-      .eq('user_id', customerId)
+      .select('connection_status')
+      .eq('user_id', userId)
       .single()
-  console.log('error:', discordIntegrationError)
-  //just log things for now
   console.log('discordIntegration', discordIntegration)
-  console.log('subscription', subscription)
+  console.log('discordIntegrationError', discordIntegrationError)
+
+  // const { data: discordIntegration, error: discordIntegrationError } =
+  //   await supabaseAdmin
+  //     .from('discord_integration')
+  //     .select('*')
+  //     .eq('user_id', customerId)
+  //     .single()
+  // console.log('error:', discordIntegrationError)
+  // //just log things for now
+  // console.log('discordIntegration', discordIntegration)
+  // console.log('subscription', subscription)
 }
 
 const manageSubscriptionStatusChange = async (
