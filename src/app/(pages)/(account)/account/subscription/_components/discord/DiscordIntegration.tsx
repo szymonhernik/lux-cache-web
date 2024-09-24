@@ -10,7 +10,7 @@ import {
 } from './actions'
 import { useToast } from '@/components/ui/Toasts/use-toast'
 import { useRouter } from 'next/navigation'
-import { Badge } from '@/components/shadcn/ui/Badge'
+import { Badge } from '@/components/shadcn/ui/badge'
 import clsx from 'clsx'
 
 export default function DiscordIntegration({
