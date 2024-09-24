@@ -267,23 +267,45 @@ const manageDiscordRoles = async (
   subscription: Stripe.Subscription
 ) => {
   // get the user id from the customers table and then get the discord integration status having the user id
-  const { data: userData, error: userError } = await supabaseAdmin
-    .from('customers')
-    .select('id')
-    .eq('stripe_customer_id', customerId)
-    .single()
-  console.log('userData', userData)
-  if (userError) throw new Error(`User lookup failed: ${userError.message}`)
-  const userId = userData.id
-  const { data: discordIntegration, error: discordIntegrationError } =
-    await supabaseAdmin
-      .from('discord_integration')
-      .select('connection_status')
-      .eq('user_id', userId)
-      .single()
-  console.log('discordIntegration', discordIntegration)
-  console.log('discordIntegrationError', discordIntegrationError)
+  // const { data: userData, error: userError } = await supabaseAdmin
+  //   .from('customers')
+  //   .select('id')
+  //   .eq('stripe_customer_id', customerId)
+  //   .single()
+  // console.log('userData', userData)
+  // if (userError) throw new Error(`User lookup failed: ${userError.message}`)
+  // const userId = userData.id
+  // const { data: discordIntegration, error: discordIntegrationError } =
+  //   await supabaseAdmin
+  //     .from('discord_integration')
+  //     .select('connection_status')
+  //     .eq('user_id', userId)
+  //     .single()
+  // console.log('discordIntegration', discordIntegration)
+  // console.log('discordIntegrationError', discordIntegrationError)
 
+  const { data: connectionData, error: connectionError } = await supabaseAdmin
+    .from('customers')
+    .select('discord_integration(connection_status)')
+    .eq('customer_id', customerId)
+    .single()
+
+  if (connectionError) {
+    console.error(
+      'SINGLE QUERY Error fetching connection_status:',
+      connectionError
+    )
+  } else {
+    console.log(
+      'SINGLE QUERY Connection Status no array:',
+      // @ts-ignore
+      connectionData.discord_integration.connection_status
+    )
+    console.log(
+      'SINGLE QUERY Connection Status array:',
+      connectionData.discord_integration[0].connection_status
+    )
+  }
   // const { data: discordIntegration, error: discordIntegrationError } =
   //   await supabaseAdmin
   //     .from('discord_integration')
