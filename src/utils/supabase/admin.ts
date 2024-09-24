@@ -269,7 +269,7 @@ const manageDiscordRoles = async (
   const { data: connectionData, error: connectionError } = await supabaseAdmin
     .from('customers')
     .select('id')
-    .eq('customer_id', customerId)
+    .eq('stripe_customer_id', customerId)
     .single()
 
   if (connectionError) {
