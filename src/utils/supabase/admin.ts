@@ -304,7 +304,7 @@ const manageDiscordRoles = async (
     console.log('User has no active Discord integration')
     return
   }
-  console.log('subscription', subscription)
+  console.log('subscription.items.data[0]', subscription.items.data[0])
 
   // Get the subscription tier name
   const tierName = subscription.items.data[0]?.price?.product as string
