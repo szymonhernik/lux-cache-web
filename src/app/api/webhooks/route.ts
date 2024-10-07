@@ -75,6 +75,7 @@ export async function POST(req: Request) {
           // if the user has a discord integration, update the roles
           // first get the user id, maybe by customer id
           const customerId = event.data.object.customer as string
+          console.log('event.data.object', event.data.object)
           manageDiscordRoles(
             customerId,
             event.data.object as Stripe.Subscription
