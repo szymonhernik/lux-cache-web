@@ -308,13 +308,13 @@ const manageDiscordRoles = async (
   // Get the subscription tier name from the plan
   // @ts-ignore
   const plan = subscription.plan.product
-  if (!plan || !plan.product) {
+  if (!plan) {
     console.error('Unable to determine product from plan')
     return
   }
 
   // Get the product name from the product id in the plan
-  const product = await stripe.products.retrieve(plan.product as string)
+  const product = await stripe.products.retrieve(plan as string)
   const tierName = product.name
   console.log('New tierName', tierName)
 
