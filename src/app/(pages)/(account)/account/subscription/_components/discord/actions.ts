@@ -214,6 +214,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
             `Failed to remove Discord role: ${removeRoleResponse.status} ${errorBody}`
           )
         }
+        console.log('Removed role:', role)
       }
     }
 
@@ -241,6 +242,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
       }
     } else {
       console.log('Discord role assigned successfully')
+      console.log('New role:', roleId)
     }
   } catch (error) {
     console.error('Error assigning Discord role:', error)
