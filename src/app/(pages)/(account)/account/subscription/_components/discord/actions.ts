@@ -239,6 +239,8 @@ export async function assignDiscordRoles(userId: string, tier: string) {
           `Failed to assign Discord role: ${response.status} ${errorBody}`
         )
       }
+    } else {
+      console.log('Discord role assigned successfully')
     }
   } catch (error) {
     console.error('Error assigning Discord role:', error)
