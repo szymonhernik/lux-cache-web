@@ -164,7 +164,7 @@ async function addUserToDiscordServer(userId: string, accessToken: string) {
   }
 }
 
-async function assignDiscordRoles(userId: string, tier: string) {
+export async function assignDiscordRoles(userId: string, tier: string) {
   const guildId = process.env.DISCORD_GUILD_ID!
   const roleId = getRoleIdForTier(tier)
   const rolesToRemove = [

@@ -6,7 +6,9 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
 
   if (!code) {
-    return NextResponse.json({ error: 'No code provided' }, { status: 400 })
+    return NextResponse.redirect(
+      `${process.env.NEXT_PUBLIC_SITE_URL}/account/subscription?discord=error&error=${encodeURIComponent('No authorization code provided')}`
+    )
   }
 
   try {

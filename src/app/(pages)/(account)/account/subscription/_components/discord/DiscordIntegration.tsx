@@ -1,6 +1,14 @@
 'use client'
 
 import { Button } from '@/components/shadcn/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from '@/components/shadcn/ui/dialog'
 
 import { useEffect, useState } from 'react'
 import {
@@ -27,6 +35,8 @@ export default function DiscordIntegration({
   // TODO: when discord account is removed by hand in discord
   const { toast } = useToast()
   const router = useRouter()
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const handleConnect = async () => {
     try {
       const url = await initiateDiscordConnection()
@@ -49,6 +59,14 @@ export default function DiscordIntegration({
       console.error('Error disconnecting Discord:', error)
       toast({ title: 'Failed to disconnect Discord', variant: 'destructive' })
     }
+  }
+
+  const openModal = () => setIsModalOpen(true)
+  const closeModal = () => setIsModalOpen(false)
+
+  const handleConfirmConnect = async () => {
+    closeModal()
+    await handleConnect()
   }
 
   return (
@@ -76,14 +94,56 @@ export default function DiscordIntegration({
         </div>
       ) : discordConnectionStatusResult.status ? (
         // <Button onClick={handleDisconnect}>Disconnect Discord</Button>
-        <p>Please contact support to disconnect your Discord account.</p>
+        <p className="text-secondary-foreground text-sm">
+          Your Discord account will remain connected as long as your
+          subscription is active. If you wish to disconnect Discord before
+          canceling your subscription, please contact the site administrator at:{' '}
+          <a href="mailto:admin@luxcache.com" className="underline">
+            admin@luxcache.com
+          </a>
+          .
+        </p>
       ) : (
-        <Button
-          onClick={handleConnect}
-          className="bg-[#5865F2] hover:bg-[#5865F2] hover:brightness-110"
-        >
-          Connect Discord
-        </Button>
+        <>
+          <Button
+            onClick={openModal}
+            className="bg-[#5865F2] hover:bg-[#5865F2] hover:brightness-110"
+          >
+            Connect Discord
+          </Button>
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Connect Discord</DialogTitle>
+                <DialogDescription className="text-primary-foreground space-y-4">
+                  Connecting your Discord account allows us to:
+                  <ul className="list-disc list-inside mt-2">
+                    <li>Provide access to exclusive Discord channels</li>
+                    <li>Sync your subscription status with Discord roles</li>
+                    <li>
+                      Offer seamless integration between our service and Discord
+                    </li>
+                  </ul>
+                  <p>
+                    Your Discord account will remain connected as long as your
+                    subscription is active. If you wish to disconnect Discord
+                    before canceling your subscription, please contact the site
+                    administrator at:{' '}
+                    <span className="underline">admin@luxcache.com</span>.
+                  </p>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter>
+                <Button variant="outline" onClick={closeModal}>
+                  Cancel
+                </Button>
+                <Button onClick={handleConfirmConnect}>
+                  Confirm Connection
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
       )}
     </div>
   )

@@ -1,3 +1,4 @@
+import { assignDiscordRoles } from '@/app/(pages)/(account)/account/subscription/_components/discord/actions'
 import { toDateTime } from '@/utils/helpers'
 import { stripe } from '@/utils/stripe/config'
 import { createClient } from '@supabase/supabase-js'
@@ -274,20 +275,48 @@ const manageDiscordRoles = async (
 
   if (connectionError) {
     console.error('Error fetching user_id:', connectionError)
-  } else if (connectionData) {
-    const userId = connectionData.id
+    return
+  }
 
-    const { data: discordData, error: discordError } = await supabaseAdmin
-      .from('discord_integration')
-      .select('connection_status')
-      .eq('user_id', userId)
-      .single()
+  if (!connectionData) {
+    console.error('No customer found for Stripe customer ID:', customerId)
+    return
+  }
 
-    if (discordError) {
-      console.error('Error fetching connection_status:', discordError)
-    } else {
-      console.log('Connection Status:', discordData.connection_status)
-    }
+  const userId = connectionData.id
+
+  const { data: discordData, error: discordError } = await supabaseAdmin
+    .from('discord_integration')
+    .select('connection_status, discord_id')
+    .eq('user_id', userId)
+    .single()
+
+  if (discordError) {
+    console.error('Error fetching Discord integration:', discordError)
+    return
+  }
+
+  if (
+    !discordData ||
+    !discordData.connection_status ||
+    !discordData.discord_id
+  ) {
+    console.log('User has no active Discord integration')
+    return
+  }
+
+  // Get the subscription tier name
+  const tierName = subscription.items.data[0]?.price?.product as string
+  if (!tierName) {
+    console.error('Unable to determine subscription tier')
+    return
+  }
+
+  try {
+    await assignDiscordRoles(discordData.discord_id, tierName)
+    console.log(`Discord roles updated for user ${userId} to tier ${tierName}`)
+  } catch (error) {
+    console.error('Error updating Discord roles:', error)
   }
 }
 
