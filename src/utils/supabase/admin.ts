@@ -304,12 +304,20 @@ const manageDiscordRoles = async (
     console.log('User has no active Discord integration')
     return
   }
-  console.log('subscription.items.data[0]', subscription.items.data[0])
 
   // Get the subscription tier name
-  const tierName = subscription.items.data[0]?.price?.product as string
+  const productId = subscription.items.data[0]?.price?.product as string
+  if (!productId) {
+    console.error('Unable to determine productId')
+    return
+  }
+  // get the product name from the product id from stripe
+  const product = await stripe.products.retrieve(productId)
+  const tierName = product.name
+  console.log('tierName', tierName)
+  // handle errors
   if (!tierName) {
-    console.error('Unable to determine subscription tier')
+    console.error('Unable to determine subscription tier name from Stripe')
     return
   }
 
