@@ -193,7 +193,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     const currentRoles = memberData.roles
 
     console.log('currentRoles:', currentRoles)
-
+    //TODO: i think here we should remove all roles
     // Remove specified roles if they exist
     for (const role of rolesToRemove) {
       if (currentRoles.includes(role)) {
@@ -219,7 +219,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
         console.log('Removed role:', role)
       }
     }
-
+    // TODO: and here we should add the new role and all the lower tiers
     // Assign the new role
     const response = await fetch(
       `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${roleId}`,

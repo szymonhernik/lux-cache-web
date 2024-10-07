@@ -72,12 +72,12 @@ export async function POST(req: Request) {
         case 'customer.subscription.created':
 
         case 'customer.subscription.updated':
-          // if the user has a discord integration, update the roles
-          // first get the user id, maybe by customer id
-          const subscriptionObject = event.data.object as Stripe.Subscription
-          const customerId = subscriptionObject.customer as string
-          console.log('event.data.object', subscriptionObject)
-          await manageDiscordRoles(customerId, subscriptionObject)
+        // if the user has a discord integration, update the roles
+        // first get the user id, maybe by customer id
+        // const subscriptionObject = event.data.object as Stripe.Subscription
+        // const customerId = subscriptionObject.customer as string
+        // console.log('event.data.object', subscriptionObject)
+        // await manageDiscordRoles(customerId, subscriptionObject)
 
         // then check the discord_integration if the connection_status is true for the user
         // if it is, then update the roles
@@ -86,7 +86,7 @@ export async function POST(req: Request) {
         // TO DO: Trigger manageSubscriptionStatusChange to update the billing details in supabase
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription
-          console.log('subscription in deleted webhook', subscription)
+          console.log('Subscription in deleted webhook', subscription)
 
           await manageSubscriptionStatusChange(
             subscription.id,
