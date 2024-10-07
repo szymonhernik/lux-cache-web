@@ -190,31 +190,34 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     }
 
     const memberData = await memberResponse.json()
+
     const currentRoles = memberData.roles
+    console.log('currentRoles:', currentRoles)
+    console.log('rolesToRemove:', rolesToRemove)
 
     // Remove specified roles if they exist
     for (const role of rolesToRemove) {
       if (currentRoles.includes(role)) {
-        const removeRoleResponse = await fetch(
-          `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${role}`,
-          {
-            method: 'DELETE',
-            headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
-          }
-        )
+        try {
+          const removeRoleResponse = await fetch(
+            `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${role}`,
+            {
+              method: 'DELETE',
+              headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+            }
+          )
 
-        if (!removeRoleResponse.ok) {
-          const errorBody = await removeRoleResponse.text()
-          console.error(
-            'Discord API Error:',
-            removeRoleResponse.status,
-            errorBody
-          )
-          throw new Error(
-            `Failed to remove Discord role: ${removeRoleResponse.status} ${errorBody}`
-          )
+          if (!removeRoleResponse.ok) {
+            const errorBody = await removeRoleResponse.text()
+            console.warn(
+              `Failed to remove Discord role ${role}: ${removeRoleResponse.status} ${errorBody}`
+            )
+          } else {
+            console.log(`Successfully removed role ${role}`)
+          }
+        } catch (error) {
+          console.error(`Error removing role ${role}:`, error)
         }
-        console.log('Removed role:', role)
       }
     }
 
