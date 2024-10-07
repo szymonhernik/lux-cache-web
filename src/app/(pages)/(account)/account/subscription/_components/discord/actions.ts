@@ -192,6 +192,8 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     const memberData = await memberResponse.json()
     const currentRoles = memberData.roles
 
+    console.log('currentRoles:', currentRoles)
+
     // Remove specified roles if they exist
     for (const role of rolesToRemove) {
       if (currentRoles.includes(role)) {

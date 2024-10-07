@@ -86,6 +86,8 @@ export async function POST(req: Request) {
         // TO DO: Trigger manageSubscriptionStatusChange to update the billing details in supabase
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription
+          console.log('subscription in deleted webhook', subscription)
+
           await manageSubscriptionStatusChange(
             subscription.id,
             subscription.customer as string,
