@@ -289,8 +289,7 @@ export default defineType({
           description: 'Paste your PDF here',
           options: {
             accept: 'application/pdf'
-          },
-          validation: (rule) => rule.required()
+          }
         }),
         defineField({
           name: 'embedOnPage',
