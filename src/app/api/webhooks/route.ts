@@ -80,14 +80,14 @@ export async function POST(req: Request) {
             subscription.customer as string,
             event.type === 'customer.subscription.created'
           )
-          if (event.type === 'customer.subscription.updated') {
-            await manageDiscordRoles(
-              subscription.customer as string,
-              subscription
-            )
-          } else if (event.type === 'customer.subscription.deleted') {
-            await removeDiscordRoles(subscription.customer as string)
-          }
+          // if (event.type === 'customer.subscription.updated') {
+          //   await manageDiscordRoles(
+          //     subscription.customer as string,
+          //     subscription
+          //   )
+          // } else if (event.type === 'customer.subscription.deleted') {
+          //   await removeDiscordRoles(subscription.customer as string)
+          // }
           break
 
         case 'checkout.session.completed':
