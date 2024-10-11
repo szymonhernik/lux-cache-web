@@ -12,9 +12,17 @@ import { SupabaseClient } from '@supabase/supabase-js'
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET!
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!
+const DISCORD_GUILD_ID = process.env.DISCORD_GUILD_ID!
+const DISCORD_BOT_PERMISSIONS = process.env.DISCORD_BOT_PERMISSIONS!
 const REDIRECT_URI = `${process.env.NEXT_PUBLIC_SITE_URL}/api/discord`
 const DISCORD_API_ENDPOINT = 'https://discord.com/api/v10'
-const DISCORD_BOT_PERMISSIONS = process.env.DISCORD_BOT_PERMISSIONS!
+
+// Define Discord role IDs
+const DISCORD_ROLES = {
+  PREMIUM: process.env.DISCORD_PREMIUM_ROLE_ID!,
+  SUBSCRIBER: process.env.DISCORD_SUBSCRIBER_ROLE_ID!,
+  SUPPORTER: process.env.DISCORD_SUPPORTER_ROLE_ID!
+}
 
 // TODO:
 // make sure if the dicord account is already in the server that you don't try to add them again
@@ -165,18 +173,20 @@ async function addUserToDiscordServer(userId: string, accessToken: string) {
 }
 
 export async function assignDiscordRoles(userId: string, tier: string) {
-  const guildId = process.env.DISCORD_GUILD_ID!
+  if (!DISCORD_GUILD_ID) {
+    throw new Error('DISCORD_GUILD_ID is not set in environment variables')
+  }
   const newRoleId = getRoleIdForTier(tier)
   const rolesToRemove = [
-    process.env.DISCORD_SUPPORTER_ROLE_ID!,
-    process.env.DISCORD_SUBSCRIBER_ROLE_ID!,
-    process.env.DISCORD_PREMIUM_ROLE_ID!
+    DISCORD_ROLES.SUPPORTER,
+    DISCORD_ROLES.SUBSCRIBER,
+    DISCORD_ROLES.PREMIUM
   ]
 
   try {
     // Fetch current roles of the user
     const memberResponse = await fetch(
-      `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}`,
+      `${DISCORD_API_ENDPOINT}/guilds/${DISCORD_GUILD_ID}/members/${userId}`,
       {
         headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
       }
@@ -192,6 +202,13 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     const memberData = await memberResponse.json()
     const currentRoles = memberData.roles
 
+    // If newRoleId is null (free tier), only remove existing roles
+    if (newRoleId === null) {
+      console.log('TODO: Free tier user, will remove all roles in the future')
+      // await Promise.all(rolesToRemovePromises)
+      return
+    }
+
     // Check if the new role is already assigned
     if (currentRoles.includes(newRoleId)) {
       console.log('User already has the correct role:', newRoleId)
@@ -204,7 +221,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
       .map(async (role) => {
         try {
           const removeRoleResponse = await fetch(
-            `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${role}`,
+            `${DISCORD_API_ENDPOINT}/guilds/${DISCORD_GUILD_ID}/members/${userId}/roles/${role}`,
             {
               method: 'DELETE',
               headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
@@ -227,9 +244,9 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     // Perform all removals concurrently
     await Promise.all(rolesToRemovePromises)
 
-    // Assign the new role
+    // Assign the new role only if it's not null
     const addRoleResponse = await fetch(
-      `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${newRoleId}`,
+      `${DISCORD_API_ENDPOINT}/guilds/${DISCORD_GUILD_ID}/members/${userId}/roles/${newRoleId}`,
       {
         method: 'PUT',
         headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
@@ -258,20 +275,25 @@ export async function assignDiscordRoles(userId: string, tier: string) {
   }
 }
 
-function getRoleIdForTier(tier: string): string {
+function getRoleIdForTier(tier: string): string | null {
   console.log(`Getting role ID for tier: ${tier}`)
-  let roleId: string
+  let roleId: string | null = null
+
   switch (tier.toLowerCase()) {
     case 'premium subscriber':
-      roleId = process.env.DISCORD_PREMIUM_ROLE_ID!
+      roleId = DISCORD_ROLES.PREMIUM
       break
     case 'subscriber':
-      roleId = process.env.DISCORD_PRO_ROLE_ID!
+      roleId = DISCORD_ROLES.SUBSCRIBER
       break
-    //   TODO: change defualt to free (no tier)
+    case 'supporter':
+      roleId = DISCORD_ROLES.SUPPORTER
+      break
     default:
-      roleId = process.env.DISCORD_BASIC_ROLE_ID!
+      // Free tier, no role assigned
+      roleId = null
   }
+
   console.log(`Role ID for tier ${tier}: ${roleId}`)
   return roleId
 }
