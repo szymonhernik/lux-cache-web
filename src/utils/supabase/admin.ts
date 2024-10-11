@@ -4,10 +4,7 @@ import { stripe } from '@/utils/stripe/config'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import type { Database, Tables, TablesInsert } from 'types_db'
-import {
-  removeAllDiscordRoles,
-  disconnectDiscord
-} from '@/app/(pages)/(account)/account/subscription/_components/discord/actions'
+import { removeAllDiscordRoles } from '@/app/(pages)/(account)/account/subscription/_components/discord/actions'
 
 type Product = Tables<'products'>
 type Price = Tables<'prices'>
@@ -250,6 +247,24 @@ const copyBillingDetailsToCustomer = async (
     .eq('id', uuid)
   if (updateError)
     throw new Error(`Customer update failed: ${updateError.message}`)
+}
+
+export async function disconnectDiscord(userId: string) {
+  const { error } = await supabaseAdmin
+    .from('discord_integration')
+    .update({
+      connection_status: false,
+      discord_id: null,
+      connected_at: null
+    })
+    .eq('user_id', userId)
+
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw new Error('Failed to update Discord integration')
+  }
+
+  console.log('Discord integration updated. User disconnected')
 }
 
 const manageDiscordRoles = async (

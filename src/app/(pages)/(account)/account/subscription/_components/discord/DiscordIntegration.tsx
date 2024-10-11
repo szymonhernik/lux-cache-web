@@ -11,11 +11,7 @@ import {
 } from '@/components/shadcn/ui/dialog'
 
 import { useEffect, useState } from 'react'
-import {
-  disconnectDiscord,
-  getDiscordConnectionStatus,
-  initiateDiscordConnection
-} from './actions'
+import { initiateDiscordConnection } from './actions'
 import { useToast } from '@/components/ui/Toasts/use-toast'
 import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/shadcn/ui/badge'
@@ -47,17 +43,6 @@ export default function DiscordIntegration({
         title: 'Failed to initiate Discord connection',
         variant: 'destructive'
       })
-    }
-  }
-
-  const handleDisconnect = async () => {
-    try {
-      await disconnectDiscord(userId)
-      router.refresh()
-      toast({ title: 'Discord disconnected successfully' })
-    } catch (error) {
-      console.error('Error disconnecting Discord:', error)
-      toast({ title: 'Failed to disconnect Discord', variant: 'destructive' })
     }
   }
 

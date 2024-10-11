@@ -42,25 +42,6 @@ export const getDiscordConnectionStatus = cache(
   }
 )
 
-export async function disconnectDiscord(userId: string) {
-  const supabase = createClient()
-  const { error } = await supabase
-    .from('discord_integration')
-    .update({
-      connection_status: false,
-      discord_id: null,
-      connected_at: null
-    })
-    .eq('user_id', userId)
-
-  if (error) {
-    console.error('Error updating Discord integration:', error)
-    throw new Error('Failed to update Discord integration')
-  }
-
-  console.log('Discord integration updated. User disconnected')
-}
-
 export async function initiateDiscordConnection() {
   const scope = 'identify guilds.join'
 
