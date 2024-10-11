@@ -24,10 +24,7 @@ const DISCORD_ROLES = {
   SUPPORTER: process.env.DISCORD_SUPPORTER_ROLE_ID!
 }
 
-// TODO:
-// make sure if the dicord account is already in the server that you don't try to add them again
-// don't add to supabase db if assigning roles fails
-// keep discord role in sync with user's subscription status (webhooks?)
+// Main functions
 
 export const getDiscordConnectionStatus = cache(
   async (supabase: SupabaseClient) => {
@@ -82,39 +79,46 @@ export async function initiateDiscordConnection() {
 }
 
 export async function connectDiscord(code: string) {
-  const supabase = createClient() // Create a Supabase client instance
+  const supabase = createClient()
   const {
     data: { user },
     error: userError
-  } = await supabase.auth.getUser() // Get the authenticated user
+  } = await supabase.auth.getUser()
 
-  if (userError || !user) throw new Error('User not authenticated') // Throw an error if the user is not authenticated
+  if (userError || !user) throw new Error('User not authenticated')
 
   try {
-    const tokenResponse = await exchangeCodeForToken(code) // Exchange the authorization code for an access token
-    const discordUser = await getDiscordUserInfo(tokenResponse.access_token) // Get the Discord user info using the access token
+    // Step 1: Exchange code for token
+    const tokenResponse = await exchangeCodeForToken(code)
 
-    await addUserToDiscordServer(discordUser.id, tokenResponse.access_token) // Add the user to the Discord server
+    // Step 2: Get Discord user info
+    const discordUser = await getDiscordUserInfo(tokenResponse.access_token)
 
-    const subscription = await getSubscription(supabase) // Get the user's subscription details
+    // Step 3: Add user to Discord server
+    await addUserToDiscordServer(discordUser.id, tokenResponse.access_token)
+
+    // Step 4: Get user's subscription and assign roles
+    const subscription = await getSubscription(supabase)
     if (subscription?.prices?.products?.name) {
       await assignDiscordRoles(
         discordUser.id,
         subscription.prices.products.name
-      ) // Assign Discord roles based on the user's subscription tier
+      )
     }
 
-    // Update the Discord integration status in the database only if the above operations succeed
+    // Step 5: Update Discord integration status in the database
     await updateDiscordIntegration(user.id, {
       connection_status: true,
       discord_id: discordUser.id,
       connected_at: new Date().toISOString()
     })
   } catch (error) {
-    console.error('Error in connectDiscord:', error) // Log any errors that occur
-    throw error // Rethrow the error to be handled by the caller
+    console.error('Error in connectDiscord:', error)
+    throw error
   }
 }
+
+// Helper functions
 
 async function exchangeCodeForToken(code: string) {
   const response = await fetch(`${DISCORD_API_ENDPOINT}/oauth2/token`, {
