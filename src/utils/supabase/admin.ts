@@ -292,19 +292,14 @@ const manageDiscordRoles = async (
     return
   }
 
-  console.log('subscription: ', subscription)
-  console.log('subscription.items.data[0].price.id', subscription.items.data[0])
-
-  // Get the subscription tier name from the plan
-  // @ts-ignore
-  const plan = subscription.plan.product
-  if (!plan) {
+  const priceId = subscription.items.data[0].price.id
+  if (!priceId) {
     console.error('Unable to determine product from plan')
     return
   }
 
-  // Get the product name from the product id in the plan
-  const product = await stripe.products.retrieve(plan as string)
+  // Get the product object
+  const product = await stripe.products.retrieve(priceId as string)
   const tierName = product.name
   console.log('New tierName', tierName)
 

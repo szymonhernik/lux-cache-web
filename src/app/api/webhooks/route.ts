@@ -79,10 +79,6 @@ export async function POST(req: Request) {
             subscription.customer as string,
             event.type === 'customer.subscription.created'
           )
-          // if any changes to subscription, check if the user has "synced" discord account, if not, don't do anything
-          // if subscription is updated, check if the user has "synced" discord account, if yes, update their role
-          // if subscription is deleted, check if the user has "synced" discord account, if yes, remove their role
-
           if (event.type === 'customer.subscription.updated') {
             await manageDiscordRoles(
               subscription.customer as string,
