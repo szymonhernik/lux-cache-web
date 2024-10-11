@@ -69,46 +69,28 @@ export async function POST(req: Request) {
         case 'product.deleted':
           await deleteProductRecord(event.data.object as Stripe.Product)
           break
+
         case 'customer.subscription.created':
         case 'customer.subscription.updated':
-        // if the user has a discord integration, update the roles
-        // first get the user id, maybe by customer id
-        // const subscriptionObject = event.data.object as Stripe.Subscription
-        // const customerId = subscriptionObject.customer as string
-        // console.log('event.data.object', subscriptionObject)
-        // await manageDiscordRoles(customerId, subscriptionObject)
-
-        // then check the discord_integration if the connection_status is true for the user
-        // if it is, then update the roles
-        // if not, do nothing
-
-        // TO DO: Trigger manageSubscriptionStatusChange to update the billing details in supabase
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription
-          // console.log('event.data.object', event.data.object)
-          // console.log(
-          //   'event.data.previous_attributes',
-          //   event.data.previous_attributes
-          // )
-          // console.log(
-          //   'event.data.object.items.data',
-          //   event.data.object.items.data
-          // )
-          // in event.data.object.items.data we have the productId of the new subscription
-
           await manageSubscriptionStatusChange(
             subscription.id,
             subscription.customer as string,
             event.type === 'customer.subscription.created'
           )
+          // if any changes to subscription, check if the user has "synced" discord account, if not, don't do anything
+          // if subscription is updated, check if the user has "synced" discord account, if yes, update their role
+          // if subscription is deleted, check if the user has "synced" discord account, if yes, remove their role
+
           if (event.type === 'customer.subscription.updated') {
-            // update the discord roles
             await manageDiscordRoles(
               subscription.customer as string,
               subscription
             )
           }
           break
+
         case 'checkout.session.completed':
           const checkoutSession = event.data.object as Stripe.Checkout.Session
           if (checkoutSession.mode === 'subscription') {

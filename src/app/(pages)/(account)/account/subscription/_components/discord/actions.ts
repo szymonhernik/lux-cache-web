@@ -1,10 +1,7 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import {
-  getDiscordIntegration,
-  updateDiscordIntegration
-} from '@/utils/supabase/admin'
+import { updateDiscordIntegration } from '@/utils/supabase/admin'
 import { getSubscription } from '@/utils/supabase/queries'
 import { cache } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'

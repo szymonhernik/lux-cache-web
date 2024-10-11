@@ -163,3 +163,92 @@ mv schema.json sanity.types.ts src/utils/types/sanity/
 https://www.radix-ui.com/icons
 
 LC DRIVE: https://drive.google.com/drive/folders/1kj9jbNEVUXGrVBxxjjfxDBZ_7C-3HElE
+
+---
+
+### **Step-by-Step Process for Discord Integration:**
+
+1. **Stripe Webhook Event Handling (`/api/webhooks/route.ts`)**:
+
+   - When a subscription is created, updated, or deleted, the Stripe webhook sends an event.
+   - The event triggers the `manageSubscriptionStatusChange()` function to update the subscription status.
+   - If the event is of type `customer.subscription.updated`, the system proceeds to manage Discord roles by invoking `manageDiscordRoles()`.
+
+2. **Fetching Customer and Discord Integration Data (`manageDiscordRoles()` in `utils/supabase/admin.ts`)**:
+
+   - The `manageDiscordRoles()` function retrieves the Stripe customer ID from the `customers` table using Supabase.
+   - The `discord_integration` table is queried to fetch the Discord ID and connection status for the corresponding user.
+   - If no active Discord connection is found, the function exits. Otherwise, it proceeds to manage the roles.
+
+3. **Determining Subscription Plan**:
+
+   - The function retrieves the subscription plan from Stripe, which includes the product name.
+   - The product name (e.g., "Premium Subscriber") is then used to determine the corresponding Discord role.
+
+4. **Assigning Discord Roles (`assignDiscordRoles()` in `discord/actions.ts`)**:
+
+   - The function checks if the user has the correct role in Discord by comparing the subscription plan with the role.
+   - Roles that no longer match the user's subscription tier are removed from the user.
+   - If the new role is not already assigned, it is added using Discord's API.
+
+5. **Fetching and Adding User to Discord Server (`connectDiscord()` in `discord/actions.ts`)**:
+
+   - When the user connects their Discord account, the app uses OAuth2 to authenticate the user with Discord.
+   - The user is added to the Discord server (guild) and assigned the correct role based on their subscription tier.
+   - The Discord connection status is updated in the `discord_integration` table to reflect that the user is connected.
+
+6. **Role Assignment Based on Subscription Tier (`getRoleIdForTier()`)**:
+
+   - The subscription tier is matched to a role ID defined in the environment variables (`DISCORD_ROLES`).
+   - If no subscription or free tier, no role is assigned.
+
+7. **Removing Discord Roles**:
+   - If a user's subscription changes or they no longer qualify for certain roles, those roles are removed from the Discord server using the Discord API.
+
+---
+
+### **Diagram**:
+
+```
+Stripe Webhook (Subscription Created/Updated/Deleted)
+            |
+            v
+  manageSubscriptionStatusChange()
+            |
+            v
+manageDiscordRoles() (Only for Subscription Updated)
+            |
+            v
+ Fetch User Info (From Supabase customers table)
+            |
+            v
+Fetch Discord Connection Info (From discord_integration table)
+            |
+            v
+  Check if User is Connected to Discord
+            |
+            v
+Retrieve Subscription Plan from Stripe
+            |
+            v
+ assignDiscordRoles() based on Plan
+            |
+            v
+Fetch Current Roles from Discord Server
+            |
+            v
+  Remove Outdated Roles (If Needed)
+            |
+            v
+ Add New Role (If Applicable)
+            |
+            v
+     Role Assignment Completed
+```
+
+### **Summary**:
+
+- The integration starts by processing a webhook event from Stripe.
+- It retrieves customer information and checks their Discord integration status.
+- Based on their subscription plan, the app updates their Discord roles using the Discord API.
+- All operations are logged, and any issues (e.g., API errors, missing data) are reported via error handling.

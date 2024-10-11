@@ -21,21 +21,6 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 )
 
-export async function getDiscordIntegration(userId: string) {
-  const { data, error } = await supabaseAdmin
-    .from('discord_integration')
-    .select('connection_status')
-    .eq('user_id', userId)
-    .single()
-
-  if (error) {
-    console.error('Error fetching Discord integration:', error)
-    return null
-  }
-
-  return data
-}
-
 export async function updateDiscordIntegration(
   userId: string,
   updateData: Partial<Tables<'discord_integration'>>
@@ -267,29 +252,31 @@ const manageDiscordRoles = async (
   customerId: string,
   subscription: Stripe.Subscription
 ) => {
-  const { data: connectionData, error: connectionError } = await supabaseAdmin
+  const { data: customerData, error: customerFetchError } = await supabaseAdmin
     .from('customers')
     .select('id')
     .eq('stripe_customer_id', customerId)
     .single()
 
-  if (connectionError) {
-    console.error('Error fetching user_id:', connectionError)
+  if (customerFetchError) {
+    console.error('Error fetching user_id:', customerFetchError)
     return
   }
 
-  if (!connectionData) {
+  if (!customerData) {
     console.error('No customer found for Stripe customer ID:', customerId)
     return
   }
 
-  const userId = connectionData.id
+  const supabaseUserId = customerData.id
 
-  const { data: discordData, error: discordError } = await supabaseAdmin
-    .from('discord_integration')
-    .select('connection_status, discord_id')
-    .eq('user_id', userId)
-    .single()
+  // Fetch Discord integration data
+  const { data: discordIntegrationData, error: discordError } =
+    await supabaseAdmin
+      .from('discord_integration')
+      .select('connection_status, discord_id')
+      .eq('user_id', supabaseUserId)
+      .single()
 
   if (discordError) {
     console.error('Error fetching Discord integration:', discordError)
@@ -297,13 +284,16 @@ const manageDiscordRoles = async (
   }
 
   if (
-    !discordData ||
-    !discordData.connection_status ||
-    !discordData.discord_id
+    !discordIntegrationData ||
+    !discordIntegrationData.connection_status ||
+    !discordIntegrationData.discord_id
   ) {
     console.log('User has no active Discord integration')
     return
   }
+
+  console.log('subscription: ', subscription)
+  console.log('subscription.items.data[0].price.id', subscription.items.data[0])
 
   // Get the subscription tier name from the plan
   // @ts-ignore
@@ -325,8 +315,10 @@ const manageDiscordRoles = async (
   }
 
   try {
-    await assignDiscordRoles(discordData.discord_id, tierName)
-    console.log(`Discord roles updated for user ${userId} to tier ${tierName}`)
+    await assignDiscordRoles(discordIntegrationData.discord_id, tierName)
+    console.log(
+      `Discord roles updated for user ${supabaseUserId} to tier ${tierName}`
+    )
   } catch (error) {
     console.error('Error updating Discord roles:', error)
   }
