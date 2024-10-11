@@ -16,16 +16,19 @@ import { useToast } from '@/components/ui/Toasts/use-toast'
 import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/shadcn/ui/badge'
 import clsx from 'clsx'
+import { SubscriptionWithProduct } from '@/utils/types'
 
 export default function DiscordIntegration({
   discordConnectionStatusResult,
-  userId
+  userId,
+  subscription
 }: {
   discordConnectionStatusResult: {
     status: boolean | null
     error: string | null
   }
   userId: string
+  subscription: SubscriptionWithProduct | null
 }) {
   // TODO: when stripe subscription updates
   // TODO: when discord account is removed by hand in discord
@@ -73,7 +76,12 @@ export default function DiscordIntegration({
         </Badge>
       </div>
 
-      {discordConnectionStatusResult.error ? (
+      {!subscription ? (
+        <p className="text-secondary-foreground text-sm">
+          You need an active subscription to connect your Discord account.
+          Please subscribe first.
+        </p>
+      ) : discordConnectionStatusResult.error ? (
         <div className="text-red-500">
           {discordConnectionStatusResult.error}
         </div>

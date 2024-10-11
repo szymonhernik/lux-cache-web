@@ -28,9 +28,6 @@ export default async function Page() {
       getSubscription(supabase),
       getDiscordConnectionStatus(supabase)
     ])
-  const discordConnectionStatus = discordConnectionStatusResult.status
-  const discordConnectionError = discordConnectionStatusResult.error
-  console.log('discordConnectionStatusResult', discordConnectionStatusResult)
 
   return (
     <>
@@ -40,6 +37,7 @@ export default async function Page() {
           <DiscordIntegration
             discordConnectionStatusResult={discordConnectionStatusResult}
             userId={user?.id}
+            subscription={subscription}
           />
         )}
         {subscription ? (

@@ -176,10 +176,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     const memberData = await memberResponse.json()
     const currentRoles = memberData.roles
 
-    // If newRoleId is null (free tier), only remove existing roles
     if (newRoleId === null) {
-      console.log('TODO: Free tier user, will remove all roles in the future')
-      // await Promise.all(rolesToRemovePromises)
       return
     }
 
