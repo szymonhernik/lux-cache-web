@@ -5,9 +5,7 @@ import {
   upsertPriceRecord,
   manageSubscriptionStatusChange,
   deleteProductRecord,
-  deletePriceRecord,
-  manageDiscordRoles,
-  removeDiscordRoles
+  deletePriceRecord
 } from '@/utils/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'

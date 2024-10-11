@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/shadcn/ui/badge'
 import clsx from 'clsx'
 import { SubscriptionWithProduct } from '@/utils/types'
+import { Loader2, RefreshCw } from 'lucide-react'
 
 export default function DiscordIntegration({
   discordConnectionStatusResult,
@@ -30,10 +31,7 @@ export default function DiscordIntegration({
   userId: string
   subscription: SubscriptionWithProduct | null
 }) {
-  // TODO: when stripe subscription updates
-  // TODO: when discord account is removed by hand in discord
   const { toast } = useToast()
-  const router = useRouter()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleConnect = async () => {
@@ -86,16 +84,37 @@ export default function DiscordIntegration({
           {discordConnectionStatusResult.error}
         </div>
       ) : discordConnectionStatusResult.status ? (
-        // <Button onClick={handleDisconnect}>Disconnect Discord</Button>
-        <p className="text-secondary-foreground text-sm">
-          Your Discord account will remain connected as long as your
-          subscription is active. If you wish to disconnect Discord before
-          canceling your subscription, please contact the site administrator at:{' '}
-          <a href="mailto:admin@luxcache.com" className="underline">
-            admin@luxcache.com
-          </a>
-          .
-        </p>
+        <>
+          {/* <Button
+              onClick={handleUpdateDiscordRole}
+              className="bg-[#5865F2] hover:bg-[#5865F2] hover:brightness-110"
+              disabled={isUpdatingRole}
+            >
+              {isUpdatingRole ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="mr-2 h-4 w-4" />
+              )}
+              Update Discord Role
+            </Button> */}
+          {/* <Button
+              onClick={handleRemoveDiscordIntegration}
+              // className="bg-[#5865F2] hover:bg-[#5865F2] hover:brightness-110"
+              disabled={isUpdatingRole}
+            >
+              Remove Discord Integration
+            </Button> */}
+
+          <div className="rounded-md border p-4 mt-4 bg-secondary shadow-sm space-y-2">
+            <p className="text-secondary-foreground text-xs ">
+              Your Discord account is successfully connected. For any other
+              questions or issues, please contact us at:{' '}
+              <a href="mailto:support@luxcache.com" className="underline">
+                support@luxcache.com
+              </a>
+            </p>
+          </div>
+        </>
       ) : (
         <>
           <Button
