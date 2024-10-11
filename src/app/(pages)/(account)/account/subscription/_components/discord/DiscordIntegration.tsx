@@ -27,10 +27,14 @@ export default function DiscordIntegration({
   discordConnectionStatusResult: {
     status: boolean | null
     error: string | null
-  }
+  } | null
   userId: string
   subscription: SubscriptionWithProduct | null
 }) {
+  if (!discordConnectionStatusResult) {
+    return null // or some loading state
+  }
+
   const { toast } = useToast()
   const [isModalOpen, setIsModalOpen] = useState(false)
 

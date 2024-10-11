@@ -15,6 +15,7 @@ import BillingAddress from '../_components/BillingAddress'
 import UpdateBillingAddress from '../_components/UpdateBillingAddress'
 import DiscordIntegration from './_components/discord/DiscordIntegration'
 import { getDiscordConnectionStatus } from './_components/discord/actions'
+import { ENABLE_DISCORD_INTEGRATION } from '@/config/featureFlags'
 
 export const dynamic = 'force-dynamic'
 
@@ -26,17 +27,19 @@ export default async function Page() {
       getUser(supabase),
       getProducts(supabase),
       getSubscription(supabase),
-      getDiscordConnectionStatus(supabase)
+      ENABLE_DISCORD_INTEGRATION
+        ? getDiscordConnectionStatus(supabase)
+        : Promise.resolve(null)
     ])
 
   return (
     <>
       <h1 className="text-2xl font-extrabold ">Subscription</h1>
       <div className="divide-y flex flex-col gap-8 *:pt-8">
-        {user?.id && (
+        {ENABLE_DISCORD_INTEGRATION && user?.id && (
           <DiscordIntegration
             discordConnectionStatusResult={discordConnectionStatusResult}
-            userId={user?.id}
+            userId={user.id}
             subscription={subscription}
           />
         )}
