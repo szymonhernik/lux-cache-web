@@ -166,7 +166,7 @@ async function addUserToDiscordServer(userId: string, accessToken: string) {
 
 export async function assignDiscordRoles(userId: string, tier: string) {
   const guildId = process.env.DISCORD_GUILD_ID!
-  const roleId = getRoleIdForTier(tier)
+  const newRoleId = getRoleIdForTier(tier)
   const rolesToRemove = [
     process.env.DISCORD_SUPPORTER_ROLE_ID!,
     process.env.DISCORD_SUBSCRIBER_ROLE_ID!,
@@ -190,14 +190,18 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     }
 
     const memberData = await memberResponse.json()
-
     const currentRoles = memberData.roles
-    console.log('currentRoles:', currentRoles)
-    console.log('rolesToRemove:', rolesToRemove)
 
-    // Remove specified roles if they exist
-    for (const role of rolesToRemove) {
-      if (currentRoles.includes(role)) {
+    // Check if the new role is already assigned
+    if (currentRoles.includes(newRoleId)) {
+      console.log('User already has the correct role:', newRoleId)
+      return
+    }
+
+    // Remove roles that the user has and are in the rolesToRemove array
+    const rolesToRemovePromises = rolesToRemove
+      .filter((role) => currentRoles.includes(role) && role !== newRoleId)
+      .map(async (role) => {
         try {
           const removeRoleResponse = await fetch(
             `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${role}`,
@@ -218,34 +222,35 @@ export async function assignDiscordRoles(userId: string, tier: string) {
         } catch (error) {
           console.error(`Error removing role ${role}:`, error)
         }
-      }
-    }
+      })
+
+    // Perform all removals concurrently
+    await Promise.all(rolesToRemovePromises)
 
     // Assign the new role
-    const response = await fetch(
-      `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${roleId}`,
+    const addRoleResponse = await fetch(
+      `${DISCORD_API_ENDPOINT}/guilds/${guildId}/members/${userId}/roles/${newRoleId}`,
       {
         method: 'PUT',
         headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
       }
     )
 
-    if (!response.ok) {
-      const errorBody = await response.text()
-      console.error('Discord API Error:', response.status, errorBody)
+    if (!addRoleResponse.ok) {
+      const errorBody = await addRoleResponse.text()
+      console.error('Discord API Error:', addRoleResponse.status, errorBody)
 
-      if (response.status === 403) {
+      if (addRoleResponse.status === 403) {
         throw new Error(
           'Bot lacks necessary permissions to assign roles. Please check bot permissions in Discord server settings.'
         )
       } else {
         throw new Error(
-          `Failed to assign Discord role: ${response.status} ${errorBody}`
+          `Failed to assign Discord role: ${addRoleResponse.status} ${errorBody}`
         )
       }
     } else {
-      console.log('Discord role assigned successfully')
-      console.log('New role:', roleId)
+      console.log('Discord role assigned successfully:', newRoleId)
     }
   } catch (error) {
     console.error('Error assigning Discord role:', error)
