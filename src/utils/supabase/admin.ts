@@ -253,9 +253,7 @@ export async function disconnectDiscord(userId: string) {
   const { error } = await supabaseAdmin
     .from('discord_integration')
     .update({
-      connection_status: false,
-      discord_id: null,
-      connected_at: null
+      connection_status: false
     })
     .eq('user_id', userId)
 
