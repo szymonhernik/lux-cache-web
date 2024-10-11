@@ -14,11 +14,24 @@ function isValidEmail(email: string) {
   return regex.test(email)
 }
 
+async function getAuthenticatedUser() {
+  const supabase = createClient()
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+  return user
+}
+
 export async function redirectToPath(path: string) {
   return redirect(path)
 }
 
 export async function SignOut(formData: FormData) {
+  const user = await getAuthenticatedUser()
+  if (!user) {
+    throw new Error('You must be signed in to perform this action')
+  }
+
   const pathName = String(formData.get('pathName')).trim()
 
   const supabase = createClient()
@@ -33,8 +46,6 @@ export async function SignOut(formData: FormData) {
   } else {
     revalidatePath('/')
     return getStatusRedirect('/', 'Success', 'You are now signed out.')
-
-    // return getStatusRedirect('/pricing', '', 'You are now signed out.')
   }
 }
 
@@ -120,9 +131,6 @@ export async function requestPasswordUpdate(values: { email: string }) {
       error.message,
       'Please try again.'
     )
-    // revalidatePath('/signin/forgot_password')
-
-    // return redirect('/signin/password_signin')
   } else if (data) {
     redirectPath = getStatusRedirect(
       '/browse',
@@ -273,7 +281,11 @@ export async function updatePassword(values: { password: string }) {
 }
 
 export async function updateEmail(formData: FormData) {
-  // Get form data
+  const user = await getAuthenticatedUser()
+  if (!user) {
+    throw new Error('You must be signed in to perform this action')
+  }
+
   const newEmail = String(formData.get('newEmail')).trim()
 
   // Check that the email is valid
@@ -286,7 +298,6 @@ export async function updateEmail(formData: FormData) {
   }
 
   const supabase = createClient()
-
   const callbackUrl = getURL(
     getStatusRedirect('/account', 'Success!', `Your email has been updated.`)
   )
@@ -313,37 +324,12 @@ export async function updateEmail(formData: FormData) {
   }
 }
 
-// export async function updateName(formData: FormData) {
-//   // Get form data
-//   const fullName = String(formData.get('fullName')).trim();
-
-//   const supabase = createClient();
-//   const { error, data } = await supabase.auth.updateUser({
-//     data: { full_name: fullName }
-//   });
-
-//   if (error) {
-//     return getErrorRedirect(
-//       '/account',
-//       'Your name could not be updated.',
-//       error.message
-//     );
-//   } else if (data.user) {
-//     return getStatusRedirect(
-//       '/account',
-//       'Success!',
-//       'Your name has been updated.'
-//     );
-//   } else {
-//     return getErrorRedirect(
-//       '/account',
-//       'Hmm... Something went wrong.',
-//       'Your name could not be updated.'
-//     );
-//   }
-// }
-
 export async function updateName(formData: FormData) {
+  const user = await getAuthenticatedUser()
+  if (!user) {
+    throw new Error('You must be signed in to perform this action')
+  }
+
   const fullName = String(formData.get('fullName')).trim()
   const userId = String(formData.get('userId'))
 
@@ -354,8 +340,6 @@ export async function updateName(formData: FormData) {
     .eq('id', userId)
     .select('full_name')
     .single()
-
-  // console.log('data', data);
 
   if (error) {
     return getErrorRedirect(
@@ -379,16 +363,16 @@ export async function updateName(formData: FormData) {
 }
 
 export async function updatePasswordInAccount(formData: FormData) {
+  const user = await getAuthenticatedUser()
+  if (!user) {
+    throw new Error('You must be signed in to perform this action')
+  }
+
   const password = String(formData.get('password')).trim()
   const passwordConfirm = String(formData.get('passwordConfirm')).trim()
   let redirectPath: string
 
-  // const ip = headers().get('x-forwarded-for')
   const ja4 = headers().get('x-vercel-ja4-digest')
-
-  // console.log('ip address:', ip)
-  console.log('ja4:', ja4)
-
   const { success } = await ratelimit.limit(ja4 ?? 'anonymous')
 
   if (!success) {
@@ -439,6 +423,11 @@ export async function updatePasswordInAccount(formData: FormData) {
 }
 
 export async function removeBookmark(formData: FormData) {
+  const user = await getAuthenticatedUser()
+  if (!user) {
+    throw new Error('You must be signed in to perform this action')
+  }
+
   const postId = formData.get('postId') as string
 
   const supabase = createClient()

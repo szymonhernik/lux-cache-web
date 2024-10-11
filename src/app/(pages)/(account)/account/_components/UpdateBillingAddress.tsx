@@ -1,5 +1,6 @@
 'use client'
 import { Button } from '@/components/shadcn/ui/button'
+import Card from '@/components/ui/Card'
 import { getStripe } from '@/utils/stripe/client'
 import { updateCustomerBillingAddress } from '@/utils/stripe/server'
 import { SubscriptionWithPriceAndProduct } from '@/utils/types'
@@ -49,35 +50,37 @@ export default function UpdateBillingAddress({
     setIsSubmitting(false)
   }
   return (
-    <Elements stripe={stripePromise}>
-      <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-8">
-        <AddressElement
-          options={{ mode: 'billing' }}
-          onChange={(event) => {
-            if (event.complete) {
-              // Extract potentially complete address
-              const address = event.value.address
-              setAddress(address)
+    <Card title="Billing address">
+      <Elements stripe={stripePromise}>
+        <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col gap-8">
+          <AddressElement
+            options={{ mode: 'billing' }}
+            onChange={(event) => {
+              if (event.complete) {
+                // Extract potentially complete address
+                const address = event.value.address
+                setAddress(address)
 
-              if (canSubmit !== true) {
-                setCanSubmit(true)
+                if (canSubmit !== true) {
+                  setCanSubmit(true)
+                }
+              } else {
+                if (canSubmit !== false) {
+                  setCanSubmit(false)
+                }
               }
-            } else {
-              if (canSubmit !== false) {
-                setCanSubmit(false)
-              }
-            }
-          }}
-        />
-        <Button
-          className="w-fit"
-          isLoading={isSubmitting}
-          disabled={!canSubmit || isSubmitting}
-          type="submit"
-        >
-          {isSubmitting ? 'Processing' : 'Update address'}
-        </Button>
-      </form>
-    </Elements>
+            }}
+          />
+          <Button
+            className="w-fit"
+            isLoading={isSubmitting}
+            disabled={!canSubmit || isSubmitting}
+            type="submit"
+          >
+            {isSubmitting ? 'Processing' : 'Update address'}
+          </Button>
+        </form>
+      </Elements>
+    </Card>
   )
 }

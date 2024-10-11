@@ -163,3 +163,78 @@ mv schema.json sanity.types.ts src/utils/types/sanity/
 https://www.radix-ui.com/icons
 
 LC DRIVE: https://drive.google.com/drive/folders/1kj9jbNEVUXGrVBxxjjfxDBZ_7C-3HElE
+
+---
+
+### **Step-by-Step Process for Updated Discord Integration:**
+
+1. **Stripe Webhook Event Handling (`/api/webhooks/route.ts`)**:
+
+   - When a subscription is created, updated, or deleted, Stripe sends a webhook event.
+   - The event triggers the `manageSubscriptionStatusChange()` function to update the subscription status.
+   - **If a subscription is created or updated**, the system checks the user's Discord integration and manages roles accordingly by calling `manageDiscordRoles()`.
+   - **If a subscription is deleted**, the system calls `removeDiscordRoles()` to revoke all of the user’s Discord roles.
+
+2. **Fetching Customer and Discord Integration Data (`manageDiscordRoles()` in `utils/supabase/admin.ts`)**:
+
+   - The function retrieves the customer’s ID using the `customers` table in Supabase based on the Stripe customer ID.
+   - It fetches the Discord connection status and Discord ID from the `discord_integration` table.
+   - If the user is connected to Discord, the system retrieves their subscription plan and assigns the appropriate Discord roles.
+
+3. **Assigning Discord Roles (`assignDiscordRoles()` in `discord/actions.ts`)**:
+
+   - The `assignDiscordRoles()` function assigns roles based on the user's subscription plan. It compares the current roles with the required ones and makes updates using the Discord API.
+   - Roles that are no longer relevant are removed, and the correct role for the current subscription tier is assigned.
+
+4. **Handling Subscription Deletion (New Functionality)**:
+
+   - When a subscription is deleted, the system calls the `removeDiscordRoles()` function.
+   - This function fetches the current roles for the user from the Discord server and removes all subscription-related roles using the Discord API.
+
+5. **Removing Discord Roles (`removeAllDiscordRoles()` in `discord/actions.ts`)**:
+
+   - This function removes all roles associated with subscription tiers (Supporter, Subscriber, Premium) by fetching the user’s current roles from Discord and issuing DELETE requests for each role using the Discord API.
+
+6. **Updating Discord Integration Status**:
+   - If a user disconnects their Discord account or their subscription is deleted, the Discord integration status is updated in the `discord_integration` table.
+   - This reflects the disconnection or revocation of roles, ensuring that the user no longer has roles in Discord.
+
+---
+
+### **Updated Diagram**:
+
+```
+Stripe Webhook (Subscription Created/Updated/Deleted)
+            |
+            v
+  manageSubscriptionStatusChange()
+            |
+            v
+   ┌────────┴─────────┐
+   |                  |
+Updated Subscription  Deleted Subscription
+   |                  |
+   v                  v
+manageDiscordRoles()  removeDiscordRoles()
+   |                  |
+   v                  |
+ Fetch User Info      |
+   |                  |
+   v                  |
+Fetch Discord Connection Info
+   |                  |
+   v                  |
+Retrieve Subscription Plan (Stripe)
+   |                  |
+   v                  |
+ assignDiscordRoles()  |
+   |                  |
+   v                  v
+Remove Old Roles    removeAllDiscordRoles()
+   |                  |
+   v                  v
+ Add New Role    Remove All Roles
+   |
+   v
+Role Assignment Completed
+```

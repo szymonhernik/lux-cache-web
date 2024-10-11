@@ -1,3 +1,4 @@
+import { assignDiscordRoles } from '@/app/(pages)/(account)/account/subscription/_components/discord/actions'
 import { toDateTime } from '@/utils/helpers'
 import { stripe } from '@/utils/stripe/config'
 import { createClient } from '@supabase/supabase-js'
@@ -19,36 +20,6 @@ const supabaseAdmin = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL || '',
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 )
-
-export async function getDiscordIntegration(userId: string) {
-  const { data, error } = await supabaseAdmin
-    .from('discord_integration')
-    .select('connection_status')
-    .eq('user_id', userId)
-    .single()
-
-  if (error) {
-    console.error('Error fetching Discord integration:', error)
-    return null
-  }
-
-  return data
-}
-
-export async function updateDiscordIntegration(
-  userId: string,
-  updateData: Partial<Tables<'discord_integration'>>
-) {
-  const { error } = await supabaseAdmin.from('discord_integration').upsert({
-    user_id: userId,
-    ...updateData
-  })
-
-  if (error) {
-    console.error('Error updating Discord integration:', error)
-    throw error
-  }
-}
 
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
@@ -262,6 +233,113 @@ const copyBillingDetailsToCustomer = async (
     throw new Error(`Customer update failed: ${updateError.message}`)
 }
 
+export async function updateDiscordIntegration(
+  userId: string,
+  updateData: Partial<Tables<'discord_integration'>>
+) {
+  const { error } = await supabaseAdmin.from('discord_integration').upsert(
+    {
+      user_id: userId, // Ensure this is part of the unique constraint
+      ...updateData
+    },
+    {
+      onConflict: 'user_id' // Specify the column to check for conflicts
+    }
+  )
+
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw error
+  }
+}
+
+export async function disconnectDiscord(userId: string) {
+  const { error } = await supabaseAdmin
+    .from('discord_integration')
+    .update({
+      connection_status: false
+    })
+    .eq('user_id', userId)
+
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw new Error('Failed to update Discord integration')
+  }
+
+  console.log('Discord integration updated. User disconnected')
+}
+
+const manageDiscordRoles = async (
+  customerId: string,
+  subscription: Stripe.Subscription
+) => {
+  const { data: customerData, error: customerFetchError } = await supabaseAdmin
+    .from('customers')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .single()
+
+  if (customerFetchError) {
+    console.error('Error fetching user_id:', customerFetchError)
+    return
+  }
+
+  if (!customerData) {
+    console.error('No customer found for Stripe customer ID:', customerId)
+    return
+  }
+
+  const supabaseUserId = customerData.id
+
+  // Fetch Discord integration data
+  const { data: discordIntegrationData, error: discordError } =
+    await supabaseAdmin
+      .from('discord_integration')
+      .select('connection_status, discord_id')
+      .eq('user_id', supabaseUserId)
+      .single()
+
+  if (discordError) {
+    console.error('Error fetching Discord integration:', discordError)
+    return
+  }
+
+  if (
+    !discordIntegrationData ||
+    !discordIntegrationData.connection_status ||
+    !discordIntegrationData.discord_id
+  ) {
+    console.log('User has no active Discord integration')
+    return
+  }
+
+  const productId = subscription.items.data[0].plan.product
+  if (!productId) {
+    console.error('Unable to determine product from plan')
+    return
+  }
+
+  // Get the product object
+  const product = await stripe.products.retrieve(productId as string)
+  const tierName = product.name
+  console.log('New tierName', tierName)
+
+  // handle errors
+  if (!tierName) {
+    console.error('Unable to determine subscription tier name from Stripe')
+    return
+  }
+
+  try {
+    await assignDiscordRoles(discordIntegrationData.discord_id, tierName)
+    console.log(
+      `Discord roles updated for user ${supabaseUserId} to tier ${tierName}`
+    )
+  } catch (error) {
+    console.error('Error updating Discord roles:', error)
+  }
+}
+
 const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
@@ -282,6 +360,8 @@ const manageSubscriptionStatusChange = async (
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
     expand: ['default_payment_method']
   })
+  console.log('subscription in manageSubscriptionStatusChange', subscription)
+
   // Upsert the latest status of the subscription object.
   const subscriptionData: TablesInsert<'subscriptions'> = {
     id: subscription.id,
@@ -347,51 +427,13 @@ const manageSubscriptionStatusChange = async (
     )
 }
 
-// // Retrieve customer id
-// const retrieveCustomerInStripe = async ({
-//   email,
-//   uuid
-// }: {
-//   email: string;
-//   uuid: string;
-// }) => {
-//   const { data: existingSupabaseCustomer, error: queryError } =
-//     await supabaseAdmin
-//       .from('customers')
-//       .select('*')
-//       .eq('id', uuid)
-//       .maybeSingle();
-
-//   if (queryError) {
-//     throw new Error(`Supabase customer lookup failed: ${queryError.message}`);
-//   }
-//   // Retrieve the Stripe customer ID using the Supabase customer ID, with email fallback
-//   let stripeCustomerId: string | undefined;
-//   if (existingSupabaseCustomer?.stripe_customer_id) {
-//     const existingStripeCustomer = await stripe.customers.retrieve(
-//       existingSupabaseCustomer.stripe_customer_id
-//     );
-//     stripeCustomerId = existingStripeCustomer.id;
-//     // console.log('existingStripeCustomer', existingStripeCustomer);
-//   } else {
-//     // If Stripe ID is missing from Supabase, try to retrieve Stripe customer ID by email
-//     const stripeCustomers = await stripe.customers.list({ email: email });
-//     stripeCustomerId =
-//       stripeCustomers.data.length > 0 ? stripeCustomers.data[0].id : undefined;
-//   }
-//   if (stripeCustomerId) {
-//     return stripeCustomerId;
-//   } else {
-//     throw new Error('Supabase customer record couldnt be accessed.');
-//   }
-// };
-
 export {
   upsertProductRecord,
   upsertPriceRecord,
   deleteProductRecord,
   deletePriceRecord,
   createOrRetrieveCustomer,
-  manageSubscriptionStatusChange
+  manageSubscriptionStatusChange,
+  manageDiscordRoles
   // retrieveCustomerInStripe
 }

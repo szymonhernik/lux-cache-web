@@ -68,10 +68,9 @@ export async function POST(req: Request) {
         case 'product.deleted':
           await deleteProductRecord(event.data.object as Stripe.Product)
           break
-        case 'customer.subscription.created':
 
+        case 'customer.subscription.created':
         case 'customer.subscription.updated':
-        // TO DO: Trigger manageSubscriptionStatusChange to update the billing details in supabase
         case 'customer.subscription.deleted':
           const subscription = event.data.object as Stripe.Subscription
           await manageSubscriptionStatusChange(
@@ -79,7 +78,16 @@ export async function POST(req: Request) {
             subscription.customer as string,
             event.type === 'customer.subscription.created'
           )
+          // if (event.type === 'customer.subscription.updated') {
+          //   await manageDiscordRoles(
+          //     subscription.customer as string,
+          //     subscription
+          //   )
+          // } else if (event.type === 'customer.subscription.deleted') {
+          //   await removeDiscordRoles(subscription.customer as string)
+          // }
           break
+
         case 'checkout.session.completed':
           const checkoutSession = event.data.object as Stripe.Checkout.Session
           if (checkoutSession.mode === 'subscription') {
