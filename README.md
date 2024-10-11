@@ -166,48 +166,42 @@ LC DRIVE: https://drive.google.com/drive/folders/1kj9jbNEVUXGrVBxxjjfxDBZ_7C-3HE
 
 ---
 
-### **Step-by-Step Process for Discord Integration:**
+### **Step-by-Step Process for Updated Discord Integration:**
 
 1. **Stripe Webhook Event Handling (`/api/webhooks/route.ts`)**:
 
-   - When a subscription is created, updated, or deleted, the Stripe webhook sends an event.
+   - When a subscription is created, updated, or deleted, Stripe sends a webhook event.
    - The event triggers the `manageSubscriptionStatusChange()` function to update the subscription status.
-   - If the event is of type `customer.subscription.updated`, the system proceeds to manage Discord roles by invoking `manageDiscordRoles()`.
+   - **If a subscription is created or updated**, the system checks the user's Discord integration and manages roles accordingly by calling `manageDiscordRoles()`.
+   - **If a subscription is deleted**, the system calls `removeDiscordRoles()` to revoke all of the user’s Discord roles.
 
 2. **Fetching Customer and Discord Integration Data (`manageDiscordRoles()` in `utils/supabase/admin.ts`)**:
 
-   - The `manageDiscordRoles()` function retrieves the Stripe customer ID from the `customers` table using Supabase.
-   - The `discord_integration` table is queried to fetch the Discord ID and connection status for the corresponding user.
-   - If no active Discord connection is found, the function exits. Otherwise, it proceeds to manage the roles.
+   - The function retrieves the customer’s ID using the `customers` table in Supabase based on the Stripe customer ID.
+   - It fetches the Discord connection status and Discord ID from the `discord_integration` table.
+   - If the user is connected to Discord, the system retrieves their subscription plan and assigns the appropriate Discord roles.
 
-3. **Determining Subscription Plan**:
+3. **Assigning Discord Roles (`assignDiscordRoles()` in `discord/actions.ts`)**:
 
-   - The function retrieves the subscription plan from Stripe, which includes the product name.
-   - The product name (e.g., "Premium Subscriber") is then used to determine the corresponding Discord role.
+   - The `assignDiscordRoles()` function assigns roles based on the user's subscription plan. It compares the current roles with the required ones and makes updates using the Discord API.
+   - Roles that are no longer relevant are removed, and the correct role for the current subscription tier is assigned.
 
-4. **Assigning Discord Roles (`assignDiscordRoles()` in `discord/actions.ts`)**:
+4. **Handling Subscription Deletion (New Functionality)**:
 
-   - The function checks if the user has the correct role in Discord by comparing the subscription plan with the role.
-   - Roles that no longer match the user's subscription tier are removed from the user.
-   - If the new role is not already assigned, it is added using Discord's API.
+   - When a subscription is deleted, the system calls the `removeDiscordRoles()` function.
+   - This function fetches the current roles for the user from the Discord server and removes all subscription-related roles using the Discord API.
 
-5. **Fetching and Adding User to Discord Server (`connectDiscord()` in `discord/actions.ts`)**:
+5. **Removing Discord Roles (`removeAllDiscordRoles()` in `discord/actions.ts`)**:
 
-   - When the user connects their Discord account, the app uses OAuth2 to authenticate the user with Discord.
-   - The user is added to the Discord server (guild) and assigned the correct role based on their subscription tier.
-   - The Discord connection status is updated in the `discord_integration` table to reflect that the user is connected.
+   - This function removes all roles associated with subscription tiers (Supporter, Subscriber, Premium) by fetching the user’s current roles from Discord and issuing DELETE requests for each role using the Discord API.
 
-6. **Role Assignment Based on Subscription Tier (`getRoleIdForTier()`)**:
-
-   - The subscription tier is matched to a role ID defined in the environment variables (`DISCORD_ROLES`).
-   - If no subscription or free tier, no role is assigned.
-
-7. **Removing Discord Roles**:
-   - If a user's subscription changes or they no longer qualify for certain roles, those roles are removed from the Discord server using the Discord API.
+6. **Updating Discord Integration Status**:
+   - If a user disconnects their Discord account or their subscription is deleted, the Discord integration status is updated in the `discord_integration` table.
+   - This reflects the disconnection or revocation of roles, ensuring that the user no longer has roles in Discord.
 
 ---
 
-### **Diagram**:
+### **Updated Diagram**:
 
 ```
 Stripe Webhook (Subscription Created/Updated/Deleted)
@@ -216,39 +210,31 @@ Stripe Webhook (Subscription Created/Updated/Deleted)
   manageSubscriptionStatusChange()
             |
             v
-manageDiscordRoles() (Only for Subscription Updated)
-            |
-            v
- Fetch User Info (From Supabase customers table)
-            |
-            v
-Fetch Discord Connection Info (From discord_integration table)
-            |
-            v
-  Check if User is Connected to Discord
-            |
-            v
-Retrieve Subscription Plan from Stripe
-            |
-            v
- assignDiscordRoles() based on Plan
-            |
-            v
-Fetch Current Roles from Discord Server
-            |
-            v
-  Remove Outdated Roles (If Needed)
-            |
-            v
- Add New Role (If Applicable)
-            |
-            v
-     Role Assignment Completed
+   ┌────────┴─────────┐
+   |                  |
+Updated Subscription  Deleted Subscription
+   |                  |
+   v                  v
+manageDiscordRoles()  removeDiscordRoles()
+   |                  |
+   v                  |
+ Fetch User Info      |
+   |                  |
+   v                  |
+Fetch Discord Connection Info
+   |                  |
+   v                  |
+Retrieve Subscription Plan (Stripe)
+   |                  |
+   v                  |
+ assignDiscordRoles()  |
+   |                  |
+   v                  v
+Remove Old Roles    removeAllDiscordRoles()
+   |                  |
+   v                  v
+ Add New Role    Remove All Roles
+   |
+   v
+Role Assignment Completed
 ```
-
-### **Summary**:
-
-- The integration starts by processing a webhook event from Stripe.
-- It retrieves customer information and checks their Discord integration status.
-- Based on their subscription plan, the app updates their Discord roles using the Discord API.
-- All operations are logged, and any issues (e.g., API errors, missing data) are reported via error handling.
