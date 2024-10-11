@@ -22,21 +22,6 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 )
 
-export async function updateDiscordIntegration(
-  userId: string,
-  updateData: Partial<Tables<'discord_integration'>>
-) {
-  const { error } = await supabaseAdmin.from('discord_integration').upsert({
-    user_id: userId,
-    ...updateData
-  })
-
-  if (error) {
-    console.error('Error updating Discord integration:', error)
-    throw error
-  }
-}
-
 const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
@@ -247,6 +232,26 @@ const copyBillingDetailsToCustomer = async (
     .eq('id', uuid)
   if (updateError)
     throw new Error(`Customer update failed: ${updateError.message}`)
+}
+
+export async function updateDiscordIntegration(
+  userId: string,
+  updateData: Partial<Tables<'discord_integration'>>
+) {
+  const { error } = await supabaseAdmin.from('discord_integration').upsert(
+    {
+      user_id: userId, // Ensure this is part of the unique constraint
+      ...updateData
+    },
+    {
+      onConflict: 'user_id' // Specify the column to check for conflicts
+    }
+  )
+
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw error
+  }
 }
 
 export async function disconnectDiscord(userId: string) {
