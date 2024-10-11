@@ -44,7 +44,7 @@ export const getDiscordConnectionStatus = cache(
 
 export async function disconnectDiscord(userId: string) {
   const supabase = createClient()
-  const { error, data } = await supabase
+  const { error } = await supabase
     .from('discord_integration')
     .update({
       connection_status: false,
@@ -52,21 +52,13 @@ export async function disconnectDiscord(userId: string) {
       connected_at: null
     })
     .eq('user_id', userId)
-    .select()
+
   if (error) {
     console.error('Error updating Discord integration:', error)
     throw new Error('Failed to update Discord integration')
   }
 
-  if (!data) {
-    console.error('No record found to update')
-    throw new Error('No record found to update')
-  }
-  if (data.length === 1 && data[0].connection_status === false) {
-    console.log('Discord integration updated. user disconnected')
-  }
-
-  // TODO: Implement Discord API call to remove user from server or roles
+  console.log('Discord integration updated. User disconnected')
 }
 
 export async function initiateDiscordConnection() {
@@ -297,4 +289,70 @@ function getRoleIdForTier(tier: string): string | null {
 
   console.log(`Role ID for tier ${tier}: ${roleId}`)
   return roleId
+}
+
+export async function removeAllDiscordRoles(userId: string) {
+  if (!DISCORD_GUILD_ID) {
+    throw new Error('DISCORD_GUILD_ID is not set in environment variables')
+  }
+
+  const rolesToRemove = [
+    DISCORD_ROLES.SUPPORTER,
+    DISCORD_ROLES.SUBSCRIBER,
+    DISCORD_ROLES.PREMIUM
+  ]
+
+  try {
+    // Fetch current roles of the user
+    const memberResponse = await fetch(
+      `${DISCORD_API_ENDPOINT}/guilds/${DISCORD_GUILD_ID}/members/${userId}`,
+      {
+        headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+      }
+    )
+
+    if (!memberResponse.ok) {
+      const errorBody = await memberResponse.text()
+      throw new Error(
+        `Failed to fetch user roles: ${memberResponse.status} ${errorBody}`
+      )
+    }
+
+    const memberData = await memberResponse.json()
+    const currentRoles = memberData.roles
+
+    // Remove roles that the user has and are in the rolesToRemove array
+    const rolesToRemovePromises = rolesToRemove
+      .filter((role) => currentRoles.includes(role))
+      .map(async (role) => {
+        try {
+          const removeRoleResponse = await fetch(
+            `${DISCORD_API_ENDPOINT}/guilds/${DISCORD_GUILD_ID}/members/${userId}/roles/${role}`,
+            {
+              method: 'DELETE',
+              headers: { Authorization: `Bot ${DISCORD_BOT_TOKEN}` }
+            }
+          )
+
+          if (!removeRoleResponse.ok) {
+            const errorBody = await removeRoleResponse.text()
+            console.warn(
+              `Failed to remove Discord role ${role}: ${removeRoleResponse.status} ${errorBody}`
+            )
+          } else {
+            console.log(`Successfully removed role ${role}`)
+          }
+        } catch (error) {
+          console.error(`Error removing role ${role}:`, error)
+        }
+      })
+
+    // Perform all removals concurrently
+    await Promise.all(rolesToRemovePromises)
+
+    console.log('All Discord roles removed successfully')
+  } catch (error) {
+    console.error('Error removing Discord roles:', error)
+    throw error
+  }
 }

@@ -4,6 +4,10 @@ import { stripe } from '@/utils/stripe/config'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import type { Database, Tables, TablesInsert } from 'types_db'
+import {
+  removeAllDiscordRoles,
+  disconnectDiscord
+} from '@/app/(pages)/(account)/account/subscription/_components/discord/actions'
 
 type Product = Tables<'products'>
 type Price = Tables<'prices'>
@@ -445,6 +449,61 @@ const manageSubscriptionStatusChange = async (
 //   }
 // };
 
+const removeDiscordRoles = async (customerId: string) => {
+  const { data: customerData, error: customerFetchError } = await supabaseAdmin
+    .from('customers')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
+    .single()
+
+  if (customerFetchError) {
+    console.error('Error fetching user_id:', customerFetchError)
+    return
+  }
+
+  if (!customerData) {
+    console.error('No customer found for Stripe customer ID:', customerId)
+    return
+  }
+
+  const supabaseUserId = customerData.id
+
+  // Fetch Discord integration data
+  const { data: discordIntegrationData, error: discordError } =
+    await supabaseAdmin
+      .from('discord_integration')
+      .select('connection_status, discord_id')
+      .eq('user_id', supabaseUserId)
+      .single()
+
+  if (discordError) {
+    console.error('Error fetching Discord integration:', discordError)
+    return
+  }
+
+  if (
+    !discordIntegrationData ||
+    !discordIntegrationData.connection_status ||
+    !discordIntegrationData.discord_id
+  ) {
+    console.log('User has no active Discord integration')
+    return
+  }
+
+  try {
+    await removeAllDiscordRoles(discordIntegrationData.discord_id)
+    await disconnectDiscord(supabaseUserId)
+    console.log(
+      `Discord roles removed and connection status updated for user ${supabaseUserId}`
+    )
+  } catch (error) {
+    console.error(
+      'Error removing Discord roles and updating connection status:',
+      error
+    )
+  }
+}
+
 export {
   upsertProductRecord,
   upsertPriceRecord,
@@ -452,6 +511,7 @@ export {
   deletePriceRecord,
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
-  manageDiscordRoles
+  manageDiscordRoles,
+  removeDiscordRoles
   // retrieveCustomerInStripe
 }

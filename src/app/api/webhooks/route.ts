@@ -6,7 +6,8 @@ import {
   manageSubscriptionStatusChange,
   deleteProductRecord,
   deletePriceRecord,
-  manageDiscordRoles
+  manageDiscordRoles,
+  removeDiscordRoles
 } from '@/utils/supabase/admin'
 import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
@@ -84,6 +85,8 @@ export async function POST(req: Request) {
               subscription.customer as string,
               subscription
             )
+          } else if (event.type === 'customer.subscription.deleted') {
+            await removeDiscordRoles(subscription.customer as string)
           }
           break
 
