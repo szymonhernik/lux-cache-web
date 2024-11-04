@@ -1,4 +1,4 @@
-import Stripe from 'stripe';
+import Stripe from 'stripe'
 
 export const stripe = new Stripe(
   process.env.STRIPE_SECRET_KEY_LIVE ?? process.env.STRIPE_SECRET_KEY ?? '',
@@ -12,7 +12,7 @@ export const stripe = new Stripe(
     appInfo: {
       name: 'Next.js Subscription Starter',
       version: '0.0.0',
-      url: 'https://saas-starter-test.vercel.app'
+      url: 'lc-local-development.vercel.app'
     }
   }
-);
+)

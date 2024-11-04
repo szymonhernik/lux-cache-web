@@ -25,13 +25,6 @@ const SubscriptionCompletedEmail = () => {
       <Body style={main}>
         <Container style={container}>
           <Section style={message}>
-            <Img
-              src={`${baseUrl}/lcLogo.webp`}
-              alt="LC logo"
-              width="50"
-              height="32"
-              style={{ margin: 'auto' }}
-            />
             <Heading style={global.heading}>Thank you for subscribing!</Heading>
             <Text style={global.text}>
               You are now subscribed to our platform. You can now access all the
