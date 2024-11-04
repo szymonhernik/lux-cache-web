@@ -204,7 +204,6 @@ const copyBillingDetailsToCustomer = async (
   //Todo: check this assertion
   const customer = payment_method.customer as string
   const { name, phone, address } = payment_method.billing_details
-  // if (!name || !phone || !address) return;
 
   // No matter the state of billing information new subscription marks the user as not eligible for trials in future
   if (!name || !address) {
@@ -239,11 +238,11 @@ export async function updateDiscordIntegration(
 ) {
   const { error } = await supabaseAdmin.from('discord_integration').upsert(
     {
-      user_id: userId, // Ensure this is part of the unique constraint
+      user_id: userId,
       ...updateData
     },
     {
-      onConflict: 'user_id' // Specify the column to check for conflicts
+      onConflict: 'user_id'
     }
   )
 
@@ -407,13 +406,6 @@ const manageSubscriptionStatusChange = async (
   console.log(
     `Inserted/updated subscription [${subscription.id}] for user [${uuid}]. `
   )
-  // console.log(`Subscription [${subscription}]`);
-  // console.log(
-  //   `Default payment method`,
-  //   JSON.stringify(subscription.default_payment_method, null, 2)
-  // );
-  // // console.log(`subscriptionData [${subscriptionData}]`);
-  // console.log('subscriptionData', JSON.stringify(subscriptionData, null, 2));
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
@@ -435,5 +427,4 @@ export {
   createOrRetrieveCustomer,
   manageSubscriptionStatusChange,
   manageDiscordRoles
-  // retrieveCustomerInStripe
 }

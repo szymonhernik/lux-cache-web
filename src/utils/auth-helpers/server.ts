@@ -371,7 +371,9 @@ export async function updatePasswordInAccount(formData: FormData) {
   const password = String(formData.get('password')).trim()
   const passwordConfirm = String(formData.get('passwordConfirm')).trim()
   let redirectPath: string
-
+  // Rate limit the request
+  // Read from Vercel headers, specifically the ja4-digest
+  // TODO: consider user limiting or IP
   const ja4 = headers().get('x-vercel-ja4-digest')
   const { success } = await ratelimit.limit(ja4 ?? 'anonymous')
 

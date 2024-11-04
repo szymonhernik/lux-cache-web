@@ -1,7 +1,5 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { decodeJwt } from 'jose'
-import { cookies } from 'next/headers'
-import { redirect } from 'next/navigation'
 import { type NextRequest, NextResponse } from 'next/server'
 
 export const createClient = (request: NextRequest) => {
@@ -60,8 +58,6 @@ export const createClient = (request: NextRequest) => {
     }
   )
 
-  // Attempt to retrieve and decode the JWT from cookies
-
   return { supabase, response }
 }
 
@@ -84,8 +80,6 @@ export const updateSession = async (request: NextRequest) => {
   }
 
   try {
-    // const { data, error } = await supabase.auth.refreshSession()
-
     const session = await supabase.auth.getSession()
     if (session.data.session) {
       const decodedJwt = decodeJwt(session.data.session.access_token)

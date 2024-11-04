@@ -1,7 +1,7 @@
 import { createBrowserClient } from '@supabase/ssr'
 import { SupabaseClient } from '@supabase/supabase-js'
 
-import { Database, Tables } from 'types_db'
+import { Database } from 'types_db'
 
 let client: SupabaseClient<Database> | undefined
 

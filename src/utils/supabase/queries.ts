@@ -77,11 +77,6 @@ export const getUserDetails = cache(async (supabase: SupabaseClient) => {
   return userDetails as User
 })
 
-// export const getPricesDetails = cache(async () => {
-//   const pricesDetails = await loadPrices()
-//   return pricesDetails
-// })
-
 // get price and product info from stripe based on the price id
 export const getPrice = cache(
   async (supabase: SupabaseClient, priceId: string) => {

@@ -465,7 +465,7 @@ export async function createStripePortal(currentPath: string) {
 type CustomCheckoutResponse = {
   sessionId?: string
   errorRedirect?: string
-  clientSecret?: string | null // Add this line
+  clientSecret?: string | null
 }
 export async function updatePaymentMethod(
   customerId: string,
@@ -614,8 +614,6 @@ export async function customCheckoutWithStripe(
         mode: 'payment'
       }
     }
-
-    // console.log('Params:', params);
 
     // Create a checkout session in Stripe
     let session

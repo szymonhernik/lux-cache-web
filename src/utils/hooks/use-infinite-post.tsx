@@ -19,9 +19,7 @@ export const useInfinitePost = (
   const initialPageParams = { lastPublishedAt, lastId, limit }
   const searchParams = useSearchParams()
   const isFiltered = searchParams.get('filter')
-  // const initialPageParams = searchParams.get('filter')
-  //   ? { lastPublishedAt: null, lastId: null, limit }
-  //   : { lastPublishedAt, lastId, limit }
+
   // sort selectedFiltersArray alphabetically so that whatever order the user selects the filters in, the query key will be the same
   const sortedSelectedFiltersArray = sortSelectedFilters(selectedFiltersArray)
 
@@ -52,8 +50,3 @@ export const useInfinitePost = (
     initialPageParam: initialPageParams
   })
 }
-
-// const searchParams = useSearchParams()
-// const initialPageParams = searchParams.get('filter')
-//   ? { lastPublishedAt: null, lastId: null, limit }
-//   : { lastPublishedAt, lastId, limit }

@@ -1,4 +1,3 @@
-// import type { PortableTextBlock } from 'next-sanity'
 import type { Image, PortableTextBlock } from 'sanity'
 import {
   InitialPostsQueryResult,

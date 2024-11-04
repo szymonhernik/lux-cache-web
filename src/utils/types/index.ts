@@ -10,16 +10,6 @@ interface PriceWithProduct extends Price {
   products: Product | null
 }
 
-interface ExtendedProductMetadata {
-  index?: string
-  trial_allowed?: string
-}
-
-// Omit the original 'metadata' from Product and add the new one.
-// type ProductWithFlexibleMetadata = Omit<Product, 'metadata'> & {
-//   metadata?: ExtendedProductMetadata;
-// };
-
 interface SubscriptionWithProduct extends Subscription {
   prices: PriceWithProduct | null
 }
@@ -52,10 +42,3 @@ export type {
   SubscriptionWithProduct,
   CheckoutResponse
 }
-
-// type ExtendedProduct = Product & {
-//   metadata: {
-//     trial_allowed?: 'true' | undefined;
-//     index?: '0' | '1' | '2' | undefined;
-//   };
-// };
