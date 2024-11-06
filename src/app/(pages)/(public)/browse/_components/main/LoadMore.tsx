@@ -2,7 +2,7 @@
 
 import { PreviewVideoType, SinglePostType } from '@/utils/types/sanity'
 import { useInViewport } from '@mantine/hooks'
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect } from 'react'
 import ListItem from './ListItem'
 
 import { useInfinitePost } from '@/utils/hooks/use-infinite-post'
@@ -11,9 +11,7 @@ import { GridWrapperDiv } from './GridWrapperDiv'
 import { limitNumber } from '@/utils/fetch-helpers/client'
 import PostWrapper from './PostWrapper'
 import {
-  EpisodeSkeleton,
-  EpisodeSkeletonListView,
-  EpisodesSkeletonTwo
+  EpisodeSkeleton
 } from '@/components/ui/skeletons/skeletons'
 
 export default function LoadMore({

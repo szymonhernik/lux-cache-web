@@ -8,7 +8,6 @@ import { InitialPostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import {
   Fragment,
   Suspense,
-  use,
   useCallback,
   useEffect,
   useRef,
@@ -25,7 +24,6 @@ import useSubscription from '@/utils/hooks/use-subscription-query'
 import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
 import { useMediaQuery } from '@/utils/hooks/use-media-query'
 import { PreviewVideoType } from '@/utils/types/sanity'
-import { HoverProvider } from './HoverProvider'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult['posts']

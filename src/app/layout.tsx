@@ -1,5 +1,4 @@
 import { Metadata } from 'next'
-import Footer from '@/components/ui/Footer'
 import localFont from 'next/font/local'
 
 import '@/styles/main.css'

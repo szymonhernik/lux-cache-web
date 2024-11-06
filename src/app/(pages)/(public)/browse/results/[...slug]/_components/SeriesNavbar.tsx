@@ -1,6 +1,5 @@
 import {
-  PostsBySeriesSlugQueryResult,
-  Slug
+  PostsBySeriesSlugQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
 import Breadcrumbs from '../../../../_components/Breadcrumbs'

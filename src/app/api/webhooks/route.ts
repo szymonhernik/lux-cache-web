@@ -7,7 +7,6 @@ import {
   deleteProductRecord,
   deletePriceRecord
 } from '@/utils/supabase/admin'
-import { revalidatePath } from 'next/cache'
 import { Resend } from 'resend'
 import SubscriptionCompletedEmail from '@/components/emails/SubscriptionCompletedEmail'
 import { createClient } from '@/utils/supabase/server'

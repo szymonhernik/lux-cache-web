@@ -1,18 +1,9 @@
 import {
   PortableText,
-  type PortableTextBlock,
   type PortableTextComponents
 } from 'next-sanity'
-import type { Image } from 'sanity'
 import s from './CustomPortableTextPages.module.css'
 
-import ImageBoxArticle from './ImageBoxArticle'
-import { TimelineSection } from './TimelineSection'
-import YouTubeEmbed from './YouTubeEmbed'
-import SpotifyEmbed from './SpotifyEmbed'
-import AudioInlineMux from './AudioInlineMux'
-import VideoMuxInline from './VideoMuxInline'
-import { PageContent } from '@/utils/types/sanity'
 import {
   Accordion,
   AccordionContent,

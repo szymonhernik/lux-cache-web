@@ -1,6 +1,5 @@
 import {
   Breadcrumb,
-  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
@@ -8,7 +7,6 @@ import {
   BreadcrumbSeparator
 } from '@/components/shadcn/ui/breadcrumb'
 
-import { PostsByArtistSlugQueryResult } from '@/utils/types/sanity/sanity.types'
 
 type TypePathnames = {
   name: string

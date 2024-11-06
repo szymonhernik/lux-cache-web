@@ -1,4 +1,4 @@
-import { HomeIcon, TiersIcon } from '@sanity/icons'
+import { TiersIcon } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 
 export default defineType({

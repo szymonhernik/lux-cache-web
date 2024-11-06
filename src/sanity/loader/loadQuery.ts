@@ -5,10 +5,6 @@ import { draftMode } from 'next/headers'
 
 import { token } from '@/sanity/lib/token'
 import {
-  PagePayload,
-  PostPayload,
-  PostsPayload,
-  ProjectPayload,
   SettingsPayload
 } from '@/utils/types/sanity'
 import {

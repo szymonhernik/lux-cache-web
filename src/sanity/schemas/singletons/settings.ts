@@ -3,9 +3,7 @@ import {
   CogIcon,
   EarthGlobeIcon,
   LinkIcon,
-  MenuIcon,
-  TiersIcon,
-  UlistIcon
+  MenuIcon
 } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'
 

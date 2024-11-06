@@ -1,13 +1,7 @@
 'use client'
 
-import TestQuery from '@/components/TestQuery'
-import { Button } from '@/components/shadcn/ui/button'
-import { PostsPayload } from '@/utils/types/sanity'
 import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { EncodeDataAttributeCallback } from '@sanity/react-loader'
-import { SanityDocument } from 'next-sanity'
-import Image from 'next/image'
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 export interface HomePageProps {

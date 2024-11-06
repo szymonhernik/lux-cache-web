@@ -3,7 +3,6 @@ import Card from '@/components/ui/Card'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -12,9 +11,7 @@ import {
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import { getStripe } from '@/utils/stripe/client'
-import { AddressElement, CustomCheckoutProvider } from '@stripe/react-stripe-js'
 import { useRouter } from 'next/navigation'
-import { getErrorRedirect } from '@/utils/helpers'
 
 const stripePromise = getStripe()
 

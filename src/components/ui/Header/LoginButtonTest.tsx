@@ -1,22 +1,13 @@
 'use client'
-import { handleRequest } from '@/utils/auth-helpers/client'
 import { SignOut } from '@/utils/auth-helpers/server'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
-import s from './Navbar.module.css'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger
-} from '@/components/shadcn/ui/sheet'
+
+
 import clsx from 'clsx'
-import { ChevronRightIcon } from '@radix-ui/react-icons'
-import { ChevronLeftOwn, ChevronRightOwn } from '../Icons/ChevronRightOwn'
+import { ChevronRightOwn } from '../Icons/ChevronRightOwn'
 
 // client side component that handles sign in and sign out, depending on the session
 // this way we can render some pages where this component appears as static pages

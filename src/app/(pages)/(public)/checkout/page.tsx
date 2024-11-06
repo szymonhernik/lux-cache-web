@@ -1,6 +1,4 @@
-import { Button } from '@/components/shadcn/ui/button'
 import { createClient } from '@/utils/supabase/server'
-import Link from 'next/link'
 
 import { redirect } from 'next/navigation'
 import { z } from 'zod'

@@ -2,7 +2,6 @@ import type { Image, PortableTextBlock } from 'sanity'
 import {
   InitialPostsQueryResult,
   PostBySlugQueryResult,
-  PostsQueryResult,
   SanityImageCrop,
   SanityImageHotspot,
   internalGroqTypeReferenceTo

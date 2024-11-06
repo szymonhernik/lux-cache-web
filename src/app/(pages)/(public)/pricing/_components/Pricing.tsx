@@ -1,30 +1,18 @@
 'use client'
 
-import LogoCloud from '@/components/ui/LogoCloud'
-import type { Tables } from 'types_db'
-import { getStripe } from '@/utils/stripe/client'
-import { checkoutWithStripe } from '@/utils/stripe/server'
-import { getErrorRedirect } from '@/utils/helpers'
 import { User } from '@supabase/supabase-js'
 import cn from 'classnames'
-import { useRouter, usePathname, useSearchParams } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useState } from 'react'
 import {
   BillingInterval,
-  Price,
   ProductWithPrices,
   SubscriptionWithProduct
 } from '@/utils/types'
-import Link from 'next/link'
-import ConditionalWrapper from '../../../../../components/ui/ConditionalWrapper'
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage
-} from '@/components/shadcn/ui/avatar'
+
+
 import { Button } from '@/components/shadcn/ui/button'
 import { PricesQueryResult } from '@/utils/types/sanity/sanity.types'
-import { CustomPortableText } from '@/components/shared/CustomPortableText'
 import { CustomPortableTextPages } from '@/components/shared/CustomPortableTextPages'
 import clsx from 'clsx'
 import { toast } from 'sonner'

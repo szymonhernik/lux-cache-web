@@ -1,5 +1,3 @@
-import { Button } from '@/components/shadcn/ui/button'
-import { BookmarkIcon } from '@radix-ui/react-icons'
 import BookmarkButton from './BookmarkButton'
 import { createClient } from '@/utils/supabase/server'
 import { getUser } from '@/utils/supabase/queries'

@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/shadcn/ui/button'
 import { createUrl } from '@/utils/helpers'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 

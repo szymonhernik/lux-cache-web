@@ -4,7 +4,6 @@ import { type QueryResponseInitial } from '@sanity/react-loader'
 
 import { useQuery } from '@/sanity/loader/useQuery'
 
-import { PostsPayload } from '@/utils/types/sanity'
 import { postsQuery } from '@/sanity/lib/queries'
 import HomePage from './HomePage'
 import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'

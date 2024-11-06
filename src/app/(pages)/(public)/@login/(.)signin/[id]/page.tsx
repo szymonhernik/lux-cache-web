@@ -1,6 +1,5 @@
 import { Suspense } from 'react'
 import { createClient } from '@/utils/supabase/server'
-import { ModalLogin } from '../../../_components/modalLogin'
 import {
   getAuthTypes,
   getRedirectMethod,

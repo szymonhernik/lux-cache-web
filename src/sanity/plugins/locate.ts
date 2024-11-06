@@ -1,10 +1,8 @@
-import { map, Observable } from 'rxjs'
+import { map } from 'rxjs'
 import {
-  DocumentLocationResolver,
-  DocumentLocationsState
+  DocumentLocationResolver
 } from 'sanity/presentation'
 
-import { resolveHref } from '@/sanity/lib/utils'
 
 // export const locate: DocumentLocationResolver = (params, context) => {
 //   if (params.type === 'settings') {

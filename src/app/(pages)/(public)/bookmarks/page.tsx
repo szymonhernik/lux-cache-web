@@ -2,7 +2,6 @@ import { loadBookmarkedPosts } from '@/sanity/loader/loadQuery'
 import { getUser } from '@/utils/supabase/queries'
 import { createClient } from '@/utils/supabase/server'
 import { BookmarkedQueryResult } from '@/utils/types/sanity/sanity.types'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import BookmarksLayout from './_components/BookmarksLayout'
 

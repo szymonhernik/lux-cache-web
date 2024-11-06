@@ -4,7 +4,6 @@ import { customCheckoutWithStripe } from '@/utils/stripe/server';
 import { redirect } from 'next/navigation';
 import CustomCheckoutProviderWrapper from './CustomCheckoutProviderWrapper';
 import { getErrorRedirect } from '@/utils/helpers';
-import { z } from 'zod';
 import { ProductMetadataSchema } from '@/utils/types/zod/types';
 
 type Price = Tables<'prices'>;

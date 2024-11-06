@@ -1,8 +1,4 @@
 import {
-  DocumentIcon,
-  FilterIcon,
-  FolderIcon,
-  ImageIcon,
   OlistIcon
 } from '@sanity/icons'
 import { defineArrayMember, defineField, defineType } from 'sanity'

@@ -1,4 +1,3 @@
-import { PlayIcon } from '@sanity/icons'
 import { defineField, defineType } from 'sanity'
 import { BsSoundwave } from 'react-icons/bs'
 

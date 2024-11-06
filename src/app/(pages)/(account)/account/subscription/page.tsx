@@ -1,17 +1,14 @@
 import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZod'
 import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkeleton'
 import { createClient } from '@/utils/supabase/server'
-import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
 import PremiumPlansPanel from '../_components/PremiumPlansPanel'
 import Link from 'next/link'
 import {
   getProducts,
   getSubscription,
-  getUser,
-  getUserDetails
+  getUser
 } from '@/utils/supabase/queries'
-import BillingAddress from '../_components/BillingAddress'
 import UpdateBillingAddress from '../_components/UpdateBillingAddress'
 import DiscordIntegration from './_components/discord/DiscordIntegration'
 import { getDiscordConnectionStatus } from './_components/discord/actions'

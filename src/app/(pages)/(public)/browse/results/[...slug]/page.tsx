@@ -1,4 +1,3 @@
-import { loadArtistsPosts } from '@/sanity/loader/loadQuery'
 import { fetchDataByCategory } from '@/utils/fetch-helpers/server'
 import ResultsPage from './_components/ResultsPage'
 

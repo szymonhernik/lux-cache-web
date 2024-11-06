@@ -2,7 +2,6 @@
 
 import { createUrl } from '@/utils/helpers'
 import {
-  ReadonlyURLSearchParams,
   usePathname,
   useRouter,
   useSearchParams

@@ -10,14 +10,12 @@ import {
   DialogTitle
 } from '@/components/shadcn/ui/dialog'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { initiateDiscordConnection } from './actions'
 import { useToast } from '@/components/ui/Toasts/use-toast'
-import { useRouter } from 'next/navigation'
 import { Badge } from '@/components/shadcn/ui/badge'
 import clsx from 'clsx'
 import { SubscriptionWithProduct } from '@/utils/types'
-import { Loader2, RefreshCw } from 'lucide-react'
 
 export default function DiscordIntegration({
   discordConnectionStatusResult,

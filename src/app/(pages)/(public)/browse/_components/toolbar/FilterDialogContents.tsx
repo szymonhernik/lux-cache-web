@@ -1,21 +1,15 @@
 'use client'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import {
-  Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger
+  DialogFooter
 } from './ToolbarDialog'
 import { FilterGroupsQueryResult } from '@/utils/types/sanity/sanity.types'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import s from './SearchInput/SearchInput.module.css'
 
-import { FilterGroupsSchema } from '@/utils/types/zod/types'
 import { useQuery } from '@tanstack/react-query'
 import { getFilteredPosts } from '@/utils/fetch-helpers/client'
 import { createUrl } from '@/utils/helpers'

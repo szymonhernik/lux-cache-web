@@ -1,7 +1,6 @@
 'use client'
 import { Button } from '@/components/shadcn/ui/button'
 import { createClient } from '@/utils/supabase/client'
-import { getUser } from '@/utils/supabase/queries'
 
 import { BookmarkIcon } from '@radix-ui/react-icons'
 import { BookmarkFilledIcon } from '@radix-ui/react-icons'

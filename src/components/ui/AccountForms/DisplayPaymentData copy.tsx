@@ -4,7 +4,7 @@ import {
   updateSubscriptionDefaultPaymentMethod
 } from '@/utils/stripe/server'
 import { ListPaymentMethodSchema } from '@/utils/types/zod/types'
-import { redirect, usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { z } from 'zod'
 

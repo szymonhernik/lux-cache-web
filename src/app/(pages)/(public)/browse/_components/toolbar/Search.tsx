@@ -5,9 +5,6 @@ import { useRouter } from 'next/navigation'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   DialogTrigger
 } from './ToolbarDialog'
 import SearchInput from './SearchInput'

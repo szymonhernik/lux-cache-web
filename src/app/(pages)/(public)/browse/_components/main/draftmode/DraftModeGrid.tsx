@@ -1,7 +1,5 @@
 'use client'
 import { PostsQueryResult } from '@/utils/types/sanity/sanity.types'
-import { QueryResponseInitial } from '@sanity/react-loader'
-import ListItem from '../ListItem'
 import { GridWrapperDiv } from '../GridWrapperDiv'
 import { Suspense } from 'react'
 

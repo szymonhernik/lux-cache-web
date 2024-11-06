@@ -4,10 +4,8 @@ import ImageBox from '@/components/ui/ImageBox'
 import Breadcrumbs from '../../../../_components/Breadcrumbs'
 import { useState } from 'react'
 import { Cross1Icon } from '@radix-ui/react-icons'
-import { ImageType } from '@/utils/types/sanity'
 import {
-  PostsByArtistSlugQueryResult,
-  Slug
+  PostsByArtistSlugQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
 interface Props {

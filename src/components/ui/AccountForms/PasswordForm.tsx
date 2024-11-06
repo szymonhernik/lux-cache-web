@@ -5,9 +5,8 @@ import Card from '@/components/ui/Card'
 import { handleRequest } from '@/utils/auth-helpers/client'
 import { updatePasswordInAccount } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
-import { useFormState, useFormStatus } from 'react-dom'
 
 export default function PasswordForm() {
   const router = useRouter()

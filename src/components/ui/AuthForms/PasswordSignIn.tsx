@@ -2,16 +2,13 @@
 
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { redirectToPath, signInWithPassword } from '@/utils/auth-helpers/server'
-import { handleRequest } from '@/utils/auth-helpers/client'
+import { signInWithPassword } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import { revalidatePath } from 'next/cache'
 import { Button } from '@/components/shadcn/ui/button'
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,

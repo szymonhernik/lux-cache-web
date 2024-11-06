@@ -1,16 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Hamburger from 'hamburger-react'
 import Link from 'next/link'
-import SignInOutLink from './SignInOutLink'
 import Logo from '@/components/icons/Logo'
 
-import { User } from '@supabase/supabase-js'
 import clsx from 'clsx'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { handleRequest } from '@/utils/auth-helpers/client'
-import { SignOut } from '@/utils/auth-helpers/server'
 import LoginButtonTest from './LoginButtonTest'
 
 // interface NavbarProps {

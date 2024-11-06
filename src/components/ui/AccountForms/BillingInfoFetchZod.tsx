@@ -1,11 +1,8 @@
-import { Tables } from 'types_db'
 import BillingInfo from './BillingInfo'
 import { stripe } from '@/utils/stripe/config'
-import Stripe from 'stripe'
 
 import { z } from 'zod'
 import {
-  CardDetailsSchema,
   CustomerDataSchema,
   CustomerIdSchema,
   PaymentMethodSchema,

@@ -1,7 +1,7 @@
 import { PaymentElement, useCustomCheckout } from '@stripe/react-stripe-js'
 import { useState } from 'react'
 
-import { redirect, usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { getStatusRedirect } from '@/utils/helpers'
 import { Button } from '@/components/shadcn/ui/button'
 

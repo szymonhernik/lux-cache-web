@@ -1,11 +1,10 @@
 'use client'
 
 import { getStripe } from '@/utils/stripe/client'
-import { CustomCheckoutProvider, PaymentElement } from '@stripe/react-stripe-js'
+import { CustomCheckoutProvider } from '@stripe/react-stripe-js'
 import CheckoutForm from './CheckoutForm'
 import { getErrorRedirect } from '@/utils/helpers'
 import { redirect } from 'next/navigation'
-import { useEffect } from 'react'
 
 const stripePromise = getStripe()
 export default function CustomCheckoutProviderWrapper(props: {

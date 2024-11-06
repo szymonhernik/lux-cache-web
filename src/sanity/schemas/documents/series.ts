@@ -1,5 +1,5 @@
-import { ImageIcon, LinkIcon, SchemaIcon } from '@sanity/icons'
-import { defineArrayMember, defineField, defineType } from 'sanity'
+import { SchemaIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'series',

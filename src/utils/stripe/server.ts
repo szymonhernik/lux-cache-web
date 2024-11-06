@@ -11,8 +11,6 @@ import {
   calculateTrialEndUnixTimestamp,
   getStatusRedirect
 } from '@/utils/helpers'
-import { Tables } from 'types_db'
-import { z } from 'zod'
 import { CheckoutResponse, Price, PriceWithProduct } from '../types'
 import {
   ProductMetadataSchema,

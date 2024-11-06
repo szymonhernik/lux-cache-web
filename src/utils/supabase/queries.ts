@@ -2,14 +2,12 @@ import { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import {
   ProductWithPrices,
-  Subscription,
   SubscriptionWithPriceAndProduct
 } from '../types'
 import { redirect } from 'next/navigation'
 import { Tables } from 'types_db'
 import { getErrorRedirect } from '../helpers'
 import subscriptionTiers, { SubscriptionTiers } from '../stripe/products'
-import { loadPrices } from '@/sanity/loader/loadQuery'
 
 type User = Tables<'users'>
 export const getUser = cache(async (supabase: SupabaseClient) => {

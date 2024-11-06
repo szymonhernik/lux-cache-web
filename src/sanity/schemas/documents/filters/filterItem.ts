@@ -1,5 +1,5 @@
-import { DocumentIcon, FilterIcon, ImageIcon, TagIcon } from '@sanity/icons'
-import { defineArrayMember, defineField, defineType } from 'sanity'
+import { TagIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
 
 export default defineType({
   name: 'filterItem',

@@ -7,8 +7,6 @@ import {
 import Pricing from './Pricing'
 import { loadPrices } from '@/sanity/loader/loadQuery'
 import { createClient } from '@/utils/supabase/server'
-import { ProductWithPrices } from '@/utils/types'
-import { ProductMetadataSchema } from '@/utils/types/zod/types'
 
 export default async function PricingLayout() {
   const supabase = createClient()

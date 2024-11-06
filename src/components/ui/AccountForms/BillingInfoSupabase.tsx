@@ -1,12 +1,6 @@
 'use client'
 
-import { useRouter, usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { createStripePortal } from '@/utils/stripe/server'
-import Link from 'next/link'
 import Card from '@/components/ui/Card'
-import { Tables } from 'types_db'
-import Stripe from 'stripe'
 
 interface PaymentMethodDetails {
   last4: string

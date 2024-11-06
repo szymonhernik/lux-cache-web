@@ -1,10 +1,8 @@
 import { Metadata } from 'next'
-import Footer from '@/components/ui/Footer'
 import { Toaster } from '@/components/ui/Toasts/toaster'
 import { Toaster as Sonner } from '@/components/shadcn/ui/sonner'
 
-import { PropsWithChildren, Suspense } from 'react'
-import localFont from 'next/font/local'
+import { Suspense } from 'react'
 
 import '@/styles/main.css'
 import { getURL } from '@/utils/helpers'

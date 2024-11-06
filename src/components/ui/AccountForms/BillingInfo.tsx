@@ -6,9 +6,8 @@ import { updatePaymentMethod } from '@/utils/stripe/server'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Stripe } from '@stripe/stripe-js'
-import { CustomCheckoutProvider, PaymentElement } from '@stripe/react-stripe-js'
+import { CustomCheckoutProvider } from '@stripe/react-stripe-js'
 import {
-  createStripePortal,
   retrievePaymentMethods
 } from '@/utils/stripe/server'
 import Card from '@/components/ui/Card'
@@ -16,21 +15,18 @@ import Card from '@/components/ui/Card'
 
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger
 } from '@/components/shadcn/ui/dialog'
 import DisplayPaymentData from './DisplayPaymentData'
-import { set, z } from 'zod'
+import { z } from 'zod'
 import {
   ListPaymentMethodSchema,
   PaymentMethodSchema
 } from '@/utils/types/zod/types'
-import AddNewPaymentMethod from './AddNewPaymentMethod'
 import PaymentMethodSetupForm from './PaymentMethodSetupForm'
 import { Button } from '@/components/shadcn/ui/button'
 

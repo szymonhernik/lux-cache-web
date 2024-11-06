@@ -1,6 +1,5 @@
 import {
   PortableText,
-  type PortableTextBlock,
   type PortableTextComponents
 } from 'next-sanity'
 import type { Image } from 'sanity'

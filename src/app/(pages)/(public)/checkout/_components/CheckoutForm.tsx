@@ -19,14 +19,8 @@ import {
 } from '@/components/shadcn/ui/alert'
 import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
 
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription
-} from '@/components/shadcn/ui/dialog'
+
+
 import { Progress } from '@/components/shadcn/ui/progress'
 
 export default function CheckoutForm(props: {

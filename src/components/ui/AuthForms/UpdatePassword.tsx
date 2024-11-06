@@ -1,8 +1,7 @@
 'use client'
 
 import { updatePassword } from '@/utils/auth-helpers/server'
-import { handleRequest } from '@/utils/auth-helpers/client'
-import { redirect, useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import { useForm } from 'react-hook-form'
@@ -17,7 +16,6 @@ import {
   FormMessage
 } from '@/components/shadcn/ui/form'
 import { Input } from '@/components/shadcn/ui/input'
-import { revalidatePath } from 'next/cache'
 
 interface UpdatePasswordProps {
   redirectMethod: string

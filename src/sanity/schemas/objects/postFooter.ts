@@ -1,4 +1,4 @@
-import { InsertBelowIcon, PlayIcon } from '@sanity/icons'
+import { InsertBelowIcon } from '@sanity/icons'
 import { defineField, defineType } from 'sanity'
 
 export default defineType({

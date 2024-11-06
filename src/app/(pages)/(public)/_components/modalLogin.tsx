@@ -3,7 +3,6 @@
 import { type ElementRef, useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createPortal } from 'react-dom'
-import { Button } from '@/components/shadcn/ui/button'
 
 export function ModalLogin({
   children,

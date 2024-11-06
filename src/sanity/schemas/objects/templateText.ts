@@ -1,6 +1,5 @@
-import { Description } from '@radix-ui/react-toast'
 import { InsertAboveIcon } from '@sanity/icons'
-import { defineArrayMember, defineField, defineType } from 'sanity'
+import { defineType } from 'sanity'
 
 export default defineType({
   name: 'templateText',

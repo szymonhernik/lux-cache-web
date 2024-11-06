@@ -3,7 +3,7 @@
 import { signInWithOAuth } from '@/utils/auth-helpers/client'
 import { type Provider } from '@supabase/supabase-js'
 // import { Github } from 'lucide-react';
-import { FaDiscord, FaGoogle, FaGithub } from 'react-icons/fa'
+import { FaDiscord, FaGoogle } from 'react-icons/fa'
 // import { Google } from 'react-ionicons';
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'

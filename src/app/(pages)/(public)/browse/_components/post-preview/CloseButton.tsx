@@ -1,6 +1,6 @@
 'use client'
 import CloseIcon from '@/components/icons/CloseIcon'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function CloseButton() {
   const router = useRouter()

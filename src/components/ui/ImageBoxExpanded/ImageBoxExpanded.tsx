@@ -1,8 +1,5 @@
-import React, { InputHTMLAttributes, ChangeEvent } from 'react'
-import cn from 'classnames'
+import React from 'react'
 
-import s from './Input.module.css'
-import { urlForImage } from '@/sanity/lib/utils'
 import Image from 'next/image'
 
 interface ImageExpanded {
