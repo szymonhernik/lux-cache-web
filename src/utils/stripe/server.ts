@@ -1,4 +1,3 @@
-// import 'server-only';
 'use server'
 
 import Stripe from 'stripe'
@@ -17,6 +16,7 @@ import {
   SubscriptionItemSchema
 } from '../types/zod/types'
 import { AddressType } from '@/app/(pages)/(account)/account/_components/UpdateBillingAddress'
+import { getAuthenticatedUser } from '../auth-helpers/server'
 
 export async function retrieveProducts() {
   try {
@@ -82,6 +82,12 @@ export async function updateCustomerBillingAddress(
   }
 }
 export async function retrievePaymentMethods(customerId: string) {
+  const user = await getAuthenticatedUser()
+  if (!user) {
+    console.log('No user found')
+    throw new Error('You must be signed in to perform this action')
+  }
+  // TODO: Add check to verify the customerId belongs to the authenticated user
   try {
     const paymentMethods = await stripe.customers.listPaymentMethods(customerId)
     // console.log('Payment methods from server stripe', paymentMethods);

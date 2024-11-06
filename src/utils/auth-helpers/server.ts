@@ -14,7 +14,7 @@ function isValidEmail(email: string) {
   return regex.test(email)
 }
 
-async function getAuthenticatedUser() {
+export async function getAuthenticatedUser() {
   const supabase = createClient()
   const {
     data: { user }

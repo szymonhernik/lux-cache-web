@@ -4,15 +4,12 @@ import { createClient } from '@/utils/supabase/server'
 import { Suspense } from 'react'
 import PremiumPlansPanel from '../_components/PremiumPlansPanel'
 import Link from 'next/link'
-import {
-  getProducts,
-  getSubscription,
-  getUser
-} from '@/utils/supabase/queries'
+import { getProducts, getSubscription, getUser } from '@/utils/supabase/queries'
 import UpdateBillingAddress from '../_components/UpdateBillingAddress'
 import DiscordIntegration from './_components/discord/DiscordIntegration'
 import { getDiscordConnectionStatus } from './_components/discord/actions'
 import { ENABLE_DISCORD_INTEGRATION } from '@/config/featureFlags'
+import BillingPanel from './_components/billing/BillingPanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -49,14 +46,12 @@ export default async function Page() {
               />
             </Suspense>
             <Suspense fallback={<BillingInfoScheleton />}>
-              <BillingInfoFetchZod subscription={subscription} />
+              <BillingPanel subscription={subscription} />
             </Suspense>
-
-            <UpdateBillingAddress subscription={subscription} />
             {/* <Suspense fallback={<BillingInfoScheleton />}>
-
-              <BillingAddress />
+              <BillingInfoFetchZod subscription={subscription} />
             </Suspense> */}
+            <UpdateBillingAddress subscription={subscription} />
           </>
         ) : (
           <div>
