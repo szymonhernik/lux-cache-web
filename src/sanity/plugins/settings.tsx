@@ -162,10 +162,7 @@ export const pageStructure = (
       .title('Templates')
       .icon(BlockElementIcon)
       .child(S.documentTypeList('templates').title('Templates'))
-    const plans = S.listItem()
-      .title('Plans (Developer Only)')
-      .icon(TiersIcon)
-      .child(S.documentTypeList('plan').title('Plan'))
+
     const series = S.listItem()
       .title('Series')
       .icon(SchemaIcon)
@@ -186,8 +183,6 @@ export const pageStructure = (
         series,
         S.divider(),
         templates
-        // S.divider(),
-        // plans
 
         // ...defaultListItems
       ])

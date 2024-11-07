@@ -31,8 +31,6 @@ import mainBody from '@/sanity/schemas/objects/mainBody'
 
 import blockContentSimple from '@/sanity/schemas/objects/blockContentSimple'
 import faq from '@/sanity/schemas/objects/faq'
-import plan from '@/sanity/schemas/documents/plan'
-import asyncList from '@/sanity/schemas/objects/asyncList'
 import mentorsGallery from '@/sanity/schemas/objects/mentorsGallery'
 import series from '@/sanity/schemas/documents/series'
 import templateText from '@/sanity/schemas/objects/templateText'
@@ -92,7 +90,6 @@ export default defineConfig({
       filterItem,
       filterGroup,
       templates,
-      plan,
       series,
 
       // Objects
@@ -101,7 +98,6 @@ export default defineConfig({
       blockContentSimple,
       mainBody,
       faq,
-      asyncList,
       mentorsGallery,
       templateText,
       blockContentAdvanced,

@@ -28,11 +28,8 @@ interface Props {
   subscription: SubscriptionWithProduct | null
 }
 
-export default function PremiumPlansPanel(props: Props) {
+export default function SubscriptionManagementPanel(props: Props) {
   const { products, subscription } = props
-
-  // console.log('subscription', subscription)
-
   const isScheduledForCancellation = subscription?.cancel_at_period_end
 
   const price = subscription?.prices

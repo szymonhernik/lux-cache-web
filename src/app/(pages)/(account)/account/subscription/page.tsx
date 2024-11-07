@@ -2,14 +2,14 @@ import BillingInfoFetchZod from '@/components/ui/AccountForms/BillingInfoFetchZo
 import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkeleton'
 import { createClient } from '@/utils/supabase/server'
 import { Suspense } from 'react'
-import PremiumPlansPanel from '../_components/PremiumPlansPanel'
 import Link from 'next/link'
 import { getProducts, getSubscription, getUser } from '@/utils/supabase/queries'
-import UpdateBillingAddress from '../_components/UpdateBillingAddress'
+import UpdateBillingAddress from './_components/billing/UpdateBillingAddress'
 import DiscordIntegration from './_components/discord/DiscordIntegration'
 import { getDiscordConnectionStatus } from './_components/discord/actions'
 import { ENABLE_DISCORD_INTEGRATION } from '@/config/featureFlags'
 import BillingPanel from './_components/billing/BillingPanel'
+import SubscriptionManagementPanel from './_components/plans/SubscriptionManagementPanel'
 
 export const dynamic = 'force-dynamic'
 
@@ -40,7 +40,7 @@ export default async function Page() {
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
-              <PremiumPlansPanel
+              <SubscriptionManagementPanel
                 products={products ?? []}
                 subscription={subscription}
               />

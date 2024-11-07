@@ -13,17 +13,6 @@ export default async function Account() {
     getUserDetails(supabase)
   ])
 
-  // console.log('ip', ip)
-
-  // const {
-  //   data: { user }
-  // } = await supabase.auth.getUser()
-
-  // const { data: userDetails } = await supabase
-  //   .from('users')
-  //   .select('*')
-  //   .single()
-
   if (!user) {
     return redirect('/signin/password_signin')
   }
