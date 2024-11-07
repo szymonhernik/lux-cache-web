@@ -15,9 +15,10 @@ import {
   ProductMetadataSchema,
   SubscriptionItemSchema
 } from '../types/zod/types'
-import { AddressType } from '@/app/(pages)/(account)/account/_components/UpdateBillingAddress'
+
 import { getAuthenticatedUser } from '../auth-helpers/server'
 import { getCustomer, getUser } from '../supabase/queries'
+import { AddressType } from '@/app/(pages)/(account)/account/subscription/_components/billing/UpdateBillingAddress'
 
 export async function retrieveProducts() {
   try {
