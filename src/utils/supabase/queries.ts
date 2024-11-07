@@ -1,9 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
-import {
-  ProductWithPrices,
-  SubscriptionWithPriceAndProduct
-} from '../types'
+import { ProductWithPrices, SubscriptionWithPriceAndProduct } from '../types'
 import { redirect } from 'next/navigation'
 import { Tables } from 'types_db'
 import { getErrorRedirect } from '../helpers'
@@ -15,6 +12,18 @@ export const getUser = cache(async (supabase: SupabaseClient) => {
     data: { user }
   } = await supabase.auth.getUser()
   return user
+})
+export const getCustomer = cache(async (supabase: SupabaseClient) => {
+  const { data: customer, error } = await supabase
+    .from('customers')
+    .select('*')
+    .maybeSingle()
+  if (error) {
+    // throw error
+    throw new Error('Error fetching customer')
+  } else {
+    return customer
+  }
 })
 
 export const getSubscription = cache(async (supabase: SupabaseClient) => {

@@ -17,6 +17,7 @@ import {
 } from '../types/zod/types'
 import { AddressType } from '@/app/(pages)/(account)/account/_components/UpdateBillingAddress'
 import { getAuthenticatedUser } from '../auth-helpers/server'
+import { getCustomer, getUser } from '../supabase/queries'
 
 export async function retrieveProducts() {
   try {
@@ -82,21 +83,35 @@ export async function updateCustomerBillingAddress(
   }
 }
 export async function retrievePaymentMethods(customerId: string) {
-  const user = await getAuthenticatedUser()
+  const supabase = createClient()
+  const user = await getUser(supabase)
   if (!user) {
     console.log('No user found')
     throw new Error('You must be signed in to perform this action')
   }
-  // TODO: Add check to verify the customerId belongs to the authenticated user
+  // Add check to verify the customerId belongs to the authenticated user
+  const customer = (await getCustomer(supabase)) as {
+    id: string
+    stripe_customer_id: string
+  }
+  // TODO: Check if this is how you should protect server actions
+
+  if (customer.stripe_customer_id !== customerId) {
+    throw new Error('You are not authorized to perform this action')
+  }
+
   try {
     const paymentMethods = await stripe.customers.listPaymentMethods(customerId)
-    // console.log('Payment methods from server stripe', paymentMethods);
+    console.log('Payment methods from server stripe', paymentMethods)
+    // TODO: Return this back to the client
+
     return paymentMethods.data
   } catch (error) {
     console.error(error)
     throw new Error('Could not retrieve payment methods.')
   }
 }
+
 export async function detachPaymentMethod(
   paymentMethodId: string,
   redirectPath: string = '/account'

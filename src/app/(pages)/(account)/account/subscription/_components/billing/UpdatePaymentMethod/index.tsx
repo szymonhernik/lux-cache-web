@@ -36,6 +36,7 @@ export default function UpdatePaymentMethod({
         console.error(validatedData.error.issues)
         return
       } else {
+        console.log('Validated data', validatedData.data)
         setPaymentMethods(validatedData.data)
       }
     } catch (error) {
