@@ -74,7 +74,7 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
             />
 
             {introTextBlocks && introTextBlocks.length > 0 && (
-              <div className="intro-text-container font-neue text-lg md:text-xl text-left">
+              <div className="intro-text-container font-serif text-lg md:text-xl text-left">
                 <CustomPortableText value={introTextBlocks} />
               </div>
             )}

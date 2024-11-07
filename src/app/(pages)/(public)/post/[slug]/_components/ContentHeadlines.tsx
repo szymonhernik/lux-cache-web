@@ -33,7 +33,7 @@ export default function ContentHeadlines(props: Props) {
         <p className="w-fit mx-auto italic ">
           with {` `}
           {artistList.map((artist, index) => (
-            <span key={artist._key} className="font-neue">
+            <span key={artist._key} className="font-serif">
               {artist.artistRef?.slug ? (
                 <Link
                   href={`/artist/${artist.artistRef.slug}`}

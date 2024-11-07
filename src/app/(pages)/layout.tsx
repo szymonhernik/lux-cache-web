@@ -10,7 +10,7 @@ import { getURL } from '@/utils/helpers'
 import GlobalNav from '@/components/ui/Header/GlobalNav'
 import { draftMode } from 'next/headers'
 import LiveVisualEditing from '@/sanity/loader/LiveVisualEditing'
-import AccountTab from './(public)/_components/AccountTab'
+import AccountTabDesktop from './(public)/_components/AccountTabDesktop'
 
 const meta = {
   title:
@@ -40,7 +40,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
           id="skip"
           className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]  flex-1 relative"
         >
-          <AccountTab />
+          <AccountTabDesktop />
           {props.children}
         </main>
 

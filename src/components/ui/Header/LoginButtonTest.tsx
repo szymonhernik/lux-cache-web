@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-
 import clsx from 'clsx'
 import { ChevronRightOwn } from '../Icons/ChevronRightOwn'
 
@@ -44,7 +43,7 @@ export default function LoginButtonTest() {
 
   return session ? (
     <div
-      className={clsx(' ', {
+      className={clsx({
         'w-screen h-screen text-white bg-black backdrop-blur-sm bg-opacity-50 flex  justify-end ':
           openAccountPanel
       })}
@@ -57,7 +56,7 @@ export default function LoginButtonTest() {
               setOpenAccountPanel(false)
             }}
           >
-            <p className="h-12  opacity-0">Account</p>
+            <p className="h-12 opacity-0 ">Account</p>
 
             <ChevronRightOwn />
           </button>
@@ -106,23 +105,15 @@ export default function LoginButtonTest() {
             setOpenAccountPanel(true)
           }}
         >
-          <p className="h-12 pt-1 lg:pt-0 uppercase italic">Account</p>
-
-          <div className="hidden lg:block">{/* <ChevronLeftOwn /> */}</div>
+          <span className="h-12 pt-1 lg:pt-0 uppercase italic">Account</span>
         </button>
       )}
     </div>
   ) : (
-    <div className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl `}>
+    <div className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl italic`}>
       <Link href="/signin/password_signin" className="">
         Sign In
       </Link>
-      {/* <Link href="/signin/password_signin" className="hidden sm:block">
-        Sign In
-      </Link>
-      <a href="/signin" className="sm:hidden ">
-        Sign In
-      </a> */}
     </div>
   )
 }

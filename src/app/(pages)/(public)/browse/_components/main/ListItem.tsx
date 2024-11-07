@@ -223,7 +223,7 @@ export default function ListItem({
               <h3 className="uppercase text-secondary-foreground font-semibold text-xs mb-1">
                 Description
               </h3>
-              <p className="font-neue italic text-sm max-w-4xl">
+              <p className="font-serif italic text-sm max-w-4xl">
                 {item.ogDescription}
               </p>
             </div>

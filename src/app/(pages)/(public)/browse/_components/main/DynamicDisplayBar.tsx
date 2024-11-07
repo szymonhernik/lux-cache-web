@@ -22,7 +22,7 @@ export default function DynamicDisplayBar({ data }: Props) {
           </div>
           <div className="h-full pt-4 pl-2 ">
             {' '}
-            <p className="text-secondary-foreground">Highlight</p>
+            <p className="text-secondary-foreground ">Highlight</p>
             <p className="font-semibold tracking-tight group-hover:opacity-80">
               {title}
             </p>

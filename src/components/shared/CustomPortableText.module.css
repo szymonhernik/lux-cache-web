@@ -1,5 +1,5 @@
 .emphasis em {
-  @apply font-neue;
+  @apply font-serif;
 }
 
 /* .pdfWrapper {

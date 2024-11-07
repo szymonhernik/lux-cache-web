@@ -106,12 +106,12 @@ export default function EpisodePreview(props: Props) {
           <div>
             <p className="">{publishedAt}</p>
             <h1 className="text-2xl font-semibold">{title}</h1>
-            {subtitle && <h3 className="font-neue italic">{subtitle}</h3>}
+            {subtitle && <h3 className="font-serif italic">{subtitle}</h3>}
             <FiltersPreview filters={filters} />
           </div>
 
           <div>
-            <p className="font-neue italic">{ogDescription}</p>
+            <p className="font-serif italic">{ogDescription}</p>
           </div>
 
           {slug && (
