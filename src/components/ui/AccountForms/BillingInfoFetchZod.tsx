@@ -5,7 +5,7 @@ import { z } from 'zod'
 import {
   CustomerDataSchema,
   CustomerIdSchema,
-  PaymentMethodSchema,
+  CardPaymentMethodSchema,
   SubscriptionIdSchema,
   SubscriptionSchema
 } from '@/utils/types/zod/types'
@@ -88,7 +88,7 @@ export default async function BillingInfoFetchZod({ subscription }: Props) {
               )
 
             const validateRetrievedPaymentMethodData =
-              PaymentMethodSchema.safeParse(retrieveBackupPaymentMethod)
+              CardPaymentMethodSchema.safeParse(retrieveBackupPaymentMethod)
             if (!validateRetrievedPaymentMethodData.success) {
               console.error(
                 'Couldnt retrieve information about payment method from stripe. '

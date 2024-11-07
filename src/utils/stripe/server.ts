@@ -82,11 +82,10 @@ export async function updateCustomerBillingAddress(
     )
   }
 }
-export async function retrievePaymentMethods(customerId: string) {
+async function validateCustomerOwnership(customerId: string) {
   const supabase = createClient()
   const user = await getUser(supabase)
   if (!user) {
-    console.log('No user found')
     throw new Error('You must be signed in to perform this action')
   }
   // Add check to verify the customerId belongs to the authenticated user
@@ -94,17 +93,18 @@ export async function retrievePaymentMethods(customerId: string) {
     id: string
     stripe_customer_id: string
   }
-  // TODO: Check if this is how you should protect server actions
-
-  if (customer.stripe_customer_id !== customerId) {
+  if (!customer || customer.stripe_customer_id !== customerId) {
     throw new Error('You are not authorized to perform this action')
   }
 
+  return { user, customer }
+}
+export async function retrievePaymentMethods(customerId: string) {
+  await validateCustomerOwnership(customerId)
+  // TODO: Check if this is how you should protect server actions
+
   try {
     const paymentMethods = await stripe.customers.listPaymentMethods(customerId)
-    console.log('Payment methods from server stripe', paymentMethods)
-    // TODO: Return this back to the client
-
     return paymentMethods.data
   } catch (error) {
     console.error(error)
@@ -114,9 +114,11 @@ export async function retrievePaymentMethods(customerId: string) {
 
 export async function detachPaymentMethod(
   paymentMethodId: string,
-  redirectPath: string = '/account'
+  redirectPath: string = '/account',
+  stripeCustomerId: string
 ) {
   try {
+    await validateCustomerOwnership(stripeCustomerId)
     const detach = await stripe.paymentMethods.detach(paymentMethodId)
     // TODO: Check if this is enough to be sure the payment method was detached
     if (detach) {
@@ -274,9 +276,11 @@ export async function updateSubscriptionPlan(
 export async function updateSubscriptionDefaultPaymentMethod(
   defaultPaymentMethodId: string,
   subscriptionId: string,
+  stripeCustomerId: string,
   redirectPath: string = '/account/subscription'
 ) {
   // Create a checkout session in Stripe
+  await validateCustomerOwnership(stripeCustomerId)
   try {
     const newSubscriptionPaymentMethod = await stripe.subscriptions.update(
       subscriptionId,
@@ -491,10 +495,7 @@ export async function updatePaymentMethod(
   subscriptionId: string,
   redirectPath: string = '/account'
 ): Promise<CustomCheckoutResponse> {
-  // I'll need:
-  // - customer ID
-  // - subscription ID
-
+  await validateCustomerOwnership(customerId)
   let params: Stripe.Checkout.SessionCreateParams = {
     payment_method_types: ['card'],
     mode: 'setup',

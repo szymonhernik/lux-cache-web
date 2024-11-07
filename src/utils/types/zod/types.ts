@@ -7,7 +7,7 @@ const CardDetailsSchema = z.object({
   exp_month: z.number()
 })
 
-const PaymentMethodSchema = z.object({
+const CardPaymentMethodSchema = z.object({
   id: z.string(),
   card: CardDetailsSchema,
   created: z.number()
@@ -15,7 +15,7 @@ const PaymentMethodSchema = z.object({
 const SubscriptionSchema = z.object({
   id: z.string(),
   customer: z.string(),
-  default_payment_method: PaymentMethodSchema
+  default_payment_method: CardPaymentMethodSchema
 })
 
 const SubscriptionIdSchema = z.object({
@@ -30,11 +30,11 @@ const CustomerIdSchema = z.object({
   customer: z.string()
 })
 
-const ListPaymentMethodSchema = z.array(PaymentMethodSchema)
+const StoredPaymentCardsSchema = z.array(CardPaymentMethodSchema)
 
 const LinkedPaymentMethodsSchema = z.object({
   object: z.string(),
-  data: ListPaymentMethodSchema
+  data: StoredPaymentCardsSchema
 })
 
 const ProductMetadataSchema = z.object({
@@ -69,14 +69,14 @@ const FilterGroupsSchema = z.array(filterGroupSchema)
 
 export {
   CardDetailsSchema,
-  PaymentMethodSchema,
+  CardPaymentMethodSchema,
   LinkedPaymentMethodsSchema,
   SubscriptionItemSchema,
   CustomerDataSchema,
   CustomerIdSchema,
   SubscriptionSchema,
   SubscriptionIdSchema,
-  ListPaymentMethodSchema,
+  StoredPaymentCardsSchema,
   ProductMetadataSchema,
   FilterGroupsSchema
 }

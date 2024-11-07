@@ -3,6 +3,7 @@ import { cn } from '@/utils/cn'
 export interface ISVGProps extends React.SVGProps<SVGSVGElement> {
   size?: number
   className?: string
+  strokeColor?: string
 }
 
 export const LoadingSpinner = ({
@@ -18,7 +19,7 @@ export const LoadingSpinner = ({
       {...props}
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={props.strokeColor || 'currentColor'}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

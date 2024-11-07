@@ -3,12 +3,12 @@ import {
   detachPaymentMethod,
   updateSubscriptionDefaultPaymentMethod
 } from '@/utils/stripe/server'
-import { ListPaymentMethodSchema } from '@/utils/types/zod/types'
+import { StoredPaymentCardsSchema } from '@/utils/types/zod/types'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { z } from 'zod'
 
-type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>
+type StoredPaymentCardsSchemaType = z.infer<typeof StoredPaymentCardsSchema>
 
 export default function DisplayPaymentData({
   paymentMethods,
@@ -16,7 +16,7 @@ export default function DisplayPaymentData({
   subscriptionId,
   onCardsUpdate
 }: {
-  paymentMethods: ListPaymentMethodSchemaType
+  paymentMethods: StoredPaymentCardsSchemaType
   subscriptionDefaultPaymentMethodId: string | null
   subscriptionId: string
   onCardsUpdate: () => void

@@ -7,9 +7,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Stripe } from '@stripe/stripe-js'
 import { CustomCheckoutProvider } from '@stripe/react-stripe-js'
-import {
-  retrievePaymentMethods
-} from '@/utils/stripe/server'
+import { retrievePaymentMethods } from '@/utils/stripe/server'
 import Card from '@/components/ui/Card'
 // import Stripe from 'stripe';
 
@@ -24,8 +22,8 @@ import {
 import DisplayPaymentData from './DisplayPaymentData'
 import { z } from 'zod'
 import {
-  ListPaymentMethodSchema,
-  PaymentMethodSchema
+  StoredPaymentCardsSchema,
+  CardPaymentMethodSchema
 } from '@/utils/types/zod/types'
 import PaymentMethodSetupForm from './PaymentMethodSetupForm'
 import { Button } from '@/components/shadcn/ui/button'
@@ -36,9 +34,9 @@ interface Props {
   subscriptionId: string
 }
 
-type UserDefaultPaymentMethodType = z.infer<typeof PaymentMethodSchema>
+type UserDefaultPaymentMethodType = z.infer<typeof CardPaymentMethodSchema>
 
-type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>
+type StoredPaymentCardsSchemaType = z.infer<typeof StoredPaymentCardsSchema>
 
 export const dynamic = 'force-dynamic'
 
@@ -53,7 +51,7 @@ export default function BillingInfo({
   const currentPath = usePathname()
   const router = useRouter()
   const [paymentMethods, setPaymentMethods] =
-    useState<ListPaymentMethodSchemaType>([])
+    useState<StoredPaymentCardsSchemaType>([])
   const [confirmedNewCard, setConfirmedNewCard] = useState(false)
   const [sessionOpen, setSessionOpen] = useState(false)
 
@@ -84,7 +82,7 @@ export default function BillingInfo({
     // safely fetch data from stripe (retrievePaymentMethods is server action)
     try {
       const data = await retrievePaymentMethods(stripeCustomerId)
-      const validatedData = ListPaymentMethodSchema.safeParse(data)
+      const validatedData = StoredPaymentCardsSchema.safeParse(data)
       if (!validatedData.success) {
         console.error(validatedData.error.issues)
         return
@@ -164,6 +162,7 @@ export default function BillingInfo({
                     // Display available cards
                     <DisplayPaymentData
                       key={Math.random()}
+                      stripeCustomerId={stripeCustomerId}
                       subscriptionId={subscriptionId}
                       paymentMethods={paymentMethods}
                       subscriptionDefaultPaymentMethodId={

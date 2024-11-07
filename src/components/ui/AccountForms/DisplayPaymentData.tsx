@@ -1,30 +1,29 @@
 import { Button } from '@/components/shadcn/ui/button'
+import { LoadingSpinner } from '@/components/Spinner'
 import {
   detachPaymentMethod,
   updateSubscriptionDefaultPaymentMethod
 } from '@/utils/stripe/server'
-import { ListPaymentMethodSchema } from '@/utils/types/zod/types'
+import { StoredPaymentCardsSchema } from '@/utils/types/zod/types'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { z } from 'zod'
 
-type ListPaymentMethodSchemaType = z.infer<typeof ListPaymentMethodSchema>
+type StoredPaymentCardsSchemaType = z.infer<typeof StoredPaymentCardsSchema>
 
 export default function DisplayPaymentData({
+  stripeCustomerId,
   paymentMethods,
   subscriptionDefaultPaymentMethodId,
   subscriptionId,
   onCardsUpdate
 }: {
-  paymentMethods: ListPaymentMethodSchemaType
+  stripeCustomerId: string
+  paymentMethods: StoredPaymentCardsSchemaType
   subscriptionDefaultPaymentMethodId: string | null
   subscriptionId: string
   onCardsUpdate: () => void
 }) {
-  // console.log('paymentMethods in new component', paymentMethods);
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  // const [paymentMethodIdLoading, setPaymentMethodIdLoading] =
-  //   useState<string>();
   const [activeButtonState, setActiveButtonState] = useState({
     id: '',
     action: ''
@@ -41,11 +40,16 @@ export default function DisplayPaymentData({
     try {
       let redirectUrl: string = ''
       if (action === 'detach') {
-        redirectUrl = await detachPaymentMethod(paymentMethodId, currentPath)
+        redirectUrl = await detachPaymentMethod(
+          paymentMethodId,
+          currentPath,
+          stripeCustomerId
+        )
       } else if (action === 'setDefault') {
         redirectUrl = await updateSubscriptionDefaultPaymentMethod(
           paymentMethodId,
-          subscriptionId
+          subscriptionId,
+          stripeCustomerId
         )
       }
       onCardsUpdate()
@@ -116,7 +120,7 @@ export default function DisplayPaymentData({
           ))}
         </ul>
       ) : (
-        <p>Loading...</p>
+        <LoadingSpinner className="my-10 animate-spin mx-auto" size={24} />
       )}
     </>
   )

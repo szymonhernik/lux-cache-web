@@ -77,6 +77,7 @@ export default async function BillingPanel({
       <PaymentMethodPanel
         paymentMethod={result.paymentMethod}
         stripeCustomerId={result.stripeCustomerId}
+        subscriptionId={subscription.id}
       />
     )
   } catch (error) {
@@ -89,37 +90,51 @@ export default async function BillingPanel({
 
 function PaymentMethodPanel({
   paymentMethod,
-  stripeCustomerId
+  stripeCustomerId,
+  subscriptionId
 }: {
   paymentMethod: Stripe.PaymentMethod
   stripeCustomerId: string
+  subscriptionId: string
 }) {
   return (
     <Card
       title="Payment Method"
       footer={
         <div className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
-          <UpdatePaymentMethod stripeCustomerId={stripeCustomerId} />
+          <UpdatePaymentMethod
+            stripeCustomerId={stripeCustomerId}
+            defaultPaymentMethodId={paymentMethod.id}
+            subscriptionId={subscriptionId}
+          />
         </div>
       }
     >
       {paymentMethod.type === 'card' && (
-        <div className="">
-          <p className="font-semibold text-secondary-foreground">
-            Card on file:{' '}
-            <span className="font-normal ">
-              <span className="uppercase">{paymentMethod.card?.brand} </span>
-              <span className="align-top text-xs">****</span>{' '}
-              {paymentMethod.card?.last4} (expires{' '}
-              {paymentMethod.card?.exp_month}/{paymentMethod.card?.exp_year})
-            </span>
-          </p>
-        </div>
+        <DisplayActiveCard paymentMethod={paymentMethod} />
       )}
     </Card>
   )
 }
-
+function DisplayActiveCard({
+  paymentMethod
+}: {
+  paymentMethod: Stripe.PaymentMethod
+}) {
+  return (
+    <div className="">
+      <p className="font-semibold text-secondary-foreground">
+        Card on file:{' '}
+        <span className="font-normal ">
+          <span className="uppercase">{paymentMethod.card?.brand} </span>
+          <span className="align-top text-xs">****</span>{' '}
+          {paymentMethod.card?.last4} (expires {paymentMethod.card?.exp_month}/
+          {paymentMethod.card?.exp_year})
+        </span>
+      </p>
+    </div>
+  )
+}
 function WarningCard({ message }: { message?: string }) {
   return (
     <Card title="Payment method">
