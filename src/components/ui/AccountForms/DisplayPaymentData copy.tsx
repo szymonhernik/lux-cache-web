@@ -35,6 +35,7 @@ export default function DisplayPaymentData({
     setPaymentMethodIdLoading(paymentMethodId)
     try {
       const redirectUrl: string = await detachPaymentMethod(
+        subscriptionId,
         paymentMethodId,
         currentPath
       )
