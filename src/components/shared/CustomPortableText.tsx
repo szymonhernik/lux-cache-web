@@ -1,7 +1,4 @@
-import {
-  PortableText,
-  type PortableTextComponents
-} from 'next-sanity'
+import { PortableText, type PortableTextComponents } from 'next-sanity'
 import type { Image } from 'sanity'
 import s from './CustomPortableText.module.css'
 
@@ -67,29 +64,7 @@ export function CustomPortableText({
       }
     },
     types: {
-      // pdfEmbed: ({ value }) => {
-      //   return (
-      //     <>
-      //       {value.pdfFile.asset.url && (
-      //         <div className="embed-pdf w-full">
-      //           <div className={s.pdfWrapper}>
-      //             <iframe
-      //               src={`${value.pdfFile.asset.url}#view=FitH`}
-      //               className="w-full aspect-[3/4] max-w-none"
-      //             ></iframe>
-      //           </div>
-      //           {value.pdfFile.asset.originalFilename && (
-      //             <p className="text-sm mx-auto text-center block mt-6 font-semibold text-gray-500">
-      //               {value.pdfFile.asset.originalFilename}
-      //             </p>
-      //           )}
-      //         </div>
-      //       )}
-      //     </>
-      //   )
-      // },
       introText: ({ value }) => {
-        // Assuming value.body contains the content for introText
         return (
           <div className={`intro-text space-y-4 ${s.emphasis}`}>
             <PortableText value={value.body} components={components} />
@@ -142,11 +117,9 @@ export function CustomPortableText({
         )
       },
       video: ({ value }) => <VideoMuxInline value={value} />,
-      //   audioInline: ({ value }) => <AudioEmbed src={value.url} />,
-      //   video: ({ value }) => <VideoEmbed src={value.url} />,
+
       youtube: ({ value }) => <YouTubeEmbed url={value.url} />,
       spotify: ({ value }) => <SpotifyEmbed url={value.url} />,
-      //   spotify: ({ value }) => <SpotifyEmbed url={value.url} />,
       timeline: ({ value }) => {
         const { items } = value || {}
         return <TimelineSection timelines={items} />
