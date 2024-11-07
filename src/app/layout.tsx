@@ -7,49 +7,46 @@ import { getURL } from '@/utils/helpers'
 import { Providers } from '@/components/providers/providers'
 import QueryWrapper from '../components/providers/QueryWrapper'
 
-const suisse = localFont({
+const suisseSans = localFont({
   src: [
     {
-      path: '../fonts/SuisseIntl-Regular-WebTrial.woff2',
+      path: '../../public/fonts/SuisseIntl-Regular-WebTrial.woff2',
       weight: '400',
       style: 'normal'
     },
     {
-      path: '../fonts/SuisseIntl-RegularItalic-WebTrial.woff2',
+      path: '../../public/fonts/SuisseIntl-RegularItalic-WebTrial.woff2',
       weight: '400',
       style: 'italic'
     },
     {
-      path: '../fonts/SuisseIntl-SemiBold-WebTrial.woff2',
+      path: '../../public/fonts/SuisseIntl-SemiBold-WebTrial.woff2',
       weight: '600',
       style: 'normal'
     },
     {
-      path: '../fonts/SuisseIntl-SemiBoldItalic-WebTrial.woff2',
+      path: '../../public/fonts/SuisseIntl-SemiBoldItalic-WebTrial.woff2',
       weight: '600',
-      style: 'italic'
-    },
-    {
-      path: '../fonts/SuisseNeue-Regular-WebTrial.woff2',
-      weight: '400',
       style: 'italic'
     }
   ],
-  variable: '--font-suisse'
+  display: 'swap',
+  variable: '--font-suisseSans'
 })
 const suisseNeue = localFont({
   src: [
     {
-      path: '../fonts/SuisseNeue-Regular.woff2',
+      path: '../../public/fonts/SuisseNeue-Regular.woff2',
       weight: '400',
       style: 'normal'
     },
     {
-      path: '../fonts/SuisseNeue-RegularItalic.woff2',
+      path: '../../public/fonts/SuisseNeue-RegularItalic.woff2',
       weight: '400',
       style: 'italic'
     }
   ],
+  display: 'swap',
   variable: '--font-suisseNeue'
 })
 
@@ -103,7 +100,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={` ${suisse.variable} ${suisseNeue.variable}`}>
+    <html
+      lang="en"
+      className={`${suisseSans.variable}  ${suisseNeue.variable}`}
+    >
       <Providers>
         <QueryWrapper>
           <body className={` loading `}>{props.children}</body>

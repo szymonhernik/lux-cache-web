@@ -114,9 +114,9 @@ body {
     'Helvetica', sans-serif; */
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-
+  /* font-family: sans-serif; */
   @apply antialiased
-  /* @apply text-white bg-zinc-800 antialiased; */;
+    /* @apply text-white bg-zinc-800 antialiased; */;
 }
 
 body {
@@ -131,7 +131,7 @@ p a {
 
 em {
   font-style: italic;
-  font-family: sans-serif;
+  /* font-family: sans-serif; */
 }
 /* .template-text em {
   font-family: inherit;

@@ -21,8 +21,8 @@ module.exports = {
     },
     extend: {
       fontFamily: {
-        sansSerif: ['var(--font-suisse)'],
-        neue: ['var(--font-suisseNeue)']
+        sans: ['var(--font-suisseSans)'],
+        serif: ['var(--font-suisseNeue)']
       },
       screens: {
         'screen-wide-tall': {
