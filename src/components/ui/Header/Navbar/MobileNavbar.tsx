@@ -16,7 +16,6 @@ export default function MobileNavbar() {
   const pathname = usePathname()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
-  const close = () => setIsOpen(false)
 
   return (
     <div className="sticky top-0 right-0 z-10 flex w-full flex-col  ">
@@ -36,7 +35,6 @@ export default function MobileNavbar() {
         <Link
           href="/"
           className="group flex items-center justify-center gap-x-2.5 bg-secondary"
-          onClick={close}
         >
           <div className="block">
             <Logo width="100" height="40" />

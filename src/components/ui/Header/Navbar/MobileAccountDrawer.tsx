@@ -1,15 +1,9 @@
 import { createClient } from '@/utils/supabase/client'
 import { usePathname, useRouter } from 'next/navigation'
 
-import { Button } from '@/components/shadcn/ui/button'
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger
 } from '@/components/shadcn/ui/drawer'
 import { useEffect, useState } from 'react'
@@ -77,13 +71,6 @@ export default function MobileAccountDrawer() {
             </button>
           </form>
         </div>
-
-        {/* <DrawerFooter> */}
-
-        {/* <DrawerClose>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose> */}
-        {/* </DrawerFooter> */}
       </DrawerContent>
     </Drawer>
   ) : (
@@ -94,8 +81,4 @@ export default function MobileAccountDrawer() {
       Sign In
     </Link>
   )
-}
-
-function DrawerLinks() {
-  return <div>DrawerLinks</div>
 }

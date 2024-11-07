@@ -17,7 +17,6 @@ export default function DesktopNavbar() {
         <Link
           href="/"
           className="group flex w-fit mx-auto items-center justify-center gap-x-2.5 bg-secondary"
-          onClick={close}
         >
           <div className="block">
             <Logo width="140" height="50" />

@@ -3,14 +3,14 @@ import { SignOut } from '@/utils/auth-helpers/server'
 import { createClient } from '@/utils/supabase/client'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 import clsx from 'clsx'
 import { ChevronRightOwn } from '../Icons/ChevronRightOwn'
 
 // client side component that handles sign in and sign out, depending on the session
 // this way we can render some pages where this component appears as static pages
-export default function LoginButtonTest() {
+export default function AccountPanelDesktop() {
   const supabase = createClient()
   const router = useRouter()
   const pathname = usePathname()
@@ -41,6 +41,27 @@ export default function LoginButtonTest() {
     setIsLoggingOut(false)
   }
 
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(event.target as Node)
+      ) {
+        setOpenAccountPanel(false)
+      }
+    }
+
+    if (openAccountPanel) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [openAccountPanel])
+
   return session ? (
     <div
       className={clsx({
@@ -49,7 +70,10 @@ export default function LoginButtonTest() {
       })}
     >
       {openAccountPanel ? (
-        <div className={clsx('flex flex-col bg-secondary-inverted ', {})}>
+        <div
+          ref={panelRef}
+          className={clsx('flex flex-col bg-secondary-inverted')}
+        >
           <button
             className=" self-end py-4 pr-6 pl-4 flex flex-col items-end text-xl hover:cursor-pointer"
             onClick={() => {
@@ -110,7 +134,9 @@ export default function LoginButtonTest() {
       )}
     </div>
   ) : (
-    <div className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl italic`}>
+    <div
+      className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl uppercase italic`}
+    >
       <Link href="/signin/password_signin" className="">
         Sign In
       </Link>

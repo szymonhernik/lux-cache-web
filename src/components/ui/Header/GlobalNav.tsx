@@ -1,4 +1,3 @@
-import Navbar from './Navbar'
 import DesktopNavbar from './Navbar/DesktopNavbar'
 import MobileNavbar from './Navbar/MobileNavbar'
 
