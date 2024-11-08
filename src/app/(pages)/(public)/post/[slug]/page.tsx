@@ -20,6 +20,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
   // Cache the Sanity post data
   const getCachedPost = unstable_cache(
     async (slug: string) => {
+      console.log('🔍 Cache MISS - Executing database query')
       const result = await loadPost(slug)
       return result
     },
