@@ -4,13 +4,13 @@ import { createClient } from '@/utils/supabase/server'
 import { redirect } from 'next/navigation'
 
 import PasswordForm from '@/components/ui/AccountForms/PasswordForm'
-import { getUser, getUserDetails } from '@/utils/supabase/queries'
+import { getUser, getUserData } from '@/utils/supabase/queries'
 
 export default async function Account() {
   const supabase = createClient()
-  const [user, userDetails] = await Promise.all([
+  const [user, userData] = await Promise.all([
     getUser(supabase),
-    getUserDetails(supabase)
+    getUserData(supabase)
   ])
 
   if (!user) {
@@ -21,7 +21,7 @@ export default async function Account() {
     <>
       <h1 className="text-2xl font-extrabold ">Account</h1>
       <div className="divide-y flex flex-col gap-8 *:pt-8">
-        <NameForm userName={userDetails?.full_name ?? ''} userId={user?.id} />
+        <NameForm userName={userData?.full_name ?? ''} userId={user?.id} />
         <EmailForm userEmail={user.email} />
         <PasswordForm />
       </div>
