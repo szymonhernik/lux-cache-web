@@ -2,7 +2,8 @@ import {
   getProducts,
   getSubscription,
   getUser,
-  getCanTrial
+  getCanTrial,
+  getCachedProducts
 } from '@/utils/supabase/queries'
 // import Pricing from './Pricing'
 import { loadPrices } from '@/sanity/loader/loadQuery'
@@ -14,7 +15,7 @@ export default async function PricingLayout() {
   const supabase = createClient()
   const [products] = await Promise.all([
     // getUser(supabase),
-    getProducts(supabase)
+    getCachedProducts(supabase)
     // getSubscription(supabase),
     // getCanTrial(supabase)
   ])
