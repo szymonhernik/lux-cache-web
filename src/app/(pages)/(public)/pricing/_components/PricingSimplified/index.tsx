@@ -165,7 +165,7 @@ export default function PricingSimplified({ data, products }: Props) {
           <p className=" ">
             For active subscribers, you can{' '}
             <Link href="/account/subscription" className="mx-auto underline">
-              manage your subscription from youraccount dashboard
+              manage your subscription from your account dashboard
             </Link>
             .
           </p>
