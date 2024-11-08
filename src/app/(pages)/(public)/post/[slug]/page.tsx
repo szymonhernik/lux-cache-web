@@ -20,14 +20,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
   // Cache the Sanity post data
   const getCachedPost = unstable_cache(
     async (slug: string) => {
-      const start = Date.now()
-      console.log(
-        `[Cache Miss] Fetching post: ${slug} at ${new Date().toISOString()}`
-      )
       const result = await loadPost(slug)
-      console.log(
-        `[Post Fetch] ${slug} took ${Date.now() - start}ms at ${new Date().toISOString()}`
-      )
       return result
     },
     ['post-page'],
