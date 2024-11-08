@@ -2,30 +2,42 @@ import {
   getProducts,
   getSubscription,
   getUser,
-  getUserDetails
+  getCanTrial
 } from '@/utils/supabase/queries'
-import Pricing from './Pricing'
+// import Pricing from './Pricing'
 import { loadPrices } from '@/sanity/loader/loadQuery'
 import { createClient } from '@/utils/supabase/server'
+import PricingSimplified from './PricingSimplified'
+import { unstable_cache } from 'next/cache'
 
 export default async function PricingLayout() {
   const supabase = createClient()
-  const [user, products, subscription, userDetails] = await Promise.all([
-    getUser(supabase),
-    getProducts(supabase),
-    getSubscription(supabase),
-    getUserDetails(supabase)
+  const [products] = await Promise.all([
+    // getUser(supabase),
+    getProducts(supabase)
+    // getSubscription(supabase),
+    // getCanTrial(supabase)
   ])
+  const getCachedPricesDetails = unstable_cache(
+    async () => {
+      return await loadPrices()
+    },
+    ['pricing-details'],
+    {
+      tags: [`pricing-details`]
+    }
+  )
 
-  const pricesDetails = await loadPrices()
+  const pricesDetails = await getCachedPricesDetails()
 
   return (
-    <Pricing
-      data={pricesDetails.data}
-      user={user}
-      products={products ?? []}
-      subscription={subscription}
-      userDetails={userDetails}
-    />
+    <PricingSimplified data={pricesDetails.data} products={products ?? []} />
+    // <Pricing
+    //   data={pricesDetails.data}
+    //   user={user}
+    //   products={products ?? []}
+    //   subscription={subscription}
+    //   userCanTrial={userCanTrial}
+    // />
   )
 }
