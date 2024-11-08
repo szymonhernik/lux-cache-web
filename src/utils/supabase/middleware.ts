@@ -73,7 +73,11 @@ export const updateSession = async (request: NextRequest) => {
     return NextResponse.redirect(new URL('/browse', request.url))
   }
 
-  if (!user && request.nextUrl.pathname.startsWith('/account')) {
+  if (
+    !user &&
+    request.nextUrl.pathname.startsWith('/account') &&
+    !request.nextUrl.pathname.startsWith('/bookmarks')
+  ) {
     return NextResponse.redirect(
       new URL('/signin/password_signin', request.url)
     )

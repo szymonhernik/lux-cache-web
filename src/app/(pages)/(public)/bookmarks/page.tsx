@@ -1,5 +1,5 @@
 import { loadBookmarkedPosts } from '@/sanity/loader/loadQuery'
-import { getUser } from '@/utils/supabase/queries'
+import { getBookmarks, getUser } from '@/utils/supabase/queries'
 import { createClient } from '@/utils/supabase/server'
 import { BookmarkedQueryResult } from '@/utils/types/sanity/sanity.types'
 import { redirect } from 'next/navigation'
@@ -7,31 +7,40 @@ import BookmarksLayout from './_components/BookmarksLayout'
 
 export default async function Page() {
   const supabase = createClient()
-  const user = await getUser(supabase)
+  const [user, bookmarks] = await Promise.all([
+    getUser(supabase),
+    getBookmarks(supabase)
+  ])
+
   if (!user) {
     redirect('/redirect?url=/signin/password_signin')
   }
-  const { data: bookmarks, error } = await supabase
-    .from('bookmarks')
-    .select('post_id')
-
-  if (error) {
-    return (
-      <section className="flex flex-col">
-        <div className="*:max-w-3xl *:mx-auto mx-auto my-36 px-4 space-y-24 *:flex *:flex-col *:items-center">
-          <h1>Error loading bookmarks</h1>
-        </div>
-      </section>
-    )
+  if (!bookmarks || bookmarks.error) {
+    return 'There was an error.'
+  }
+  if (!bookmarks?.data?.length) {
+    return <BookmarksLayout posts={[]} />
   }
 
-  let posts: BookmarkedQueryResult | null = []
+  let posts: BookmarkedQueryResult = []
 
-  if (bookmarks && bookmarks.length > 0) {
-    const ids = bookmarks.map((bookmark) => bookmark.post_id)
-    // freeze for 3 seconds to show skeleton
+  if (bookmarks && bookmarks.data.length > 0) {
+    const ids = bookmarks.data.map((bookmark) => bookmark.post_id)
     const bookmarkedPosts = await loadBookmarkedPosts(ids)
-    posts = bookmarkedPosts.data
+
+    // Create a map of post_id to created_at for easy lookup
+    const bookmarkDates = new Map(
+      bookmarks.data.map((bookmark) => [bookmark.post_id, bookmark.created_at])
+    )
+
+    // Sort the bookmarkedPosts by the created_at date
+    if (bookmarkedPosts.data) {
+      posts = bookmarkedPosts.data?.sort((a, b) => {
+        const dateA = bookmarkDates.get(a._id) || ''
+        const dateB = bookmarkDates.get(b._id) || ''
+        return dateB.localeCompare(dateA) // newest first
+      })
+    }
   }
 
   return <BookmarksLayout posts={posts} />

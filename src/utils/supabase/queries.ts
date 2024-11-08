@@ -110,3 +110,7 @@ export const getPrice = cache(
     return price
   }
 )
+
+export const getBookmarks = cache(async (supabase: SupabaseClient) => {
+  return await supabase.from('bookmarks').select('post_id, created_at')
+})

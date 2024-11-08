@@ -15,6 +15,7 @@ import SignUp from '@/components/ui/AuthForms/Signup'
 import Separator from '@/components/ui/AuthForms/Separator'
 import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn'
 import { ModalRadix } from '../../../_components/modal-radix'
+import { getUser } from '@/utils/supabase/queries'
 
 export default async function LoginModal({
   params,
@@ -39,9 +40,7 @@ export default async function LoginModal({
   // Check if the user is already logged in and redirect to the account page if so
   const supabase = createClient()
 
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
+  const [user] = await Promise.all([getUser(supabase)])
 
   if (user) {
     return redirect('/')
