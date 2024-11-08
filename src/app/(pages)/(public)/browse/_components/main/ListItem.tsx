@@ -42,10 +42,6 @@ export default function ListItem({
   const filters = searchParams.get('filter')
   const view = searchParams.get('view')
 
-  // const [fullyInView, setFullyInView] = useState(false)
-  // const [isTouched, setIsTouched] = useState(false)
-  // const [isHovered, setIsHovered] = useState(false)
-
   // intersection observer used to detect if the item is even partly in the viewport
   const { ref, entry } = useIntersection({
     threshold: 0.0,
@@ -67,14 +63,6 @@ export default function ListItem({
     setModalOpen(false)
   }, [])
 
-  // useEffect(() => {
-  //   if (entryFull?.isIntersecting) {
-  //     setFullyInView(true)
-  //   } else {
-  //     setFullyInView(false)
-  //   }
-  // }, [entryFull?.isIntersecting])
-
   const handleModalClose = () => {
     setModalOpen(false)
   }
@@ -91,16 +79,6 @@ export default function ListItem({
       window.removeEventListener('keydown', handleEscape)
     }
   }, [])
-
-  // useEffect(() => {
-  //   if (isTouchDevice && !entry?.isIntersecting) {
-  //     setIsTouched(false)
-  //   }
-  // }, [entry?.isIntersecting])
-
-  // const handleTouchStart = () => {
-  //   setIsTouched(true)
-  // }
 
   const [shouldRenderVideo, setShouldRenderVideo] = useState(false)
 
@@ -128,7 +106,6 @@ export default function ListItem({
             setModalOpen(true)
           }
         }}
-        // onTouchStart={handleTouchStart}
         tabIndex={0}
         className={clsx(
           `hover:cursor-pointer group opacity-90 hover:opacity-70 relative h-full focus:opacity-70 focus:-outline-offset-2 focus:outline-lime-500 focus:outline  flex items-start justify-between  transition-all duration-200 hover:bg-opacity-50 overflow-hidden`,
@@ -158,10 +135,17 @@ export default function ListItem({
             className="h-full w-full blur-[32px] scale-150  z-[-1] object-cover absolute top-0 right-0 bottom-0 left-0"
           />
         )}
+
         {/* On mobile and tablet breakpoints render image in the background*/}
         {!view && isTouchDevice && item?.coverImage?.asset?.url && (
+          // TODO: consider not using next image here, use simple img tag
+          // <img
+          //   className="h-[full] w-full aspect-square object-cover  z-[-1] absolute top-0 right-0 bottom-0 left-0"
+          //   src={`${item.coverImage?.asset.url}?w=600&fm=webp`}
+          //   alt={''}
+          // />
           <Image
-            className="h-full w-full aspect-square object-cover  z-[-1] absolute top-0 right-0 bottom-0 left-0 "
+            className="h-[full] w-full aspect-square object-cover  z-[-1] absolute top-0 right-0 bottom-0 left-0 "
             src={item.coverImage?.asset.url}
             alt={''}
             width={400}
@@ -187,19 +171,6 @@ export default function ListItem({
             isDesktop={isDesktop}
           />
         )}
-        {/* {!view &&
-          isTouchDevice &&
-          isTouched &&
-          entry?.isIntersecting &&
-          item?.previewVideo && (
-            <PreviewVideo
-              isTouched={isTouched}
-              isTouchDevice={isTouchDevice}
-              isDesktop={isDesktop}
-              previewVideo={item.previewVideo}
-              fullyInView={fullyInView}
-            />
-          )} */}
         {view && (
           <div className="w-full flex flex-col gap-4">
             <div className="flex justify-between ">
@@ -210,9 +181,10 @@ export default function ListItem({
                 )}
               </div>
               {item?.coverImage?.asset?.url && (
+                // TODO: consider not using next image here, use simple img tag
                 <Image
                   className="aspect-square  object-cover w-24 h-24 sm:w-36 sm:h-36 lg:hidden"
-                  src={item.coverImage?.asset.url}
+                  src={`${item.coverImage?.asset.url}?w=400&h=400&fm=webp`}
                   alt={''}
                   width={160}
                   height={160}

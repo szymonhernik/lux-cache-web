@@ -6,18 +6,20 @@ const coreConfig = {
   images: {
     dangerouslyAllowSVG: true,
     remotePatterns: [
-      { hostname: 'placeholder.pics' },
       {
         protocol: 'https',
-        hostname: 'cdn.sanity.io'
+        hostname: 'cdn.sanity.io',
+        pathname: '/images/ikrxgij3/production/**'
       },
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.io'
+        hostname: 'res.cloudinary.io',
+        pathname: 'dmowkzh44/video/upload/**'
       },
       {
         protocol: 'https',
-        hostname: 'cloud-lc.b-cdn.net'
+        hostname: 'cloud-lc.b-cdn.net',
+        pathname: '/video/upload/**'
       }
     ]
   },
