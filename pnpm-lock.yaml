@@ -214,6 +214,9 @@ dependencies:
     version: 3.23.6
 
 devDependencies:
+  '@react-email/preview':
+    specifier: ^0.0.11
+    version: 0.0.11(react@18.3.1)
   '@types/node':
     specifier: ^20.14.2
     version: 20.14.2
@@ -4504,6 +4507,15 @@ packages:
       md-to-react-email: 5.0.2(react@18.3.1)
       react: 18.3.1
     dev: false
+
+  /@react-email/preview@0.0.11(react@18.3.1):
+    resolution: {integrity: sha512-7O/CT4b16YlSGrj18htTPx3Vbhu2suCGv/cSe5c+fuSrIM/nMiBSZ3Js16Vj0XJbAmmmlVmYFZw9L20wXJ+LjQ==}
+    engines: {node: '>=18.0.0'}
+    peerDependencies:
+      react: ^18.0 || ^19.0 || ^19.0.0-rc
+    dependencies:
+      react: 18.3.1
+    dev: true
 
   /@react-email/preview@0.0.9(react@18.3.1):
     resolution: {integrity: sha512-2fyAA/zzZYfYmxfyn3p2YOIU30klyA6Dq4ytyWq4nfzQWWglt5hNDE0cMhObvRtfjM9ghMSVtoELAb0MWiF/kw==}
@@ -11635,7 +11647,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}

@@ -7,6 +7,7 @@ import {
   Html,
   Preview,
   Row,
+  Link,
   Section,
   Text
 } from '@react-email/components'
@@ -16,7 +17,10 @@ const baseUrl =
     ? 'http://localhost:3000'
     : 'https://lc-local-development.vercel.app'
 
-const SubscriptionCompletedEmail = () => {
+const SubscriptionCompletedEmail = (
+  userEmail: string,
+  userName: string | null | undefined
+) => {
   return (
     <Html>
       <Head />
@@ -24,28 +28,56 @@ const SubscriptionCompletedEmail = () => {
       <Body style={main}>
         <Container style={container}>
           <Section style={message}>
-            <Heading style={global.heading}>Thank you for subscribing!</Heading>
             <Text style={global.text}>
-              You are now subscribed to our platform. You can now access all the
-              features and content for the plan of your choice.
+              Dear {userName ? `${userName},` : `${userEmail},`}
             </Text>
-            <Text style={{ ...global.text, marginTop: 24 }}>
-              If you have any questions, feel free to reach out to our support
-              team.
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              We are delighted to welcome you to Lux Cache, a platform dedicated
+              to providing innovative tools, insights, and support in music
+              production.
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              At Lux Cache, we collaborate with pioneering artists and producers
+              to offer an unparalleled array of resources. Our commissioned
+              articles, presentations, sample packs, features, and tutorials are
+              designed to foster creativity and enhance your musical journey.
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              We invite you to start exploring our platform and begin
+              participating in our vibrant Discord community. Visit{' '}
+              <Link style={anchor} href="https://luxcache.com">
+                LUXCACHE.COM
+              </Link>{' '}
+              to start exploring our resources and connect with like-minded
+              innovators on our Discord server.
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              Best regards,
+              <br /> Lux Cache Staff
             </Text>
           </Section>
           <Hr style={global.hr}></Hr>
           <Section>
             <Row>
               <Text
-                style={{ ...footer.text, paddingTop: 30, paddingBottom: 30 }}
+                style={{ ...footer.text, paddingTop: 10, paddingBottom: 10 }}
               >
-                Please contact us if you have any questions. (If you reply to
-                this email, we won't be able to see it)
+                Want to pitch us a guest or collaboration? → Email or DM us
+                <br />
+                This email was sent to {`${userEmail}`}
+                <br />
+                <Link href="https://luxcache.com/account">
+                  Manage your email settings
+                </Link>
+                <br />
+                Forwarded this email?{' '}
+                <Link href="https://luxcache.com">Subscribe here</Link> for more
               </Text>
             </Row>
             <Row>
-              <Text style={footer.text}>© LuxCache. All Rights Reserved.</Text>
+              <Text style={{ ...footer.text, paddingBottom: 10 }}>
+                © LuxCache
+              </Text>
             </Row>
           </Section>
         </Container>
@@ -57,8 +89,8 @@ const SubscriptionCompletedEmail = () => {
 export default SubscriptionCompletedEmail
 
 const paddingX = {
-  paddingLeft: '40px',
-  paddingRight: '40px'
+  paddingLeft: '20px',
+  paddingRight: '20px'
 }
 
 const paddingY = {
@@ -80,16 +112,17 @@ const global = {
   },
   paragraphWithBold: { ...paragraph, fontWeight: 'bold' },
   heading: {
-    fontSize: '32px',
+    fontSize: '16px',
     lineHeight: '1.3',
     fontWeight: '700',
     textAlign: 'center',
-    letterSpacing: '-1px'
+    letterSpacing: '0px'
   } as React.CSSProperties,
   text: {
     ...paragraph,
-    color: '#747474',
-    fontWeight: '500'
+    color: 'black',
+    fontWeight: '500',
+    lineHeight: '1.4'
   },
   button: {
     border: '1px solid #929292',
@@ -121,21 +154,17 @@ const container = {
   border: '1px solid #E5E5E5'
 }
 
-const track = {
-  container: {
-    padding: '22px 40px',
-    backgroundColor: '#F7F7F7'
-  },
-  number: {
-    margin: '12px 0 0 0',
-    fontWeight: 500,
-    lineHeight: '1.4',
-    color: '#6F6F6F'
-  }
+const anchor = {
+  textDecoration: 'underline',
+  color: '#000',
+  fontWeight: '500',
+  fontStyle: 'italic'
 }
 
 const message = {
-  padding: '40px 74px',
+  ...paddingX,
+  paddingTop: '30px',
+  paddingBottom: '40px',
   textAlign: 'center'
 } as React.CSSProperties
 
@@ -151,6 +180,7 @@ const footer = {
     margin: 'auto'
   },
   text: {
+    ...paddingX,
     margin: '0',
     color: '#AFAFAF',
     fontSize: '13px',

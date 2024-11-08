@@ -93,19 +93,18 @@ export async function POST(req: Request) {
               checkoutSession.customer as string,
               true
             )
+            const userEmail = event.data.object.customer_details?.email
 
             // Send email to customer with Resend
-            if (
-              event.data.object.customer_details === null ||
-              event.data.object.customer_details.email === null
-            ) {
+            if (event.data.object.customer_details === null || !userEmail) {
               throw new Error('Customer details not found')
             } else {
+              const userName = event.data.object.customer_details.name
               await resend.emails.send({
                 from: 'Lux Cache <hello@szymonhernik.com>',
-                to: [event.data.object.customer_details.email],
+                to: [userEmail],
                 subject: 'Thanks for subscribing!',
-                react: SubscriptionCompletedEmail()
+                react: SubscriptionCompletedEmail(userEmail, userName)
               })
             }
           } else if (checkoutSession.mode === 'setup') {

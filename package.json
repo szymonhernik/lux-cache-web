@@ -24,7 +24,8 @@
     "supabase:push": "npx supabase db push",
     "supabase:pull": "npx supabase db pull",
     "supabase:migration-up": "npx supabase migration up",
-    "discord-bot": "ts-node src/discord/discord_bot/index.ts"
+    "discord-bot": "ts-node src/discord/discord_bot/index.ts",
+    "email": "pnpm dlx react-email dev --dir src/components/emails"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -98,6 +99,7 @@
     "zod": "^3.23.6"
   },
   "devDependencies": {
+    "@react-email/preview": "^0.0.11",
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
