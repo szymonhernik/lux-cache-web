@@ -7,7 +7,7 @@ import {
   getPrice,
   getSubscription,
   getUser,
-  getUserDetails
+  getCanTrial
 } from '@/utils/supabase/queries'
 
 export const dynamic = 'force-dynamic'
@@ -25,8 +25,6 @@ export default async function CheckoutPage({
   params: { slug: string }
   searchParams: { [key: string]: string | string[] | undefined }
 }) {
-  // validate searchParams with Zod
-
   const validatedSearchParams = SearchParamsSchema.safeParse(searchParams)
   if (!validatedSearchParams.success) {
     // if the search params are not valid, redirect to the homepage
@@ -34,35 +32,25 @@ export default async function CheckoutPage({
     redirect('/')
   }
 
-  // check if the user is logged in
-
+  // check if the user has subscription
   const supabase = createClient()
-  const user = await getUser(supabase)
-
-  if (!user) {
-    return redirect('/redirect?url=/signin/password_signin')
-  }
-
-  // check if the user has a subscription
-  // // if yes we want to redirect the user to their account page to avoid making multiple subscriptions
-
-  const subscription = await getSubscription(supabase)
+  const [subscription] = await Promise.all([getSubscription(supabase)])
 
   if (subscription) {
     return redirect('/account')
   }
 
-  // get price and product info from stripe based on the price id
-  const [price, userDetails] = await Promise.all([
+  // get price and product info from supabase based on the price id
+  const [price, userCanTrial] = await Promise.all([
     getPrice(supabase, searchParams.priceId as string),
-    getUserDetails(supabase)
+    getCanTrial(supabase)
   ])
 
   // if the price is found and all the checks passed we can render the custom checkout page
 
   return (
     <div className="max-w-screen-sm mx-auto flex flex-col gap-4 py-36">
-      <CustomStripeCheckout price={price} userDetails={userDetails} />
+      <CustomStripeCheckout price={price} userCanTrial={userCanTrial} />
     </div>
   )
 }
