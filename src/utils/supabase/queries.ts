@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { Tables } from 'types_db'
 import { getErrorRedirect } from '../helpers'
 import subscriptionTiers, { SubscriptionTiers } from '../stripe/products'
+import { unstable_cache } from 'next/cache'
 
 type User = Tables<'users'>
 export const getUser = cache(async (supabase: SupabaseClient) => {
@@ -76,15 +77,46 @@ export const getProducts = cache(async (supabase: SupabaseClient) => {
   return products as ProductWithPrices[]
 })
 
-export const getUserDetails = cache(async (supabase: SupabaseClient) => {
-  const { data: userDetails } = await supabase
+export const getCachedProducts = async (supabase: SupabaseClient) => {
+  return unstable_cache(
+    async () => {
+      const { data: products, error } = await supabase
+        .from('products')
+        .select('*, prices(*)')
+        .eq('active', true)
+        .eq('prices.active', true)
+        .order('metadata->index')
+        .order('unit_amount', { referencedTable: 'prices' })
+      if (error) {
+        console.error('Error fetching products:', error)
+      }
+
+      return products as ProductWithPrices[]
+    },
+
+    ['products-cache'],
+    { tags: ['products'] }
+  )()
+}
+
+export const getCanTrial = cache(async (supabase: SupabaseClient) => {
+  const { data: userCanTrial } = await supabase
     .from('users')
-    .select('*')
+    .select('can_trial')
     .single()
-  return userDetails as User
+  return userCanTrial as { can_trial: boolean }
+})
+
+export const getUserData = cache(async (supabase: SupabaseClient) => {
+  const { data: userData } = await supabase
+    .from('users')
+    .select('full_name')
+    .single()
+  return userData as { full_name: string }
 })
 
 // get price and product info from stripe based on the price id
+// TODO: verify what exactly needs to be selected from the database
 export const getPrice = cache(
   async (supabase: SupabaseClient, priceId: string) => {
     const { data: price, error } = await supabase
