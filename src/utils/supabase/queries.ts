@@ -80,6 +80,8 @@ export const getProducts = cache(async (supabase: SupabaseClient) => {
 export const getCachedProducts = async (supabase: SupabaseClient) => {
   return unstable_cache(
     async () => {
+      console.log('🔍 Cache MISS - Executing database query')
+
       const { data: products, error } = await supabase
         .from('products')
         .select('*, prices(*)')
@@ -90,6 +92,7 @@ export const getCachedProducts = async (supabase: SupabaseClient) => {
       if (error) {
         console.error('Error fetching products:', error)
       }
+      console.log('📦 Fresh products fetched from DB')
 
       return products as ProductWithPrices[]
     },
