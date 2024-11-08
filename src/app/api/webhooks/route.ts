@@ -10,6 +10,7 @@ import {
 import { Resend } from 'resend'
 import SubscriptionCompletedEmail from '@/components/emails/SubscriptionCompletedEmail'
 import { createClient } from '@/utils/supabase/server'
+import { revalidateTag } from 'next/cache'
 
 const relevantEvents = new Set([
   'product.created',
@@ -55,17 +56,21 @@ export async function POST(req: Request) {
         case 'product.created':
         case 'product.updated':
           await upsertProductRecord(event.data.object as Stripe.Product)
+          revalidateTag('products') // Add revalidation here
           break
         case 'price.created':
         case 'price.updated':
           await upsertPriceRecord(event.data.object as Stripe.Price)
+          revalidateTag('products') // Add revalidation here
           break
         case 'invoice.payment_succeeded':
         case 'price.deleted':
           await deletePriceRecord(event.data.object as Stripe.Price)
+          revalidateTag('products') // Add revalidation here
           break
         case 'product.deleted':
           await deleteProductRecord(event.data.object as Stripe.Product)
+          revalidateTag('products') // Add revalidation here
           break
 
         case 'customer.subscription.created':
