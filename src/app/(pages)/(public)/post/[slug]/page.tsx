@@ -11,12 +11,31 @@ import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 import { Button } from '@/components/shadcn/ui/button'
 import { BookmarkIcon } from '@radix-ui/react-icons'
 import BackButton from './_components/BackButton'
+import { unstable_cache } from 'next/cache'
 
 type Props = {
   params: { slug: string }
 }
 export default async function ProjectSlugRoute({ params }: Props) {
-  const initial = await loadPost(params.slug)
+  // Cache the Sanity post data
+  const getCachedPost = unstable_cache(
+    async (slug: string) => {
+      const start = Date.now()
+      console.log(
+        `[Cache Miss] Fetching post: ${slug} at ${new Date().toISOString()}`
+      )
+      const result = await loadPost(slug)
+      console.log(
+        `[Post Fetch] ${slug} took ${Date.now() - start}ms at ${new Date().toISOString()}`
+      )
+      return result
+    },
+    ['post-page'],
+    {
+      tags: [`post:${params.slug}`]
+    }
+  )
+  const initial = await getCachedPost(params.slug)
 
   if (draftMode().isEnabled) {
     return <PostPreview params={params} initial={initial} />
