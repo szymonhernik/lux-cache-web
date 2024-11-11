@@ -4,6 +4,9 @@ import { createClient } from '@/utils/supabase/server'
 import { BookmarkedQueryResult } from '@/utils/types/sanity/sanity.types'
 import { redirect } from 'next/navigation'
 import BookmarksLayout from './_components/BookmarksLayout'
+import { cache } from 'react'
+
+const getBookmarkedPostsCached = cache(loadBookmarkedPosts)
 
 export default async function Page() {
   const supabase = createClient()
@@ -26,7 +29,8 @@ export default async function Page() {
 
   if (bookmarks && bookmarks.data.length > 0) {
     const ids = bookmarks.data.map((bookmark) => bookmark.post_id)
-    const bookmarkedPosts = await loadBookmarkedPosts(ids)
+
+    const bookmarkedPosts = await getBookmarkedPostsCached(ids) // Use cached version
 
     // Create a map of post_id to created_at for easy lookup
     const bookmarkDates = new Map(
