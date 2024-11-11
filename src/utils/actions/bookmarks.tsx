@@ -11,6 +11,7 @@ const bookmarkSchema = z.object({
   post_id: z.string().uuid('Invalid post ID format'),
   user_id: z.string().uuid('Invalid user ID format')
 })
+const postIdSchema = z.string().uuid('Invalid post ID format')
 
 //USED!
 //checked for authentication
@@ -21,6 +22,12 @@ export async function removeBookmark(formData: FormData) {
   }
 
   const postId = formData.get('postId') as string
+
+  //validate postId to be a uuid with zod
+  const { success } = postIdSchema.safeParse(postId)
+  if (!success) {
+    throw new Error('Invalid post ID format')
+  }
 
   const supabase = createClient()
 
