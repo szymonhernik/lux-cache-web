@@ -101,7 +101,7 @@ export async function POST(req: Request) {
               await resend.emails.send({
                 from: 'Lux Cache <hello@szymonhernik.com>',
                 to: [userEmail],
-                subject: 'Sorry to see you go - Lux Cache Subscription',
+                subject: '💟 Confirming the end of your Lux Cache Subscription',
                 react: SubscriptionCancelEmail(userEmail, userName)
               })
             }
@@ -127,7 +127,7 @@ export async function POST(req: Request) {
               await resend.emails.send({
                 from: 'Lux Cache <hello@szymonhernik.com>',
                 to: [userEmail],
-                subject: `'Thanks for subscribing!'`,
+                subject: `'Welcome to Lux Cache'`,
                 react: SubscriptionCompletedEmail(userEmail, userName)
               })
             }

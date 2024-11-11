@@ -27,7 +27,11 @@ const SubscriptionCancelEmail = (
   return (
     <Html>
       <Head />
-      <Preview>💟 Confirming the end of your Lux Cache Subscription</Preview>
+      <Preview>
+        Dear {userName ? `${userName},` : `${userEmail},`}
+        {` `}We’re sorry to see you go and hope that your time subscribed to Lux
+        Cache has been both enriching and inspiring.
+      </Preview>
       <Body style={main}>
         <Link href="https://luxcache.com">
           <Logo
