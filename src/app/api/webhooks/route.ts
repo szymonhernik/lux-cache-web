@@ -11,6 +11,7 @@ import { Resend } from 'resend'
 import SubscriptionCompletedEmail from '@/components/emails/SubscriptionCompletedEmail'
 import { createClient } from '@/utils/supabase/server'
 import { revalidateTag } from 'next/cache'
+import SubscriptionCancelEmail from '@/components/emails/SubscriptionCancelEmail'
 
 const relevantEvents = new Set([
   'product.created',
@@ -82,6 +83,29 @@ export async function POST(req: Request) {
             subscription.customer as string,
             event.type === 'customer.subscription.created'
           )
+          if (event.type === 'customer.subscription.updated') {
+            if (subscription.cancel_at_period_end) {
+              // Get customer details
+              const customerId = subscription.customer as string // Extract the customer ID
+              const customer = (await stripe.customers.retrieve(
+                customerId
+              )) as Stripe.Customer
+
+              const userName = customer.name
+              const userEmail = customer.email
+              if (!userEmail) {
+                throw new Error('Customer email not found')
+              }
+
+              // Send cancellation email
+              await resend.emails.send({
+                from: 'Lux Cache <hello@szymonhernik.com>',
+                to: [userEmail],
+                subject: 'Sorry to see you go - Lux Cache Subscription',
+                react: SubscriptionCancelEmail(userEmail, userName)
+              })
+            }
+          }
           break
 
         case 'checkout.session.completed':
@@ -103,7 +127,7 @@ export async function POST(req: Request) {
               await resend.emails.send({
                 from: 'Lux Cache <hello@szymonhernik.com>',
                 to: [userEmail],
-                subject: 'Thanks for subscribing!',
+                subject: `'Thanks for subscribing!'`,
                 react: SubscriptionCompletedEmail(userEmail, userName)
               })
             }

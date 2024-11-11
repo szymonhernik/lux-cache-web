@@ -20,16 +20,14 @@ const baseUrl =
     ? 'http://localhost:3000'
     : 'https://lc-local-development.vercel.app'
 
-const SubscriptionCompletedEmail = (
+const SubscriptionCancelEmail = (
   userEmail: string,
   userName: string | null | undefined
 ) => {
   return (
     <Html>
       <Head />
-      <Preview>
-        Welcome to Lux Cache, {userName ? `${userName}` : `${userEmail}`}!
-      </Preview>
+      <Preview>💟 Confirming the end of your Lux Cache Subscription</Preview>
       <Body style={main}>
         <Link href="https://luxcache.com">
           <Logo
@@ -46,24 +44,31 @@ const SubscriptionCompletedEmail = (
               Dear {userName ? `${userName},` : `${userEmail},`}
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
-              We are delighted to welcome you to Lux Cache, a platform dedicated
-              to providing innovative tools, insights, and support in music
-              production.
+              We’re sorry to see you go and hope that your time subscribed to
+              Lux Cache has been both enriching and inspiring. Your presence and
+              contributions to our community have been greatly valued, and we
+              sincerely thank you for being part of the platform.
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
-              At Lux Cache, we collaborate with pioneering artists and producers
-              to offer an unparalleled array of resources. Our commissioned
-              articles, presentations, sample packs, features, and tutorials are
-              designed to foster creativity and enhance your musical journey.
+              We are committed to continuous improvement and would greatly
+              appreciate any feedback you could provide about your experience.
+              Your insights are invaluable to us and can help enhance our
+              platform for all members.
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
-              We invite you to start exploring our platform and begin
-              participating in our vibrant Discord community. Visit{' '}
+              Please take a moment to share your thoughts through our{' '}
               <Link style={anchor} href="https://luxcache.com">
-                LUXCACHE.COM
-              </Link>{' '}
-              to start exploring our resources and connect with like-minded
-              innovators on our Discord server.
+                feedback form
+              </Link>
+              .
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              We hope our paths cross again in the future. Feel free to continue
+              connecting with people in the Lux Cache Discord community and we
+              hope to see you again another time.
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              Thank you again for being part of Lux Cache!
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
               Best regards,
@@ -100,7 +105,7 @@ const SubscriptionCompletedEmail = (
   )
 }
 
-export default SubscriptionCompletedEmail
+export default SubscriptionCancelEmail
 
 const paddingX = {
   paddingLeft: '40px',
@@ -163,7 +168,7 @@ const main = {
 }
 
 const container = {
-  margin: '10px auto',
+  margin: '10px auto 40px auto',
   width: '600px',
   maxWidth: '100%',
   border: '1px solid #E5E5E5'
