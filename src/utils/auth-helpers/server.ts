@@ -9,6 +9,7 @@ import { revalidatePath } from 'next/cache'
 import { ratelimit } from '../upstash/ratelimit'
 import { isAuthenticated } from '../data/auth'
 import { z } from 'zod'
+import { getUser } from '../supabase/queries'
 
 const emailSchema = z.string().email('Invalid email address')
 

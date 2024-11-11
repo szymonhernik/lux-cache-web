@@ -5,18 +5,16 @@ import { isAuthenticated } from '@/utils/data/auth'
 import { revalidatePath } from 'next/cache'
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 import { z } from 'zod'
-
-// This defines the validation rules
-const bookmarkSchema = z.object({
-  post_id: z.string().uuid('Invalid post ID format'),
-  user_id: z.string().uuid('Invalid user ID format')
-})
-const postIdSchema = z.string().uuid('Invalid post ID format')
+import { headers } from 'next/headers'
+import { ratelimit } from '../upstash/ratelimit'
+import { bookmarkSchema, postIdSchema } from '../types/zod/bookmarks'
+import { checkRateLimit } from '../upstash/helpers'
 
 //USED!
-//checked for authentication
 // ✅ check for authentication
+// ✅ add rate limitting to the request
 export async function removeBookmark(formData: FormData) {
+  await checkRateLimit('bookmark')
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
@@ -29,9 +27,10 @@ export async function removeBookmark(formData: FormData) {
     throw new Error('Invalid post ID format')
   }
 
-  const supabase = createClient()
-
   try {
+    // rate limit to 10 requests per 10 seconds
+
+    const supabase = createClient()
     const { error } = await supabase
       .from('bookmarks')
       .delete()
@@ -53,7 +52,6 @@ export async function removeBookmark(formData: FormData) {
       'Bookmark has been removed.'
     )
   } catch (error) {
-    console.error('Error removing bookmark:', error)
     return getErrorRedirect(
       '/bookmarks',
       'Hmm... Something went wrong.',
@@ -62,11 +60,17 @@ export async function removeBookmark(formData: FormData) {
   }
 }
 
+//USED!
+// ✅ check for authentication
+// ✅ add rate limitting to the request
 export async function toggleBookmark(
   post_id: string,
   slug: string,
   userHasBookmarked: boolean
 ) {
+  // rate limit to 10 requests per 10 seconds
+  await checkRateLimit('bookmark')
+
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
@@ -77,9 +81,11 @@ export async function toggleBookmark(
   } = await supabase.auth.getUser()
   const user_id = user!.id
 
-  // Validate input data
+  bookmarkSchema.parse({ post_id, user_id })
+
+  let redirectPath: string
+
   try {
-    bookmarkSchema.parse({ post_id, user_id })
     if (userHasBookmarked) {
       await supabase
         .from('bookmarks')
@@ -90,11 +96,17 @@ export async function toggleBookmark(
       await supabase.from('bookmarks').insert({ user_id, post_id })
     }
     revalidatePath(`/post/${slug}`)
-    return { success: true }
+    return getStatusRedirect(
+      `/post/${slug}`,
+      'Success!',
+      'Bookmark has been updated.'
+    )
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      throw new Error('Invalid input data')
-    }
-    throw error
+    redirectPath = getErrorRedirect(
+      `/post/${slug}`,
+      'Hmm... Something went wrong.',
+      'Bookmark could not be updated.'
+    )
+    return redirectPath
   }
 }

@@ -4,6 +4,8 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { handleRequest } from '@/utils/auth-helpers/client'
 import { removeBookmark } from '@/utils/actions/bookmarks'
+import { postIdSchema } from '@/utils/types/zod/bookmarks'
+import { toast } from 'sonner'
 
 type RemoveBookmarkButtonProps = {
   postId: string
@@ -15,15 +17,30 @@ export default function RemoveBookmarkButton({
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRemoveBookmark = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setIsSubmitting(true)
-    await handleRequest(e, removeBookmark, router)
-    setIsSubmitting(false)
+
+    //validate postId to be a uuid with zod
+    const formData = new FormData(e.currentTarget)
+    const postId = formData.get('postId') as string
+    const { success } = postIdSchema.safeParse(postId)
+    if (!success) {
+      throw new Error('Invalid post ID format')
+    }
+    try {
+      const redirectUrl = await removeBookmark(formData)
+      router.push(redirectUrl)
+      router.refresh()
+    } catch (error) {
+      toast.error('Something went wrong.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleRemoveBookmark}>
       <input type="hidden" name="postId" value={postId} />
       <button
         type="submit"
