@@ -4,6 +4,13 @@ import { createClient } from '@/utils/supabase/server'
 import { isAuthenticated } from '@/utils/data/auth'
 import { revalidatePath } from 'next/cache'
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
+import { z } from 'zod'
+
+// This defines the validation rules
+const bookmarkSchema = z.object({
+  post_id: z.string().uuid('Invalid post ID format'),
+  user_id: z.string().uuid('Invalid user ID format')
+})
 
 //USED!
 //checked for authentication
@@ -63,16 +70,24 @@ export async function toggleBookmark(
   } = await supabase.auth.getUser()
   const user_id = user!.id
 
-  if (userHasBookmarked) {
-    await supabase
-      .from('bookmarks')
-      .delete()
-      .eq('post_id', post_id)
-      .eq('user_id', user_id)
-  } else {
-    await supabase.from('bookmarks').insert({ user_id, post_id })
+  // Validate input data
+  try {
+    bookmarkSchema.parse({ post_id, user_id })
+    if (userHasBookmarked) {
+      await supabase
+        .from('bookmarks')
+        .delete()
+        .eq('post_id', post_id)
+        .eq('user_id', user_id)
+    } else {
+      await supabase.from('bookmarks').insert({ user_id, post_id })
+    }
+    revalidatePath(`/post/${slug}`)
+    return { success: true }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      throw new Error('Invalid input data')
+    }
+    throw error
   }
-
-  revalidatePath(`/post/${slug}`)
-  return { success: true }
 }
