@@ -16,7 +16,6 @@ import {
   SubscriptionItemSchema
 } from '../types/zod/types'
 
-import { getAuthenticatedUser } from '../auth-helpers/server'
 import { getCustomer, getUser } from '../supabase/queries'
 import { AddressType } from '@/app/(pages)/(account)/account/subscription/_components/billing/UpdateBillingAddress'
 
