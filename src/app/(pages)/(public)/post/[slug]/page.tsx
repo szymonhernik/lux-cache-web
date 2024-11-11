@@ -68,6 +68,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
         >
           {initial.data._id && (
             <PostNavbar
+              slug={params.slug}
               title={initial.data.title}
               post_id={initial.data._id}
               pdfUrl={initial.data.episodePDF?.file?.asset?.url}

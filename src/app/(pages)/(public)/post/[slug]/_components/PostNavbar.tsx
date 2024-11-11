@@ -10,9 +10,10 @@ interface Props {
   title: string | null | undefined
   post_id: string
   pdfUrl: string | null | undefined
+  slug: string
 }
 export default async function PostNavbar(props: Props) {
-  const { title, post_id, pdfUrl } = props
+  const { title, post_id, pdfUrl, slug } = props
   const supabase = createClient()
   const user = await getUser(supabase)
 
@@ -37,8 +38,8 @@ export default async function PostNavbar(props: Props) {
             {pdfUrl && <DownloadPDFButton url={pdfUrl} />}
             <BookmarkButton
               post_id={post_id}
-              bookmarks={bookmarks}
               userHasBookmarked={userHasBookmarked}
+              slug={slug}
             />
           </>
         )}

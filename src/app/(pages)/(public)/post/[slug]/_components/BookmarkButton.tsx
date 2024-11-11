@@ -1,39 +1,34 @@
 'use client'
 import { Button } from '@/components/shadcn/ui/button'
+import { toggleBookmark } from '@/utils/actions/bookmarks'
+
 import { createClient } from '@/utils/supabase/client'
 
 import { BookmarkIcon } from '@radix-ui/react-icons'
 import { BookmarkFilledIcon } from '@radix-ui/react-icons'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function BookmarkButton(props: {
   post_id: string
   userHasBookmarked: boolean
-  bookmarks: any
+  slug: string
 }) {
-  const { post_id, bookmarks, userHasBookmarked } = props
+  const { post_id, userHasBookmarked, slug } = props
   const [isSubmitting, setIsSubmitting] = useState(false)
   const router = useRouter()
+
   const handleBookmark = async () => {
-    setIsSubmitting(true)
-
-    const supabase = createClient()
-    const {
-      data: { user }
-    } = await supabase.auth.getUser()
-
-    if (user) {
-      if (userHasBookmarked) {
-        await supabase.from('bookmarks').delete().eq('post_id', post_id)
-      } else {
-        await supabase
-          .from('bookmarks')
-          .insert({ user_id: user.id, post_id: post_id })
-      }
+    try {
+      setIsSubmitting(true)
+      await toggleBookmark(post_id, slug, userHasBookmarked)
       router.refresh()
+    } catch (error) {
+      toast.error('Something went wrong.')
+    } finally {
+      setIsSubmitting(false)
     }
-    setIsSubmitting(false)
   }
   return (
     <Button

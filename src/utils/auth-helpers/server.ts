@@ -1,4 +1,3 @@
-// import 'server-only';
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
@@ -8,28 +7,20 @@ import { getURL, getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 import { getAuthTypes } from '@/utils/auth-helpers/settings'
 import { revalidatePath } from 'next/cache'
 import { ratelimit } from '../upstash/ratelimit'
+import { isAuthenticated } from '../data/auth'
+import { z } from 'zod'
 
-function isValidEmail(email: string) {
-  var regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/
-  return regex.test(email)
-}
-
-export async function getAuthenticatedUser() {
-  const supabase = createClient()
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
-  return user
-}
+const emailSchema = z.string().email('Invalid email address')
 
 export async function redirectToPath(path: string) {
   return redirect(path)
 }
 
+// USED!
+// ✅ check for authentication
 export async function SignOut(formData: FormData) {
-  const user = await getAuthenticatedUser()
-  if (!user) {
-    throw new Error('You must be signed in to perform this action')
+  if (!(await isAuthenticated())) {
+    throw new Error('Unauthorized')
   }
 
   const pathName = String(formData.get('pathName')).trim()
@@ -48,16 +39,17 @@ export async function SignOut(formData: FormData) {
     return getStatusRedirect('/', 'Success', 'You are now signed out.')
   }
 }
-
+// USED!
 export async function signInWithEmail(formData: FormData) {
   const cookieStore = cookies()
   const callbackURL = getURL('/auth/callback')
 
-  const email = String(formData.get('email')).trim()
   let redirectPath: string
 
-  if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
+  const email = String(formData.get('email')).trim()
+  const emailValidation = emailSchema.safeParse(email)
+  if (!emailValidation.success) {
+    return getErrorRedirect(
       '/signin/email_signin',
       'Invalid email address.',
       'Please try again.'
@@ -103,16 +95,17 @@ export async function signInWithEmail(formData: FormData) {
 
   return redirectPath
 }
-
+// USED!
 export async function requestPasswordUpdate(values: { email: string }) {
   const callbackURL = getURL('/auth/reset_password')
 
   // Get form data
-  const email = String(values.email).trim()
   let redirectPath: string
 
-  if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
+  const email = String(values.email).trim()
+  const emailValidation = emailSchema.safeParse(email)
+  if (!emailValidation.success) {
+    return getErrorRedirect(
       '/signin/forgot_password',
       'Invalid email address.',
       'Please try again.'
@@ -149,6 +142,7 @@ export async function requestPasswordUpdate(values: { email: string }) {
   return redirectPath
 }
 
+// USED!
 export async function signInWithPassword(values: {
   email: string
   password: string
@@ -189,16 +183,18 @@ export async function signInWithPassword(values: {
   return redirectPath
 }
 
+// USED!
 export async function signUp(values: { email: string; password: string }) {
   const callbackURL = getURL('/auth/callback')
 
-  const email = String(values.email).trim()
   const password = String(values.password).trim()
   let redirectPath: string
 
-  if (!isValidEmail(email)) {
-    redirectPath = getErrorRedirect(
-      '/signin/signup',
+  const email = String(values.email).trim()
+  const emailValidation = emailSchema.safeParse(email)
+  if (!emailValidation.success) {
+    return getErrorRedirect(
+      '/signin/forgot_password',
       'Invalid email address.',
       'Please try again.'
     )
@@ -248,6 +244,7 @@ export async function signUp(values: { email: string; password: string }) {
   return redirectPath
 }
 
+// USED!
 export async function updatePassword(values: { password: string }) {
   const password = String(values.password).trim()
   let redirectPath: string
@@ -280,20 +277,21 @@ export async function updatePassword(values: { password: string }) {
   return redirectPath
 }
 
+// USED!
+// ✅ check for authentication
 export async function updateEmail(formData: FormData) {
-  const user = await getAuthenticatedUser()
-  if (!user) {
-    throw new Error('You must be signed in to perform this action')
+  if (!(await isAuthenticated())) {
+    throw new Error('Unauthorized')
   }
 
   const newEmail = String(formData.get('newEmail')).trim()
 
-  // Check that the email is valid
-  if (!isValidEmail(newEmail)) {
+  const emailValidation = emailSchema.safeParse(newEmail)
+  if (!emailValidation.success) {
     return getErrorRedirect(
-      '/account',
-      'Your email could not be updated.',
-      'Invalid email address.'
+      '/signin/forgot_password',
+      'Invalid email address.',
+      'Please try again.'
     )
   }
 
@@ -324,10 +322,11 @@ export async function updateEmail(formData: FormData) {
   }
 }
 
+// USED!
+// ✅ check for authentication
 export async function updateName(formData: FormData) {
-  const user = await getAuthenticatedUser()
-  if (!user) {
-    throw new Error('You must be signed in to perform this action')
+  if (!(await isAuthenticated())) {
+    throw new Error('Unauthorized')
   }
 
   const fullName = String(formData.get('fullName')).trim()
@@ -361,11 +360,11 @@ export async function updateName(formData: FormData) {
     )
   }
 }
-
-export async function updatePasswordInAccount(formData: FormData) {
-  const user = await getAuthenticatedUser()
-  if (!user) {
-    throw new Error('You must be signed in to perform this action')
+// USED!
+// ✅ check for authentication
+export async function updatePasswordInAccountDashboard(formData: FormData) {
+  if (!(await isAuthenticated())) {
+    throw new Error('Unauthorized')
   }
 
   const password = String(formData.get('password')).trim()
@@ -422,45 +421,4 @@ export async function updatePasswordInAccount(formData: FormData) {
   }
 
   return redirectPath
-}
-
-export async function removeBookmark(formData: FormData) {
-  const user = await getAuthenticatedUser()
-  if (!user) {
-    throw new Error('You must be signed in to perform this action')
-  }
-
-  const postId = formData.get('postId') as string
-
-  const supabase = createClient()
-
-  try {
-    const { error } = await supabase
-      .from('bookmarks')
-      .delete()
-      .eq('post_id', postId)
-
-    if (error) {
-      return getErrorRedirect(
-        '/bookmarks',
-        'Bookmark could not be removed.',
-        error.message
-      )
-    }
-
-    // Revalidate the bookmarks page to reflect the changes
-    revalidatePath('/bookmarks')
-    return getStatusRedirect(
-      '/bookmarks',
-      'Success!',
-      'Bookmark has been removed.'
-    )
-  } catch (error) {
-    console.error('Error removing bookmark:', error)
-    return getErrorRedirect(
-      '/bookmarks',
-      'Hmm... Something went wrong.',
-      'Bookmark could not be removed.'
-    )
-  }
 }

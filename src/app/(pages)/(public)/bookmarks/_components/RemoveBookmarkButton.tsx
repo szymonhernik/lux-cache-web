@@ -1,9 +1,9 @@
 'use client'
 
-import { removeBookmark } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { handleRequest } from '@/utils/auth-helpers/client'
+import { removeBookmark } from '@/utils/actions/bookmarks'
 
 type RemoveBookmarkButtonProps = {
   postId: string

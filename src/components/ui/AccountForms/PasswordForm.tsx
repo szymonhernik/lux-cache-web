@@ -3,10 +3,9 @@
 import { Button } from '@/components/shadcn/ui/button'
 import Card from '@/components/ui/Card'
 import { handleRequest } from '@/utils/auth-helpers/client'
-import { updatePasswordInAccount } from '@/utils/auth-helpers/server'
+import { updatePasswordInAccountDashboard } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-
 
 export default function PasswordForm() {
   const router = useRouter()
@@ -14,7 +13,7 @@ export default function PasswordForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
-    await handleRequest(e, updatePasswordInAccount, router)
+    await handleRequest(e, updatePasswordInAccountDashboard, router)
 
     setIsSubmitting(false)
   }
