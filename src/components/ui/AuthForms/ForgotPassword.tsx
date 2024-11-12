@@ -18,6 +18,10 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Input } from '@/components/shadcn/ui/input'
+import {
+  passwordResetSchema,
+  PasswordResetSchema
+} from '@/utils/types/zod/auth'
 
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
@@ -25,9 +29,6 @@ interface ForgotPasswordProps {
   redirectMethod: string
   disableButton?: boolean
 }
-const formSchema = z.object({
-  email: z.string().email({ message: 'Please enter a valid email address.' })
-})
 
 export default function ForgotPassword({
   allowEmail,
@@ -37,14 +38,14 @@ export default function ForgotPassword({
   const router = redirectMethod === 'client' ? useRouter() : null
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<PasswordResetSchema>({
+    resolver: zodResolver(passwordResetSchema),
     defaultValues: {
       email: ''
     }
   })
 
-  const handleReset = async (values: { email: string }) => {
+  const handleReset = async (values: PasswordResetSchema) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
       const redirectUrl: string = await requestPasswordUpdate(values)

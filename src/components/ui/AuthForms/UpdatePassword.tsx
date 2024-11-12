@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Form,
@@ -16,31 +15,15 @@ import {
   FormMessage
 } from '@/components/shadcn/ui/form'
 import { Input } from '@/components/shadcn/ui/input'
+import {
+  passwordUpdateFormSchema,
+  PasswordUpdateFormSchema,
+  PasswordUpdateSchema
+} from '@/utils/types/zod/auth'
 
 interface UpdatePasswordProps {
   redirectMethod: string
 }
-
-const formSchema = z
-  .object({
-    password: z
-      .string()
-      .min(8)
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, {
-        message:
-          'Password must contain at least one lowercase letter, one uppercase letter, and one digit'
-      }),
-    confirmPassword: z.string()
-  })
-  .refine(
-    (values) => {
-      return values.password === values.confirmPassword
-    },
-    {
-      message: 'Passwords must match',
-      path: ['confirmPassword']
-    }
-  )
 
 export default function UpdatePassword({
   redirectMethod
@@ -48,15 +31,15 @@ export default function UpdatePassword({
   const router = redirectMethod === 'client' ? useRouter() : null
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<PasswordUpdateFormSchema>({
+    resolver: zodResolver(passwordUpdateFormSchema),
     defaultValues: {
       password: '',
       confirmPassword: ''
     }
   })
 
-  const handleUpdate = async (values: { password: string }) => {
+  const handleUpdate = async (values: PasswordUpdateSchema) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
       const redirectUrl: string = await updatePassword(values)

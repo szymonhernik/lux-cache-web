@@ -1,18 +1,26 @@
 'use server'
 
 import { createClient } from '@/utils/supabase/server'
-import { cookies, headers } from 'next/headers'
+import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { getURL, getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
-import { getAuthTypes } from '@/utils/auth-helpers/settings'
-import { revalidatePath } from 'next/cache'
-import { ratelimit } from '../upstash/ratelimit'
+
 import { isAuthenticated } from '../data/auth'
 import { z } from 'zod'
-import { getUser } from '../supabase/queries'
 import { checkRateLimit, checkStrictRateLimit } from '../upstash/helpers'
-
-const emailSchema = z.string().email('Invalid email address')
+import {
+  emailUpdateSchema,
+  nameUpdateSchema,
+  passwordResetSchema,
+  PasswordResetSchema,
+  passwordUpdateFormSchema,
+  passwordUpdateSchema,
+  PasswordUpdateSchema,
+  signInSchema,
+  SignInSchema,
+  signUpSchema,
+  SignUpSchema
+} from '../types/zod/auth'
 
 export async function redirectToPath(path: string) {
   return redirect(path)
@@ -20,7 +28,10 @@ export async function redirectToPath(path: string) {
 
 // USED!
 // ✅ check for authentication
-export async function SignOut(formData: FormData) {
+// ✅ add rate limiting to the request
+// ✅ Zod not needed in SignOut -> not passing any sensitive data
+export async function SignOut(pathname: string) {
+  let redirectPath: string
   // Default ratelimiter: 10 requests per 60 seconds
   await checkRateLimit('auth:signout')
 
@@ -28,47 +39,48 @@ export async function SignOut(formData: FormData) {
     throw new Error('Unauthorized')
   }
 
-  const pathName = String(formData.get('pathName')).trim()
-
   const supabase = createClient()
   const { error } = await supabase.auth.signOut()
 
   if (error) {
-    return getErrorRedirect(
-      pathName,
+    redirectPath = getErrorRedirect(
+      pathname,
       'Hmm... Something went wrong.',
       'You could not be signed out.'
     )
-  } else {
-    revalidatePath('/')
-    return getStatusRedirect('/', 'Success', 'You are now signed out.')
+    return redirectPath
   }
+
+  redirectPath = getStatusRedirect('/', 'Success', 'You are now signed out.')
+  return redirectPath
 }
 
 // USED!
+// ✅ check for authentication
 // ✅ add rate limiting to the request
-export async function requestPasswordUpdate(values: { email: string }) {
+// ✅ add Zod server-side validation
+export async function requestPasswordUpdate(values: PasswordResetSchema) {
+  const result = passwordResetSchema.safeParse(values)
+  if (!result.success) {
+    return getErrorRedirect(
+      '/signin/forgot_password',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
+
   // Rate limit password reset attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:password_reset')
 
   const callbackURL = getURL('/auth/reset_password')
 
-  // Get form data
   let redirectPath: string
 
-  const email = String(values.email).trim()
-  const emailValidation = emailSchema.safeParse(email)
-  if (!emailValidation.success) {
-    return getErrorRedirect(
-      '/signin/forgot_password',
-      'Invalid email address.',
-      'Please try again.'
-    )
-  }
+  const { email } = result.data
 
   const supabase = createClient()
 
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: callbackURL
   })
 
@@ -78,36 +90,38 @@ export async function requestPasswordUpdate(values: { email: string }) {
       error.message,
       'Please try again.'
     )
-  } else if (data) {
-    redirectPath = getStatusRedirect(
-      '/browse',
-      'Success!',
-      'Please check your email for a password reset link. You may now close this tab.',
-      true
-    )
-  } else {
-    redirectPath = getErrorRedirect(
-      '/signin/forgot_password',
-      'Hmm... Something went wrong.',
-      'Password reset email could not be sent.'
-    )
+    return redirectPath
   }
-
+  // Always return success to prevent email enumeration
+  redirectPath = getStatusRedirect(
+    '/browse',
+    'Success!',
+    'If an account exists with this email, you will receive a password reset link.',
+    true
+  )
   return redirectPath
 }
 
 // USED!
+// ✅ no authentication = public function
 // ✅ add rate limiting to the request
-export async function signInWithPassword(values: {
-  email: string
-  password: string
-}) {
+// ✅ add Zod server-side validation
+export async function signInWithPassword(values: SignInSchema) {
+  // Server-side validation
+  const result = signInSchema.safeParse(values)
+  if (!result.success) {
+    return getErrorRedirect(
+      '/signin/password_signin',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
   // Rate limit login attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:signin')
 
+  const { email, password } = result.data // Use validated data
   const cookieStore = cookies()
-  const email = String(values.email).trim()
-  const password = String(values.password).trim()
+
   let redirectPath: string
 
   const supabase = createClient()
@@ -142,25 +156,26 @@ export async function signInWithPassword(values: {
 }
 
 // USED!
+// ✅ no authentication = public function
 // ✅ add rate limiting to the request
-export async function signUp(values: { email: string; password: string }) {
+// ✅ add Zod server-side validation
+export async function signUp(values: SignUpSchema) {
+  // Server-side validation
+  const result = signUpSchema.safeParse(values)
+  if (!result.success) {
+    return getErrorRedirect(
+      '/signin/signup',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
   // Rate limit signup attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:signup')
 
   const callbackURL = getURL('/auth/callback')
 
-  const password = String(values.password).trim()
+  const { email, password } = result.data // Use validated data
   let redirectPath: string
-
-  const email = String(values.email).trim()
-  const emailValidation = emailSchema.safeParse(email)
-  if (!emailValidation.success) {
-    return getErrorRedirect(
-      '/signin/forgot_password',
-      'Invalid email address.',
-      'Please try again.'
-    )
-  }
 
   const supabase = createClient()
   const { error, data } = await supabase.auth.signUp({
@@ -194,8 +209,19 @@ export async function signUp(values: { email: string; password: string }) {
 }
 
 // USED!
+// ✅ check for authentication
 // ✅ add rate limiting to the request
-export async function updatePassword(values: { password: string }) {
+// ✅ add Zod server-side validation
+export async function updatePassword(values: PasswordUpdateSchema) {
+  const result = passwordUpdateSchema.safeParse(values)
+  if (!result.success) {
+    return getErrorRedirect(
+      '/signin/update_password',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
+
   // Strict ratelimiter: 5 requests per 60 seconds
   await checkStrictRateLimit('auth:update_password')
 
@@ -203,8 +229,9 @@ export async function updatePassword(values: { password: string }) {
     throw new Error('Unauthorized')
   }
 
-  const password = String(values.password).trim()
   let redirectPath: string
+
+  const { password } = result.data
 
   const supabase = createClient()
   const { error, data } = await supabase.auth.updateUser({
@@ -237,7 +264,16 @@ export async function updatePassword(values: { password: string }) {
 // USED!
 // ✅ check for authentication
 // ✅ add rate limiting to the request
-export async function updateEmail(formData: FormData) {
+// ✅ add Zod server-side validation
+export async function updateEmail(values: FormData) {
+  const result = emailUpdateSchema.safeParse(values)
+  if (!result.success) {
+    return getErrorRedirect(
+      '/signin/update_email',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
   // Strict ratelimiter: 5 requests per 60 seconds
   await checkStrictRateLimit('auth:update_email')
 
@@ -245,17 +281,7 @@ export async function updateEmail(formData: FormData) {
     throw new Error('Unauthorized')
   }
 
-  const newEmail = String(formData.get('newEmail')).trim()
-
-  const emailValidation = emailSchema.safeParse(newEmail)
-  if (!emailValidation.success) {
-    return getErrorRedirect(
-      '/signin/forgot_password',
-      'Invalid email address.',
-      'Please try again.'
-    )
-  }
-
+  const { newEmail } = result.data
   const supabase = createClient()
   const callbackUrl = getURL(
     getStatusRedirect('/account', 'Success!', `Your email has been updated.`)
@@ -286,16 +312,34 @@ export async function updateEmail(formData: FormData) {
 // USED!
 // ✅ check for authentication
 // ✅ add rate limiting to the request
+// ✅ add Zod server-side validation
 export async function updateName(formData: FormData) {
+  const fullName = String(formData.get('fullName')).trim()
+  const userId = String(formData.get('userId'))
+
+  // verify userId is a valid uuid with zod
+  const userIdValidation = z.string().uuid().safeParse(userId)
+  if (!userIdValidation.success) {
+    return getErrorRedirect(
+      '/account',
+      'Invalid input',
+      'User ID is not a valid UUID'
+    )
+  }
+  const result = nameUpdateSchema.safeParse({ fullName })
+  if (!result.success) {
+    return getErrorRedirect(
+      '/account',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
   // Strict ratelimiter: 5 requests per 60 seconds
   await checkStrictRateLimit('auth:update_name')
 
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
-
-  const fullName = String(formData.get('fullName')).trim()
-  const userId = String(formData.get('userId'))
 
   const supabase = createClient()
   const { error, data } = await supabase
@@ -328,7 +372,21 @@ export async function updateName(formData: FormData) {
 // USED!
 // ✅ check for authentication
 // ✅ add rate limiting to the request
+// ✅ add Zod server-side validation
 export async function updatePasswordInAccountDashboard(formData: FormData) {
+  const password = String(formData.get('password')).trim()
+  const confirmPassword = String(formData.get('confirmPassword')).trim()
+  const result = passwordUpdateFormSchema.safeParse({
+    password,
+    confirmPassword
+  })
+  if (!result.success) {
+    return getErrorRedirect(
+      '/account',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
   // Strict ratelimiter: 5 requests per 60 seconds
   await checkStrictRateLimit('auth:update_password')
 
@@ -336,19 +394,7 @@ export async function updatePasswordInAccountDashboard(formData: FormData) {
     throw new Error('Unauthorized')
   }
 
-  const password = String(formData.get('password')).trim()
-  const passwordConfirm = String(formData.get('passwordConfirm')).trim()
   let redirectPath: string
-
-  // Check that the password and confirmation match
-  if (password !== passwordConfirm) {
-    redirectPath = getErrorRedirect(
-      '/account',
-      'Your password could not be updated.',
-      'Passwords do not match.'
-    )
-    return redirectPath
-  }
 
   const supabase = createClient()
   const { error, data } = await supabase.auth.updateUser({

@@ -19,6 +19,7 @@ import {
 } from '@/components/shadcn/ui/form'
 import { Input } from '@/components/shadcn/ui/input'
 import { toast } from 'sonner'
+import { signUpSchema, SignUpSchema } from '@/utils/types/zod/auth'
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -26,40 +27,13 @@ interface SignUpProps {
   redirectMethod: string
 }
 
-const formSchema = z
-  .object({
-    email: z.string().email({ message: 'Please enter a valid email address.' }),
-    password: z
-      .string()
-      .min(8)
-      .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/, {
-        message:
-          'Password must contain at least one lowercase letter, one uppercase letter, and one digit'
-      }),
-    confirmPassword: z.string()
-  })
-  .refine(
-    (values) => {
-      return values.password === values.confirmPassword
-    },
-    {
-      message: 'Passwords must match',
-      path: ['confirmPassword']
-    }
-  )
-
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null
 
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   setIsSubmitting(true) // Disable the button while the request is being handled
-  //   await handleRequest(e, signUp, router)
-  //   setIsSubmitting(false)
-  // }
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignUpSchema>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: ''
     }

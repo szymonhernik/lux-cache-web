@@ -18,6 +18,7 @@ import { Input } from '@/components/shadcn/ui/input'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
+import { signInSchema, SignInSchema } from '@/utils/types/zod/auth'
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -37,14 +38,14 @@ export default function PasswordSignIn({
   const router = redirectMethod === 'client' ? useRouter() : null
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<SignInSchema>({
+    resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
       password: ''
     }
   })
-  const handleLogin = async (values: { email: string; password: string }) => {
+  const handleLogin = async (values: SignInSchema) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
       const redirectUrl: string = await signInWithPassword(values)

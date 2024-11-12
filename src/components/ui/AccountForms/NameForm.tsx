@@ -2,16 +2,12 @@
 
 import Card from '@/components/ui/Card'
 import { updateName } from '@/utils/auth-helpers/server'
-import { handleRequest } from '@/utils/auth-helpers/client'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { z } from 'zod'
 import { Button } from '@/components/shadcn/ui/button'
-
-const nameSchema = z
-  .string()
-  .min(1, "Name can't be empty")
-  .max(64, "Name can't exceed 64 characters")
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { nameUpdateSchema, NameUpdateSchema } from '@/utils/types/zod/auth'
 
 export default function NameForm({
   userName,
@@ -22,27 +18,40 @@ export default function NameForm({
 }) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [currentName, setCurrentName] = useState(userName)
-  const [isInputDisabled, setIsInputDisabled] = useState(true)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newName = e.target.value
-    setCurrentName(newName)
-    // Validate the new name using Zod schema
-    const validationResult = nameSchema.safeParse(newName)
-    setIsInputDisabled(!validationResult.success || newName === userName)
-  }
+  const form = useForm<NameUpdateSchema>({
+    resolver: zodResolver(nameUpdateSchema),
+    defaultValues: {
+      fullName: userName
+    }
+  })
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsSubmitting(true)
+  const onSubmit = async (data: NameUpdateSchema) => {
     // Check if the new name is the same as the old name
-    if (e.currentTarget.fullName.value === userName) {
-      e.preventDefault()
-      setIsSubmitting(false)
+    if (data.fullName === userName) {
+      form.setError('fullName', {
+        type: 'manual',
+        message: 'New name must be different from current name'
+      })
       return
     }
-    handleRequest(e, updateName, router)
-    setIsSubmitting(false)
+
+    setIsSubmitting(true)
+    try {
+      const formData = new FormData()
+      formData.append('fullName', data.fullName)
+      formData.append('userId', userId)
+      const response = await updateName(formData)
+      router.push(response)
+    } catch (error) {
+      console.error('Failed to update name:', error)
+      form.setError('fullName', {
+        type: 'manual',
+        message: 'Failed to update name. Please try again.'
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -54,6 +63,7 @@ export default function NameForm({
             type="submit"
             form="nameForm"
             size="lg"
+            disabled={isSubmitting}
             isLoading={isSubmitting}
             loadingText="Updating"
           >
@@ -63,25 +73,26 @@ export default function NameForm({
         </>
       }
     >
-      <div className=" ">
+      <div>
         <form
           id="nameForm"
-          onSubmit={(e) => handleSubmit(e)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="flex gap-4 flex-col *:space-y-2 *:flex *:flex-col"
         >
           <div>
             <label htmlFor="fullName">Name</label>
-            <input type="hidden" name="userId" value={userId} />
             <input
-              id="fullName"
+              {...form.register('fullName')}
               type="text"
-              name="fullName"
               className="w-full sm:w-3/4 p-3 rounded-sm border border-zinc-300 bg-transparent"
-              defaultValue={userName}
-              onChange={handleInputChange}
               placeholder="Your name"
               maxLength={64}
             />
+            {form.formState.errors.fullName && (
+              <p className="text-sm text-red-500">
+                {form.formState.errors.fullName.message}
+              </p>
+            )}
           </div>
         </form>
       </div>
