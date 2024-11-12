@@ -30,8 +30,8 @@ export default function MobileAccountDrawer() {
     e.preventDefault()
     setIsLoggingOut(true)
     try {
-      const result = await SignOut(new FormData(e.target as HTMLFormElement))
-      router.push(result)
+      const redirectPath = await SignOut(pathname)
+      router.push(redirectPath)
     } catch (error) {
       console.error('Logout error:', error)
     }
