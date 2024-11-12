@@ -64,7 +64,7 @@ export default function PasswordSignIn({
   }
 
   return (
-    <div className="flex flex-col gap-8 my-8">
+    <div className="flex flex-col gap-8 ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleLogin)} className=" space-y-4">
           <FormField
@@ -113,16 +113,15 @@ export default function PasswordSignIn({
           </Button>
         </form>
       </Form>
-
       <div className="">
         <p>
-          <Link href="/signin/signup" className="text-sm">
+          <Link href={'/signin/signup '} className="text-sm">
             Don't have an account? Sign up
           </Link>
         </p>
 
         <p>
-          <Link href="/signin/forgot_password" className="text-sm">
+          <Link href={'/signin/forgot_password'} className="text-sm">
             Forgot your password?
           </Link>
         </p>

@@ -22,15 +22,16 @@ export default function OauthSignIn() {
     //   icon: <FaGithub className="h-5 w-5" />
     // },
     {
-      name: 'google',
-      displayName: 'Google',
-      icon: <FaGoogle className="h-5 w-5" />
-    },
-    {
       name: 'discord',
       displayName: 'Discord',
       icon: <FaDiscord className="h-5 w-5" />
+    },
+    {
+      name: 'google',
+      displayName: 'Google',
+      icon: <FaGoogle className="h-5 w-5" />
     }
+
     /* Add desired OAuth providers here */
   ]
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,7 +43,7 @@ export default function OauthSignIn() {
   }
 
   return (
-    <div className="mt-4 flex flex-col md:flex-row gap-2">
+    <div className="mt-4 flex flex-col gap-2">
       {oAuthProviders.map((provider) => (
         <form
           key={provider.name}
@@ -52,8 +53,13 @@ export default function OauthSignIn() {
           <input type="hidden" name="provider" value={provider.name} />
           <Button
             variant={'outline'}
+            size={'lg'}
             type="submit"
-            className="w-full font-normal"
+            className={`w-full font-normal ${
+              provider.name === 'discord'
+                ? 'bg-[#5865F2] text-white hover:text-white hover:bg-[#4752C4] border-0'
+                : ''
+            }`}
             isLoading={isSubmitting}
           >
             <span className="mr-2">{provider.icon}</span>

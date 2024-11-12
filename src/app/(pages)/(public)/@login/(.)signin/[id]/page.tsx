@@ -8,7 +8,6 @@ import {
 import { redirect } from 'next/navigation'
 import Card from '@/components/ui/Card'
 import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn'
-import EmailSignIn from '@/components/ui/AuthForms/EmailSignIn'
 import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword'
 import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword'
 import SignUp from '@/components/ui/AuthForms/Signup'
@@ -62,19 +61,20 @@ export default async function LoginModal({
                       : 'Log in'
               }
             >
+              {viewProp !== 'update_password' && allowOauth && (
+                <>
+                  <OauthSignIn />
+                  <Separator text="or" />
+                </>
+              )}
+
               {viewProp === 'password_signin' && (
                 <PasswordSignIn
                   allowEmail={allowEmail}
                   redirectMethod={redirectMethod}
                 />
               )}
-              {viewProp === 'email_signin' && (
-                <EmailSignIn
-                  allowPassword={allowPassword}
-                  redirectMethod={redirectMethod}
-                  disableButton={searchParams.disable_button}
-                />
-              )}
+
               {viewProp === 'forgot_password' && (
                 <ForgotPassword
                   allowEmail={allowEmail}
@@ -90,12 +90,6 @@ export default async function LoginModal({
                   allowEmail={allowEmail}
                   redirectMethod={redirectMethod}
                 />
-              )}
-              {viewProp !== 'update_password' && allowOauth && (
-                <>
-                  <Separator text="Or continue with" />
-                  <OauthSignIn />
-                </>
               )}
             </Card>
           </div>

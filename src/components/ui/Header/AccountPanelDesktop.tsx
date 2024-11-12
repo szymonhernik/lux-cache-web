@@ -137,7 +137,7 @@ export default function AccountPanelDesktop() {
     <div
       className={`py-4 pr-6 pl-4 flex flex-col items-end text-xl uppercase italic`}
     >
-      <Link href="/signin/password_signin" className="">
+      <Link href={`/signin/password_signin`} className="">
         Sign In
       </Link>
     </div>

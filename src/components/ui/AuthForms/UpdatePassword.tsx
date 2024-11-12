@@ -71,7 +71,7 @@ export default function UpdatePassword({
   }
 
   return (
-    <div className="flex flex-col gap-8 my-8">
+    <div className="flex flex-col gap-8 ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleUpdate)} className=" space-y-4">
           <FormField

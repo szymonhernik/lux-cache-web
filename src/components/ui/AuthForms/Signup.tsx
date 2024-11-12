@@ -49,6 +49,7 @@ const formSchema = z
 
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null
+
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -81,7 +82,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   }
 
   return (
-    <div className="flex flex-col gap-8 my-8">
+    <div className="flex flex-col gap-8 ">
       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(handleSignup)}>
           <FormField
@@ -147,7 +148,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
       </Form>
       <div className="">
         <p>
-          <Link href="/signin/password_signin" className="font-light text-sm">
+          <Link href={'/signin/password_signin'} className="font-light text-sm">
             Already have an account? Sign in
           </Link>
         </p>

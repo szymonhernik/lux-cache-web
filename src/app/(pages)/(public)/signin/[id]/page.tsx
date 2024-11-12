@@ -1,4 +1,3 @@
-import Logo from '@/components/icons/Logo'
 import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -10,7 +9,6 @@ import {
 } from '@/utils/auth-helpers/settings'
 import Card from '@/components/ui/Card'
 import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn'
-import EmailSignIn from '@/components/ui/AuthForms/EmailSignIn'
 import Separator from '@/components/ui/AuthForms/Separator'
 import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn'
 import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword'
@@ -56,7 +54,7 @@ export default async function SignIn({
 
   return (
     <div className="flex justify-center height-screen-helper">
-      <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80 ">
+      <div className="flex flex-col justify-between max-w-lg p-3 m-auto w-80  ">
         <Card
           title={
             viewProp === 'forgot_password'
@@ -68,19 +66,20 @@ export default async function SignIn({
                   : 'Log in'
           }
         >
+          {viewProp !== 'update_password' && allowOauth && (
+            <>
+              <OauthSignIn />
+              <Separator text="or" />
+            </>
+          )}
+
           {viewProp === 'password_signin' && (
             <PasswordSignIn
               allowEmail={allowEmail}
               redirectMethod={redirectMethod}
             />
           )}
-          {viewProp === 'email_signin' && (
-            <EmailSignIn
-              allowPassword={allowPassword}
-              redirectMethod={redirectMethod}
-              disableButton={searchParams.disable_button}
-            />
-          )}
+
           {viewProp === 'forgot_password' && (
             <ForgotPassword
               allowEmail={allowEmail}
@@ -93,12 +92,6 @@ export default async function SignIn({
           )}
           {viewProp === 'signup' && (
             <SignUp allowEmail={allowEmail} redirectMethod={redirectMethod} />
-          )}
-          {viewProp !== 'update_password' && allowOauth && (
-            <>
-              <Separator text="Or continue with" />
-              <OauthSignIn />
-            </>
           )}
         </Card>
       </div>

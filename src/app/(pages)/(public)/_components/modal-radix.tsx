@@ -15,6 +15,7 @@ import {
 export function ModalRadix({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
+
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {

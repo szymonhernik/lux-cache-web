@@ -61,7 +61,7 @@ export default function ForgotPassword({
   }
 
   return (
-    <div className="flex flex-col gap-8 my-8">
+    <div className="flex flex-col gap-8 ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleReset)} className=" space-y-4">
           <FormField
@@ -98,12 +98,12 @@ export default function ForgotPassword({
       </Form>
       <div>
         <p>
-          <Link href="/signin/password_signin" className="text-sm">
+          <Link href={'/signin/password_signin'} className="text-sm">
             Sign in with email and password
           </Link>
         </p>
         <p>
-          <Link href="/signin/signup" className="text-sm">
+          <Link href={'/signin/signup'} className="text-sm">
             Don't have an account? Sign up
           </Link>
         </p>

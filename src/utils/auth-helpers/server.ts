@@ -40,62 +40,7 @@ export async function SignOut(formData: FormData) {
     return getStatusRedirect('/', 'Success', 'You are now signed out.')
   }
 }
-// USED!
-export async function signInWithEmail(formData: FormData) {
-  const cookieStore = cookies()
-  const callbackURL = getURL('/auth/callback')
 
-  let redirectPath: string
-
-  const email = String(formData.get('email')).trim()
-  const emailValidation = emailSchema.safeParse(email)
-  if (!emailValidation.success) {
-    return getErrorRedirect(
-      '/signin/email_signin',
-      'Invalid email address.',
-      'Please try again.'
-    )
-  }
-
-  const supabase = createClient()
-  let options = {
-    emailRedirectTo: callbackURL,
-    shouldCreateUser: true
-  }
-
-  // If allowPassword is false, do not create a new user
-  const { allowPassword } = getAuthTypes()
-  if (allowPassword) options.shouldCreateUser = false
-  const { data, error } = await supabase.auth.signInWithOtp({
-    email,
-    options: options
-  })
-
-  if (error) {
-    redirectPath = getErrorRedirect(
-      '/signin/email_signin',
-      'You could not be signed in.',
-      error.message
-    )
-  } else if (data) {
-    cookieStore.set('preferredSignInView', 'email_signin', { path: '/' })
-    redirectPath = getStatusRedirect(
-      '/signin/email_signin',
-      'Success!',
-      'Please check your email for a magic link. You may now close this tab.',
-      true
-    )
-    revalidatePath('/')
-  } else {
-    redirectPath = getErrorRedirect(
-      '/signin/email_signin',
-      'Hmm... Something went wrong.',
-      'You could not be signed in.'
-    )
-  }
-
-  return redirectPath
-}
 // USED!
 export async function requestPasswordUpdate(values: { email: string }) {
   const callbackURL = getURL('/auth/reset_password')
