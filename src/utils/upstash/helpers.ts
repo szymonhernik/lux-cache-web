@@ -7,7 +7,8 @@ export async function checkRateLimit(scope: string) {
 
   const identifier = `${scope}:${ja4}`
 
-  const { success } = await ratelimit.limit(identifier)
+  const { success, reason } = await ratelimit.limit(identifier)
+
   if (!success) {
     throw new Error('Rate limit exceeded')
   }
