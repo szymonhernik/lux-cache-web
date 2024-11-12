@@ -3,10 +3,9 @@ import { lenientRatelimit, ratelimit, strictRatelimit } from './ratelimit'
 
 export async function checkRateLimit(scope: string) {
   const headersList = headers()
-  const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
   const ja4 = headersList.get('x-vercel-ja4-digest') || 'dev'
 
-  const identifier = `${scope}:${ip}:${ja4}`
+  const identifier = `${scope}:${ja4}`
 
   const { success } = await ratelimit.limit(identifier)
   if (!success) {
@@ -16,10 +15,9 @@ export async function checkRateLimit(scope: string) {
 
 export async function checkStrictRateLimit(scope: string) {
   const headersList = headers()
-  const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
   const ja4 = headersList.get('x-vercel-ja4-digest') || 'dev'
 
-  const identifier = `${scope}:${ip}:${ja4}`
+  const identifier = `${scope}:${ja4}`
 
   const { success } = await strictRatelimit.limit(identifier)
   if (!success) {
@@ -29,10 +27,9 @@ export async function checkStrictRateLimit(scope: string) {
 
 export async function checkLenientRateLimit(scope: string) {
   const headersList = headers()
-  const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
   const ja4 = headersList.get('x-vercel-ja4-digest') || 'dev'
 
-  const identifier = `${scope}:${ip}:${ja4}`
+  const identifier = `${scope}:${ja4}`
 
   const { success } = await lenientRatelimit.limit(identifier)
   if (!success) {
