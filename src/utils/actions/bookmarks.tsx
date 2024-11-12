@@ -14,6 +14,7 @@ import { checkRateLimit } from '../upstash/helpers'
 // ✅ check for authentication
 // ✅ add rate limitting to the request
 export async function removeBookmark(formData: FormData) {
+  // rate limit to 10 requests per 10 seconds
   await checkRateLimit('bookmark')
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
@@ -28,8 +29,6 @@ export async function removeBookmark(formData: FormData) {
   }
 
   try {
-    // rate limit to 10 requests per 10 seconds
-
     const supabase = createClient()
     const { error } = await supabase
       .from('bookmarks')
