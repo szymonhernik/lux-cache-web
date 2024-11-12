@@ -8,15 +8,14 @@ import { z } from 'zod'
 import { headers } from 'next/headers'
 import { ratelimit } from '../upstash/ratelimit'
 import { bookmarkSchema, postIdSchema } from '../types/zod/bookmarks'
-import { checkRateLimit } from '../upstash/helpers'
+import { checkLenientRateLimit } from '../upstash/helpers'
 
 //USED!
 // ✅ check for authentication
 // ✅ add rate limitting to the request
 export async function removeBookmark(formData: FormData) {
-  // rate limit to 10 requests per 10 seconds
   try {
-    await checkRateLimit('bookmark')
+    await checkLenientRateLimit('bookmark')
   } catch (error) {
     throw new Error('Rate limit exceeded in removeBookmark endpoint')
   }
@@ -71,9 +70,8 @@ export async function toggleBookmark(
   slug: string,
   userHasBookmarked: boolean
 ) {
-  // rate limit to 10 requests per 10 seconds
   try {
-    await checkRateLimit('bookmark')
+    await checkLenientRateLimit('bookmark')
   } catch (error) {
     throw new Error('Rate limit exceeded in toggleBookmark endpoint')
   }

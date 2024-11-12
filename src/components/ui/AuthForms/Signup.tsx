@@ -18,6 +18,7 @@ import {
   FormMessage
 } from '@/components/shadcn/ui/form'
 import { Input } from '@/components/shadcn/ui/input'
+import { toast } from 'sonner'
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -76,6 +77,12 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
       }
     } catch (error) {
       console.error('Login failed', error)
+      if (
+        error instanceof Error &&
+        error.message.includes('Strict rate limit exceeded')
+      ) {
+        toast('Too many signup attempts. Please try again in a minute.')
+      }
     } finally {
       setIsSubmitting(false)
     }

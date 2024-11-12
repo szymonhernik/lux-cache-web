@@ -17,6 +17,7 @@ import {
 import { Input } from '@/components/shadcn/ui/input'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -58,7 +59,14 @@ export default function PasswordSignIn({
       }
       // return await redirectToPath(redirectUrl)
     } catch (error) {
+      // throw error
       console.error('Login failed', error)
+      if (
+        error instanceof Error &&
+        error.message.includes('Strict rate limit exceeded')
+      ) {
+        toast('Too many login attempts. Please try again in a minute.')
+      }
     }
     setIsSubmitting(false)
   }

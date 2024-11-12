@@ -21,6 +21,9 @@ export async function redirectToPath(path: string) {
 // USED!
 // ✅ check for authentication
 export async function SignOut(formData: FormData) {
+  // Default ratelimiter: 10 requests per 60 seconds
+  await checkRateLimit('auth:signout')
+
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
@@ -43,7 +46,11 @@ export async function SignOut(formData: FormData) {
 }
 
 // USED!
+// ✅ add rate limiting to the request
 export async function requestPasswordUpdate(values: { email: string }) {
+  // Rate limit password reset attempts: allow 5 attempts per minute
+  await checkStrictRateLimit('auth:password_reset')
+
   const callbackURL = getURL('/auth/reset_password')
 
   // Get form data
@@ -90,12 +97,14 @@ export async function requestPasswordUpdate(values: { email: string }) {
 }
 
 // USED!
+// ✅ add rate limiting to the request
 export async function signInWithPassword(values: {
   email: string
   password: string
 }) {
-  // Rate limit login attempts
-  await checkStrictRateLimit('auth:signin') // Stricter limit for login attempts
+  // Rate limit login attempts: allow 5 attempts per minute
+  await checkStrictRateLimit('auth:signin')
+
   const cookieStore = cookies()
   const email = String(values.email).trim()
   const password = String(values.password).trim()
@@ -133,7 +142,11 @@ export async function signInWithPassword(values: {
 }
 
 // USED!
+// ✅ add rate limiting to the request
 export async function signUp(values: { email: string; password: string }) {
+  // Rate limit signup attempts: allow 5 attempts per minute
+  await checkStrictRateLimit('auth:signup')
+
   const callbackURL = getURL('/auth/callback')
 
   const password = String(values.password).trim()
@@ -181,7 +194,11 @@ export async function signUp(values: { email: string; password: string }) {
 }
 
 // USED!
+// ✅ add rate limiting to the request
 export async function updatePassword(values: { password: string }) {
+  // Strict ratelimiter: 5 requests per 60 seconds
+  await checkStrictRateLimit('auth:update_password')
+
   const password = String(values.password).trim()
   let redirectPath: string
 
@@ -215,7 +232,11 @@ export async function updatePassword(values: { password: string }) {
 
 // USED!
 // ✅ check for authentication
+// ✅ add rate limiting to the request
 export async function updateEmail(formData: FormData) {
+  // Strict ratelimiter: 5 requests per 60 seconds
+  await checkStrictRateLimit('auth:update_email')
+
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
@@ -260,7 +281,11 @@ export async function updateEmail(formData: FormData) {
 
 // USED!
 // ✅ check for authentication
+// ✅ add rate limiting to the request
 export async function updateName(formData: FormData) {
+  // Strict ratelimiter: 5 requests per 60 seconds
+  await checkStrictRateLimit('auth:update_name')
+
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
@@ -298,7 +323,11 @@ export async function updateName(formData: FormData) {
 }
 // USED!
 // ✅ check for authentication
+// ✅ add rate limiting to the request
 export async function updatePasswordInAccountDashboard(formData: FormData) {
+  // Strict ratelimiter: 5 requests per 60 seconds
+  await checkStrictRateLimit('auth:update_password')
+
   if (!(await isAuthenticated())) {
     throw new Error('Unauthorized')
   }
@@ -306,20 +335,6 @@ export async function updatePasswordInAccountDashboard(formData: FormData) {
   const password = String(formData.get('password')).trim()
   const passwordConfirm = String(formData.get('passwordConfirm')).trim()
   let redirectPath: string
-  // Rate limit the request
-  // Read from Vercel headers, specifically the ja4-digest
-  // TODO: consider user limiting or IP
-  const ja4 = headers().get('x-vercel-ja4-digest')
-  const { success } = await ratelimit.limit(ja4 ?? 'anonymous')
-
-  if (!success) {
-    redirectPath = getErrorRedirect(
-      '/account',
-      'For security purposes you can attempt at updating your password three times every 5 minutes.',
-      'Please try again later.'
-    )
-    return redirectPath
-  }
 
   // Check that the password and confirmation match
   if (password !== passwordConfirm) {
