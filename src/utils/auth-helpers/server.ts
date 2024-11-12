@@ -218,27 +218,14 @@ export async function signUp(values: { email: string; password: string }) {
     )
   } else if (data.session) {
     redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.')
-  } else if (
-    data.user &&
-    data.user.identities &&
-    data.user.identities.length == 0
-  ) {
-    redirectPath = getErrorRedirect(
-      '/signin/signup',
-      'Sign up failed.',
-      'There is already an account associated with this email address. Try resetting your password.'
-    )
-  } else if (data.user) {
+  } else {
+    // MORE PRIVACY-FOCUSED APPROACH
+    // Always show the "check your email" message, regardless of whether
+    // this is a new signup or an existing user
     redirectPath = getStatusRedirect(
       '/',
       'Success!',
       'Please check your email for a confirmation link. You may now close this tab.'
-    )
-  } else {
-    redirectPath = getErrorRedirect(
-      '/signin/signup',
-      'Hmm... Something went wrong.',
-      'You could not be signed up.'
     )
   }
 
