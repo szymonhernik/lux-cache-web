@@ -9,10 +9,10 @@ export const ratelimit = new Ratelimit({
   prefix: '@upstash/ratelimit'
 })
 
-// Stricter ratelimiter for sensitive operations (5 requests per 30 seconds)
+// Stricter ratelimiter for sensitive operations (5 requests per minute)
 export const strictRatelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  limiter: Ratelimit.slidingWindow(5, '30 s'),
+  limiter: Ratelimit.slidingWindow(5, '60 s'),
   analytics: true,
   prefix: '@upstash/ratelimit:strict'
 })

@@ -10,6 +10,7 @@ import { ratelimit } from '../upstash/ratelimit'
 import { isAuthenticated } from '../data/auth'
 import { z } from 'zod'
 import { getUser } from '../supabase/queries'
+import { checkRateLimit, checkStrictRateLimit } from '../upstash/helpers'
 
 const emailSchema = z.string().email('Invalid email address')
 
@@ -93,6 +94,8 @@ export async function signInWithPassword(values: {
   email: string
   password: string
 }) {
+  // Rate limit login attempts
+  await checkStrictRateLimit('auth:signin') // Stricter limit for login attempts
   const cookieStore = cookies()
   const email = String(values.email).trim()
   const password = String(values.password).trim()

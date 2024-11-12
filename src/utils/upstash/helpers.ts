@@ -14,6 +14,17 @@ export async function checkRateLimit(scope: string) {
   }
 }
 
-export async function checkStrictRateLimit(scope: string) {}
+export async function checkStrictRateLimit(scope: string) {
+  const headersList = headers()
+  const ip = headersList.get('x-forwarded-for') || '127.0.0.1'
+  const ja4 = headersList.get('x-vercel-ja4-digest') || 'dev'
+
+  const identifier = `${scope}:${ip}:${ja4}`
+
+  const { success } = await strictRatelimit.limit(identifier)
+  if (!success) {
+    throw new Error('Strict rate limit exceeded')
+  }
+}
 
 export async function checkLenientRateLimit(scope: string) {}
