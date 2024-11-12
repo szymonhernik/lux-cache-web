@@ -199,6 +199,10 @@ export async function updatePassword(values: { password: string }) {
   // Strict ratelimiter: 5 requests per 60 seconds
   await checkStrictRateLimit('auth:update_password')
 
+  if (!(await isAuthenticated())) {
+    throw new Error('Unauthorized')
+  }
+
   const password = String(values.password).trim()
   let redirectPath: string
 
