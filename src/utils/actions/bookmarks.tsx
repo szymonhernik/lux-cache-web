@@ -15,9 +15,13 @@ import { checkRateLimit } from '../upstash/helpers'
 // ✅ add rate limitting to the request
 export async function removeBookmark(formData: FormData) {
   // rate limit to 10 requests per 10 seconds
-  await checkRateLimit('bookmark')
+  try {
+    await checkRateLimit('bookmark')
+  } catch (error) {
+    throw new Error('Rate limit exceeded in removeBookmark endpoint')
+  }
   if (!(await isAuthenticated())) {
-    throw new Error('Unauthorized')
+    throw new Error('Unauthorized in removeBookmark endpoint')
   }
 
   const postId = formData.get('postId') as string
@@ -68,10 +72,14 @@ export async function toggleBookmark(
   userHasBookmarked: boolean
 ) {
   // rate limit to 10 requests per 10 seconds
-  await checkRateLimit('bookmark')
+  try {
+    await checkRateLimit('bookmark')
+  } catch (error) {
+    throw new Error('Rate limit exceeded in toggleBookmark endpoint')
+  }
 
   if (!(await isAuthenticated())) {
-    throw new Error('Unauthorized')
+    throw new Error('Unauthorized in toggleBookmark endpoint')
   }
 
   const supabase = createClient()

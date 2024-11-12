@@ -1,5 +1,5 @@
 import { headers } from 'next/headers'
-import { ratelimit } from './ratelimit'
+import { lenientRatelimit, ratelimit, strictRatelimit } from './ratelimit'
 
 export async function checkRateLimit(scope: string) {
   const headersList = headers()
@@ -13,3 +13,7 @@ export async function checkRateLimit(scope: string) {
     throw new Error('Rate limit exceeded')
   }
 }
+
+export async function checkStrictRateLimit(scope: string) {}
+
+export async function checkLenientRateLimit(scope: string) {}
