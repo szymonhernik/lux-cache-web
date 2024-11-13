@@ -1,4 +1,4 @@
-import { Metadata } from 'next'
+import { Metadata, Viewport } from 'next'
 import localFont from 'next/font/local'
 
 import '@/styles/main.css'
@@ -59,7 +59,9 @@ const meta = {
   favicon: '/favicon.ico',
   url: getURL()
 }
-
+export const viewport: Viewport = {
+  themeColor: '#FAFAFA'
+}
 export async function generateMetadata(): Promise<Metadata> {
   return {
     title: meta.title,
@@ -86,7 +88,6 @@ export async function generateMetadata(): Promise<Metadata> {
       type: 'website',
       siteName: meta.title
     },
-    themeColor: '#FAFAFA',
     twitter: {
       card: 'summary_large_image',
       site: '@Lux Cache',
