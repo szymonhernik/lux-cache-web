@@ -3,11 +3,12 @@
 import { createClient } from '@/utils/supabase/server'
 import { updateDiscordIntegration } from '@/utils/supabase/admin'
 import { getSubscription, getUser } from '@/utils/supabase/queries'
-import { cache } from 'react'
-import { SupabaseClient } from '@supabase/supabase-js'
-import { isAuthenticated } from '@/utils/data/auth'
+
 import { createHash } from 'crypto'
 import { cookies } from 'next/headers'
+import { checkRateLimit, checkStrictRateLimit } from '@/utils/upstash/helpers'
+import { discordUserSchema, tokenSchema } from '@/utils/types/zod/discord-auth'
+import { MemberResponse } from '@/utils/types/discord/types'
 
 const DISCORD_AUTH_URL = 'https://discord.com/oauth2/authorize'
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
@@ -25,26 +26,7 @@ const DISCORD_ROLES = {
   SUPPORTER: process.env.DISCORD_SUPPORTER_ROLE_ID!
 }
 
-// Main functions
-
-export const getDiscordConnectionStatus = cache(
-  async (supabase: SupabaseClient) => {
-    const { data: discordIntegration, error } = await supabase
-      .from('discord_integration')
-      .select('*')
-      .maybeSingle()
-
-    if (error) {
-      console.error('Error fetching Discord integration:', error)
-      return { status: false, error: 'Error fetching Discord integration' }
-    }
-
-    return {
-      status: discordIntegration?.connection_status ?? false,
-      error: null
-    }
-  }
-)
+// Helper functions
 
 const generateState = (userId: string) => {
   // recommended to use State in in https://discord.com/developers/docs/topics/oauth2
@@ -57,83 +39,6 @@ const generateState = (userId: string) => {
     .update(userId + timestamp + process.env.DISCORD_OAUTH_SECRET)
     .digest('hex')
 }
-
-export async function initiateDiscordConnection() {
-  const supabase = createClient()
-  const user = await getUser(supabase)
-
-  if (!user) {
-    throw new Error('User not authenticated')
-  }
-
-  const state = generateState(user.id)
-  // Store state in a secure cookie
-  const cookieStore = cookies()
-  // Delete existing state cookie if it exists
-  cookieStore.delete('discord_oauth_state')
-  // Set new state cookie
-  cookieStore.set('discord_oauth_state', state, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 5 // 5 minutes
-  })
-
-  const scope = 'identify guilds.join'
-
-  const params = new URLSearchParams({
-    client_id: DISCORD_CLIENT_ID,
-    permissions: DISCORD_BOT_PERMISSIONS,
-    redirect_uri: REDIRECT_URI,
-    response_type: 'code',
-    scope: scope,
-    state: state
-  })
-
-  return `${DISCORD_AUTH_URL}?${params.toString()}`
-}
-
-export async function connectDiscord(code: string) {
-  const supabase = createClient()
-  const {
-    data: { user },
-    error: userError
-  } = await supabase.auth.getUser()
-
-  if (userError || !user) throw new Error('User not authenticated')
-
-  try {
-    // Step 1: Exchange code for token
-    const tokenResponse = await exchangeCodeForToken(code)
-
-    // Step 2: Get Discord user info
-    const discordUser = await getDiscordUserInfo(tokenResponse.access_token)
-
-    // Step 3: Add user to Discord server
-    await addUserToDiscordServer(discordUser.id, tokenResponse.access_token)
-
-    // Step 4: Get user's subscription and assign roles
-    const subscription = await getSubscription(supabase)
-    if (subscription?.prices?.products?.name) {
-      await assignDiscordRoles(
-        discordUser.id,
-        subscription.prices.products.name
-      )
-    }
-    // TODO: Verify that when you call this function, it's coming from a secure source like in stripe webhook route
-    // Step 5: Update Discord integration status in the database
-    await updateDiscordIntegration(user.id, {
-      connection_status: true,
-      discord_id: discordUser.id,
-      connected_at: new Date().toISOString()
-    })
-  } catch (error) {
-    console.error('Error in connectDiscord:', error)
-    throw error
-  }
-}
-
-// Helper functions
 
 async function exchangeCodeForToken(code: string) {
   const response = await fetch(`${DISCORD_API_ENDPOINT}/oauth2/token`, {
@@ -163,8 +68,9 @@ async function getDiscordUserInfo(accessToken: string) {
   if (!response.ok) {
     throw new Error('Failed to get Discord user info')
   }
-
-  return response.json()
+  const data = await response.json()
+  const { id } = discordUserSchema.parse(data)
+  return { id } // Return only what we need
 }
 
 async function addUserToDiscordServer(userId: string, accessToken: string) {
@@ -191,11 +97,37 @@ async function addUserToDiscordServer(userId: string, accessToken: string) {
   }
 }
 
-export async function assignDiscordRoles(userId: string, tier: string) {
+function getRoleIdForTier(tier: string): string | null {
+  let roleId: string | null = null
+
+  switch (tier.toLowerCase()) {
+    case 'premium subscriber':
+      roleId = DISCORD_ROLES.PREMIUM
+      break
+    case 'subscriber':
+      roleId = DISCORD_ROLES.SUBSCRIBER
+      break
+    case 'supporter':
+      roleId = DISCORD_ROLES.SUPPORTER
+      break
+    default:
+      // Free tier, no role assigned
+      roleId = null
+  }
+
+  console.log(`Role ID for tier ${tier}: ${roleId}`)
+  return roleId
+}
+
+async function assignDiscordRoles(userId: string, tier: string) {
   if (!DISCORD_GUILD_ID) {
     throw new Error('DISCORD_GUILD_ID is not set in environment variables')
   }
   const newRoleId = getRoleIdForTier(tier)
+  if (newRoleId === null) {
+    console.error('No role ID found for the given tier')
+    throw new Error('No role ID found for the given tier')
+  }
   const rolesToRemove = [
     DISCORD_ROLES.SUPPORTER,
     DISCORD_ROLES.SUBSCRIBER,
@@ -212,18 +144,12 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     )
 
     if (!memberResponse.ok) {
-      const errorBody = await memberResponse.text()
-      throw new Error(
-        `Failed to fetch user roles: ${memberResponse.status} ${errorBody}`
-      )
+      console.error('Failed to fetch user roles in assignDiscordRoles.')
+      throw new Error(`Failed to fetch user roles.`)
     }
+    const memberData = (await memberResponse.json()) as MemberResponse
 
-    const memberData = await memberResponse.json()
     const currentRoles = memberData.roles
-
-    if (newRoleId === null) {
-      return
-    }
 
     // Check if the new role is already assigned
     if (currentRoles.includes(newRoleId)) {
@@ -261,6 +187,10 @@ export async function assignDiscordRoles(userId: string, tier: string) {
     await Promise.all(rolesToRemovePromises)
 
     // Assign the new role only if it's not null
+    if (newRoleId === null) {
+      console.error('No role ID found for the given tier')
+      throw new Error('No role ID found for the given tier')
+    }
     const addRoleResponse = await fetch(
       `${DISCORD_API_ENDPOINT}/guilds/${DISCORD_GUILD_ID}/members/${userId}/roles/${newRoleId}`,
       {
@@ -283,7 +213,7 @@ export async function assignDiscordRoles(userId: string, tier: string) {
         )
       }
     } else {
-      console.log('Discord role assigned successfully:', newRoleId)
+      console.log('Discord role assigned successfully')
     }
   } catch (error) {
     console.error('Error assigning Discord role:', error)
@@ -291,25 +221,86 @@ export async function assignDiscordRoles(userId: string, tier: string) {
   }
 }
 
-function getRoleIdForTier(tier: string): string | null {
-  console.log(`Getting role ID for tier: ${tier}`)
-  let roleId: string | null = null
+// !!!!! DANGER ZONE !!!!! //
+// !!!!! DANGER ZONE !!!!! //
+// !!!!! DANGER ZONE !!!!! //
+// !!!!! DANGER ZONE !!!!! //
+// !!!!! DANGER ZONE !!!!! //
+// !!!!! DANGER ZONE !!!!! //
+// !!!!! DANGER ZONE !!!!! //
+// PUBLIC SERVER ACTIONS BELOW - KEEP THEM SAFE //
 
-  switch (tier.toLowerCase()) {
-    case 'premium subscriber':
-      roleId = DISCORD_ROLES.PREMIUM
-      break
-    case 'subscriber':
-      roleId = DISCORD_ROLES.SUBSCRIBER
-      break
-    case 'supporter':
-      roleId = DISCORD_ROLES.SUPPORTER
-      break
-    default:
-      // Free tier, no role assigned
-      roleId = null
+// USED!
+// ✅ check for authentication
+// ✅ add rate limiting to the request
+export async function initiateDiscordConnection() {
+  // add rate limiting here
+  await checkStrictRateLimit('discord:initiate')
+
+  const supabase = createClient()
+  const user = await getUser(supabase)
+
+  if (!user) {
+    throw new Error('User not authenticated')
   }
 
-  console.log(`Role ID for tier ${tier}: ${roleId}`)
-  return roleId
+  const state = generateState(user.id)
+  // Store state in a secure cookie
+  const cookieStore = cookies()
+  // Delete existing state cookie if it exists
+  cookieStore.delete('discord_oauth_state')
+  // Set new state cookie
+  cookieStore.set('discord_oauth_state', state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 5 // 5 minutes
+  })
+
+  const scope = 'identify guilds.join'
+
+  const params = new URLSearchParams({
+    client_id: DISCORD_CLIENT_ID,
+    permissions: DISCORD_BOT_PERMISSIONS,
+    redirect_uri: REDIRECT_URI,
+    response_type: 'code',
+    scope: scope,
+    state: state
+  })
+
+  return `${DISCORD_AUTH_URL}?${params.toString()}`
+}
+
+// USED!
+// ✅ check for authentication
+export async function connectDiscord(code: string) {
+  const supabase = createClient()
+  const user = await getUser(supabase)
+
+  if (!user || !user.id) throw new Error('User not authenticated')
+
+  // Step 1: Exchange code for token
+  const tokenResponse = await exchangeCodeForToken(code)
+  // validate with zod the tokenResponse is valid
+  const validatedToken = tokenSchema.parse(tokenResponse)
+
+  // Step 2: Get user's discord id
+  const { id: discordUserId } = await getDiscordUserInfo(
+    validatedToken.access_token
+  )
+  // Step 3: Add user to Discord server
+  await addUserToDiscordServer(discordUserId, validatedToken.access_token)
+
+  // Step 4: Get user's subscription and assign roles
+  const subscription = await getSubscription(supabase)
+  if (subscription?.prices?.products?.name) {
+    await assignDiscordRoles(discordUserId, subscription.prices.products.name)
+  }
+  // Step 5: Update Discord integration status in the database
+  // it's a supabase admin function that updates the discord_integration table
+  await updateDiscordIntegration(user.id, {
+    connection_status: true,
+    discord_id: discordUserId,
+    connected_at: new Date().toISOString()
+  })
 }

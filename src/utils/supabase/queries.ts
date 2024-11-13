@@ -146,3 +146,22 @@ export const getPrice = cache(
 export const getBookmarks = cache(async (supabase: SupabaseClient) => {
   return await supabase.from('bookmarks').select('post_id, created_at')
 })
+
+export const getDiscordConnectionStatus = cache(
+  async (supabase: SupabaseClient) => {
+    const { data: discordIntegration, error } = await supabase
+      .from('discord_integration')
+      .select('*')
+      .maybeSingle()
+
+    if (error) {
+      console.error('Error fetching Discord integration:', error)
+      return { status: false, error: 'Error fetching Discord integration' }
+    }
+
+    return {
+      status: discordIntegration?.connection_status ?? false,
+      error: null
+    }
+  }
+)

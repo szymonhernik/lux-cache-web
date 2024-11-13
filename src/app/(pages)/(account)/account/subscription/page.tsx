@@ -3,10 +3,15 @@ import BillingInfoScheleton from '@/components/ui/AccountForms/BillingInfoSkelet
 import { createClient } from '@/utils/supabase/server'
 import { Suspense } from 'react'
 import Link from 'next/link'
-import { getProducts, getSubscription, getUser } from '@/utils/supabase/queries'
+import {
+  getDiscordConnectionStatus,
+  getProducts,
+  getSubscription,
+  getUser
+} from '@/utils/supabase/queries'
 import UpdateBillingAddress from './_components/billing/UpdateBillingAddress'
 import DiscordIntegration from './_components/discord/DiscordIntegration'
-import { getDiscordConnectionStatus } from './_components/discord/actions'
+
 import { ENABLE_DISCORD_INTEGRATION } from '@/config/featureFlags'
 import BillingPanel from './_components/billing/BillingPanel'
 import SubscriptionManagementPanel from './_components/plans/SubscriptionManagementPanel'
