@@ -2,10 +2,14 @@
 
 import { createClient } from '@/utils/supabase/server'
 import { updateDiscordIntegration } from '@/utils/supabase/admin'
-import { getSubscription } from '@/utils/supabase/queries'
+import { getSubscription, getUser } from '@/utils/supabase/queries'
 import { cache } from 'react'
 import { SupabaseClient } from '@supabase/supabase-js'
+import { isAuthenticated } from '@/utils/data/auth'
+import { createHash } from 'crypto'
+import { cookies } from 'next/headers'
 
+const DISCORD_AUTH_URL = 'https://discord.com/oauth2/authorize'
 const DISCORD_CLIENT_ID = process.env.DISCORD_CLIENT_ID!
 const DISCORD_CLIENT_SECRET = process.env.DISCORD_CLIENT_SECRET!
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN!
@@ -42,10 +46,51 @@ export const getDiscordConnectionStatus = cache(
   }
 )
 
+const generateState = (userId: string) => {
+  // recommended to use State in in https://discord.com/developers/docs/topics/oauth2
+  if (!process.env.DISCORD_OAUTH_SECRET) {
+    throw new Error('DISCORD_OAUTH_SECRET is not set')
+  }
+
+  const timestamp = Date.now().toString()
+  return createHash('sha256')
+    .update(userId + timestamp + process.env.DISCORD_OAUTH_SECRET)
+    .digest('hex')
+}
+
 export async function initiateDiscordConnection() {
+  const supabase = createClient()
+  const user = await getUser(supabase)
+
+  if (!user) {
+    throw new Error('User not authenticated')
+  }
+
+  const state = generateState(user.id)
+  // Store state in a secure cookie
+  const cookieStore = cookies()
+  // Delete existing state cookie if it exists
+  cookieStore.delete('discord_oauth_state')
+  // Set new state cookie
+  cookieStore.set('discord_oauth_state', state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 5 // 5 minutes
+  })
+
   const scope = 'identify guilds.join'
 
-  return `https://discord.com/api/oauth2/authorize?client_id=${DISCORD_CLIENT_ID}&permissions=${DISCORD_BOT_PERMISSIONS}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=${encodeURIComponent(scope)}`
+  const params = new URLSearchParams({
+    client_id: DISCORD_CLIENT_ID,
+    permissions: DISCORD_BOT_PERMISSIONS,
+    redirect_uri: REDIRECT_URI,
+    response_type: 'code',
+    scope: scope,
+    state: state
+  })
+
+  return `${DISCORD_AUTH_URL}?${params.toString()}`
 }
 
 export async function connectDiscord(code: string) {
@@ -75,7 +120,7 @@ export async function connectDiscord(code: string) {
         subscription.prices.products.name
       )
     }
-
+    // TODO: Verify that when you call this function, it's coming from a secure source like in stripe webhook route
     // Step 5: Update Discord integration status in the database
     await updateDiscordIntegration(user.id, {
       connection_status: true,
