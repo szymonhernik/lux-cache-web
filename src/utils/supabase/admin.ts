@@ -21,7 +21,8 @@ const supabaseAdmin = createClient<Database>(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 )
 
-const upsertProductRecord = async (product: Stripe.Product) => {
+// ✅ Used (webhook)
+export const upsertProductRecord = async (product: Stripe.Product) => {
   const productData: Product = {
     id: product.id,
     active: product.active,
@@ -39,7 +40,8 @@ const upsertProductRecord = async (product: Stripe.Product) => {
   console.log(`Product inserted/updated: ${product.id}`)
 }
 
-const upsertPriceRecord = async (
+// ✅ Used (webhook)
+export const upsertPriceRecord = async (
   price: ExtendedStripePrice,
   retryCount = 0,
   maxRetries = 3
@@ -79,7 +81,8 @@ const upsertPriceRecord = async (
   }
 }
 
-const deleteProductRecord = async (product: Stripe.Product) => {
+// ✅ Used (webhook)
+export const deleteProductRecord = async (product: Stripe.Product) => {
   const { error: deletionError } = await supabaseAdmin
     .from('products')
     .delete()
@@ -89,7 +92,8 @@ const deleteProductRecord = async (product: Stripe.Product) => {
   console.log(`Product deleted: ${product.id}`)
 }
 
-const deletePriceRecord = async (price: Stripe.Price) => {
+// ✅ Used
+export const deletePriceRecord = async (price: Stripe.Price) => {
   const { error: deletionError } = await supabaseAdmin
     .from('prices')
     .delete()
@@ -99,28 +103,8 @@ const deletePriceRecord = async (price: Stripe.Price) => {
   console.log(`Price deleted: ${price.id}`)
 }
 
-const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
-  const { error: upsertError } = await supabaseAdmin
-    .from('customers')
-    .upsert([{ id: uuid, stripe_customer_id: customerId }])
-
-  if (upsertError)
-    throw new Error(
-      `Supabase customer record creation failed: ${upsertError.message}`
-    )
-
-  return customerId
-}
-
-const createCustomerInStripe = async (uuid: string, email: string) => {
-  const customerData = { metadata: { supabaseUUID: uuid }, email: email }
-  const newCustomer = await stripe.customers.create(customerData)
-  if (!newCustomer) throw new Error('Stripe customer creation failed.')
-
-  return newCustomer.id
-}
-
-const createOrRetrieveCustomer = async ({
+// ✅ Used (webhook)
+export const createOrRetrieveCustomer = async ({
   email,
   uuid
 }: {
@@ -193,153 +177,30 @@ const createOrRetrieveCustomer = async ({
     return upsertedStripeCustomer
   }
 }
-
-/**
- * Copies the billing details from the payment method to the customer object.
- */
-const copyBillingDetailsToCustomer = async (
-  uuid: string,
-  payment_method: Stripe.PaymentMethod
-) => {
-  //Todo: check this assertion
-  const customer = payment_method.customer as string
-  const { name, phone, address } = payment_method.billing_details
-
-  // No matter the state of billing information new subscription marks the user as not eligible for trials in future
-  if (!name || !address) {
-    const { error: updateError } = await supabaseAdmin
-      .from('users')
-      .update({
-        can_trial: false
-      })
-      .eq('id', uuid)
-
-    if (updateError)
-      throw new Error(`Customer update failed: ${updateError.message}`)
-    return
-  }
-  //@ts-ignore
-  await stripe.customers.update(customer, { name, phone, address })
-  const { error: updateError } = await supabaseAdmin
-    .from('users')
-    .update({
-      billing_address: { ...address },
-      payment_method: { ...payment_method[payment_method.type] },
-      can_trial: false
-    })
-    .eq('id', uuid)
-  if (updateError)
-    throw new Error(`Customer update failed: ${updateError.message}`)
-}
-
-export async function updateDiscordIntegration(
-  userId: string,
-  updateData: Partial<Tables<'discord_integration'>>
-) {
-  const { error } = await supabaseAdmin.from('discord_integration').upsert(
-    {
-      user_id: userId,
-      ...updateData
-    },
-    {
-      onConflict: 'user_id'
-    }
-  )
-
-  if (error) {
-    console.error('Error updating Discord integration:', error)
-    throw error
-  }
-}
-
-export async function disconnectDiscord(userId: string) {
-  const { error } = await supabaseAdmin
-    .from('discord_integration')
-    .update({
-      connection_status: false
-    })
-    .eq('user_id', userId)
-
-  if (error) {
-    console.error('Error updating Discord integration:', error)
-    throw new Error('Failed to update Discord integration')
-  }
-
-  console.log('Discord integration updated. User disconnected')
-}
-
-const manageDiscordRoles = async (
-  customerId: string,
-  subscription: Stripe.Subscription
-) => {
-  const { data: customerData, error: customerFetchError } = await supabaseAdmin
+// ✅ Used in createOrRetrieveCustomer
+const upsertCustomerToSupabase = async (uuid: string, customerId: string) => {
+  const { error: upsertError } = await supabaseAdmin
     .from('customers')
-    .select('id')
-    .eq('stripe_customer_id', customerId)
-    .single()
+    .upsert([{ id: uuid, stripe_customer_id: customerId }])
 
-  if (customerFetchError) {
-    console.error('Error fetching user_id:', customerFetchError)
-    return
-  }
-
-  if (!customerData) {
-    console.error('No customer found for Stripe customer ID:', customerId)
-    return
-  }
-
-  const supabaseUserId = customerData.id
-
-  // Fetch Discord integration data
-  const { data: discordIntegrationData, error: discordError } =
-    await supabaseAdmin
-      .from('discord_integration')
-      .select('connection_status, discord_id')
-      .eq('user_id', supabaseUserId)
-      .single()
-
-  if (discordError) {
-    console.error('Error fetching Discord integration:', discordError)
-    return
-  }
-
-  if (
-    !discordIntegrationData ||
-    !discordIntegrationData.connection_status ||
-    !discordIntegrationData.discord_id
-  ) {
-    console.log('User has no active Discord integration')
-    return
-  }
-
-  const productId = subscription.items.data[0].plan.product
-  if (!productId) {
-    console.error('Unable to determine product from plan')
-    return
-  }
-
-  // Get the product object
-  const product = await stripe.products.retrieve(productId as string)
-  const tierName = product.name
-  console.log('New tierName', tierName)
-
-  // handle errors
-  if (!tierName) {
-    console.error('Unable to determine subscription tier name from Stripe')
-    return
-  }
-
-  try {
-    await assignDiscordRoles(discordIntegrationData.discord_id, tierName)
-    console.log(
-      `Discord roles updated for user ${supabaseUserId} to tier ${tierName}`
+  if (upsertError)
+    throw new Error(
+      `Supabase customer record creation failed: ${upsertError.message}`
     )
-  } catch (error) {
-    console.error('Error updating Discord roles:', error)
-  }
+
+  return customerId
+}
+// ✅ Used in createOrRetrieveCustomer
+const createCustomerInStripe = async (uuid: string, email: string) => {
+  const customerData = { metadata: { supabaseUUID: uuid }, email: email }
+  const newCustomer = await stripe.customers.create(customerData)
+  if (!newCustomer) throw new Error('Stripe customer creation failed.')
+
+  return newCustomer.id
 }
 
-const manageSubscriptionStatusChange = async (
+// ✅ Used (webhook)
+export const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
   createAction = true
@@ -418,13 +279,150 @@ const manageSubscriptionStatusChange = async (
       subscription.default_payment_method as Stripe.PaymentMethod
     )
 }
+// ✅ Used in manageSubscriptionStatusChange
+/**
+ * Copies the billing details from the payment method to the customer object.
+ */
+const copyBillingDetailsToCustomer = async (
+  uuid: string,
+  payment_method: Stripe.PaymentMethod
+) => {
+  //Todo: check this assertion
+  const customer = payment_method.customer as string
+  const { name, phone, address } = payment_method.billing_details
 
-export {
-  upsertProductRecord,
-  upsertPriceRecord,
-  deleteProductRecord,
-  deletePriceRecord,
-  createOrRetrieveCustomer,
-  manageSubscriptionStatusChange,
-  manageDiscordRoles
+  // No matter the state of billing information new subscription marks the user as not eligible for trials in future
+  if (!name || !address) {
+    const { error: updateError } = await supabaseAdmin
+      .from('users')
+      .update({
+        can_trial: false
+      })
+      .eq('id', uuid)
+
+    if (updateError)
+      throw new Error(`Customer update failed: ${updateError.message}`)
+    return
+  }
+  //@ts-ignore
+  await stripe.customers.update(customer, { name, phone, address })
+  const { error: updateError } = await supabaseAdmin
+    .from('users')
+    .update({
+      billing_address: { ...address },
+      payment_method: { ...payment_method[payment_method.type] },
+      can_trial: false
+    })
+    .eq('id', uuid)
+  if (updateError)
+    throw new Error(`Customer update failed: ${updateError.message}`)
 }
+
+export async function updateDiscordIntegration(
+  userId: string,
+  updateData: Partial<Tables<'discord_integration'>>
+) {
+  const { error } = await supabaseAdmin.from('discord_integration').upsert(
+    {
+      user_id: userId,
+      ...updateData
+    },
+    {
+      onConflict: 'user_id'
+    }
+  )
+
+  if (error) {
+    console.error('Error updating Discord integration:', error)
+    throw error
+  }
+}
+
+// NOT USED BELOW
+
+// export async function disconnectDiscord(userId: string) {
+//   const { error } = await supabaseAdmin
+//     .from('discord_integration')
+//     .update({
+//       connection_status: false
+//     })
+//     .eq('user_id', userId)
+
+//   if (error) {
+//     console.error('Error updating Discord integration:', error)
+//     throw new Error('Failed to update Discord integration')
+//   }
+
+//   console.log('Discord integration updated. User disconnected')
+// }
+
+// export const manageDiscordRoles = async (
+//   customerId: string,
+//   subscription: Stripe.Subscription
+// ) => {
+//   const { data: customerData, error: customerFetchError } = await supabaseAdmin
+//     .from('customers')
+//     .select('id')
+//     .eq('stripe_customer_id', customerId)
+//     .single()
+
+//   if (customerFetchError) {
+//     console.error('Error fetching user_id:', customerFetchError)
+//     return
+//   }
+
+//   if (!customerData) {
+//     console.error('No customer found for Stripe customer ID:', customerId)
+//     return
+//   }
+
+//   const supabaseUserId = customerData.id
+
+//   // Fetch Discord integration data
+//   const { data: discordIntegrationData, error: discordError } =
+//     await supabaseAdmin
+//       .from('discord_integration')
+//       .select('connection_status, discord_id')
+//       .eq('user_id', supabaseUserId)
+//       .single()
+
+//   if (discordError) {
+//     console.error('Error fetching Discord integration:', discordError)
+//     return
+//   }
+
+//   if (
+//     !discordIntegrationData ||
+//     !discordIntegrationData.connection_status ||
+//     !discordIntegrationData.discord_id
+//   ) {
+//     console.log('User has no active Discord integration')
+//     return
+//   }
+
+//   const productId = subscription.items.data[0].plan.product
+//   if (!productId) {
+//     console.error('Unable to determine product from plan')
+//     return
+//   }
+
+//   // Get the product object
+//   const product = await stripe.products.retrieve(productId as string)
+//   const tierName = product.name
+//   console.log('New tierName', tierName)
+
+//   // handle errors
+//   if (!tierName) {
+//     console.error('Unable to determine subscription tier name from Stripe')
+//     return
+//   }
+
+//   try {
+//     await assignDiscordRoles(discordIntegrationData.discord_id, tierName)
+//     console.log(
+//       `Discord roles updated for user ${supabaseUserId} to tier ${tierName}`
+//     )
+//   } catch (error) {
+//     console.error('Error updating Discord roles:', error)
+//   }
+// }
