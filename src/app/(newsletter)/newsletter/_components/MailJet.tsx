@@ -1,12 +1,15 @@
 'use client'
 import Logo from '@/components/icons/Logo'
+import Link from 'next/link'
 import Script from 'next/script'
 
 export default function MailJet() {
   return (
     <div className="h-auto w-auto mx-auto flex flex-col mt-24 gap-12">
       <div className="mx-auto">
-        <Logo width="120" height="80" alt="Lux Cache" />
+        <Link href="/">
+          <Logo width="120" height="80" alt="Lux Cache" />
+        </Link>
       </div>
       <Script
         src="https://app.mailjet.com/pas-nc-embedded-v1.js"
