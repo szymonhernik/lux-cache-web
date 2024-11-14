@@ -87,6 +87,7 @@ export default function MobileNavbar() {
             <a href="">
               <span>↳</span> instagram
             </a>
+            <Link href="/">Subscribe to newsletter</Link>
           </div>
         </nav>
       </div>
