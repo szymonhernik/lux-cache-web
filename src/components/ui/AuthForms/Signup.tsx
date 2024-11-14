@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import Link from 'next/link'
 import { signUp } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
@@ -20,6 +20,8 @@ import {
 import { Input } from '@/components/shadcn/ui/input'
 import { toast } from 'sonner'
 import { signUpSchema, SignUpSchema } from '@/utils/types/zod/auth'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { hCaptchaSiteKey } from '@/utils/auth-helpers/settings'
 
 // Define prop type with allowEmail boolean
 interface SignUpProps {
@@ -31,6 +33,12 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null
 
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>()
+  const captcha = useRef<HCaptcha | null>(null)
+
+  const handleVerify = (token: string) => {
+    setCaptchaToken(token)
+  }
 
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
@@ -45,7 +53,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   }) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
-      const redirectUrl: string = await signUp(values)
+      const redirectUrl: string = await signUp(values, captchaToken)
       if (router) {
         router.push(redirectUrl)
       }
@@ -121,6 +129,14 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
                 <FormMessage />
               </FormItem>
             )}
+          />
+          <HCaptcha
+            ref={captcha}
+            sitekey={hCaptchaSiteKey}
+            onVerify={handleVerify}
+            onError={(err) => {
+              console.error('hCaptcha Error:', err)
+            }}
           />
           <Button type="submit" className=" w-fit " isLoading={isSubmitting}>
             Sign up

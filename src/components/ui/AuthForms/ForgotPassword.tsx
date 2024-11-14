@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { requestPasswordUpdate } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import {
   Form,
@@ -22,6 +22,8 @@ import {
   passwordResetSchema,
   PasswordResetSchema
 } from '@/utils/types/zod/auth'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { hCaptchaSiteKey } from '@/utils/auth-helpers/settings'
 
 // Define prop type with allowEmail boolean
 interface ForgotPasswordProps {
@@ -37,6 +39,8 @@ export default function ForgotPassword({
 }: ForgotPasswordProps) {
   const router = redirectMethod === 'client' ? useRouter() : null
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>()
+  const captcha = useRef<HCaptcha | null>(null)
 
   const form = useForm<PasswordResetSchema>({
     resolver: zodResolver(passwordResetSchema),
@@ -45,10 +49,17 @@ export default function ForgotPassword({
     }
   })
 
+  const handleVerify = (token: string) => {
+    setCaptchaToken(token)
+  }
+
   const handleReset = async (values: PasswordResetSchema) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
-      const redirectUrl: string = await requestPasswordUpdate(values)
+      const redirectUrl: string = await requestPasswordUpdate(
+        values,
+        captchaToken
+      )
       window.location.replace(redirectUrl)
       // if (router) {
       //   router.push(redirectUrl)
@@ -86,7 +97,11 @@ export default function ForgotPassword({
               </FormItem>
             )}
           />
-
+          <HCaptcha
+            ref={captcha}
+            sitekey={hCaptchaSiteKey}
+            onVerify={handleVerify}
+          />
           <Button
             type="submit"
             className="w-fit"

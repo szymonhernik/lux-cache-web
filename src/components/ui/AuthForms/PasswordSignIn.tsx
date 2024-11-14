@@ -1,10 +1,12 @@
 'use client'
 
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+
 import Link from 'next/link'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInWithPassword } from '@/utils/auth-helpers/server'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import {
   Form,
@@ -19,6 +21,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { signInSchema, SignInSchema } from '@/utils/types/zod/auth'
+import { hCaptchaSiteKey } from '@/utils/auth-helpers/settings'
 
 // Define prop type with allowEmail boolean
 interface PasswordSignInProps {
@@ -35,8 +38,10 @@ export default function PasswordSignIn({
   allowEmail,
   redirectMethod
 }: PasswordSignInProps) {
-  const router = redirectMethod === 'client' ? useRouter() : null
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [captchaToken, setCaptchaToken] = useState<string | undefined>()
+  const captcha = useRef<HCaptcha | null>(null)
 
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -48,17 +53,10 @@ export default function PasswordSignIn({
   const handleLogin = async (values: SignInSchema) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
-      const redirectUrl: string = await signInWithPassword(values)
-      if (router) {
-        router.replace(redirectUrl)
-        router.refresh()
-        // promise freeze for two seconds
-
-        // window.location.reload()
-
-        // redirectToPath(redirectUrl)
-      }
-      // return await redirectToPath(redirectUrl)
+      const redirectUrl: string = await signInWithPassword(values, captchaToken)
+      captcha.current?.resetCaptcha()
+      router.replace(redirectUrl)
+      router.refresh()
     } catch (error) {
       // throw error
       console.error('Login failed', error)
@@ -70,6 +68,10 @@ export default function PasswordSignIn({
       }
     }
     setIsSubmitting(false)
+  }
+  const handleVerify = (token: string) => {
+    // Prevent any default navigation
+    setCaptchaToken(token)
   }
 
   return (
@@ -116,6 +118,14 @@ export default function PasswordSignIn({
                 <FormMessage />
               </FormItem>
             )}
+          />
+          <HCaptcha
+            ref={captcha}
+            sitekey={hCaptchaSiteKey}
+            onVerify={handleVerify}
+            onError={(err) => {
+              console.error('hCaptcha Error:', err)
+            }}
           />
           <Button type="submit" className=" w-fit " isLoading={isSubmitting}>
             Log in

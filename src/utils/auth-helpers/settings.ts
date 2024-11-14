@@ -7,6 +7,8 @@ const allowPassword = true
 // (Currently set to false because screen sometimes flickers with server redirects)
 const allowServerRedirect = false
 
+export const hCaptchaSiteKey = 'dfaa7ae6-5710-4dea-8d04-73feb3dc256c'
+
 // Check that at least one of allowPassword and allowEmail is true
 if (!allowPassword && !allowEmail)
   throw new Error('At least one of allowPassword and allowEmail must be true')

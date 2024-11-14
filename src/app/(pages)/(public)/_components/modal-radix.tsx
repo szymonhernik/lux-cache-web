@@ -34,7 +34,10 @@ export function ModalRadix({ children }: { children: React.ReactNode }) {
         <DialogOverlay className={`${s.DialogOverlay} `}>
           <DialogContent
             onEscapeKeyDown={onDismiss}
-            onInteractOutside={onDismiss}
+            // onInteractOutside={onDismiss}
+            onInteractOutside={(e) => {
+              e.preventDefault()
+            }}
             // className="fixed inset-0 flex items-center justify-center bg-black/80 z-[40]"
             className={` ${s.DialogContent} `}
           >

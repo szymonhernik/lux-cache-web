@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@hcaptcha/react-hcaptcha':
+    specifier: ^1.11.0
+    version: 1.11.0(react-dom@18.3.1)(react@18.3.1)
   '@hookform/resolvers':
     specifier: ^3.9.0
     version: 3.9.0(react-hook-form@7.52.1)
@@ -2412,6 +2415,22 @@ packages:
 
   /@floating-ui/utils@0.2.2:
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
+    dev: false
+
+  /@hcaptcha/loader@1.2.4:
+    resolution: {integrity: sha512-3MNrIy/nWBfyVVvMPBKdKrX7BeadgiimW0AL/a/8TohNtJqxoySKgTJEXOQvYwlHemQpUzFrIsK74ody7JiMYw==}
+    dev: false
+
+  /@hcaptcha/react-hcaptcha@1.11.0(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-UKHtzzVMHLTGwab5pgV96UbcXdyh5Qyq8E0G5DTyXq8txMvuDx7rSyC+BneOjWVW0a7O9VuZmkg/EznVLRE45g==}
+    peerDependencies:
+      react: '>= 16.3.0'
+      react-dom: '>= 16.3.0'
+    dependencies:
+      '@babel/runtime': 7.24.7
+      '@hcaptcha/loader': 1.2.4
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /@hookform/resolvers@3.9.0(react-hook-form@7.52.1):

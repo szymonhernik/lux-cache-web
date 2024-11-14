@@ -59,7 +59,10 @@ export async function SignOut(pathname: string) {
 // ✅ check for authentication
 // ✅ add rate limiting to the request
 // ✅ add Zod server-side validation
-export async function requestPasswordUpdate(values: PasswordResetSchema) {
+export async function requestPasswordUpdate(
+  values: PasswordResetSchema,
+  captchaToken: string | undefined
+) {
   const result = passwordResetSchema.safeParse(values)
   if (!result.success) {
     return getErrorRedirect(
@@ -81,7 +84,8 @@ export async function requestPasswordUpdate(values: PasswordResetSchema) {
   const supabase = createClient()
 
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: callbackURL
+    redirectTo: callbackURL,
+    captchaToken
   })
 
   if (error) {
@@ -106,7 +110,10 @@ export async function requestPasswordUpdate(values: PasswordResetSchema) {
 // ✅ no authentication = public function
 // ✅ add rate limiting to the request
 // ✅ add Zod server-side validation
-export async function signInWithPassword(values: SignInSchema) {
+export async function signInWithPassword(
+  values: SignInSchema,
+  captchaToken: string | undefined
+) {
   // Server-side validation
   const result = signInSchema.safeParse(values)
   if (!result.success) {
@@ -127,7 +134,10 @@ export async function signInWithPassword(values: SignInSchema) {
   const supabase = createClient()
   const { error, data } = await supabase.auth.signInWithPassword({
     email,
-    password
+    password,
+    options: {
+      captchaToken: captchaToken
+    }
   })
 
   if (error) {
@@ -159,7 +169,10 @@ export async function signInWithPassword(values: SignInSchema) {
 // ✅ no authentication = public function
 // ✅ add rate limiting to the request
 // ✅ add Zod server-side validation
-export async function signUp(values: SignUpSchema) {
+export async function signUp(
+  values: SignUpSchema,
+  captchaToken: string | undefined
+) {
   // Server-side validation
   const result = signUpSchema.safeParse(values)
   if (!result.success) {
@@ -182,7 +195,8 @@ export async function signUp(values: SignUpSchema) {
     email,
     password,
     options: {
-      emailRedirectTo: callbackURL
+      emailRedirectTo: callbackURL,
+      captchaToken: captchaToken
     }
   })
 

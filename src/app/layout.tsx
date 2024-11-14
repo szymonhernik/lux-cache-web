@@ -107,7 +107,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
     >
       <Providers>
         <QueryWrapper>
-          <body className={` loading `}>{props.children}</body>
+          <body className={` loading !pointer-events-auto`}>
+            {props.children}
+          </body>
         </QueryWrapper>
       </Providers>
     </html>
