@@ -6,7 +6,10 @@ import { getSubscription, getUser } from '@/utils/supabase/queries'
 
 import { createHash } from 'crypto'
 import { cookies } from 'next/headers'
-import { checkRateLimit, checkStrictRateLimit } from '@/utils/upstash/helpers'
+import {
+  checkAPIRateLimit,
+  checkStrictRateLimit
+} from '@/utils/upstash/helpers'
 import { discordUserSchema, tokenSchema } from '@/utils/types/zod/discord-auth'
 import { MemberResponse } from '@/utils/types/discord/types'
 
@@ -273,7 +276,11 @@ export async function initiateDiscordConnection() {
 
 // USED!
 // ✅ check for authentication
+// TODO: Consider consulting this piece of code with another dev: ask for optimizing, minimizing the number of requests, etc.
 export async function connectDiscord(code: string) {
+  // rate limitting here is 100 requests per minute without IP or ja4 digest -> it's only for Discord OAuth, in case of a DDOS attack
+  await checkAPIRateLimit('discord:connect')
+
   const supabase = createClient()
   const user = await getUser(supabase)
 

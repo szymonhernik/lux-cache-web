@@ -37,3 +37,12 @@ export async function checkLenientRateLimit(scope: string) {
     throw new Error('Lenient rate limit exceeded')
   }
 }
+
+// add a rate limitting that isn't based on the ja4 digest and ip address, it will be mostly used by Discord OAuth but i don't want it to be executed more than 100 times per minute
+
+export async function checkAPIRateLimit(scope: string) {
+  const { success } = await lenientRatelimit.limit(`${scope}`)
+  if (!success) {
+    throw new Error('Discord rate limit exceeded')
+  }
+}
