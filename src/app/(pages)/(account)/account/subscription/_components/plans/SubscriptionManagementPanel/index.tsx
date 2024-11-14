@@ -99,7 +99,7 @@ export default function SubscriptionManagementPanel(props: Props) {
               </p>
             </div>
           )}
-          {/* <RenewSubscriptionDialog subscription={subscription} /> */}
+          <RenewSubscriptionDialog subscription={subscription} />
         </div>
       </Card>
     )
