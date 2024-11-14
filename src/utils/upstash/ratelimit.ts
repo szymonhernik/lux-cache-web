@@ -5,7 +5,7 @@ import { Redis } from '@upstash/redis'
 const defaultCache = new Map()
 const strictCache = new Map()
 const lenientCache = new Map()
-
+const longTermCache = new Map()
 // Default ratelimiter: 10 requests per 60 seconds
 export const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
@@ -31,4 +31,13 @@ export const lenientRatelimit = new Ratelimit({
   analytics: true,
   prefix: '@upstash/ratelimit:lenient',
   ephemeralCache: lenientCache
+})
+
+// Long term ratelimiter for user-specific operations (10 requests per month)
+export const longTermRatelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(10, '30 d'),
+  analytics: true,
+  prefix: '@upstash/ratelimit:long-term',
+  ephemeralCache: longTermCache
 })

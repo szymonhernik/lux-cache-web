@@ -72,6 +72,12 @@ const SubscriptionCancelEmail = (
               hope to see you again another time.
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
+              Lastly, your subscription will remain active until the end of your
+              current billing period. If you change your mind and decide to
+              resume your subscription, you can renew it in your account
+              dashboard.
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
               Thank you again for being part of Lux Cache!
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>

@@ -18,6 +18,11 @@ import {
 
 import { getCustomer, getUser } from '../supabase/queries'
 import { AddressType } from '@/app/(pages)/(account)/account/subscription/_components/billing/UpdateBillingAddress'
+import { isAuthenticated } from '../data/auth'
+import {
+  checkLenientRateLimit,
+  checkLongTermRateLimit
+} from '../upstash/helpers'
 
 export async function updateCustomerBillingAddress(
   subscriptionId: string,
@@ -139,6 +144,23 @@ export async function updateSubscription(
   redirectPath: string = '/redirect?url=/account',
   action: string
 ) {
+  // rate limit the request to 4 per month.
+  const supabase = createClient()
+  const user = await getUser(supabase)
+  if (!user) {
+    throw new Error('Unauthorized in updateSubscription endpoint')
+  }
+  // limit user to request this endpoint max 10 times per month.
+  try {
+    await checkLongTermRateLimit('updateSubscription', user.id)
+  } catch (error) {
+    return getErrorRedirect(
+      redirectPath,
+      'You reached the maximum number of requests.',
+      'It looks like you have reached the maximum number of requests for this month. Please try again in the next month or contact a system administrator.'
+    )
+  }
+
   try {
     const subscription = await stripe.subscriptions.update(subscriptionId, {
       cancel_at_period_end:
