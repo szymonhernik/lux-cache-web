@@ -11,7 +11,7 @@ import {
 } from '@/components/shadcn/ui/dialog'
 
 import { useState } from 'react'
-import { initiateDiscordConnection } from './actions'
+import { initiateDiscordConnection } from '@/utils/actions/discord'
 import { useToast } from '@/components/ui/Toasts/use-toast'
 import { Badge } from '@/components/shadcn/ui/badge'
 import clsx from 'clsx'

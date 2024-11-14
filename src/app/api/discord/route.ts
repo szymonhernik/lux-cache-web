@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
-import { connectDiscord } from '@/app/(pages)/(account)/account/subscription/_components/discord/actions'
 import { cookies } from 'next/headers'
+import { connectDiscord } from '@/utils/actions/discord'
 
 // Discord's OAuth domain
 const DISCORD_DOMAIN = 'discord.com'
