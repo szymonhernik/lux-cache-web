@@ -7,8 +7,10 @@ import {
 // import Pricing from './Pricing'
 import { loadPrices } from '@/sanity/loader/loadQuery'
 import { createClient } from '@/utils/supabase/server'
-import PricingSimplified from './PricingSimplified'
+// import PricingSimplified from './PricingSimplified'
 import { unstable_cache } from 'next/cache'
+import PricingEmbed from './PricingEmbed'
+import PricingSimplified from './PricingSimplified'
 
 export default async function PricingLayout() {
   const supabase = createClient()
@@ -29,15 +31,14 @@ export default async function PricingLayout() {
   )
 
   const pricesDetails = await getCachedPricesDetails()
+  const isEmbeddedCheckoutEnabled =
+    process.env.NEXT_PUBLIC_STRIPE_EMBEDDED_CHECKOUT_ENABLED === 'true'
 
-  return (
-    <PricingSimplified data={pricesDetails.data} products={products ?? []} />
-    // <Pricing
-    //   data={pricesDetails.data}
-    //   user={user}
-    //   products={products ?? []}
-    //   subscription={subscription}
-    //   userCanTrial={userCanTrial}
-    // />
-  )
+  if (isEmbeddedCheckoutEnabled) {
+    return <PricingEmbed data={pricesDetails.data} products={products ?? []} />
+  } else {
+    return (
+      <PricingSimplified data={pricesDetails.data} products={products ?? []} />
+    )
+  }
 }
