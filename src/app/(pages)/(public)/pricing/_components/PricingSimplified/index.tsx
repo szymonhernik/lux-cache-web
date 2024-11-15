@@ -32,6 +32,11 @@ export default function PricingSimplified({ data, products }: Props) {
     useState<BillingInterval>('month')
   const [priceIdLoading, setPriceIdLoading] = useState<string>()
 
+  const handleSubscription = (priceId: string) => {
+    setPriceIdLoading(priceId)
+    router.push('/checkout' + '?priceId=' + priceId)
+  }
+
   return (
     <>
       <h1 className="text-shadow text-sm font-semibold lg:sticky lg:top-0 p-4 lg:p-6 uppercase ">
@@ -114,10 +119,10 @@ export default function PricingSimplified({ data, products }: Props) {
                     <Button
                       size={'xl'}
                       variant={'outline'}
-                      className="w-full font-normal border-black  tracking-tight"
-                      onClick={() => {
-                        router.push('/checkout' + '?priceId=' + price.id)
-                      }}
+                      className="w-full font-normal border-black  tracking-tight disabled:bg-primary"
+                      onClick={() => handleSubscription(price.id)}
+                      disabled={!!priceIdLoading}
+                      isLoading={priceIdLoading === price.id}
                     >
                       <span>
                         Join for{` `}
@@ -161,8 +166,9 @@ export default function PricingSimplified({ data, products }: Props) {
             })}
           </div>
         </div>
-        <div className="p-6 text-sm">
-          <p className=" ">
+        <div className="p-6 text-sm space-y-6">
+          <hr />
+          <p className="">
             For active subscribers, you can{' '}
             <Link href="/account/subscription" className="mx-auto underline">
               manage your subscription from your account dashboard

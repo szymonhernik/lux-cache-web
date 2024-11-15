@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { StoredPaymentCardsSchema } from '@/utils/types/zod/types'
 import {
   retrievePaymentMethods,
-  updatePaymentMethod
+  createSetupSession
 } from '@/utils/stripe/server'
 import { z } from 'zod'
 import DisplayPaymentData from '@/components/ui/AccountForms/DisplayPaymentData'
@@ -62,13 +62,18 @@ export default function UpdatePaymentMethod({
         setPaymentMethods(validatedListOfCards.data)
       }
     } catch (error) {
+      const redirectUrl = getErrorRedirect(
+        '/account',
+        'Could not retrieve payment methods.',
+        'Please try again later or contact a system administrator.'
+      )
       console.error('Failed to retrieve payment methods:', error)
+      return router.push(redirectUrl)
     }
   }
   const handleStripePaymentMethodUpdate = async () => {
     setIsSubmitting(true)
-    const { errorRedirect, clientSecret } = await updatePaymentMethod(
-      stripeCustomerId,
+    const { errorRedirect, clientSecret } = await createSetupSession(
       subscriptionId,
       currentPath
     )

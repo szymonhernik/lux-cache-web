@@ -18,7 +18,7 @@ export default async function CustomStripeCheckout(props: {
   userCanTrial: { can_trial: boolean } | null
 }) {
   const { price, userCanTrial } = props
-  let clientSecretReceived: string | null = null
+
   if (!price) {
     return redirect(
       getErrorRedirect(
@@ -33,19 +33,15 @@ export default async function CustomStripeCheckout(props: {
   // TODO: This case could be handled better (e.g. give the user information why they can't trial)
   const userCanTrialBoolean = userCanTrial?.can_trial ?? false
 
+  // Parse metadata and trial info
   const readMetadata = ProductMetadataSchema.safeParse(
     price?.products?.metadata
   )
-  let priceWithTrial: boolean = false
-  let daysTrial: number | null = null
-  if (readMetadata.success) {
-    // console.log('readMetadata', readMetadata.data);
-    priceWithTrial =
-      readMetadata.data.trial_allowed === 'true' &&
+  const priceWithTrial = readMetadata.success
+    ? readMetadata.data.trial_allowed === 'true' &&
       readMetadata.data.index === '0'
-
-    daysTrial = price.trial_period_days
-  }
+    : false
+  const daysTrial = readMetadata.success ? price.trial_period_days : null
 
   // check if the user can trial, if not reasign the values to false and null
   // ! this will not prevent the user from trial
@@ -61,7 +57,7 @@ export default async function CustomStripeCheckout(props: {
     return redirect(errorRedirect)
   }
   //for custom checkout provider i'll need to receive the clientsecret from checkoutWithStripe
-  if (!sessionId && !clientSecret) {
+  if (!sessionId || !clientSecret) {
     return redirect(
       getErrorRedirect(
         `/`,
@@ -70,15 +66,12 @@ export default async function CustomStripeCheckout(props: {
       )
     )
   }
-  if (clientSecret) {
-    clientSecretReceived = clientSecret
-  }
 
   return (
     <div>
-      {clientSecretReceived && (
+      {clientSecret && (
         <CustomCheckoutProviderWrapper
-          clientSecret={clientSecretReceived}
+          clientSecret={clientSecret}
           priceWithTrial={priceWithTrial}
           daysTrial={daysTrial}
           userCanTrial={userCanTrialBoolean}

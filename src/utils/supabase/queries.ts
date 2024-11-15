@@ -1,3 +1,5 @@
+'server-only'
+
 import { SupabaseClient } from '@supabase/supabase-js'
 import { cache } from 'react'
 import { ProductWithPrices, SubscriptionWithPriceAndProduct } from '../types'
@@ -6,6 +8,7 @@ import { Tables } from 'types_db'
 import { getErrorRedirect } from '../helpers'
 import subscriptionTiers, { SubscriptionTiers } from '../stripe/products'
 import { unstable_cache } from 'next/cache'
+import { stripe } from '@/utils/stripe/config'
 
 type User = Tables<'users'>
 export const getUser = cache(async (supabase: SupabaseClient) => {
@@ -20,11 +23,15 @@ export const getCustomer = cache(async (supabase: SupabaseClient) => {
     .select('*')
     .maybeSingle()
   if (error) {
-    // throw error
-    throw new Error('Error fetching customer')
-  } else {
-    return customer
+    console.error('Error fetching customer:', error)
+    return null
   }
+  return customer
+})
+
+// Cached wrapper function
+export const getSubscriptionDetails = cache(async (subscriptionId: string) => {
+  return await stripe.subscriptions.retrieve(subscriptionId)
 })
 
 export const getSubscription = cache(async (supabase: SupabaseClient) => {
@@ -40,42 +47,33 @@ export const getSubscription = cache(async (supabase: SupabaseClient) => {
   return subscription as SubscriptionWithPriceAndProduct
 })
 export const getUserTier = cache(async (supabase: SupabaseClient) => {
-  const { data: subscription, error } = await supabase
-    .from('subscriptions')
-    .select('*, prices(*, products(*))')
-    .in('status', ['trialing', 'active'])
-    .maybeSingle()
+  const subscription = await getSubscription(supabase)
 
-  if (error) {
-    console.error('Error fetching subscription:', error)
+  if (!subscription?.prices?.products) {
     return { userTier: 0, productName: 'free' }
   }
 
-  if (subscription) {
-    const productId = subscription.prices.products.id
-    const productName = subscription.prices.products.name
-    const userTier = (subscriptionTiers as SubscriptionTiers)[productId] ?? 0 // Default to Free (0) if not found
+  const productId = subscription.prices.products.id
+  const productName = subscription.prices.products.name
+  const userTier = (subscriptionTiers as SubscriptionTiers)[productId] ?? 0
 
-    return { userTier, productName }
-  }
-
-  return { userTier: 0, productName: 'free' } // No subscription, hence Free tier
+  return { userTier, productName }
 })
 
-export const getProducts = cache(async (supabase: SupabaseClient) => {
-  const { data: products, error } = await supabase
-    .from('products')
-    .select('*, prices(*)')
-    .eq('active', true)
-    .eq('prices.active', true)
-    .order('metadata->index')
-    .order('unit_amount', { referencedTable: 'prices' })
-  if (error) {
-    console.error('Error fetching products:', error)
-  }
+// export const getProducts = cache(async (supabase: SupabaseClient) => {
+//   const { data: products, error } = await supabase
+//     .from('products')
+//     .select('*, prices(*)')
+//     .eq('active', true)
+//     .eq('prices.active', true)
+//     .order('metadata->index')
+//     .order('unit_amount', { referencedTable: 'prices' })
+//   if (error) {
+//     console.error('Error fetching products:', error)
+//   }
 
-  return products as ProductWithPrices[]
-})
+//   return products as ProductWithPrices[]
+// })
 
 export const getCachedProducts = async (supabase: SupabaseClient) => {
   return unstable_cache(
@@ -107,13 +105,13 @@ export const getCanTrial = cache(async (supabase: SupabaseClient) => {
   return userCanTrial as { can_trial: boolean }
 })
 
-export const getUserData = cache(async (supabase: SupabaseClient) => {
-  const { data: userData } = await supabase
-    .from('users')
-    .select('full_name')
-    .single()
-  return userData as { full_name: string }
-})
+// export const getUserData = cache(async (supabase: SupabaseClient) => {
+//   const { data: userData } = await supabase
+//     .from('users')
+//     .select('full_name')
+//     .single()
+//   return userData as { full_name: string }
+// })
 
 // get price and product info from stripe based on the price id
 // TODO: verify what exactly needs to be selected from the database
@@ -126,9 +124,6 @@ export const getPrice = cache(
       .eq('id', priceId)
       .eq('products.active', true)
       .maybeSingle()
-
-    console.log('priceId', priceId)
-    console.log('price', price)
 
     if (error || !price) {
       return redirect(

@@ -1,6 +1,6 @@
 import { getErrorRedirect } from '@/utils/helpers'
 import { getStripe } from '@/utils/stripe/client'
-import { updatePaymentMethod } from '@/utils/stripe/server'
+import { createSetupSession } from '@/utils/stripe/server'
 import { usePathname, useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Stripe } from '@stripe/stripe-js'
@@ -24,8 +24,7 @@ export default function AddNewPaymentMethod({
 
   const handleStripePaymentMethodUpdate = async () => {
     setIsSubmitting(true)
-    const { errorRedirect, clientSecret } = await updatePaymentMethod(
-      customerId,
+    const { errorRedirect, clientSecret } = await createSetupSession(
       subscriptionId,
       currentPath
     )

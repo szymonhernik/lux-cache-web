@@ -151,6 +151,7 @@ function PlansDialog({
     if (!subscriptionId || !newPriceId) {
       return
     }
+
     const redirectUrl = await updateSubscriptionPlan(
       subscriptionId,
       newPriceId,

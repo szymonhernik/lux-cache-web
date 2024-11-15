@@ -323,66 +323,66 @@ export async function updateEmail(values: FormData) {
   }
 }
 
-// USED!
+// NOT USED FOR NOW
 // ✅ check for authentication
 // ✅ add rate limiting to the request
 // ✅ add Zod server-side validation
-export async function updateName(formData: FormData) {
-  const fullName = String(formData.get('fullName')).trim()
-  const userId = String(formData.get('userId'))
+// export async function updateName(formData: FormData) {
+//   const fullName = String(formData.get('fullName')).trim()
+//   const userId = String(formData.get('userId'))
 
-  // verify userId is a valid uuid with zod
-  const userIdValidation = z.string().uuid().safeParse(userId)
-  if (!userIdValidation.success) {
-    return getErrorRedirect(
-      '/account',
-      'Invalid input',
-      'User ID is not a valid UUID'
-    )
-  }
-  const result = nameUpdateSchema.safeParse({ fullName })
-  if (!result.success) {
-    return getErrorRedirect(
-      '/account',
-      'Invalid input',
-      result.error.errors[0].message
-    )
-  }
-  // Strict ratelimiter: 5 requests per 60 seconds
-  await checkStrictRateLimit('auth:update_name')
+//   // verify userId is a valid uuid with zod
+//   const userIdValidation = z.string().uuid().safeParse(userId)
+//   if (!userIdValidation.success) {
+//     return getErrorRedirect(
+//       '/account',
+//       'Invalid input',
+//       'User ID is not a valid UUID'
+//     )
+//   }
+//   const result = nameUpdateSchema.safeParse({ fullName })
+//   if (!result.success) {
+//     return getErrorRedirect(
+//       '/account',
+//       'Invalid input',
+//       result.error.errors[0].message
+//     )
+//   }
+//   // Strict ratelimiter: 5 requests per 60 seconds
+//   await checkStrictRateLimit('auth:update_name')
 
-  if (!(await isAuthenticated())) {
-    throw new Error('Unauthorized')
-  }
+//   if (!(await isAuthenticated())) {
+//     throw new Error('Unauthorized')
+//   }
 
-  const supabase = createClient()
-  const { error, data } = await supabase
-    .from('users')
-    .update({ full_name: fullName })
-    .eq('id', userId)
-    .select('full_name')
-    .single()
+//   const supabase = createClient()
+//   const { error, data } = await supabase
+//     .from('users')
+//     .update({ full_name: fullName })
+//     .eq('id', userId)
+//     .select('full_name')
+//     .single()
 
-  if (error) {
-    return getErrorRedirect(
-      '/account',
-      'Your name could not be updated.',
-      error.message
-    )
-  } else if (data) {
-    return getStatusRedirect(
-      '/account',
-      'Success!',
-      'Your name has been updated.'
-    )
-  } else {
-    return getErrorRedirect(
-      '/account',
-      'Hmm... Something went wrong.',
-      'Your name could not be updated.'
-    )
-  }
-}
+//   if (error) {
+//     return getErrorRedirect(
+//       '/account',
+//       'Your name could not be updated.',
+//       error.message
+//     )
+//   } else if (data) {
+//     return getStatusRedirect(
+//       '/account',
+//       'Success!',
+//       'Your name has been updated.'
+//     )
+//   } else {
+//     return getErrorRedirect(
+//       '/account',
+//       'Hmm... Something went wrong.',
+//       'Your name could not be updated.'
+//     )
+//   }
+// }
 // USED!
 // ✅ check for authentication
 // ✅ add rate limiting to the request

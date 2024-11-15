@@ -17,7 +17,7 @@ import { createClient } from '../supabase/client'
 
 export const limitNumber = 20
 
-const fetchMorePosts = async (
+export const fetchMorePosts = async (
   selectedFiltersArray: Array<string> | null,
   paginationParams: {
     lastPublishedAt: string | null
@@ -52,7 +52,7 @@ const fetchMorePosts = async (
   return posts
 }
 
-const getSearchResults = async (searchValue: string | null) => {
+export const getSearchResults = async (searchValue: string | null) => {
   // artists (get from artists)
   // episodes (posts)
   // series (get from episodes)
@@ -63,7 +63,7 @@ const getSearchResults = async (searchValue: string | null) => {
 
   return result as SearchQueryResult
 }
-const getFilteredPosts = async (tagsSelected: string[]) => {
+export const getFilteredPosts = async (tagsSelected: string[]) => {
   // await new Promise((resolve) => setTimeout(resolve, 3000))
   const result = await client.fetch(filterByTagsQuery, { tagsSelected })
   return result as FilterByTagsQueryResult
@@ -78,5 +78,3 @@ export const fetchSubscriptions = async () => {
 
   return userTierObject?.userTier
 }
-
-export { fetchMorePosts, getSearchResults, getFilteredPosts }

@@ -40,16 +40,11 @@ export default function DisplayPaymentData({
     try {
       let redirectUrl: string = ''
       if (action === 'detach') {
-        redirectUrl = await detachPaymentMethod(
-          paymentMethodId,
-          currentPath,
-          stripeCustomerId
-        )
+        redirectUrl = await detachPaymentMethod(paymentMethodId, currentPath)
       } else if (action === 'setDefault') {
         redirectUrl = await updateSubscriptionDefaultPaymentMethod(
           paymentMethodId,
-          subscriptionId,
-          stripeCustomerId
+          subscriptionId
         )
       }
       onCardsUpdate()

@@ -1,5 +1,4 @@
 import {
-  getProducts,
   getSubscription,
   getUser,
   getCanTrial,

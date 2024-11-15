@@ -3,8 +3,8 @@ import { createClient } from '@/utils/supabase/server'
 import { Suspense } from 'react'
 import Link from 'next/link'
 import {
+  getCachedProducts,
   getDiscordConnectionStatus,
-  getProducts,
   getSubscription,
   getUser
 } from '@/utils/supabase/queries'
@@ -13,7 +13,9 @@ import { ENABLE_DISCORD_INTEGRATION } from '@/config/featureFlags'
 import DiscordIntegration from './discord/DiscordIntegration'
 import SubscriptionManagementPanel from './plans/SubscriptionManagementPanel'
 import BillingPanel from './billing/BillingPanel'
-import UpdateBillingAddress from './billing/UpdateBillingAddress'
+// import UpdateBillingAddress from './billing/UpdateBillingAddress'
+import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm'
+import Card from '@/components/ui/Card'
 
 export const dynamic = 'force-dynamic'
 
@@ -23,7 +25,7 @@ export default async function SubscriptionLayout() {
   const [user, products, subscription, discordConnectionStatusResult] =
     await Promise.all([
       getUser(supabase),
-      getProducts(supabase),
+      getCachedProducts(supabase),
       getSubscription(supabase),
       ENABLE_DISCORD_INTEGRATION
         ? getDiscordConnectionStatus(supabase)
@@ -41,6 +43,7 @@ export default async function SubscriptionLayout() {
             subscription={subscription}
           />
         )}
+
         {subscription ? (
           <>
             <Suspense fallback={<BillingInfoScheleton />}>
@@ -52,20 +55,20 @@ export default async function SubscriptionLayout() {
             <Suspense fallback={<BillingInfoScheleton />}>
               <BillingPanel subscription={subscription} />
             </Suspense>
-            {/* <Suspense fallback={<BillingInfoScheleton />}>
-              <BillingInfoFetchZod subscription={subscription} />
-            </Suspense> */}
-            <UpdateBillingAddress subscription={subscription} />
           </>
         ) : (
-          <div>
-            You do not have an active subscription. Please{' '}
-            <Link href="/pricing" className="underline">
-              Subscribe
-            </Link>
-            .
-          </div>
+          <Card title="Plan type">
+            <div
+              className={`border p-4 rounded-md bg-secondary flex justify-between`}
+            >
+              <p className="font-semibold ">You have no active subscription</p>
+              <Link href="/pricing" className="underline">
+                Subscribe
+              </Link>
+            </div>
+          </Card>
         )}
+        <CustomerPortalForm subscription={subscription} />
       </div>
     </>
   )
