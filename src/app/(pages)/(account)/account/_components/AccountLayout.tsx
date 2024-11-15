@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 
 import PasswordForm from '@/components/ui/AccountForms/PasswordForm'
 import { getUser } from '@/utils/supabase/queries'
+import Stripe from 'stripe'
 
 export default async function AccountLayout() {
   const supabase = createClient()

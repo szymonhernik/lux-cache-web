@@ -14,10 +14,10 @@ import PricingSimplified from './PricingSimplified'
 
 export default async function PricingLayout() {
   const supabase = createClient()
-  const [products] = await Promise.all([
+  const [products, subscription] = await Promise.all([
     // getUser(supabase),
-    getCachedProducts(supabase)
-    // getSubscription(supabase),
+    getCachedProducts(supabase),
+    getSubscription(supabase)
     // getCanTrial(supabase)
   ])
   const getCachedPricesDetails = unstable_cache(
@@ -35,7 +35,13 @@ export default async function PricingLayout() {
     process.env.NEXT_PUBLIC_STRIPE_EMBEDDED_CHECKOUT_ENABLED === 'true'
 
   if (isEmbeddedCheckoutEnabled) {
-    return <PricingEmbed data={pricesDetails.data} products={products ?? []} />
+    return (
+      <PricingEmbed
+        data={pricesDetails.data}
+        products={products ?? []}
+        subscription={subscription}
+      />
+    )
   } else {
     return (
       <PricingSimplified data={pricesDetails.data} products={products ?? []} />

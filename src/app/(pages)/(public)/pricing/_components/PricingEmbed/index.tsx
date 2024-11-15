@@ -1,7 +1,11 @@
 'use client'
 
 import React, { Suspense, useState } from 'react'
-import { BillingInterval, ProductWithPrices } from '@/utils/types'
+import {
+  BillingInterval,
+  ProductWithPrices,
+  SubscriptionWithPriceAndProduct
+} from '@/utils/types'
 
 import { PricesQueryResult } from '@/utils/types/sanity/sanity.types'
 
@@ -12,11 +16,12 @@ import { PricingCardWrapper } from './PricingCardWrapper'
 interface Props {
   data: PricesQueryResult | null
   products: ProductWithPrices[]
+  subscription: SubscriptionWithPriceAndProduct | null
 }
 
-export default function PricingEmbed({ data, products }: Props) {
+export default function PricingEmbed({ data, products, subscription }: Props) {
   const { plansFeatures } = data ?? {}
-
+  const hasActiveSubscription = subscription?.status === 'active'
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -82,6 +87,7 @@ export default function PricingEmbed({ data, products }: Props) {
                     price={price}
                     billingInterval={billingInterval}
                     planDescription={plansFeatures?.[index]?.planDescription}
+                    hasActiveSubscription={hasActiveSubscription}
                   />
                 </React.Fragment>
               )
