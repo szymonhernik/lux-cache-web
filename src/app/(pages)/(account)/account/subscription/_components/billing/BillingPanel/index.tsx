@@ -4,6 +4,7 @@ import Stripe from 'stripe'
 import Card from '@/components/ui/Card'
 import clsx from 'clsx'
 import UpdatePaymentMethod from '../UpdatePaymentMethod'
+import { getSubscriptionDetails } from '@/utils/stripe/queries'
 
 // to know which payment method is used for a specific Subscription:
 // 1. check the default payment method of the subscription. if there's one, then show that
@@ -11,12 +12,7 @@ import UpdatePaymentMethod from '../UpdatePaymentMethod'
 async function getDefaultPaymentMethod(subscriptionId: string) {
   // retrieve subscription data from stripe using the subscription id
   // then check the default payment method of the subscription
-  const stripeSubscription = await stripe.subscriptions.retrieve(
-    subscriptionId as string,
-    {
-      expand: ['default_payment_method']
-    }
-  )
+  const stripeSubscription = await getSubscriptionDetails(subscriptionId)
   if (!stripeSubscription) {
     return { error: 'Unable to retrieve subscription details.' }
   }

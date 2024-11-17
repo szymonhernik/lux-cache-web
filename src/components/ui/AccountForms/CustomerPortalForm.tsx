@@ -45,7 +45,7 @@ export default function CustomerPortalForm({ subscription }: Props) {
 
   return (
     <Card title="Manage Billing & Invoices">
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4" id="manage-billing-invoices">
         <Button
           onClick={handleStripePortalRequest}
           className="w-fit"

@@ -16,6 +16,7 @@ import BillingPanel from './billing/BillingPanel'
 // import UpdateBillingAddress from './billing/UpdateBillingAddress'
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm'
 import Card from '@/components/ui/Card'
+import { stripe } from '@/utils/stripe/config'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,6 +32,16 @@ export default async function SubscriptionLayout() {
         ? getDiscordConnectionStatus(supabase)
         : Promise.resolve(null)
     ])
+
+  // const subscriptionFromStripe = await stripe.subscriptions.retrieve(
+  //   'sub_1QMAKUC5Vnk6f7u9BIrX3Jgc',
+  //   { expand: ['discounts'] }
+  // )
+  // const upcomingInvoice = await stripe.invoices.retrieveUpcoming({
+  //   customer: 'cus_REdbYFJw5590XU'
+  // })
+  // // console.log('subscriptionFromStripe', subscriptionFromStripe)
+  // console.log('upcomingInvoice', upcomingInvoice)
 
   return (
     <>

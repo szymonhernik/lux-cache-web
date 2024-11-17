@@ -242,7 +242,7 @@ export const createOrRetrieveCustomer = async ({
 export const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
-  createAction = true
+  createAction = false
 ) => {
   // Get customer's UUID from mapping table.
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
@@ -270,6 +270,7 @@ export const manageSubscriptionStatusChange = async (
     //TODO check quantity on subscription
     // @ts-ignore
     quantity: subscription.quantity,
+
     cancel_at_period_end: subscription.cancel_at_period_end,
     cancel_at: subscription.cancel_at
       ? toDateTime(subscription.cancel_at).toISOString()
