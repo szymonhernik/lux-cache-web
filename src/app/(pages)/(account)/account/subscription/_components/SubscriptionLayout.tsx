@@ -33,16 +33,6 @@ export default async function SubscriptionLayout() {
         : Promise.resolve(null)
     ])
 
-  // const subscriptionFromStripe = await stripe.subscriptions.retrieve(
-  //   'sub_1QMAKUC5Vnk6f7u9BIrX3Jgc',
-  //   { expand: ['discounts'] }
-  // )
-  // const upcomingInvoice = await stripe.invoices.retrieveUpcoming({
-  //   customer: 'cus_REdbYFJw5590XU'
-  // })
-  // // console.log('subscriptionFromStripe', subscriptionFromStripe)
-  // console.log('upcomingInvoice', upcomingInvoice)
-
   return (
     <>
       <h1 className="text-2xl font-extrabold ">Subscription</h1>
