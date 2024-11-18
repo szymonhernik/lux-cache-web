@@ -20,6 +20,7 @@ export default async function PricingLayout() {
     getSubscription(supabase)
     // getCanTrial(supabase)
   ])
+
   const getCachedPricesDetails = unstable_cache(
     async () => {
       return await loadPrices()

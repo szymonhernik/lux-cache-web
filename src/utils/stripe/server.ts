@@ -37,8 +37,9 @@ async function validateCustomerOwnership() {
     id: string
     stripe_customer_id: string
   }
+
   // Verifies the customerId belongs to the authenticated user
-  if (!customer || customer.stripe_customer_id) {
+  if (!customer || !customer.stripe_customer_id) {
     throw new Error('You are not authorized to perform this action')
   }
   return customer.stripe_customer_id

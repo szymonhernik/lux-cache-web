@@ -56,7 +56,7 @@ export const checkoutAction = async (formData: FormData) => {
   const createCheckoutSessionObject: Stripe.Checkout.SessionCreateParams = {
     ui_mode: 'embedded',
     customer,
-    payment_method_types: ['card'],
+    // payment_method_types: ['card'],
     line_items: [
       {
         price: priceId,
