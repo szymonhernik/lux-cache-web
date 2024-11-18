@@ -46,7 +46,7 @@ const copyBillingDetailsToCustomer = async (
     return
   }
   //@ts-ignore
-  await stripe.customers.update(customer, { name, phone, address })
+  // await stripe.customers.update(customer, { name, phone, address })
   const { error: updateError } = await supabaseAdmin
     .from('users')
     .update({

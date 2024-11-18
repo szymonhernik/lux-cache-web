@@ -160,26 +160,26 @@ export const DiscountsTags = ({
   return (
     <>
       {discounts &&
-        discounts.length &&
-        discounts.length > 0 &&
-        hasValidDiscounts && (
-          <div className="flex gap-2 justify-end">
-            {discounts
-              .filter(
-                (discount) => discount.end && discount.end > Date.now() / 1000
-              )
-              .map((discount) => (
-                <div
-                  key={discount.id}
-                  className="w-fit text-xs bg-muted flex gap-1 font-semibold px-2 py-1  shadow-sm rounded-md"
-                >
-                  <LightningBoltIcon className="w-4 h-4 text-secondary-foreground" />
-                  {discount.coupon?.percent_off}% Off for{' '}
-                  {discount.coupon?.duration_in_months} months
-                </div>
-              ))}
-          </div>
-        )}
+      discounts.length &&
+      discounts.length > 0 &&
+      hasValidDiscounts ? (
+        <div className="flex gap-2 justify-end">
+          {discounts
+            .filter(
+              (discount) => discount.end && discount.end > Date.now() / 1000
+            )
+            .map((discount) => (
+              <div
+                key={discount.id}
+                className="w-fit text-xs bg-muted flex gap-1 font-semibold px-2 py-1  shadow-sm rounded-md"
+              >
+                <LightningBoltIcon className="w-4 h-4 text-secondary-foreground" />
+                {discount.coupon?.percent_off}% Off for{' '}
+                {discount.coupon?.duration_in_months} months
+              </div>
+            ))}
+        </div>
+      ) : null}
     </>
   )
 }
