@@ -16,7 +16,6 @@ import BillingPanel from './billing/BillingPanel'
 // import UpdateBillingAddress from './billing/UpdateBillingAddress'
 import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm'
 import Card from '@/components/ui/Card'
-import { stripe } from '@/utils/stripe/config'
 
 export const dynamic = 'force-dynamic'
 
