@@ -26,14 +26,15 @@ const supabaseAdmin = createClient<Database>(
  */
 const copyBillingDetailsToCustomer = async (
   uuid: string,
-  payment_method: Stripe.PaymentMethod
+  payment_method: Stripe.PaymentMethod,
+  updateAction = false
 ) => {
   //Todo: check this assertion
   const customer = payment_method.customer as string
   const { name, phone, address } = payment_method.billing_details
 
   // No matter the state of billing information new subscription marks the user as not eligible for trials in future
-  if (!name || !address) {
+  if ((!name || !address) && !updateAction) {
     const { error: updateError } = await supabaseAdmin
       .from('users')
       .update({
@@ -46,7 +47,7 @@ const copyBillingDetailsToCustomer = async (
     return
   }
   //@ts-ignore
-  // await stripe.customers.update(customer, { name, phone, address })
+  await stripe.customers.update(customer, { name, phone, address })
   const { error: updateError } = await supabaseAdmin
     .from('users')
     .update({
@@ -242,7 +243,8 @@ export const createOrRetrieveCustomer = async ({
 export const manageSubscriptionStatusChange = async (
   subscriptionId: string,
   customerId: string,
-  createAction = false
+  createAction = false,
+  updateAction = false
 ) => {
   // Get customer's UUID from mapping table.
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
@@ -309,13 +311,18 @@ export const manageSubscriptionStatusChange = async (
 
   // For a new subscription copy the billing details to the customer object.
   // NOTE: This is a costly operation and should happen at the very end.
-  if (createAction && subscription.default_payment_method && uuid)
+  if (
+    (createAction || updateAction) &&
+    subscription.default_payment_method &&
+    uuid
+  )
     // console.log('↓↓↓ Webhook fired ');
 
     //@ts-ignore
     await copyBillingDetailsToCustomer(
       uuid,
-      subscription.default_payment_method as Stripe.PaymentMethod
+      subscription.default_payment_method as Stripe.PaymentMethod,
+      updateAction
     )
 }
 

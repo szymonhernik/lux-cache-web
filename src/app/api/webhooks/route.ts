@@ -82,7 +82,8 @@ export async function POST(req: Request) {
           await manageSubscriptionStatusChange(
             subscription.id,
             subscription.customer as string,
-            event.type === 'customer.subscription.created'
+            event.type === 'customer.subscription.created',
+            event.type === 'customer.subscription.updated'
           )
           if (event.type === 'customer.subscription.updated') {
             if (subscription.cancel_at_period_end) {
