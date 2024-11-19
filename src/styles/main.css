@@ -52,10 +52,10 @@
     --radius: 0.5rem;
 
     /* lux cache colors */
-    --surface-brand: 330, 11%, 89%;
+    --surface-brand: 330 11% 89%;
     --surface-brand-darken: 330 11.1% 59.4%;
-    --surface-secondary: 0, 0%, 96.1%;
-    --surface-secondary-inverted: 0, 0%, 9%;
+    --surface-secondary: 0 0% 96.1%;
+    --surface-secondary-inverted: 0 0% 9%;
     /* heights */
     --height-dynamic-display-bar: 20vh;
     --height-toolbar: 4rem;

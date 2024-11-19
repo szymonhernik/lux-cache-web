@@ -9,7 +9,7 @@ import {
   RenewSubscriptionDialog
 } from '../SubscriptionDialogs.tsx'
 import Stripe from 'stripe'
-import { LightningBoltIcon } from '@radix-ui/react-icons'
+import { CalendarIcon, LightningBoltIcon } from '@radix-ui/react-icons'
 
 interface Props {
   products: ProductWithPrices[]
@@ -38,74 +38,107 @@ export default async function SubscriptionManagementPanel(props: Props) {
     }).format((price.unit_amount || 0) / 100)
   }
 
-  if (!isScheduledForCancellation) {
-    return (
-      <Card title="Plan type">
-        <div className={clsx(`border p-4 rounded-md bg-white space-y-4`)}>
-          <div className="space-y-1 ">
-            <div className="flex justify-between">
-              <div>
-                <p className="font-semibold">
-                  {subscription?.prices?.products?.name}
-                </p>
-                <p className="text-sm text-secondary-foreground">
-                  Next charge date:{` `}
-                  {formatDate(subscription?.current_period_end)}
-                </p>
-              </div>
-              <div className="text-right space-y-2">
-                <p className="font-semibold">
-                  {priceString} {` `}
-                  <span className="font-normal text-secondary-foreground">
-                    (VAT incl.)
-                  </span>
-                </p>
-                <DiscountsTags discounts={discounts} />
-              </div>
-            </div>
-          </div>
-          <DiscountsInfo discounts={discounts} />
-          <hr />
-          <div>
-            <PlansDialog products={products} subscription={subscription} />
-            {` `} or <CancelSubscriptionDialog subscription={subscription} />
-          </div>
-        </div>
-        {/* <div className="mt-8 mb-4 text-xl font-semibold">Plans</div> */}
-      </Card>
-    )
-  } else {
-    return (
-      <Card title="Plan type">
-        <div className={clsx(`border p-4 rounded-md bg-yellow-50 space-y-4`)}>
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <p className="font-semibold">
+  return (
+    <Card title="Plan type">
+      <SubscriptionCard
+        subscription={subscription}
+        priceString={priceString}
+        discounts={discounts}
+        products={products}
+        isScheduledForCancellation={isScheduledForCancellation}
+      />
+    </Card>
+  )
+}
+
+interface SubscriptionCardProps {
+  subscription: SubscriptionWithProduct | null
+  priceString: string | null
+  discounts: Stripe.Discount[] | null
+  products: ProductWithPrices[]
+  isScheduledForCancellation: boolean | null | undefined
+}
+
+function SubscriptionCard({
+  subscription,
+  priceString,
+  discounts,
+  products,
+  isScheduledForCancellation
+}: SubscriptionCardProps) {
+  return (
+    <div className="border p-6 rounded-md space-y-4 bg-white">
+      <div className="space-y-2">
+        <div className="flex justify-between ">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <p className="font-semibold text-xl">
                 {subscription?.prices?.products?.name}
               </p>
-              <p className="font-semibold">
-                {priceString} {` `}
-                <span className="font-normal text-secondary-foreground">
-                  (VAT incl.)
-                </span>
-              </p>
+              {!isScheduledForCancellation ? (
+                <TrialTag subscription={subscription} />
+              ) : (
+                <div className="text-xs border-secondary border flex gap-1 font-semibold px-2 py-[2px]  shadow-sm rounded-full text-secondary-foreground">
+                  Cancelling
+                </div>
+              )}
             </div>
-          </div>
-          <hr />
-          {subscription.cancel_at && (
-            <div>
+            {!isScheduledForCancellation && (
               <p className="text-sm text-secondary-foreground">
-                Your subscription has been planned for cancellation on{' '}
-                {formatDate(subscription?.cancel_at)}. You will no longer be
-                billed after the next billing date.
+                Next charge date:{` `}
+                {formatDate(subscription?.current_period_end)}
               </p>
+            )}
+          </div>
+          <div className="text-right ">
+            <p className="font-semibold tracking-tighter text-xl">
+              {priceString}
+            </p>
+            <span className="font-normal text-sm text-secondary-foreground">
+              VAT incl.
+            </span>
+          </div>
+        </div>
+      </div>
+
+      {!isScheduledForCancellation && (
+        <>
+          <DiscountsTags discounts={discounts} />
+          <TrialInfo subscription={subscription} />
+          <DiscountsInfo discounts={discounts} />
+        </>
+      )}
+
+      {isScheduledForCancellation ? (
+        <>
+          {subscription?.cancel_at && (
+            <div className="rounded-lg bg-muted p-4 mb-6">
+              <div className="space-y-1 text-sm">
+                <h4 className="font-semibold ">
+                  Subscription Cancellation Scheduled
+                </h4>
+                <p className=" text-secondary-foreground">
+                  Your subscription has been planned for cancellation on{' '}
+                  {formatDate(subscription?.cancel_at)}. You will no longer be
+                  billed after the next billing date. You can renew your
+                  subscription at any time before the cancellation date.
+                </p>
+              </div>
             </div>
           )}
           <RenewSubscriptionDialog subscription={subscription} />
-        </div>
-      </Card>
-    )
-  }
+        </>
+      ) : (
+        <>
+          <hr />
+          <div className="flex sm:flex-row flex-col gap-2 ">
+            <PlansDialog products={products} subscription={subscription} />
+            {` `} <CancelSubscriptionDialog subscription={subscription} />
+          </div>
+        </>
+      )}
+    </div>
+  )
 }
 
 const formatDate = (dateString: string | undefined) => {
@@ -119,6 +152,63 @@ const formatDate = (dateString: string | undefined) => {
   }
 }
 
+const TrialTag = ({
+  subscription
+}: {
+  subscription: SubscriptionWithProduct | null
+}) => {
+  if (!subscription?.trial_end || subscription.status !== 'trialing') {
+    return null
+  }
+
+  const trialEndTimestamp = new Date(subscription.trial_end).getTime() / 1000
+  const currentTimestamp = Date.now() / 1000
+  const isTrialActive = trialEndTimestamp >= currentTimestamp
+
+  if (!isTrialActive) {
+    return null
+  }
+  return (
+    <div className="text-xs bg-muted flex gap-1 font-semibold px-2 py-[2px]   shadow-sm rounded-full">
+      Trial
+    </div>
+  )
+}
+const TrialInfo = ({
+  subscription
+}: {
+  subscription: SubscriptionWithProduct | null
+}) => {
+  // Skip if no subscription or trial data
+  if (!subscription?.trial_end || subscription.status !== 'trialing') {
+    return null
+  }
+
+  const trialEndTimestamp = new Date(subscription.trial_end).getTime() / 1000
+  const currentTimestamp = Date.now() / 1000
+  const isTrialActive = trialEndTimestamp >= currentTimestamp
+
+  if (!isTrialActive) {
+    return null
+  }
+
+  return (
+    <>
+      <div className="text-sm flex flex-col gap-1 rounded-lg bg-secondary/50 p-4  text-secondary-foreground">
+        <div className="font-semibold text-primary-foreground">
+          Trial period active
+        </div>
+        <div>
+          Ends{` `}
+          {formatDate(subscription.trial_end)}
+        </div>
+        <div className="">
+          You will be charged after the trial period ends unless you cancel.
+        </div>
+      </div>
+    </>
+  )
+}
 export const DiscountsInfo = ({
   discounts
 }: {
@@ -132,8 +222,7 @@ export const DiscountsInfo = ({
     <>
       {hasValidDiscounts && (
         <>
-          <hr />
-          <div className="text-sm flex flex-col gap-2  rounded-lg bg-muted p-2 ">
+          <div className="text-sm flex flex-col gap-2  rounded-lg bg-secondary/50  p-4 ">
             <p className="text-secondary-foreground">
               You have active discounts on your subscription. To see your final
               discounted price, check your billing dashboard in the{' '}
@@ -163,7 +252,7 @@ export const DiscountsTags = ({
       discounts.length &&
       discounts.length > 0 &&
       hasValidDiscounts ? (
-        <div className="flex gap-2 justify-end">
+        <div className="flex gap-2">
           {discounts
             .filter(
               (discount) => discount.end && discount.end > Date.now() / 1000
@@ -171,9 +260,9 @@ export const DiscountsTags = ({
             .map((discount) => (
               <div
                 key={discount.id}
-                className="w-fit text-xs bg-muted flex gap-1 font-semibold px-2 py-1  shadow-sm rounded-md"
+                className="w-fit text-xs bg-muted flex gap-1 font-semibold px-2 py-[2px]  shadow-sm rounded-full  items-center"
               >
-                <LightningBoltIcon className="w-4 h-4 text-secondary-foreground" />
+                <LightningBoltIcon className="w-3 h-3 " />
                 {discount.coupon?.percent_off}% Off for{' '}
                 {discount.coupon?.duration_in_months} months
               </div>

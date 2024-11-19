@@ -86,7 +86,11 @@ export function PlansDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="underline">Change plan</DialogTrigger>
+      <DialogTrigger className="underline flex-1">
+        <Button size={'lg'} variant={'outline'} className="w-full">
+          Change plan
+        </Button>
+      </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">
         {step === 1 && (
@@ -222,8 +226,10 @@ export function CancelSubscriptionDialog({
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="underline">
-        Cancel current subscription
+      <DialogTrigger className="underline flex-1">
+        <Button size={'lg'} variant={'outline'} className=" w-full">
+          Cancel current subscription
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
