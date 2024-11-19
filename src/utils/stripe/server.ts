@@ -11,10 +11,7 @@ import {
   getStatusRedirect
 } from '@/utils/helpers'
 import { PriceWithProduct } from '../types'
-import {
-  ProductMetadataSchema,
-  SubscriptionItemSchema
-} from '../types/zod/types'
+import { ProductMetadataSchema } from '../types/zod/types'
 
 import {
   getCustomer,
@@ -283,7 +280,7 @@ export async function updateSubscriptionDefaultPaymentMethod(
   }
 }
 
-// USED!
+// USED IN ACCOUNT/SUBSCRIPTION
 // ✅ rate limit the request
 // ✅ check for authentication
 export async function createStripePortal(currentPath: string) {
@@ -349,7 +346,7 @@ type CustomCheckoutResponse = {
   clientSecret?: string | null
 }
 
-// USED!
+// USED IN UpdatePaymentMethod in ACCOUNT/SUBSCRIPTION
 // ✅ rate limit the request
 // ✅ check for authentication
 export async function createSetupSession(
@@ -555,48 +552,3 @@ function buildCheckoutParams({
     mode: 'payment'
   }
 }
-
-// NOT USED FOR NOW
-// ✅ rate limit the request
-// ✅ check for authentication
-// export async function openStripeBillingPortal(currentPath: string) {
-//   try {
-//     // rate limit default (10 requests per minute)
-//     await checkRateLimit('openStripeBillingPortal')
-//     const supabase = createClient()
-//     const user = await getUser(supabase)
-//     if (!user) {
-//       throw new Error('You must be signed in to perform this action')
-//     }
-
-//     const customer = await getCustomer(supabase)
-//     if (!customer || !customer.stripe_customer_id) {
-//       throw new Error('No customer record found')
-//     }
-
-//     const { url } = await stripe.billingPortal.sessions.create({
-//       customer: customer.stripe_customer_id,
-//       return_url: getURL('/account')
-//     })
-
-//     if (!url) {
-//       throw new Error('Could not create billing portal')
-//     }
-//     return url
-//   } catch (error) {
-//     if (error instanceof Error) {
-//       console.error(error)
-//       return getErrorRedirect(
-//         currentPath,
-//         error.message,
-//         'Please try again later or contact a system administrator.'
-//       )
-//     } else {
-//       return getErrorRedirect(
-//         currentPath,
-//         'An unknown error occurred.',
-//         'Please try again later or contact a system administrator.'
-//       )
-//     }
-//   }
-// }

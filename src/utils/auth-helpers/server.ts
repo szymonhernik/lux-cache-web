@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation'
 import { getURL, getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 
 import { isAuthenticated } from '../data/auth'
-import { z } from 'zod'
+
 import { checkRateLimit, checkStrictRateLimit } from '../upstash/helpers'
 import {
   emailUpdateSchema,

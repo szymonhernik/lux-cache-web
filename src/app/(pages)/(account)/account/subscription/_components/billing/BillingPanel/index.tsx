@@ -17,7 +17,6 @@ async function getDefaultPaymentMethod(subscriptionId: string) {
     return { error: 'Unable to retrieve subscription details.' }
   }
 
-  let paymentMethod = null
   const defaultPaymentMethod = stripeSubscription.default_payment_method
   const stripeCustomerId = stripeSubscription.customer as string
 
