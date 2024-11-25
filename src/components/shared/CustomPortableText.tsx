@@ -117,7 +117,6 @@ export function CustomPortableText({
         )
       },
       video: ({ value }) => <VideoMuxInline value={value} />,
-
       youtube: ({ value }) => <YouTubeEmbed url={value.url} />,
       spotify: ({ value }) => <SpotifyEmbed url={value.url} />,
       timeline: ({ value }) => {
@@ -126,7 +125,7 @@ export function CustomPortableText({
       },
       postContent: ({ value }) => {
         return (
-          <div className="post-content space-y-5">
+          <div className="post-content space-y-5 h-24 w-full ">
             <PortableText value={value.body} components={components} />
           </div>
         )

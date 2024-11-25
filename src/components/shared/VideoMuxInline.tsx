@@ -3,7 +3,7 @@ import MuxPlayer from '@mux/mux-player-react'
 export default function VideoMuxInline({ value }: { value: any }) {
   return (
     <>
-      {value.videoFile.asset.playback && (
+      {value.videoFile.asset.playbackId && (
         <div>
           <MuxPlayer
             playbackId={value.videoFile.asset.playbackId}

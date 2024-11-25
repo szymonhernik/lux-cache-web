@@ -36,6 +36,9 @@ export function PostPage({ data, encodeDataAttribute }: PostPageProps) {
     (block) => block._type !== 'introText'
   )
 
+  // console.log(remainingContent?.[1])
+  // console.log('introTextBlocks', introTextBlocks)
+
   return (
     <>
       <article className="max-w-4xl mx-auto">

@@ -3,7 +3,7 @@
 import React, { useRef } from 'react'
 import Link from 'next/link'
 import { signUp } from '@/utils/auth-helpers/server'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
 import { useForm } from 'react-hook-form'
@@ -32,6 +32,10 @@ interface SignUpProps {
 export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null
 
+  const searchParams = useSearchParams()
+  const emailInParams = searchParams.get('email')
+  console.log('emailInParams', emailInParams)
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [captchaToken, setCaptchaToken] = useState<string | undefined>()
   const captcha = useRef<HCaptcha | null>(null)
@@ -43,7 +47,7 @@ export default function SignUp({ allowEmail, redirectMethod }: SignUpProps) {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      email: ''
+      email: emailInParams || ''
     }
   })
   const handleSignup = async (values: {

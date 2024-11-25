@@ -55,7 +55,7 @@ export default function PreviewVideo(props: Props) {
       <>
         <video
           ref={videoRef}
-          className={`h-full w-full min-w-screen lg:min-w-auto ${!isVideoLoaded ? 'hidden' : ''}`}
+          className={`min-h-full w-full min-w-screen lg:min-w-auto ${!isVideoLoaded ? 'hidden' : ''}`}
           playsInline
           muted
           loop
