@@ -125,7 +125,7 @@ export function CustomPortableText({
       },
       postContent: ({ value }) => {
         return (
-          <div className="post-content space-y-5 h-24 w-full ">
+          <div className="post-content space-y-5  w-full ">
             <PortableText value={value.body} components={components} />
           </div>
         )
