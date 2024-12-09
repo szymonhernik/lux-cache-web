@@ -70,6 +70,7 @@
     "clsx": "^2.1.1",
     "discord.js": "^14.16.2",
     "hamburger-react": "^2.5.0",
+    "hls-video-element": "^1.2.11",
     "jose": "^5.3.0",
     "locate": "link:@/sanity/plugins/locate",
     "lucide-react": "0.330.0",

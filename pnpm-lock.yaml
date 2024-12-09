@@ -131,6 +131,9 @@ dependencies:
   hamburger-react:
     specifier: ^2.5.0
     version: 2.5.0(react@18.3.1)
+  hls-video-element:
+    specifier: ^1.2.11
+    version: 1.2.11
   jose:
     specifier: ^5.3.0
     version: 5.3.0
@@ -7721,6 +7724,10 @@ packages:
     resolution: {integrity: sha512-nDyMobZgoAVqz7mA8rsn7i1/6bjH6N9ab2Ge7LyyNxrvxAq7zQJPg8i3u2VH7wEB+Y1T1+C3/h1G774/D+ZLag==}
     dev: false
 
+  /custom-media-element@1.4.1:
+    resolution: {integrity: sha512-kWPRk+6tEebklkd9QWbeCAEOzgL72Uhra4ZSmjN3R9mxg4emqh/0vKyKgxzLtuak76SiaSstzCY6zFrBZ8kyJg==}
+    dev: false
+
   /cyclist@1.0.2:
     resolution: {integrity: sha512-0sVXIohTfLqVIW3kb/0n6IiWF3Ifj5nm2XaSrLq2DI6fKIGa2fYAZdk917rUneaeLVpYfFcyXE2ft0fe3remsA==}
     dev: false
@@ -9527,6 +9534,14 @@ packages:
       '@babel/runtime': 7.24.5
     dev: false
 
+  /hls-video-element@1.2.11:
+    resolution: {integrity: sha512-QaUPnGcJj9uW9US7+XtUMda/i6Wvf9EOTPRCMYzgQKU0h65QgiOpMnfKQDVDZbTanc7333nf2H0ubKyL0umyRg==}
+    dependencies:
+      custom-media-element: 1.4.1
+      hls.js: 1.5.13
+      media-tracks: 0.3.3
+    dev: false
+
   /hls.js@1.5.13:
     resolution: {integrity: sha512-xRgKo84nsC7clEvSfIdgn/Tc0NOT+d7vdiL/wvkLO+0k0juc26NRBPPG1SfB8pd5bHXIjMW/F5VM8VYYkOYYdw==}
     dev: false
@@ -10467,6 +10482,10 @@ packages:
 
   /media-tracks@0.3.2:
     resolution: {integrity: sha512-qz1MLcXPm0DuzeKm5vWm0kxHROSbwJJw/01h+pvanMAEwR8K4z3tzpLTZoF8sNNa1cy0FbQ8QzNDNU3Hwh0kJw==}
+    dev: false
+
+  /media-tracks@0.3.3:
+    resolution: {integrity: sha512-9P2FuUHnZZ3iji+2RQk7Zkh5AmZTnOG5fODACnjhCVveX1McY3jmCRHofIEI+yTBqplz7LXy48c7fQ3Uigp88w==}
     dev: false
 
   /memoize-one@5.2.1:

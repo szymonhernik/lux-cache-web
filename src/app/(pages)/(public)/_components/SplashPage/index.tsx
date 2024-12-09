@@ -1,9 +1,12 @@
+import SplashVideoStream from './SplashVideoStream'
 import TrialForm from './TrialForm'
 import s from './splash.module.css'
 
 export default function SplashVideo() {
   return (
     <div className="relative h-[calc(100vh-4rem)] lg:h-screen w-full">
+      <SplashVideoStream />
+      {/* <VideoSplashPage /> */}
       <div className="absolute bottom-10 right-10 space-y-4 max-w-md w-full p-4 bg-slate-300 bg-opacity-20 backdrop-contrast-[50] backdrop-blur-sm rounded-lg ">
         <h1 className="text-black text-2xl uppercase italic">
           Try 7 days for free
