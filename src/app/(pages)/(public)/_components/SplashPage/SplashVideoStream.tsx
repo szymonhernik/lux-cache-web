@@ -10,8 +10,10 @@ export default function SplashVideoStream() {
     const videoElement = videoRef.current
     if (!videoElement) return
 
+    // const videoSrc =
+    //   'https://vz-f9672ffd-83a.b-cdn.net/67f3fa77-d814-481d-a947-6d037a824ccc/playlist.m3u8'
     const videoSrc =
-      'https://vz-f9672ffd-83a.b-cdn.net/67f3fa77-d814-481d-a947-6d037a824ccc/playlist.m3u8'
+      'https://pub-e18f0b6cf12246908bb3d80c99e28ea9.r2.dev/output/output/playlist.m3u8'
 
     if (Hls.isSupported()) {
       const hls = new Hls()
