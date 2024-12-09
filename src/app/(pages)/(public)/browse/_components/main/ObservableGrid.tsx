@@ -98,10 +98,40 @@ export default function ObservableGrid({
     }
   }, [filters, isDesktop, view])
 
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+
+  const handleWheel = useCallback(
+    (e: WheelEvent) => {
+      if (!view && scrollContainerRef.current && isDesktop) {
+        e.preventDefault()
+
+        // Handle both vertical and horizontal touchpad gestures
+        const deltaX =
+          Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
+
+        scrollContainerRef.current.scrollBy({
+          left: deltaX,
+          behavior: 'auto'
+        })
+      }
+    },
+    [view, isDesktop]
+  )
+
+  // manage the wheel event listener
+  useEffect(() => {
+    const element = scrollContainerRef.current
+    if (element && !view && isDesktop) {
+      element.addEventListener('wheel', handleWheel, { passive: false })
+      return () => element.removeEventListener('wheel', handleWheel)
+    }
+  }, [handleWheel, view, isDesktop])
+
   // if filters are present i don't want to render initial posts and load more should fetch first $limit posts without lastpublisheddate
   // if filters are NOT present i want to render initial posts and load more should fetch next $limit posts with lastpublisheddate
   return (
     <div
+      ref={scrollContainerRef}
       className={clsx(' relative', {
         'overflow-x-auto   ': !view,
         'flex items-start min-h-[100vh]': view === 'list'
