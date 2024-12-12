@@ -10,15 +10,14 @@ import { useSearchParams } from 'next/navigation'
 import { GridWrapperDiv } from './GridWrapperDiv'
 import { limitNumber } from '@/utils/fetch-helpers/client'
 import PostWrapper from './PostWrapper'
-import {
-  EpisodeSkeleton
-} from '@/components/ui/skeletons/skeletons'
+import { EpisodeSkeleton } from '@/components/ui/skeletons/skeletons'
 
 export default function LoadMore({
   initialPosts,
   view,
   onHover,
   userTier,
+  userRole,
   isLoadingSubscriptions,
   onFirstFilteredPost,
   isDesktop,
@@ -28,6 +27,7 @@ export default function LoadMore({
   view: string | null
   onHover: (previewVideo: PreviewVideoType) => void
   userTier?: number
+  userRole?: string
   isLoadingSubscriptions?: boolean
   onFirstFilteredPost?: (firstFilteredPost: PreviewVideoType) => void // Add this prop
   isDesktop: boolean
@@ -95,6 +95,7 @@ export default function LoadMore({
                     item={post}
                     isLoading={isLoadingSubscriptions}
                     userTier={userTier}
+                    userRole={userRole}
                   />
                 </Suspense>
               </PostWrapper>

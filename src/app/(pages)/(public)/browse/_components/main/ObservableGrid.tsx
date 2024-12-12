@@ -24,6 +24,7 @@ import useSubscription from '@/utils/hooks/use-subscription-query'
 import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
 import { useMediaQuery } from '@/utils/hooks/use-media-query'
 import { PreviewVideoType } from '@/utils/types/sanity'
+import useUserRole from '@/utils/hooks/use-user-role-query'
 
 export interface ObservableGridProps {
   data: InitialPostsQueryResult['posts']
@@ -62,8 +63,7 @@ export default function ObservableGrid({
   }, [])
 
   const { data: userTier = 0, isLoading } = useSubscription(sessionExpiresAt)
-
-  // console.log('userTier:', userTier)
+  const { data: userRole = '' } = useUserRole(sessionExpiresAt)
 
   const handleHover = useCallback(
     (previewVideo: PreviewVideoType) => {
@@ -188,6 +188,7 @@ export default function ObservableGrid({
                             isTouchDevice={isTouchDevice}
                             item={post}
                             userTier={userTier}
+                            userRole={userRole}
                             isLoading={isLoading}
                             encodeDataAttribute={encodeDataAttribute}
                           />
@@ -203,6 +204,7 @@ export default function ObservableGrid({
                   view={view}
                   isTouchDevice={isTouchDevice}
                   userTier={userTier}
+                  userRole={userRole}
                   isLoadingSubscriptions={isLoading}
                   onHover={handleHover}
                   onFirstFilteredPost={handleFirstFilteredPost}
@@ -216,6 +218,7 @@ export default function ObservableGrid({
               isTouchDevice
               view={view}
               userTier={userTier}
+              userRole={userRole}
               isLoadingSubscriptions={isLoading}
               onHover={handleHover}
               onFirstFilteredPost={handleFirstFilteredPost}

@@ -28,7 +28,7 @@ export default async function BrowsePage({
   // const { posts } = previewData || {}
   return (
     <>
-      <Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
         <BrowsePageWrapper>
           <div className="z-[10] sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
             <Toolbar />

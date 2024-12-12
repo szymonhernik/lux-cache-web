@@ -17,13 +17,14 @@ import { Modal } from '../../preview/@modal/[slug]/modal'
 import EpisodePreview from '../post-preview/EpisodePreview'
 import PreviewVideo from '../../../post/[slug]/_components/PreviewVideo'
 import Image from 'next/image'
-import { LockClosedIcon } from '@radix-ui/react-icons'
+import { FaceIcon, LockClosedIcon } from '@radix-ui/react-icons'
 
 export default function ListItem({
   item,
   isTouchDevice,
   encodeDataAttribute,
   userTier,
+  userRole,
   isLoading,
   isDesktop
 }: {
@@ -32,6 +33,7 @@ export default function ListItem({
     | PostsQueryResult['posts'][number] // this is used in draft mode
   encodeDataAttribute?: EncodeDataAttributeCallback
   userTier?: number
+  userRole?: string
   isLoading?: boolean
   isDesktop: boolean
   isTouchDevice: boolean
@@ -54,7 +56,8 @@ export default function ListItem({
     threshold: 0.8
   })
 
-  const canAccess = canAccessPost(userTier, item.minimumTier)
+  const canAccess =
+    userRole === 'admin' ? true : canAccessPost(userTier, item.minimumTier)
 
   //  Simple check to detect if JS is enabled
   const [js, setJs] = useState(false)
@@ -127,6 +130,11 @@ export default function ListItem({
           <div className="absolute top-3 right-3 p-2 shadow  bg-opacity-50 backdrop-blur group-hover:bg-neutral-200 transition-colors  ">
             {' '}
             <LockClosedIcon className="min-w-4 min-h-4" />
+          </div>
+        )}
+        {userRole === 'admin' && (
+          <div className="absolute top-3 right-3 p-2 shadow  bg-opacity-50 backdrop-blur group-hover:bg-neutral-200 transition-colors rounded-full ">
+            <FaceIcon className="min-w-4 min-h-4" />
           </div>
         )}
         {!view && item?.coverImage?.asset?.lqip && (

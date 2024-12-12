@@ -63,6 +63,8 @@ export const updateSession = async (request: NextRequest) => {
     if (session.data.session) {
       const decodedJwt = decodeJwt(session.data.session.access_token)
       const userRole = decodedJwt.user_role
+      console.log('userRole in middleware:', userRole)
+
       response.headers.set('x-user-role', userRole as string)
     }
   } catch (e) {

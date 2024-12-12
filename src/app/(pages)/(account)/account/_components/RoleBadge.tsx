@@ -4,10 +4,10 @@ import { headers } from 'next/headers'
 
 export default async function RoleBadge({ userRole }: { userRole: string }) {
   return (
-    <div className="fixed top-8 left-6">
+    <div className="fixed right-4 top-20 lg:top-4 lg:left-6 lg:right-auto">
       <Badge
         variant={'outline'}
-        className="flex items-center gap-1 border-fuchsia-200 bg-fuchsia-100 "
+        className="flex items-center gap-1 bg-primary "
       >
         <FaceIcon />
 

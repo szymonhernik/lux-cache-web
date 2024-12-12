@@ -12,7 +12,7 @@ import {
 } from '@/sanity/lib/queries'
 import { SinglePostType } from '../types/sanity'
 
-import { getUserTier } from '../supabase/queries'
+import { getUserRole, getUserTier } from '../supabase/queries'
 import { createClient } from '../supabase/client'
 
 export const limitNumber = 20
@@ -77,4 +77,11 @@ export const fetchSubscriptions = async () => {
   const userTierObject = await getUserTier(supabase)
 
   return userTierObject?.userTier
+}
+
+export const fetchUserRole = async () => {
+  const supabase = createClient()
+  console.log('Fetching user role')
+  const userRole = await getUserRole(supabase)
+  return userRole
 }
