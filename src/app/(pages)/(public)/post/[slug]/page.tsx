@@ -4,7 +4,7 @@ import PostPreview from './_components/PostPreview'
 import { PostPage } from './_components/PostPage'
 import { notFound, redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
-import { getUserTier } from '@/utils/supabase/queries'
+import { getUserRole, getUserTier } from '@/utils/supabase/queries'
 import { Suspense } from 'react'
 import PostNavbar from './_components/PostNavbar'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
@@ -40,14 +40,19 @@ export default async function ProjectSlugRoute({ params }: Props) {
   const supabase = createClient()
   // const user = await getUser(supabase)
   const userTierObject = await getUserTier(supabase)
+  const userRole = await getUserRole(supabase)
   const userTier = userTierObject?.userTier
-  const canAccess = canAccessPost(userTier, initial.data.minimumTier)
+  const canAccess =
+    userRole === 'admin'
+      ? true
+      : canAccessPost(userTier, initial.data.minimumTier)
+
   if (!canAccess) {
     redirect(`/browse/preview/${params.slug}`)
   }
 
   return (
-    <>
+    <div className="relative w-full">
       <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start z-[10]">
         <Suspense
           fallback={
@@ -80,7 +85,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
           {initial.data.title}
         </h1>
       </div>
-      <PostPage data={initial.data} />
-    </>
+      <PostPage data={initial.data} userRole={userRole} />
+    </div>
   )
 }
