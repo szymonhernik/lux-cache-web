@@ -48,11 +48,11 @@ export function PostPage({
 
   return (
     <>
-      {userRole === 'admin' && (
+      {/* {userRole === 'admin' && (
         <div className=" fixed left-0 bottom-0 z-[9999] w-full  lg:w-[calc(100vw-var(--width-navbar))] text-center text-sm py-4 bg-green-300 ">
           Your are viewing this post with {userRole} privileges
         </div>
-      )}
+      )} */}
       <article className="max-w-4xl mx-auto">
         {/* Post content */}
         <div className=" mx-auto my-24 px-4  space-y-20  ">
