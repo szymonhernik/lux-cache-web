@@ -10,6 +10,7 @@ import { draftMode } from 'next/headers'
 import BrowsePreview from './BrowsePreview'
 import { Suspense } from 'react'
 import BrowsePageWrapper from './BrowsePageWrapper'
+import { LoadingSpinner } from '@/components/Spinner'
 
 export interface BrowsePageProps {
   data?: InitialPostsQueryResult | null
@@ -28,29 +29,28 @@ export default async function BrowsePage({
   // const { posts } = previewData || {}
   return (
     <>
-      <Suspense fallback={<div>Loading...</div>}>
-        <BrowsePageWrapper>
-          <div className="z-[10] sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-            <Toolbar />
-          </div>
-          <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[8]  lg:sticky top-0  left-0 bg-surface-brand">
-            {data && <DynamicDisplayBar data={data.highlight} />}
-          </section>
-          <section data-listattr={true} className="lg:grow lg:mb-16 ">
-            {draftMode().isEnabled ? (
-              <BrowsePreview />
-            ) : !draftMode().isEnabled && data ? (
-              <Suspense>
-                <ObservableGrid
-                  data={data.posts}
-                  // key={Math.random()}
-                  encodeDataAttribute={encodeDataAttribute}
-                />
-              </Suspense>
-            ) : null}
-          </section>
-        </BrowsePageWrapper>
-      </Suspense>
+      <BrowsePageWrapper>
+        <div className="z-[10] sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
+          <Toolbar />
+        </div>
+        <section className="h-dynamicDisplayBar min-h-dynamicDisplayBar z-[8]  lg:sticky top-0  left-0 bg-surface-brand">
+          {data && <DynamicDisplayBar data={data.highlight} />}
+        </section>
+        <section data-listattr={true} className="lg:grow lg:mb-16 ">
+          {draftMode().isEnabled ? (
+            <BrowsePreview />
+          ) : !draftMode().isEnabled && data ? (
+            <Suspense>
+              <ObservableGrid
+                data={data.posts}
+                // key={Math.random()}
+                encodeDataAttribute={encodeDataAttribute}
+              />
+            </Suspense>
+          ) : null}
+        </section>
+      </BrowsePageWrapper>
+
       {/* <div className="h-56 w-full bg-pink-100">Highlighted element</div> */}
     </>
   )
