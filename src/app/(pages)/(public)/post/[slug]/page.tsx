@@ -53,7 +53,7 @@ export default async function ProjectSlugRoute({ params }: Props) {
 
   return (
     <div className="relative w-full">
-      <div className="flex items-center gap-4 p-4 sticky top-0 left-0 flex-row-reverse md:flex-row justify-between md:justify-start z-[10]">
+      <div className="flex items-center gap-4 p-4 sticky -top-16 left-0 flex-row-reverse md:flex-row justify-between md:justify-start z-[10]">
         <Suspense
           fallback={
             <div className="flex gap-2">
