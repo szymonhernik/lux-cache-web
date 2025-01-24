@@ -36,7 +36,7 @@ export default function ContentHeadlines(props: Props) {
             <span key={artist._key} className="font-serif">
               {artist.artistRef?.slug ? (
                 <Link
-                  href={`/artist/${artist.artistRef.slug}`}
+                  href={`browse/results/artists/${artist.artistRef.slug}`}
                   className="underline"
                 >
                   {artist.artistRef?.name}
