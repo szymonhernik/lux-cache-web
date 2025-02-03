@@ -49,6 +49,7 @@
     "@radix-ui/react-toast": "^1.1.5",
     "@radix-ui/react-tooltip": "^1.1.2",
     "@react-email/components": "^0.0.17",
+    "@sanity/client": "^6.27.2",
     "@sanity/icons": "^2.11.8",
     "@sanity/image-url": "1.0.2",
     "@sanity/preview-url-secret": "1.6.12",
