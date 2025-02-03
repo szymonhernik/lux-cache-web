@@ -17,7 +17,7 @@ export default function LoadMore({
   view,
   onHover,
   userTier,
-  userRole,
+  userRoles,
   isLoadingSubscriptions,
   onFirstFilteredPost,
   isDesktop,
@@ -27,7 +27,7 @@ export default function LoadMore({
   view: string | null
   onHover: (previewVideo: PreviewVideoType) => void
   userTier?: number
-  userRole?: string
+  userRoles?: string[]
   isLoadingSubscriptions?: boolean
   onFirstFilteredPost?: (firstFilteredPost: PreviewVideoType) => void // Add this prop
   isDesktop: boolean
@@ -95,7 +95,7 @@ export default function LoadMore({
                     item={post}
                     isLoading={isLoadingSubscriptions}
                     userTier={userTier}
-                    userRole={userRole}
+                    userRoles={userRoles}
                   />
                 </Suspense>
               </PostWrapper>

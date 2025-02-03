@@ -24,7 +24,7 @@ export default function ListItem({
   isTouchDevice,
   encodeDataAttribute,
   userTier,
-  userRole,
+  userRoles,
   isLoading,
   isDesktop
 }: {
@@ -33,7 +33,7 @@ export default function ListItem({
     | PostsQueryResult['posts'][number] // this is used in draft mode
   encodeDataAttribute?: EncodeDataAttributeCallback
   userTier?: number
-  userRole?: string
+  userRoles?: string[]
   isLoading?: boolean
   isDesktop: boolean
   isTouchDevice: boolean
@@ -56,8 +56,9 @@ export default function ListItem({
     threshold: 0.8
   })
 
-  const canAccess =
-    userRole === 'admin' ? true : canAccessPost(userTier, item.minimumTier)
+  const canAccess = userRoles?.includes('admin')
+    ? true
+    : canAccessPost(userTier, item.minimumTier)
 
   //  Simple check to detect if JS is enabled
   const [js, setJs] = useState(false)
@@ -132,7 +133,7 @@ export default function ListItem({
             <LockClosedIcon className="min-w-4 min-h-4" />
           </div>
         )}
-        {userRole === 'admin' && (
+        {userRoles?.includes('admin') && (
           <div className="absolute top-3 right-3 p-2 shadow  bg-opacity-50 backdrop-blur group-hover:bg-neutral-200 transition-colors rounded-full ">
             <FaceIcon className="min-w-4 min-h-4" />
           </div>

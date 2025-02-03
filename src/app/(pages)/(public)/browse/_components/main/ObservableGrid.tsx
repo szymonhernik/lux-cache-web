@@ -63,7 +63,7 @@ export default function ObservableGrid({
   }, [])
 
   const { data: userTier = 0, isLoading } = useSubscription(sessionExpiresAt)
-  const { data: userRole = '' } = useUserRole(sessionExpiresAt)
+  const { data: userRoles = [] } = useUserRole(sessionExpiresAt)
 
   const handleHover = useCallback(
     (previewVideo: PreviewVideoType) => {
@@ -188,7 +188,7 @@ export default function ObservableGrid({
                             isTouchDevice={isTouchDevice}
                             item={post}
                             userTier={userTier}
-                            userRole={userRole}
+                            userRoles={userRoles}
                             isLoading={isLoading}
                             encodeDataAttribute={encodeDataAttribute}
                           />
@@ -204,7 +204,7 @@ export default function ObservableGrid({
                   view={view}
                   isTouchDevice={isTouchDevice}
                   userTier={userTier}
-                  userRole={userRole}
+                  userRoles={userRoles}
                   isLoadingSubscriptions={isLoading}
                   onHover={handleHover}
                   onFirstFilteredPost={handleFirstFilteredPost}
@@ -218,7 +218,7 @@ export default function ObservableGrid({
               isTouchDevice
               view={view}
               userTier={userTier}
-              userRole={userRole}
+              userRoles={userRoles}
               isLoadingSubscriptions={isLoading}
               onHover={handleHover}
               onFirstFilteredPost={handleFirstFilteredPost}
