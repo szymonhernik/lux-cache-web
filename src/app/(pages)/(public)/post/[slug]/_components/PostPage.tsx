@@ -14,13 +14,13 @@ import { Badge } from '@/components/shadcn/ui/badge'
 export interface PostPageProps {
   data: PostBySlugQueryResult | null
   encodeDataAttribute?: EncodeDataAttributeCallback
-  userRole?: string
+  userRoles?: string[]
 }
 
 export function PostPage({
   data,
   encodeDataAttribute,
-  userRole
+  userRoles
 }: PostPageProps) {
   const {
     _id,

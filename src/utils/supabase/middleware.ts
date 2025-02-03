@@ -62,9 +62,19 @@ export const updateSession = async (request: NextRequest) => {
     const session = await supabase.auth.getSession()
     if (session.data.session) {
       const decodedJwt = decodeJwt(session.data.session.access_token)
-      const userRole = decodedJwt.user_role
+      const userRoles = (decodedJwt.user_roles as string[]) || []
+      // console.log('userRoles:', userRoles)
+      // userRoles: [ 'admin', 'contributor' ]
+      // if someone is trying to access admin page without being admin, redirect to about page
+      if (
+        request.nextUrl.pathname.startsWith('/admin') &&
+        !userRoles.includes('admin')
+      ) {
+        return NextResponse.redirect(new URL('/about', request.url))
+      }
 
-      response.headers.set('x-user-role', userRole as string)
+      // response.headers.set('x-user-role', userRole as string)
+      response.headers.set('x-user-roles', userRoles.join(',') as string)
     }
   } catch (e) {
     console.error('JWT Error:', e)

@@ -60,15 +60,17 @@ export const getUserTier = cache(async (supabase: SupabaseClient) => {
   return { userTier, productName }
 })
 
-export const getUserRole = cache(async (supabase: SupabaseClient) => {
-  const { data: userRole, error } = await supabase
+export const getUserRoles = cache(async (supabase: SupabaseClient) => {
+  const { data: userRoles, error } = await supabase
     .from('user_roles')
     .select('role')
-    .maybeSingle()
+
   if (error) {
-    console.error('Error fetching user role:', error)
+    console.error('Error fetching user roles:', error)
   }
-  return userRole?.role as string
+
+  // Return array of roles or empty array if none found
+  return userRoles?.map((ur) => ur.role as string) || []
 })
 
 // export const getProducts = cache(async (supabase: SupabaseClient) => {

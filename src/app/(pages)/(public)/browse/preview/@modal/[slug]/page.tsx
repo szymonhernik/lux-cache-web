@@ -2,7 +2,7 @@ import { loadPostModal } from '@/sanity/loader/loadQuery'
 
 import ModalPage from '@/components/pages/modal/ModalPage'
 import { createClient } from '@/utils/supabase/server'
-import { getUserRole, getUserTier } from '@/utils/supabase/queries'
+import { getUserRoles, getUserTier } from '@/utils/supabase/queries'
 import { canAccessPost } from '@/utils/helpers/subscriptionUtils'
 import { notFound } from 'next/navigation'
 
@@ -18,10 +18,11 @@ export default async function Page({ params }: { params: { slug: string } }) {
 
   const supabase = createClient()
   const subscriptionTier = await getUserTier(supabase)
-  const userRole = await getUserRole(supabase)
+  const userRole = await getUserRoles(supabase)
   const userTier = subscriptionTier?.userTier
-  const canAccess =
-    userRole === 'admin' ? true : canAccessPost(userTier, data.minimumTier)
+  const canAccess = userRole.includes('admin')
+    ? true
+    : canAccessPost(userTier, data.minimumTier)
 
   return <ModalPage data={data} canAccess={canAccess} />
 }
