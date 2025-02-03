@@ -50,12 +50,12 @@ export default function UpdatePaymentMethod({
     setShowPaymentElement(false)
     try {
       const data = await retrievePaymentMethods(stripeCustomerId)
-      console.log('data', data)
+      // console.log('data', data)
 
       //   for now validation assumes the only available payment method atm is card
       const validatedListOfCards = StoredPaymentCardsSchema.safeParse(data)
       if (!validatedListOfCards.success) {
-        console.log('validation failed')
+        // console.log('validation failed')
         console.error(validatedListOfCards.error.issues)
         return
       } else {

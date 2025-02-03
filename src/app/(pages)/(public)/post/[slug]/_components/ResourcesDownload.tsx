@@ -71,7 +71,7 @@ export default function ResourcesDownload(props: PropsType) {
     size: number | null
   ) => {
     const bunnyCdnUrl = replaceUrl(url, size)
-    console.log('Downloading from:', bunnyCdnUrl)
+    // console.log('Downloading from:', bunnyCdnUrl)
 
     // Trigger the download
     const link = document.createElement('a')

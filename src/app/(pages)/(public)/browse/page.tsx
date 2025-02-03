@@ -5,19 +5,13 @@ import { loadInitalPosts } from '@/sanity/loader/loadQuery'
 import BrowsePage from './_components/main/BrowsePage'
 import { limitNumber } from '@/utils/fetch-helpers/client'
 import { LoadingSpinner } from '@/components/Spinner'
+import { SpinnerContainer } from '@/components/shared/SpinnerContainer'
 
 export default function Page() {
   return (
     <Suspense fallback={<SpinnerContainer />}>
       <BrowsePageContent />
     </Suspense>
-  )
-}
-function SpinnerContainer() {
-  return (
-    <div className="flex justify-center items-center h-screen">
-      <LoadingSpinner />
-    </div>
   )
 }
 
