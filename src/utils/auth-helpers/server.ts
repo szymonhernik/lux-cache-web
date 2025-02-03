@@ -10,6 +10,7 @@ import { isAuthenticated } from '../data/auth'
 import { checkRateLimit, checkStrictRateLimit } from '../upstash/helpers'
 import {
   emailUpdateSchema,
+  inviteContributorSchema,
   nameUpdateSchema,
   passwordResetSchema,
   PasswordResetSchema,
@@ -21,6 +22,7 @@ import {
   signUpSchema,
   SignUpSchema
 } from '../types/zod/auth'
+import { assignRoleToUser } from '../supabase/admin'
 
 export async function redirectToPath(path: string) {
   return redirect(path)
@@ -437,3 +439,62 @@ export async function updatePasswordInAccountDashboard(formData: FormData) {
 
   return redirectPath
 }
+
+export async function inviteContributor(formData: FormData) {
+  // zod validation
+  const result = inviteContributorSchema.safeParse({
+    email: String(formData.get('email'))
+  })
+  if (!result.success) {
+    return getErrorRedirect(
+      '/admin',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
+  // Check if the current user is an admin
+  const supabase = createClient()
+  const { data: user, error: userError } = await supabase.auth.getUser()
+  if (userError) {
+    throw new Error('Unauthorized')
+  }
+  const { data: roles } = await supabase
+    .from('user_roles')
+    .select('role')
+    .eq('user_id', user.user.id)
+    .single()
+
+  if (!roles || roles.role !== 'admin') {
+    throw new Error('Unauthorized')
+  }
+  try {
+    // Use the admin client to assign the role
+    await assignRoleToUser(result.data.email, 'contributor')
+
+    return getStatusRedirect(
+      '/admin',
+      'Success!',
+      `Contributor role assigned to ${result.data.email}`
+    )
+  } catch (error) {
+    console.error('Failed to assign contributor role:', error)
+    return getErrorRedirect(
+      '/admin',
+      'Operation failed',
+      'Failed to assign contributor role. The user might not exist in the system.'
+    )
+  }
+}
+
+// export async function inviteContributor(formData: FormData) {
+// check if authenticated
+// check if user has user_roles = admin
+//   Implement the logic in your application to handle role assignments. This involves:
+// Fetching the user ID based on the email provided.
+// Inserting a new role for that user in the user_roles table.
+// Example SQL for Application Logic
+// -- Fetch user ID by email
+// SELECT id FROM users WHERE email = 'user@example.com';
+// -- Insert contributor role for the user
+// INSERT INTO user_roles (user_id, role) VALUES (fetched_user_id, 'contributor');
+// }

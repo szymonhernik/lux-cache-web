@@ -1,6 +1,6 @@
 import { toDateTime } from '@/utils/helpers'
 import { stripe } from '@/utils/stripe/config'
-import { createClient } from '@supabase/supabase-js'
+import { createClient, User } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import type { Database, Tables, TablesInsert } from 'types_db'
 
@@ -330,4 +330,37 @@ export async function updateDiscordIntegration(
     console.error('Error updating Discord integration:', error)
     throw error
   }
+}
+
+// Function to assign a role to a user
+export const assignRoleToUser = async (email: string, role: string) => {
+  const {
+    data: { users },
+    error: listError
+  } = await supabaseAdmin.auth.admin.listUsers()
+
+  if (listError) {
+    throw new Error(`User list retrieval failed: ${listError.message}`)
+  }
+
+  const user = users.find((u: User) => u.email === email)
+
+  if (!user) {
+    throw new Error('User not found')
+  }
+
+  const { error: upsertError } = await supabaseAdmin
+    .from('user_roles')
+    .upsert(
+      { user_id: user.id, role: role as 'admin' | 'moderator' | 'contributor' },
+      { onConflict: 'user_id,role', ignoreDuplicates: true }
+    )
+
+  if (upsertError) {
+    throw new Error(`Role assignment failed: ${upsertError.message}`)
+  }
+
+  console.log(
+    `Role '${role}' assigned/confirmed for user with email '${email}'.`
+  )
 }

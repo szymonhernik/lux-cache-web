@@ -48,6 +48,10 @@ export const emailUpdateSchema = z.object({
   newEmail: authSchema.email
 })
 
+export const inviteContributorSchema = z.object({
+  email: z.string().email('Please enter a valid email')
+})
+
 export const nameUpdateSchema = z.object({
   fullName: z
     .string()
