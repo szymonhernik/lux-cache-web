@@ -9,10 +9,17 @@ import clsx from 'clsx'
 import { usePathname, useRouter } from 'next/navigation'
 
 import s from './Navbar.module.css'
-import { links } from '../GlobalNav'
-import MobileAccountDrawer from './MobileAccountDrawer'
 
-export default function MobileNavbar() {
+import MobileAccountDrawer from './MobileAccountDrawer'
+import { links } from '../_data/NavLinks'
+import { SettingsQueryResult } from '@/utils/types/sanity/sanity.types'
+import SocialLinks from './SocialLinks'
+
+export default function MobileNavbar({
+  socialLinks
+}: {
+  socialLinks: NonNullable<SettingsQueryResult>['linksSocials']
+}) {
   const pathname = usePathname()
   const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
@@ -80,15 +87,7 @@ export default function MobileNavbar() {
               )
             })}
           </div>
-          <div className="text-zinc-500 flex flex-col text-sm gap-2">
-            <a href="">
-              <span>↳</span> discord
-            </a>
-            <a href="">
-              <span>↳</span> instagram
-            </a>
-            <Link href="/">Subscribe to newsletter</Link>
-          </div>
+          <SocialLinks socialLinks={socialLinks} />
         </nav>
       </div>
     </div>

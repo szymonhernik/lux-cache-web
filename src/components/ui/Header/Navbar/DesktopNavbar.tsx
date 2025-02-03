@@ -5,9 +5,15 @@ import Logo from '@/components/icons/Logo'
 
 import clsx from 'clsx'
 import { usePathname, useRouter } from 'next/navigation'
-import { links } from '../GlobalNav'
+import { links } from '../_data/NavLinks'
+import { SettingsQueryResult } from '@/utils/types/sanity/sanity.types'
+import SocialLinks from './SocialLinks'
 
-export default function DesktopNavbar() {
+export default function DesktopNavbar({
+  socialLinks
+}: {
+  socialLinks: NonNullable<SettingsQueryResult>['linksSocials']
+}) {
   const pathname = usePathname()
   const router = useRouter()
 
@@ -55,15 +61,7 @@ export default function DesktopNavbar() {
               )
             })}
           </div>
-          <div className="text-zinc-500 flex flex-col text-sm gap-2">
-            <a href="">
-              <span>↳</span> discord
-            </a>
-            <a href="">
-              <span>↳</span> instagram
-            </a>
-            <Link href="/">Subscribe to newsletter</Link>
-          </div>
+          <SocialLinks socialLinks={socialLinks} />
         </nav>
       </div>
     </div>

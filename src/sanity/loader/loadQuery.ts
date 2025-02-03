@@ -4,9 +4,7 @@ import * as queryStore from '@sanity/react-loader'
 import { draftMode } from 'next/headers'
 
 import { token } from '@/sanity/lib/token'
-import {
-  SettingsPayload
-} from '@/utils/types/sanity'
+import { SettingsPayload } from '@/utils/types/sanity'
 import {
   bookmarkedQuery,
   filterGroupsQuery,
@@ -31,7 +29,8 @@ import {
   PostsByArtistSlugQueryResult,
   PostsBySeriesSlugQueryResult,
   PostsQueryResult,
-  PricesQueryResult
+  PricesQueryResult,
+  SettingsQueryResult
 } from '@/utils/types/sanity/sanity.types'
 
 const serverClient = client.withConfig({
@@ -193,5 +192,13 @@ export function loadPage(slug: string) {
     pageBySlugQuery,
     { slug },
     { next: { tags: [`page:${slug}`] } }
+  )
+}
+
+export function getSettings() {
+  return loadQuery<SettingsQueryResult>(
+    settingsQuery,
+    {},
+    { next: { tags: ['settings'] } }
   )
 }

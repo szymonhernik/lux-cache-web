@@ -295,8 +295,6 @@ export type MentorsGallery = {
   }>
 }
 
-export type AsyncList = never
-
 export type Faq = {
   _type: 'faq'
   faqItems?: Array<{
@@ -469,17 +467,6 @@ export type Series = {
   _rev: string
   title?: string
   slug?: Slug
-}
-
-export type Plan = {
-  _id: string
-  _type: 'plan'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  planName?: string
-  visualHelper?: string
-  index?: number
 }
 
 export type Templates = {
@@ -928,14 +915,12 @@ export type AllSanitySchemaTypes =
   | BlockContentAdvanced
   | TemplateText
   | MentorsGallery
-  | AsyncList
   | Faq
   | MainBody
   | BlockContentSimple
   | IntroText
   | BlockContent
   | Series
-  | Plan
   | Templates
   | FilterGroup
   | FilterItem
@@ -1102,7 +1087,7 @@ export type MorePostsQueryResult = {
   }>
 }
 // Variable: searchQuery
-// Query:   {    "artists": *[_type == "artist" && name match $searchValue + "*"]{      _id,      name,      "slug": slug.current,      image,    },    "posts": *[_type == "post" && title match $searchValue + "*"]{      _id,      title,      publishedAt,      "slug": slug.current,      series[]->{        _id,        title,      },    },    "series": *[_type== "series" && title match $searchValue + "*"]{      _id,      title,      "slug": slug.current,    },    "hiddenTags": *[_type == 'post' && hiddenTags match $searchValue + "*"]{      _id,      title,      "slug": slug.current,      publishedAt,      series[]->{        _id,        title,      },    }  }
+// Query: {    "artists": *[_type == "artist" && name match $searchValue + "*"]{      _id,      name,      "slug": slug.current,      image,    },    "posts": *[_type == "post" && title match $searchValue + "*"]{      _id,      title,      publishedAt,      "slug": slug.current,      series[]->{        _id,        title,      },    },    "series": *[_type== "series" && title match $searchValue + "*"]{      _id,      title,      "slug": slug.current,    },    "hiddenTags": *[_type == 'post' && hiddenTags match $searchValue + "*"]{      _id,      title,      "slug": slug.current,      publishedAt,      series[]->{        _id,        title,      },    }  }
 export type SearchQueryResult = {
   artists: Array<{
     _id: string
@@ -1148,7 +1133,7 @@ export type SearchQueryResult = {
   }>
 }
 // Variable: filterByTagsQuery
-// Query:   *[_type == "post" && count((filters[]->slug.current)[@ in $tagsSelected]) == count($tagsSelected)]{    _id,    filters[]->{      "slug": slug.current    }  }
+// Query: *[_type == "post" && count((filters[]->slug.current)[@ in $tagsSelected]) == count($tagsSelected)]{    _id,    filters[]->{      "slug": slug.current    }  }
 export type FilterByTagsQueryResult = Array<{
   _id: string
   filters: Array<{
@@ -1156,12 +1141,50 @@ export type FilterByTagsQueryResult = Array<{
   }> | null
 }>
 // Variable: searchQueryDefault
-// Query:   {    "artists": *[_type == "artist" && name match "*a*" ][0..0]{      _id,      name,      "slug": slug.current,      image,    },    "posts": *[_type == "post" && title match "*a*" ][0..0]{      _id,      title,      publishedAt,      "slug": slug.current,      series[]->{        _id,        title,      },    },    "series": *[_type == "series" && title match "*a*" ][0..0]{      _id,      title,      "slug": slug.current,    },    "hiddenTags": *[_type == 'post' && hiddenTags match "*a*" ][0..0]{      _id,      title,      "slug": slug.current,      publishedAt,      series[]->{        _id,        title,      },    }  }
+// Query: {    "artists": *[_type == "artist" && name match "*a*" ][0..0]{      _id,      name,      "slug": slug.current,      image,    },    "posts": *[_type == "post" && title match "*a*" ][0..0]{      _id,      title,      publishedAt,      "slug": slug.current,      series[]->{        _id,        title,      },    },    "series": *[_type == "series" && title match "*a*" ][0..0]{      _id,      title,      "slug": slug.current,    },    "hiddenTags": *[_type == 'post' && hiddenTags match "*a*" ][0..0]{      _id,      title,      "slug": slug.current,      publishedAt,      series[]->{        _id,        title,      },    }  }
 export type SearchQueryDefaultResult = {
-  artists: Array<never>
-  posts: Array<never>
-  series: Array<never>
-  hiddenTags: Array<never>
+  artists: Array<{
+    _id: string
+    name: string | null
+    slug: string | null
+    image: {
+      asset?: {
+        _ref: string
+        _type: 'reference'
+        _weak?: boolean
+        [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+      }
+      hotspot?: SanityImageHotspot
+      crop?: SanityImageCrop
+      alt?: string
+      _type: 'image'
+    } | null
+  }>
+  posts: Array<{
+    _id: string
+    title: string | null
+    publishedAt: string | null
+    slug: string | null
+    series: Array<{
+      _id: string
+      title: string | null
+    }> | null
+  }>
+  series: Array<{
+    _id: string
+    title: string | null
+    slug: string | null
+  }>
+  hiddenTags: Array<{
+    _id: string
+    title: string | null
+    slug: string | null
+    publishedAt: string | null
+    series: Array<{
+      _id: string
+      title: string | null
+    }> | null
+  }>
 }
 // Variable: filterGroupsQuery
 // Query: {  "filterGroups": *[_type == "filterGroup"]{    _id,    title,    "slug": slug.current,    groupFilters[]->{      _id,      "slug":slug.current,      title,    }  }}
@@ -1178,7 +1201,7 @@ export type FilterGroupsQueryResult = {
   }>
 }
 // Variable: pricesQuery
-// Query:   *[_type == "pricing"][0]{    ...,  }
+// Query: *[_type == "pricing"][0]{    ...,  }
 export type PricesQueryResult = {
   _id: string
   _type: 'pricing'
@@ -1194,7 +1217,7 @@ export type PricesQueryResult = {
   }>
 } | null
 // Variable: postBySlugQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    episodePDF {      embedOnPage,      file {          ...,          asset-> {          url,          originalFilename          }        },     },    pageContent[]{      ...,      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
+// Query: *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    downloadFiles[] {      ...,      fileForDownload {        asset->{          url,          size,          originalFilename,          _id        }      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },    episodePDF {      embedOnPage,      file {          ...,          asset-> {          url,          originalFilename          }        },     },    pageContent[]{      ...,      _type == 'introText' => {        ...,        body[] {          ...,          _type == 'templateText' => {            ...,            "body": @->.body          },        }      },      _type == 'postContent' => {      ...,        body[] {        ...,          _type == 'audioInline' => {            ...,            audioFile {              ...,              asset-> {                playbackId              }            }          },          _type == 'video' => {            ...,            videoFile {              ...,              asset-> {                playbackId              }            }          }        }      }    }  }
 export type PostBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1406,7 +1429,7 @@ export type PostBySlugQueryResult = {
   > | null
 } | null
 // Variable: postBySlugModalQuery
-// Query:   *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },  }
+// Query: *[_type == "post" && slug.current == $slug][0] {    _id,     title,     subtitle,    artistList[]{      additionalContext,      _key,      artistRef->{        name,        "slug": slug.current,      }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },  }
 export type PostBySlugModalQueryResult = {
   _id: string
   title: string | null
@@ -1436,7 +1459,7 @@ export type PostBySlugModalQueryResult = {
   }> | null
 } | null
 // Variable: bookmarkedQuery
-// Query:   *[_type =="post" && defined(slug) && _id in $ids] {    _id,    title,    coverImage,    subtitle,    "slug": slug.current  }
+// Query: *[_type =="post" && defined(slug) && _id in $ids] {    _id,    title,    coverImage,    subtitle,    "slug": slug.current  }
 export type BookmarkedQueryResult = Array<{
   _id: string
   title: string | null
@@ -1455,7 +1478,7 @@ export type BookmarkedQueryResult = Array<{
   slug: string | null
 }>
 // Variable: postsByArtistSlugQuery
-// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}    
+// Query: { "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }}
 export type PostsByArtistSlugQueryResult = {
   results: {
     _id: string
@@ -1523,7 +1546,7 @@ export type PostsByArtistSlugQueryResult = {
   } | null
 }
 // Variable: postsBySeriesSlugQuery
-// Query:  {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }    
+// Query: {"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{    ...,      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {            _id,     title,     subtitle,    artistList[]{    additionalContext,    _key,     artistRef->{      name,      "slug": slug.current,     }    },    publishedAt,     "slug": slug.current,    coverImage{      _type,      asset->{        _id,        url,        "lqip": metadata.lqip,      }    },    previewVideo {      generatedBase64,      video {        _key,        _type,        format,         public_id      }    },    minimumTier,    ogDescription,    filters[]->{      "slug": slug.current    },        }    }      }
 export type PostsBySeriesSlugQueryResult = {
   results: {
     _id: string
@@ -1573,7 +1596,7 @@ export type PostsBySeriesSlugQueryResult = {
   } | null
 }
 // Variable: pageBySlugQuery
-// Query:     *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    pageContent[]{      ...,      _type == 'mainBody' => {        ...,      },      _type == 'faq' => {        ...,      }    }  }
+// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    pageContent[]{      ...,      _type == 'mainBody' => {        ...,      },      _type == 'faq' => {        ...,      }    }  }
 export type PageBySlugQueryResult = {
   _id: string
   title: string | null
@@ -1727,7 +1750,7 @@ export type PageBySlugQueryResult = {
   > | null
 } | null
 // Variable: settingsQuery
-// Query:   *[_type == "settings"][0]{    ogImage  }
+// Query: *[_type == "settings"][0]{    ogImage,    linksSocials  }
 export type SettingsQueryResult = {
   ogImage: {
     asset?: {
@@ -1740,6 +1763,11 @@ export type SettingsQueryResult = {
     crop?: SanityImageCrop
     _type: 'image'
   } | null
+  linksSocials: Array<{
+    linkTitle?: string
+    linkURL?: string
+    _key: string
+  }> | null
 } | null
 // Variable: filterExample
 // Query: {  "initialPosts": *[    _type == "post" &&      (!defined($selectedFiltersArray) || $selectedFiltersArray == [] ||       count(        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)      )    ] | order(publishedAt desc) [0...$limit] {    _id,     title,     artistList,    publishedAt,     "slug": slug.current,    coverImage,    coverVideo,    filters[]->{      "slug": slug.current    },    minimumTier,    ogDescription,  }}
@@ -1778,4 +1806,27 @@ export type FilterExampleResult = {
     minimumTier: '0' | '1' | '2' | '3' | null
     ogDescription: string | null
   }>
+}
+
+// Query TypeMap
+import '@sanity/client'
+declare module '@sanity/client' {
+  interface SanityQueries {
+    '{\n  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) {\n    \n    _id, \n    title, \n    subtitle,\n    artistList[]{\n    additionalContext,\n    _key,\n     artistRef->{\n      name,\n      "slug": slug.current,\n     }\n    },\n    publishedAt, \n    "slug": slug.current,\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    previewVideo {\n      generatedBase64,\n      video {\n        _key,\n        _type,\n        format, \n        public_id\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n  \n\n  }\n}': PostsQueryResult
+    '{\n  "posts": *[_type == "post" && defined(slug)] | order(publishedAt desc) [0...20] {\n    \n    _id, \n    title, \n    subtitle,\n    artistList[]{\n    additionalContext,\n    _key,\n     artistRef->{\n      name,\n      "slug": slug.current,\n     }\n    },\n    publishedAt, \n    "slug": slug.current,\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    previewVideo {\n      generatedBase64,\n      video {\n        _key,\n        _type,\n        format, \n        public_id\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n  \n\n  },\n  "highlight": *[_type == "home"][0]{\n    highlight->{\n      _type,\n      "slug": slug.current,\n      coverImage,\n      title,\n    },\n  },\n}': InitialPostsQueryResult
+    '{\n  "posts": *[\n    _type == "post" &&  \n    ( !defined($lastPublishedAt) || (\n      publishedAt < $lastPublishedAt\n      || (publishedAt == $lastPublishedAt && _id < $lastId)\n    )) && \n    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || \n      count(\n        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)\n      )\n    ] | order(publishedAt desc) [0...20] {\n    \n    _id, \n    title, \n    subtitle,\n    artistList[]{\n    additionalContext,\n    _key,\n     artistRef->{\n      name,\n      "slug": slug.current,\n     }\n    },\n    publishedAt, \n    "slug": slug.current,\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    previewVideo {\n      generatedBase64,\n      video {\n        _key,\n        _type,\n        format, \n        public_id\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n  \n\n  }\n}': MorePostsQueryResult
+    '\n  {\n    "artists": *[_type == "artist" && name match $searchValue + "*"]{\n      _id,\n      name,\n      "slug": slug.current,\n      image,\n    },\n    "posts": *[_type == "post" && title match $searchValue + "*"]{\n      _id,\n      title,\n      publishedAt,\n      "slug": slug.current,\n      series[]->{\n        _id,\n        title,\n      },\n    },\n    "series": *[_type== "series" && title match $searchValue + "*"]{\n      _id,\n      title,\n      "slug": slug.current,\n    },\n    "hiddenTags": *[_type == \'post\' && hiddenTags match $searchValue + "*"]{\n      _id,\n      title,\n      "slug": slug.current,\n      publishedAt,\n      series[]->{\n        _id,\n        title,\n      },\n    }\n  }\n': SearchQueryResult
+    '\n  *[_type == "post" && count((filters[]->slug.current)[@ in $tagsSelected]) == count($tagsSelected)]{\n    _id,\n    filters[]->{\n      "slug": slug.current\n    }\n  }': FilterByTagsQueryResult
+    '\n  {\n    "artists": *[_type == "artist" && name match "*a*" ][0..0]{\n      _id,\n      name,\n      "slug": slug.current,\n      image,\n    },\n    "posts": *[_type == "post" && title match "*a*" ][0..0]{\n      _id,\n      title,\n      publishedAt,\n      "slug": slug.current,\n      series[]->{\n        _id,\n        title,\n      },\n    },\n    "series": *[_type == "series" && title match "*a*" ][0..0]{\n      _id,\n      title,\n      "slug": slug.current,\n    },\n    "hiddenTags": *[_type == \'post\' && hiddenTags match "*a*" ][0..0]{\n      _id,\n      title,\n      "slug": slug.current,\n      publishedAt,\n      series[]->{\n        _id,\n        title,\n      },\n    }\n  }\n': SearchQueryDefaultResult
+    '{\n  "filterGroups": *[_type == "filterGroup"]{\n    _id,\n    title,\n    "slug": slug.current,\n    groupFilters[]->{\n      _id,\n      "slug":slug.current,\n      title,\n    }\n  }\n}': FilterGroupsQueryResult
+    '\n  *[_type == "pricing"][0]{\n    ...,\n  }': PricesQueryResult
+    '\n  *[_type == "post" && slug.current == $slug][0] {\n    _id, \n    title, \n    subtitle,\n    artistList[]{\n      additionalContext,\n      _key,\n      artistRef->{\n        name,\n        "slug": slug.current,\n      }\n    },\n    downloadFiles[] {\n      ...,\n      fileForDownload {\n        asset->{\n          url,\n          size,\n          originalFilename,\n          _id\n        }\n      }\n    },\n    publishedAt, \n    "slug": slug.current,\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n    episodePDF {\n      embedOnPage,\n      file {\n          ...,\n          asset-> {\n          url,\n          originalFilename\n          }\n        }, \n    },\n    pageContent[]{\n      ...,\n      _type == \'introText\' => {\n        ...,\n        body[] {\n          ...,\n          _type == \'templateText\' => {\n            ...,\n            "body": @->.body\n          },\n        }\n      },\n      _type == \'postContent\' => {\n      ...,\n        body[] {\n        ...,\n          _type == \'audioInline\' => {\n            ...,\n            audioFile {\n              ...,\n              asset-> {\n                playbackId\n              }\n            }\n          },\n          _type == \'video\' => {\n            ...,\n            videoFile {\n              ...,\n              asset-> {\n                playbackId\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n': PostBySlugQueryResult
+    '\n  *[_type == "post" && slug.current == $slug][0] {\n    _id, \n    title, \n    subtitle,\n    artistList[]{\n      additionalContext,\n      _key,\n      artistRef->{\n        name,\n        "slug": slug.current,\n      }\n    },\n    publishedAt, \n    "slug": slug.current,\n\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n  }\n': PostBySlugModalQueryResult
+    '\n  *[_type =="post" && defined(slug) && _id in $ids] {\n    _id,\n    title,\n    coverImage,\n    subtitle,\n    "slug": slug.current\n  }\n\n': BookmarkedQueryResult
+    '\n{ "results": *[_type == "artist" && defined(slug) && slug.current == $slug][0]{\n    ...,\n      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {\n        \n    _id, \n    title, \n    subtitle,\n    artistList[]{\n    additionalContext,\n    _key,\n     artistRef->{\n      name,\n      "slug": slug.current,\n     }\n    },\n    publishedAt, \n    "slug": slug.current,\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    previewVideo {\n      generatedBase64,\n      video {\n        _key,\n        _type,\n        format, \n        public_id\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n  \n\n      }\n    }\n}\n    \n': PostsByArtistSlugQueryResult
+    '\n {\n"results": *[_type == "series" && defined(slug) && slug.current == $slug][0]{\n    ...,\n      "posts": *[_type == "post" && defined(slug) && references(^._id)] | order(publishedAt desc) {\n        \n    _id, \n    title, \n    subtitle,\n    artistList[]{\n    additionalContext,\n    _key,\n     artistRef->{\n      name,\n      "slug": slug.current,\n     }\n    },\n    publishedAt, \n    "slug": slug.current,\n    coverImage{\n      _type,\n      asset->{\n        _id,\n        url,\n        "lqip": metadata.lqip,\n      }\n    },\n    previewVideo {\n      generatedBase64,\n      video {\n        _key,\n        _type,\n        format, \n        public_id\n      }\n    },\n    minimumTier,\n    ogDescription,\n    filters[]->{\n      "slug": slug.current\n    },\n  \n\n      }\n    }\n      }\n    \n': PostsBySeriesSlugQueryResult
+    '\n  \n  *[_type == "page" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    pageContent[]{\n      ...,\n      _type == \'mainBody\' => {\n        ...,\n      },\n      _type == \'faq\' => {\n        ...,\n      }\n    }\n  }\n\n': PageBySlugQueryResult
+    '\n  *[_type == "settings"][0]{\n    ogImage,\n    linksSocials\n  }\n': SettingsQueryResult
+    '{\n  "initialPosts": *[\n    _type == "post" &&  \n    (!defined($selectedFiltersArray) || $selectedFiltersArray == [] || \n      count(\n        (filters[]->slug.current)[@ in $selectedFiltersArray]) == count($selectedFiltersArray)\n      )\n    ] | order(publishedAt desc) [0...$limit] {\n    _id, \n    title, \n    artistList,\n    publishedAt, \n    "slug": slug.current,\n    coverImage,\n    coverVideo,\n    filters[]->{\n      "slug": slug.current\n    },\n    minimumTier,\n    ogDescription,\n  }\n}': FilterExampleResult
+  }
 }

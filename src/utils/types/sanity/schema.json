@@ -1806,14 +1806,6 @@
     }
   },
   {
-    "name": "asyncList",
-    "type": "type",
-    "value": {
-      "type": "union",
-      "of": []
-    }
-  },
-  {
     "name": "faq",
     "type": "type",
     "value": {
@@ -2972,64 +2964,6 @@
         "value": {
           "type": "inline",
           "name": "slug"
-        },
-        "optional": true
-      }
-    }
-  },
-  {
-    "name": "plan",
-    "type": "document",
-    "attributes": {
-      "_id": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "_type": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string",
-          "value": "plan"
-        }
-      },
-      "_createdAt": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "_updatedAt": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "_rev": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        }
-      },
-      "planName": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "visualHelper": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "string"
-        },
-        "optional": true
-      },
-      "index": {
-        "type": "objectAttribute",
-        "value": {
-          "type": "number"
         },
         "optional": true
       }
