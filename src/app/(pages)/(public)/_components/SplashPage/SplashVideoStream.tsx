@@ -50,6 +50,22 @@ export default function SplashVideoStream() {
 
   return (
     <>
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        style={{
+          position: 'absolute',
+          top: '0',
+          height: '100%',
+          width: '100%',
+          objectFit: 'cover',
+          opacity: isHDReady ? 1 : 0,
+          transition: 'opacity 0.5s',
+          zIndex: 1
+        }}
+      />
       <div
         style={{
           position: 'absolute',
@@ -63,21 +79,6 @@ export default function SplashVideoStream() {
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           zIndex: 0
-        }}
-      />
-      <video
-        ref={videoRef}
-        autoPlay
-        loop
-        muted
-        style={{
-          position: 'absolute',
-          top: '0',
-          height: '100%',
-          width: '100%',
-          objectFit: 'cover',
-          opacity: isHDReady ? 1 : 0,
-          transition: 'opacity 0.5s'
         }}
       />
     </>
