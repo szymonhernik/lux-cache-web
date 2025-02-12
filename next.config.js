@@ -20,6 +20,11 @@ const coreConfig = {
         protocol: 'https',
         hostname: 'cloud-lc.b-cdn.net',
         pathname: '/video/upload/**'
+      },
+      {
+        protocol: 'https',
+        hostname: 'pub-e18f0b6cf12246908bb3d80c99e28ea9.r2.dev',
+        pathname: '/output/**'
       }
     ]
   },
