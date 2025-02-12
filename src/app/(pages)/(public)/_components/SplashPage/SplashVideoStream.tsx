@@ -53,6 +53,9 @@ export default function SplashVideoStream() {
       <video
         ref={videoRef}
         autoPlay
+        playsInline
+        controls={false}
+        webkit-playsinline="true"
         loop
         muted
         style={{
