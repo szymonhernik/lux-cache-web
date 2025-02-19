@@ -126,7 +126,7 @@ function SubscriptionCard({
               </div>
             </div>
           )}
-          <RenewSubscriptionDialog subscription={subscription} />
+          {/* <RenewSubscriptionDialog subscription={subscription} /> */}
         </>
       ) : (
         <>
