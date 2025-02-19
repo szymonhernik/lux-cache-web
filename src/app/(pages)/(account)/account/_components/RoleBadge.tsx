@@ -36,7 +36,11 @@ export default async function RoleBadge({ userRoles }: { userRoles: string }) {
     <TooltipProvider>
       <div className="fixed top-4 left-4 z-50 flex gap-2 bg-primary dark:bg-gray-800 rounded-full hover:shadow-md transition-shadow duration-200 p-1">
         {userRoles.split(',').map((role) => {
-          const { icon: Icon, description } = roleInfoMap[role as Role]
+          const roleInfo = roleInfoMap[role as Role]
+          if (!roleInfo) {
+            return null
+          }
+          const { icon: Icon, description } = roleInfo
           return (
             <Tooltip key={role}>
               <TooltipTrigger asChild>
