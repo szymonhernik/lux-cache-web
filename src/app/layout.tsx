@@ -78,7 +78,7 @@ export async function generateMetadata(): Promise<Metadata> {
     creator: 'Lux Cache',
     publisher: 'Lux Cache',
     robots: meta.robots,
-    // icons: { icon: meta.favicon },
+    icons: { icon: meta.favicon },
     metadataBase: new URL(meta.url),
     openGraph: {
       url: meta.url,
