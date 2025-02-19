@@ -86,7 +86,7 @@ export function PlansDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="underline flex-1" asChild>
+      <DialogTrigger className="underline sm:flex-1" asChild>
         <Button size={'lg'} variant={'outline'} className="w-full">
           Change plan
         </Button>
@@ -226,7 +226,7 @@ export function CancelSubscriptionDialog({
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="underline flex-1" asChild>
+      <DialogTrigger className="underline sm:flex-1" asChild>
         <Button size={'lg'} variant={'outline'} className=" w-full">
           Cancel current subscription
         </Button>

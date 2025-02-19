@@ -131,7 +131,7 @@ function SubscriptionCard({
       ) : (
         <>
           <hr />
-          <div className="flex sm:flex-row flex-col gap-2 ">
+          <div className="flex sm:flex-row flex-col  gap-2 ">
             <PlansDialog products={products} subscription={subscription} />
             {` `} <CancelSubscriptionDialog subscription={subscription} />
           </div>
