@@ -11,8 +11,8 @@ export default function DynamicDisplayBar({ data }: Props) {
   return (
     <div className="w-full sm:w-3/4  h-full">
       <Link href={`/browse/preview/${slug}`} className=" ">
-        <div className="px-4 py-6  flex gap-4 h-full items-center group ">
-          <div className="  aspect-square h-full max-h-32 group-hover:opacity-80">
+        <div className="px-4 py-6  flex gap-4 h-full items-start md:items-center group ">
+          <div className=" aspect-square h-28 md:h-full md:max-h-32 group-hover:opacity-80">
             <ImageBoxArticle
               image={coverImage}
               width={300}
@@ -20,7 +20,7 @@ export default function DynamicDisplayBar({ data }: Props) {
               size="300px"
             />
           </div>
-          <div className="h-full pt-4 pl-2 ">
+          <div className="md:h-full pt-2 md:pt-4 pl-2 ">
             {' '}
             <p className="text-secondary-foreground ">Highlight</p>
             <p className="font-semibold tracking-tight group-hover:opacity-80">

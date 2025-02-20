@@ -133,7 +133,7 @@ export default function ObservableGrid({
     <div
       ref={scrollContainerRef}
       className={clsx(' relative', {
-        'overflow-x-auto   ': !view,
+        'overflow-x-auto  overscroll-none ': !view,
         'flex items-start min-h-[100vh]': view === 'list'
       })}
     >

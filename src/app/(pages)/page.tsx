@@ -1,4 +1,3 @@
-import HomePage from '@/components/pages/home/HomePage'
 // import { unstable_noStore } from 'next/cache'
 import SplashPage from './(public)/_components/SplashPage'
 
