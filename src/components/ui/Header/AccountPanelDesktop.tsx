@@ -105,14 +105,14 @@ export default function AccountPanelDesktop() {
                 >
                   <li>Bookmarks</li>
                 </Link>
-                <Link
+                {/* <Link
                   href="/help"
                   onClick={() => {
                     setOpenAccountPanel(false)
                   }}
                 >
                   <li>Help</li>
-                </Link>
+                </Link> */}
               </ul>
               <form onSubmit={handleLogout}>
                 <button type="submit" disabled={isLoggingOut}>
