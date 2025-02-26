@@ -141,7 +141,7 @@ export default function ObservableGrid({
         {view === 'list' && (
           <div
             className={clsx(
-              'hidden lg:block sticky top-dynamicDisplayBar ml-4 mr-8  bg-blue-200'
+              'hidden lg:block sticky top-[calc(var(--height-dynamic-display-bar)+var(--height-toolbar)+1rem)]  ml-4 mr-8  bg-blue-200'
             )}
           >
             <Suspense fallback={<EpisodeSkeletonListView />}>

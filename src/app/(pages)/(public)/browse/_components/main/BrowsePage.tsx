@@ -30,13 +30,13 @@ export default async function BrowsePage({
   return (
     <>
       <BrowsePageWrapper>
-        <div className="z-[10] sticky top-16 left-0 w-full lg:w-toolbarDesktop lg:fixed h-toolbar lg:top-auto lg:bottom-0   flex justify-between items-center text-xl  font-normal px-4 bg-white">
-          <Toolbar />
-        </div>
         <section className="h-40 lg:h-dynamicDisplayBar lg:min-h-dynamicDisplayBar z-[8]  lg:sticky top-0  left-0 bg-surface-brand">
           {data && <DynamicDisplayBar data={data.highlight} />}
         </section>
-        <section data-listattr={true} className="lg:grow lg:mb-16 ">
+        <div className="z-[10] sticky top-16 left-0 w-full lg:w-toolbarDesktop  h-toolbar  lg:top-dynamicDisplayBar   flex justify-between items-center text-xl  font-normal px-4 bg-white">
+          <Toolbar />
+        </div>
+        <section data-listattr={true} className="lg:grow  ">
           {draftMode().isEnabled ? (
             <BrowsePreview />
           ) : !draftMode().isEnabled && data ? (
