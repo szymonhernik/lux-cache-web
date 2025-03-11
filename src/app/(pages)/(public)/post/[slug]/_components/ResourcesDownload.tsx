@@ -44,7 +44,11 @@ export default function ResourcesDownload(props: PropsType) {
     return sizeInMB.toFixed(2) + ' MB'
   }
 
-  const replaceUrl = (url: string, size: number | null): string => {
+  const replaceUrl = (
+    url: string,
+    size: number | null,
+    filename: string
+  ): string => {
     try {
       const originalUrl = 'https://cdn.sanity.io/'
       const regularPullZone = 'https://cloud-lc-files.b-cdn.net/'
@@ -56,9 +60,15 @@ export default function ResourcesDownload(props: PropsType) {
 
       // Extract the path from the original URL
       const path = new URL(url).pathname
+      // Construct the new URL with the appropriate Bunny CDN domain, path, and download parameter
+      const basePath = `${newUrl}${path.startsWith('/') ? path.slice(1) : path}`
 
-      // Construct the new URL with the appropriate Bunny CDN domain and the original path
-      return `${newUrl}${path.startsWith('/') ? path.slice(1) : path}`
+      // Only add ?dl= parameter if filename exists and is not empty
+      if (filename && filename.trim() !== '') {
+        return `${basePath}?dl=${encodeURIComponent(filename)}`
+      }
+
+      return basePath
     } catch (error) {
       console.error('Error replacing URL:', error)
       return url // Return the original URL if there's an error
@@ -70,17 +80,36 @@ export default function ResourcesDownload(props: PropsType) {
     filename: string,
     size: number | null
   ) => {
-    const bunnyCdnUrl = replaceUrl(url, size)
+    const bunnyCdnUrl = replaceUrl(url, size, filename)
     // console.log('Downloading from:', bunnyCdnUrl)
 
-    // Trigger the download
-    const link = document.createElement('a')
-    link.target = '_blank'
-    link.href = bunnyCdnUrl
-    link.download = filename
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
+    // Create a fetch request instead of using an anchor tag
+    fetch(bunnyCdnUrl)
+      .then((response) => response.blob())
+      .then((blob) => {
+        // Create a blob URL and use it for download
+        const blobUrl = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = blobUrl
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+
+        // Clean up
+        document.body.removeChild(link)
+        URL.revokeObjectURL(blobUrl)
+      })
+      .catch((error) => {
+        console.error('Error downloading file:', error)
+        // Fallback to the original method if fetch fails
+        const link = document.createElement('a')
+        link.href = bunnyCdnUrl
+        link.download = filename
+        link.target = '_blank'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+      })
   }
 
   return (
@@ -101,7 +130,9 @@ export default function ResourcesDownload(props: PropsType) {
                   const assetUrl = file.fileForDownload?.asset?.url
                   const assetSize = file.fileForDownload?.asset?.size
                   const assetFilename =
-                    file.fileForDownload?.asset?.originalFilename
+                    file.fileForDownload?.asset?.originalFilename ??
+                    file.fileTitle ??
+                    'download'
 
                   if (assetUrl && assetSize !== undefined && assetFilename) {
                     return (
@@ -109,9 +140,10 @@ export default function ResourcesDownload(props: PropsType) {
                         key={file._key}
                         className="border rounded-md border-black w-full p-8"
                       >
-                        <a
-                          href={replaceUrl(assetUrl, assetSize)}
-                          target="_blank"
+                        <div
+                          onClick={() =>
+                            handleDownload(assetUrl, assetFilename, assetSize)
+                          }
                           className="flex gap-2 justify-between items-center cursor-pointer"
                         >
                           <div className="flex-1 min-w-0">
@@ -134,7 +166,7 @@ export default function ResourcesDownload(props: PropsType) {
                           <div className="flex-shrink-0">
                             <DownloadIcon />
                           </div>
-                        </a>
+                        </div>
                       </div>
                     )
                   }
