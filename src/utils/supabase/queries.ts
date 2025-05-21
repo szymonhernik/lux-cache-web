@@ -104,7 +104,7 @@ export const getCachedProducts = async (supabase: SupabaseClient) => {
 
       return products as ProductWithPrices[]
     },
-    ['products-cache'],
+    ['products-cache-v2'],
     { tags: ['products'] }
   )()
 }
