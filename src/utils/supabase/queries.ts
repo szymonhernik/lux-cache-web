@@ -89,8 +89,10 @@ export const getUserRoles = cache(async (supabase: SupabaseClient) => {
 // })
 
 export const getCachedProducts = async (supabase: SupabaseClient) => {
+  console.log('Fetching products from cache/database...')
   return unstable_cache(
     async () => {
+      console.log('Cache miss, fetching from database...')
       const { data: products, error } = await supabase
         .from('products')
         .select('*, prices(*)')
@@ -100,11 +102,21 @@ export const getCachedProducts = async (supabase: SupabaseClient) => {
         .order('unit_amount', { referencedTable: 'prices' })
       if (error) {
         console.error('Error fetching products:', error)
+      } else {
+        console.log(
+          'Products fetched successfully:',
+          products?.length ?? 0,
+          'products found'
+        )
+        if (products?.length === 0) {
+          console.log(
+            'No products found in database. This might indicate a sync issue with Stripe.'
+          )
+        }
       }
 
       return products as ProductWithPrices[]
     },
-
     ['products-cache'],
     { tags: ['products'] }
   )()
