@@ -31,3 +31,15 @@ A content platform built with Next.js 14, featuring subscription-based access to
 ## Development
 
 Based on the [Next.js Subscription Payments Template](https://github.com/vercel/nextjs-subscription-payments), extensively customized and enhanced with additional features and integrations.
+
+<!-- TODO -->
+
+<!-- early access -->
+
+[] if the user confirms the email via early-access sign up flow, they will be sent to early-access/success route, rather than signin route.
+[] make sure the user gets confirmation to their email with info what to expect (that they will get info etc etc, they will be able to checkout once the app goes life with the discount when they signin with the same email)
+[] what happens if the verification email expires/email provider pre-opens it, thus invalidating it? Is their account already verified and they can log in and they get an email anyway so you don't have to worry?
+[] update the database with early access flag
+[] how to make sure only subscribers can get on early-access signup deal?
+
+<!--  -->

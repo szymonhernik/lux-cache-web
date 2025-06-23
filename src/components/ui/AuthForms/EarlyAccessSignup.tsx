@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react'
 import Link from 'next/link'
-import { signUp } from '@/utils/auth-helpers/server'
+import { signUp, signUpEarlyAccess } from '@/utils/auth-helpers/server'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import { Button } from '@/components/shadcn/ui/button'
@@ -27,13 +27,11 @@ import { hCaptchaSiteKey } from '@/utils/auth-helpers/settings'
 interface SignUpProps {
   allowEmail: boolean
   redirectMethod: string
-  displaySignInLink?: boolean
 }
 
-export default function SignUp({
+export default function EarlyAccessSignup({
   allowEmail,
-  redirectMethod,
-  displaySignInLink = true
+  redirectMethod
 }: SignUpProps) {
   const router = redirectMethod === 'client' ? useRouter() : null
 
@@ -62,7 +60,7 @@ export default function SignUp({
   }) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
     try {
-      const redirectUrl: string = await signUp(values, captchaToken)
+      const redirectUrl: string = await signUpEarlyAccess(values, captchaToken)
       if (router) {
         router.push(redirectUrl)
       }
@@ -152,19 +150,6 @@ export default function SignUp({
           </Button>
         </form>
       </Form>
-      {/* if displaySignInLink is true, which by default is true, show the sign in link */}
-      {displaySignInLink && (
-        <div className="">
-          <p>
-            <Link
-              href={'/signin/password_signin'}
-              className="font-light text-sm"
-            >
-              Already have an account? Sign in
-            </Link>
-          </p>
-        </div>
-      )}
     </div>
   )
 }

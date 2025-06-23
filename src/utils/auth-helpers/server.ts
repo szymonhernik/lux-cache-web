@@ -167,6 +167,69 @@ export async function signInWithPassword(
   return redirectPath
 }
 
+// USED FOR EARLY ACCESS
+
+export async function signUpEarlyAccess(
+  values: SignUpSchema,
+  captchaToken: string | undefined
+) {
+  // Server-side validation
+  const result = signUpSchema.safeParse(values)
+  if (!result.success) {
+    return getErrorRedirect(
+      '/signin/signup',
+      'Invalid input',
+      result.error.errors[0].message
+    )
+  }
+  // Rate limit signup attempts: allow 5 attempts per minute
+  await checkStrictRateLimit('auth:signup')
+
+  const callbackURL = getURL('/auth/callback')
+  const { email, password } = result.data
+
+  const supabase = createClient()
+  const { error, data } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: callbackURL,
+      captchaToken: captchaToken
+    }
+  })
+
+  // Tag as early access if signup succeeded and user exists
+  if (!error && data.user) {
+    await supabase
+      .from('users')
+      .update({ is_early_access: true })
+      .eq('id', data.user.id)
+  }
+
+  let redirectPath: string
+  if (error) {
+    redirectPath = getErrorRedirect(
+      '/early-access',
+      'Sign up failed.',
+      error.message
+    )
+  } else if (data.session) {
+    redirectPath = getStatusRedirect(
+      '/early-access',
+      'Success!',
+      'Welcome to Early Access!'
+    )
+  } else {
+    redirectPath = getStatusRedirect(
+      '/early-access',
+      'Success!',
+      'Check your email to confirm your early access spot!'
+    )
+  }
+
+  return redirectPath
+}
+
 // USED!
 // ✅ no authentication = public function
 // ✅ add rate limiting to the request
@@ -209,7 +272,11 @@ export async function signUp(
       error.message
     )
   } else if (data.session) {
-    redirectPath = getStatusRedirect('/', 'Success!', 'You are now signed in.')
+    redirectPath = getStatusRedirect(
+      '/browse',
+      'Success!',
+      'You are now signed in.'
+    )
   } else {
     // MORE PRIVACY-FOCUSED APPROACH
     // Always show the "check your email" message, regardless of whether
