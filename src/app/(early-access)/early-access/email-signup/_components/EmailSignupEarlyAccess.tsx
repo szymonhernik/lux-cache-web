@@ -29,7 +29,7 @@ interface SignUpProps {
   redirectMethod: string
 }
 
-export default function EarlyAccessSignup({
+export default function EmailSignupEarlyAccess({
   allowEmail,
   redirectMethod
 }: SignUpProps) {
