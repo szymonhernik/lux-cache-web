@@ -185,7 +185,8 @@ export async function signUpEarlyAccess(
   // Rate limit signup attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:signup')
 
-  const callbackURL = getURL('/auth/callback')
+  // Include redirect parameter for early-access users
+  const callbackURL = getURL('/auth/callback?redirect=/early-access/success')
   const { email, password } = result.data
 
   const supabase = createClient()

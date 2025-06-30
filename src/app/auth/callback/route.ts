@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   // by the `@supabase/ssr` package. It exchanges an auth code for the user's session.
   const requestUrl = new URL(request.url)
   const code = requestUrl.searchParams.get('code')
+  const redirect = requestUrl.searchParams.get('redirect') // Get redirect parameter
 
   if (code) {
     const supabase = createClient()
@@ -25,10 +26,21 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  // Determine the redirect path
+  let redirectPath = '/account' // Default redirect
+
+  // If redirect parameter is provided and it's a safe path, use it
+  if (
+    redirect &&
+    (redirect.startsWith('/early-access') || redirect.startsWith('/account'))
+  ) {
+    redirectPath = redirect
+  }
+
   // URL to redirect to after sign in process completes
   return NextResponse.redirect(
     getStatusRedirect(
-      `${requestUrl.origin}/account`,
+      `${requestUrl.origin}${redirectPath}`,
       'Success!',
       'You are now signed in.'
     )
