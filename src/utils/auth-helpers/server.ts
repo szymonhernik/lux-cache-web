@@ -189,23 +189,33 @@ export async function signUpEarlyAccess(
   const callbackURL = getURL('/auth/callback?redirect=/early-access/success')
   const { email, password } = result.data
 
+  // Pass is_early_access in the signup metadata.
+  // Update your trigger to set is_early_access from the metadata.
+  // This avoids RLS issues and race conditions.
   const supabase = createClient()
   const { error, data } = await supabase.auth.signUp({
     email,
     password,
     options: {
       emailRedirectTo: callbackURL,
-      captchaToken: captchaToken
+      captchaToken: captchaToken,
+      data: { is_early_access: true }
     }
   })
 
+  // Solution: Use the existing admin client
+  // Modify your signUpEarlyAccess function to use the admin client
   // Tag as early access if signup succeeded and user exists
-  if (!error && data.user) {
-    await supabase
-      .from('users')
-      .update({ is_early_access: true })
-      .eq('id', data.user.id)
-  }
+  // if (!error && data.user) {
+  //   const { error: updateError } = await supabase
+  //     .from('users')
+  //     .update({ is_early_access: true })
+  //     .eq('id', data.user.id)
+
+  //   if (updateError) {
+  //     console.error('Failed to update is_early_access:', updateError)
+  //   }
+  // }
 
   let redirectPath: string
   if (error) {
