@@ -129,7 +129,7 @@ export async function POST(req: Request) {
               await resend.emails.send({
                 from: 'Lux Cache <hello@szymonhernik.com>',
                 to: [userEmail],
-                subject: 'Welcome to Lux Cache',
+                subject: 'You successfully subscribed to Lux Cache',
                 react: SubscriptionCompletedEmail(userEmail, userName)
               })
             }

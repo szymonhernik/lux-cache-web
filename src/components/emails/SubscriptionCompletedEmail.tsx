@@ -28,7 +28,8 @@ const SubscriptionCompletedEmail = (
     <Html>
       <Head />
       <Preview>
-        Welcome to Lux Cache, {userName ? `${userName}` : `${userEmail}`}!
+        You successfully subscribed to Lux Cache,{' '}
+        {userName ? `${userName}` : `${userEmail}`}!
       </Preview>
       <Body style={main}>
         <Link href="https://luxcache.com">
@@ -44,6 +45,10 @@ const SubscriptionCompletedEmail = (
           <Section style={message}>
             <Text style={global.text}>
               Dear {userName ? `${userName},` : `${userEmail},`}
+            </Text>
+            <Text style={{ ...global.text, marginTop: 20 }}>
+              This is a confirmation that you have successfully subscribed to
+              Lux Cache.
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
               We are delighted to welcome you to Lux Cache, a platform dedicated
