@@ -52,14 +52,15 @@ export const updateSession = async (request: NextRequest) => {
     const isAllowedPath = allowedPaths.some((path) =>
       request.nextUrl.pathname.startsWith(path)
     )
-    // in local environment redirect to early access page, otherwise redirect to /test
+    // in local environment redirect to early access page, otherwise redirect to /test for all paths for now
+
     if (request.nextUrl.hostname === 'localhost') {
       if (!isAllowedPath) {
         // Redirect to /test for any non-allowed paths
         return NextResponse.redirect(new URL('/early-access', request.url))
       }
     } else {
-      if (!isAllowedPath) {
+      if (!isAllowedPath || request.nextUrl.pathname === '/early-access') {
         // Redirect to /test for any non-allowed paths
         return NextResponse.redirect(new URL('/test', request.url))
       }
