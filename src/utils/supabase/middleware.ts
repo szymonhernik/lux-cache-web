@@ -2,6 +2,9 @@ import { createServerClient, type CookieMethodsServer } from '@supabase/ssr'
 import { decodeJwt } from 'jose'
 import { type NextRequest, NextResponse } from 'next/server'
 
+// Simple flag to control early access mode
+const EARLY_ACCESS_MODE = true // Set to false to disable early access restrictions
+
 export const createClient = (request: NextRequest) => {
   // Create an unmodified response
   let response = NextResponse.next({
@@ -38,15 +41,38 @@ export const createClient = (request: NextRequest) => {
 export const updateSession = async (request: NextRequest) => {
   const { supabase, response } = createClient(request)
 
+  // Check if early access mode is enabled and we're on early access domain or localhost
+  const isEarlyAccessDomain =
+    request.nextUrl.hostname === 'early.luxcache.com' ||
+    (EARLY_ACCESS_MODE && request.nextUrl.hostname === 'localhost')
+
+  if (isEarlyAccessDomain) {
+    // Only allow access to /test route and api/auth routes
+    const allowedPaths = ['/test', '/api/auth']
+    const isAllowedPath = allowedPaths.some((path) =>
+      request.nextUrl.pathname.startsWith(path)
+    )
+
+    if (!isAllowedPath) {
+      // Redirect to /test for any non-allowed paths
+      return NextResponse.redirect(new URL('/test', request.url))
+    }
+
+    // For early access domain, just return the response
+    return response
+  }
+
+  // Normal flow when early access mode is disabled or on other domains
   const {
     data: { user }
   } = await supabase.auth.getUser()
 
-  // People with user account and logged in when visiting luxcache.com see browse page on homepage
+  // People with user account and logged in when visiting homepage see browse page
   if (user && request.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/browse', request.url))
   }
 
+  // Redirect unauthenticated users away from protected routes
   if (
     !user &&
     (request.nextUrl.pathname.startsWith('/account') ||
