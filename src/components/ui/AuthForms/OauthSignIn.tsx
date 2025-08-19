@@ -14,7 +14,7 @@ type OAuthProviders = {
   icon: JSX.Element
 }
 
-export default function OauthSignIn() {
+export default function OauthSignIn({ disabled }: { disabled?: boolean }) {
   const oAuthProviders: OAuthProviders[] = [
     // {
     //   name: 'github',
@@ -61,6 +61,7 @@ export default function OauthSignIn() {
                 : ''
             }`}
             isLoading={isSubmitting}
+            disabled={disabled}
           >
             <span className="mr-2">{provider.icon}</span>
             <span>{provider.displayName}</span>

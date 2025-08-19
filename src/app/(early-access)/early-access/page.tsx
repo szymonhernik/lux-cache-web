@@ -12,7 +12,7 @@ export default function Page() {
   return (
     <div className="">
       <div className="w-full max-w-md p-8 rounded-lg shadow-lg bg-white border border-gray-200">
-        <OAuthSignup allowOauth={allowOauth} />
+        <OAuthSignup allowOauth={allowOauth} disabled={true} />
         <Link
           href={`/early-access/email-signup`}
           className="font-light text-sm text-center block"

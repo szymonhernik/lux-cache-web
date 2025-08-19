@@ -48,14 +48,21 @@ export const updateSession = async (request: NextRequest) => {
 
   if (isEarlyAccessDomain) {
     // Only allow access to /test route and api/auth routes
-    const allowedPaths = ['/test', '/api/auth']
+    const allowedPaths = ['/early-access', '/test', '/api/auth']
     const isAllowedPath = allowedPaths.some((path) =>
       request.nextUrl.pathname.startsWith(path)
     )
-
-    if (!isAllowedPath) {
-      // Redirect to /test for any non-allowed paths
-      return NextResponse.redirect(new URL('/test', request.url))
+    // in local environment redirect to early access page, otherwise redirect to /test
+    if (request.nextUrl.hostname === 'localhost') {
+      if (!isAllowedPath) {
+        // Redirect to /test for any non-allowed paths
+        return NextResponse.redirect(new URL('/early-access', request.url))
+      }
+    } else {
+      if (!isAllowedPath) {
+        // Redirect to /test for any non-allowed paths
+        return NextResponse.redirect(new URL('/test', request.url))
+      }
     }
 
     // For early access domain, just return the response

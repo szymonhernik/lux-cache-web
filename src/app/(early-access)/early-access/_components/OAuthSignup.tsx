@@ -1,7 +1,13 @@
 import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn'
 import Separator from '@/components/ui/AuthForms/Separator'
 
-export default function OAuthSignup({ allowOauth }: { allowOauth: boolean }) {
+export default function OAuthSignup({
+  allowOauth,
+  disabled
+}: {
+  allowOauth: boolean
+  disabled?: boolean
+}) {
   return (
     <>
       <h1 className="text-3xl font-bold text-center mb-4">Get Early Access</h1>
@@ -11,7 +17,7 @@ export default function OAuthSignup({ allowOauth }: { allowOauth: boolean }) {
       </p>
       {allowOauth && (
         <>
-          <OauthSignIn />
+          <OauthSignIn disabled={disabled} />
           <Separator text="or" />
         </>
       )}
