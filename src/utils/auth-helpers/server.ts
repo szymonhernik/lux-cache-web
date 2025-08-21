@@ -206,7 +206,8 @@ export async function signUpEarlyAccess(
   }
 
   const baseUrl = host.startsWith('http') ? host : `https://${host}`
-  callbackURL = `${baseUrl}/auth/callback?redirect=/early-access/success`
+  // Direct redirect to success page instead of going through auth callback
+  callbackURL = `${baseUrl}/early-access/success`
 
   // Debug logging - remove this after testing
   console.log('Environment variables:', {
