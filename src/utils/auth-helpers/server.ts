@@ -185,8 +185,18 @@ export async function signUpEarlyAccess(
   // Rate limit signup attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:signup')
 
-  // Include redirect parameter for early-access users
-  const callbackURL = getURL('/auth/callback?redirect=/early-access/success')
+  // Dynamically determine the callback URL based on the current domain
+  // This allows testing on Vercel preview deployments while maintaining production functionality
+  let callbackURL: string
+
+  // Use Vercel's VERCEL_URL for automatic domain detection, fallback to SITE_URL, then localhost
+  const host =
+    process.env.VERCEL_URL ||
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    'http://localhost:3000'
+  const baseUrl = host.startsWith('http') ? host : `https://${host}`
+  callbackURL = `${baseUrl}/auth/callback?redirect=/early-access/success`
+
   const { email, password } = result.data
 
   // Pass is_early_access in the signup metadata.
