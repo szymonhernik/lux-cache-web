@@ -47,8 +47,13 @@ export const updateSession = async (request: NextRequest) => {
     (EARLY_ACCESS_MODE && request.nextUrl.hostname === 'localhost')
 
   if (isEarlyAccessDomain) {
-    // Only allow access to /test route and api/auth routes
-    const allowedPaths = ['/early-access', '/test', '/api/auth']
+    // Only allow access to early access routes and api/auth routes
+    const allowedPaths = [
+      '/early-access',
+      '/test',
+      '/api/auth',
+      '/auth' // For /auth/callback route
+    ]
     const isAllowedPath = allowedPaths.some((path) =>
       request.nextUrl.pathname.startsWith(path)
     )
@@ -60,7 +65,8 @@ export const updateSession = async (request: NextRequest) => {
         return NextResponse.redirect(new URL('/early-access', request.url))
       }
     } else {
-      if (!isAllowedPath || request.nextUrl.pathname === '/early-access') {
+      // if (!isAllowedPath || request.nextUrl.pathname === '/early-access') {
+      if (!isAllowedPath) {
         // Redirect to /test for any non-allowed paths
         return NextResponse.redirect(new URL('/test', request.url))
       }
