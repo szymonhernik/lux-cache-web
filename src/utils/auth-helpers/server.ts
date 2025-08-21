@@ -197,6 +197,15 @@ export async function signUpEarlyAccess(
   const baseUrl = host.startsWith('http') ? host : `https://${host}`
   callbackURL = `${baseUrl}/auth/callback?redirect=/early-access/success`
 
+  // Debug logging - remove this after testing
+  console.log('Environment variables:', {
+    VERCEL_URL: process.env.VERCEL_URL,
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    host,
+    baseUrl,
+    callbackURL
+  })
+
   const { email, password } = result.data
 
   // Pass is_early_access in the signup metadata.
