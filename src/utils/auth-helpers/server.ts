@@ -185,38 +185,8 @@ export async function signUpEarlyAccess(
   // Rate limit signup attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:signup')
 
-  // Dynamically determine the callback URL based on the current domain
-  // This allows testing on Vercel preview deployments while maintaining production functionality
-  let callbackURL: string
-
-  // Check if we're on the production domain and prioritize it
-  const isProduction =
-    process.env.NEXT_PUBLIC_SITE_URL === 'https://early.luxcache.com'
-
-  let host: string
-  if (isProduction) {
-    // Force production domain for early.luxcache.com
-    host = 'https://early.luxcache.com'
-  } else {
-    // Use Vercel's VERCEL_URL for automatic domain detection, fallback to SITE_URL, then localhost
-    host =
-      process.env.VERCEL_URL ||
-      process.env.NEXT_PUBLIC_SITE_URL ||
-      'http://localhost:3000'
-  }
-
-  const baseUrl = host.startsWith('http') ? host : `https://${host}`
-  // Direct redirect to success page instead of going through auth callback
-  callbackURL = `${baseUrl}/early-access/success`
-
-  // Debug logging - remove this after testing
-  console.log('Environment variables:', {
-    VERCEL_URL: process.env.VERCEL_URL,
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-    host,
-    baseUrl,
-    callbackURL
-  })
+  // Simple approach: use getURL helper which handles domain detection automatically
+  const callbackURL = getURL('/early-access/success')
 
   const { email, password } = result.data
 
