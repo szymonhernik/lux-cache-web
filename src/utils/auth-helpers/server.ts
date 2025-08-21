@@ -186,7 +186,18 @@ export async function signUpEarlyAccess(
   await checkStrictRateLimit('auth:signup')
 
   // Simple approach: use getURL helper which handles domain detection automatically
+
+  // Debug: Check what environment variables are being used
+  console.log('Environment check:', {
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
+    VERCEL_URL: process.env.VERCEL_URL,
+    NODE_ENV: process.env.NODE_ENV
+  })
+
   const callbackURL = getURL('/early-access/success')
+
+  // Debug: Check what the final callbackURL becomes
+  console.log('Final callbackURL:', callbackURL)
 
   const { email, password } = result.data
 
