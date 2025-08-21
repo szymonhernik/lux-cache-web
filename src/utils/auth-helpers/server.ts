@@ -189,11 +189,22 @@ export async function signUpEarlyAccess(
   // This allows testing on Vercel preview deployments while maintaining production functionality
   let callbackURL: string
 
-  // Use Vercel's VERCEL_URL for automatic domain detection, fallback to SITE_URL, then localhost
-  const host =
-    process.env.VERCEL_URL ||
-    process.env.NEXT_PUBLIC_SITE_URL ||
-    'http://localhost:3000'
+  // Check if we're on the production domain and prioritize it
+  const isProduction =
+    process.env.NEXT_PUBLIC_SITE_URL === 'https://early.luxcache.com'
+
+  let host: string
+  if (isProduction) {
+    // Force production domain for early.luxcache.com
+    host = 'https://early.luxcache.com'
+  } else {
+    // Use Vercel's VERCEL_URL for automatic domain detection, fallback to SITE_URL, then localhost
+    host =
+      process.env.VERCEL_URL ||
+      process.env.NEXT_PUBLIC_SITE_URL ||
+      'http://localhost:3000'
+  }
+
   const baseUrl = host.startsWith('http') ? host : `https://${host}`
   callbackURL = `${baseUrl}/auth/callback?redirect=/early-access/success`
 
