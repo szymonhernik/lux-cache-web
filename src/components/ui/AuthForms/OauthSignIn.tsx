@@ -1,6 +1,9 @@
 'use client'
 
-import { signInWithOAuth } from '@/utils/auth-helpers/client'
+import {
+  earlySignInWithOAuth,
+  signInWithOAuth
+} from '@/utils/auth-helpers/client'
 import { type Provider } from '@supabase/supabase-js'
 // import { Github } from 'lucide-react';
 import { FaDiscord, FaGoogle } from 'react-icons/fa'
@@ -44,7 +47,11 @@ export default function OauthSignIn({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
-    await signInWithOAuth(e)
+    if (isEarlyAccess) {
+      await earlySignInWithOAuth(e)
+    } else {
+      await signInWithOAuth(e)
+    }
     setIsSubmitting(false)
   }
 

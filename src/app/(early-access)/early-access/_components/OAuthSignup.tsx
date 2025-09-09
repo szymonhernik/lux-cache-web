@@ -3,16 +3,18 @@ import Separator from '@/components/ui/AuthForms/Separator'
 
 export default function OAuthSignup({
   allowOauth,
-  disabled
+  disabled,
+  isEarlyAccess = false
 }: {
   allowOauth: boolean
   disabled?: boolean
+  isEarlyAccess?: boolean
 }) {
   return (
     <>
       {allowOauth && (
         <>
-          <OauthSignIn disabled={false} isEarlyAccess={true} />
+          <OauthSignIn disabled={false} isEarlyAccess={isEarlyAccess} />
         </>
       )}
     </>
