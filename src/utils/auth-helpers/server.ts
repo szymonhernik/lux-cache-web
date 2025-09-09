@@ -211,7 +211,7 @@ export async function signUpEarlyAccess(
     )
   } else if (data.session) {
     redirectPath = getStatusRedirect(
-      '/early-access',
+      '/early-access/success',
       'Success!',
       'You are now on the early access list!'
     )

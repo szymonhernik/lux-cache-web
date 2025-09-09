@@ -35,7 +35,9 @@ export default async function Layout(props: { children: React.ReactNode }) {
       </div> */}
 
       <div className=" bg-white flex flex-col py-16 min-h-screen items-center justify-center">
-        {props.children}
+        <div className="w-full max-w-md p-8  bg-white border border-gray-200">
+          {props.children}
+        </div>
       </div>
 
       <Suspense>
