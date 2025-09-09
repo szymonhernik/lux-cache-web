@@ -9,7 +9,7 @@ export default function Page() {
   const redirectMethod = getRedirectMethod()
   return (
     <div className="">
-      <div className="w-full max-w-md p-8 rounded-lg shadow-lg bg-white border border-gray-200">
+      <div className="w-full max-w-md p-8  bg-white border border-gray-200">
         <OAuthSignup allowOauth={allowOauth} disabled={true} />
 
         {allowEmail && (

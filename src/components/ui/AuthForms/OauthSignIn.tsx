@@ -14,7 +14,13 @@ type OAuthProviders = {
   icon: JSX.Element
 }
 
-export default function OauthSignIn({ disabled }: { disabled?: boolean }) {
+export default function OauthSignIn({
+  disabled,
+  isEarlyAccess = false
+}: {
+  disabled?: boolean
+  isEarlyAccess?: boolean
+}) {
   const oAuthProviders: OAuthProviders[] = [
     // {
     //   name: 'github',

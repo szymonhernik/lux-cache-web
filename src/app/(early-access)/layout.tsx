@@ -30,11 +30,11 @@ export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <>
       {/* in top left absolutely positioned corner show the breadcrumbs */}
-      <div className="absolute top-0 left-0 p-4">
+      {/* <div className="absolute top-0 left-0 p-4">
         <ListBreadcrumbs />
-      </div>
+      </div> */}
 
-      <div className="flex flex-col py-16 min-h-screen items-center justify-center">
+      <div className=" bg-white flex flex-col py-16 min-h-screen items-center justify-center">
         {props.children}
       </div>
 

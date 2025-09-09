@@ -244,7 +244,7 @@ export async function signUpEarlyAccess(
     )
   } else {
     redirectPath = getStatusRedirect(
-      '/early-access',
+      '/early-access/confirm-email',
       'Success!',
       'Check your email to confirm your early access spot!'
     )
