@@ -1,9 +1,6 @@
 'use client'
 
-import {
-  earlySignInWithOAuth,
-  signInWithOAuth
-} from '@/utils/auth-helpers/client'
+import { signInWithOAuth } from '@/utils/auth-helpers/client'
 import { type Provider } from '@supabase/supabase-js'
 // import { Github } from 'lucide-react';
 import { FaDiscord, FaGoogle } from 'react-icons/fa'
@@ -17,13 +14,7 @@ type OAuthProviders = {
   icon: JSX.Element
 }
 
-export default function OauthSignIn({
-  disabled,
-  isEarlyAccess = false
-}: {
-  disabled?: boolean
-  isEarlyAccess?: boolean
-}) {
+export default function OauthSignIn({ disabled }: { disabled?: boolean }) {
   const oAuthProviders: OAuthProviders[] = [
     // {
     //   name: 'github',
@@ -47,11 +38,7 @@ export default function OauthSignIn({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     setIsSubmitting(true) // Disable the button while the request is being handled
-    if (isEarlyAccess) {
-      await earlySignInWithOAuth(e)
-    } else {
-      await signInWithOAuth(e)
-    }
+    await signInWithOAuth(e)
     setIsSubmitting(false)
   }
 

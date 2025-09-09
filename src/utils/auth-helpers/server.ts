@@ -185,19 +185,7 @@ export async function signUpEarlyAccess(
   // Rate limit signup attempts: allow 5 attempts per minute
   await checkStrictRateLimit('auth:signup')
 
-  // Simple approach: use getURL helper which handles domain detection automatically
-
-  // Debug: Check what environment variables are being used
-  console.log('Environment check:', {
-    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL,
-    VERCEL_URL: process.env.VERCEL_URL,
-    NODE_ENV: process.env.NODE_ENV
-  })
-
   const callbackURL = getURL('/early-access/success')
-
-  // Debug: Check what the final callbackURL becomes
-  console.log('Final callbackURL:', callbackURL)
 
   const { email, password } = result.data
 
@@ -210,24 +198,9 @@ export async function signUpEarlyAccess(
     password,
     options: {
       emailRedirectTo: callbackURL,
-      captchaToken: captchaToken,
-      data: { is_early_access: true }
+      captchaToken: captchaToken
     }
   })
-
-  // Solution: Use the existing admin client
-  // Modify your signUpEarlyAccess function to use the admin client
-  // Tag as early access if signup succeeded and user exists
-  // if (!error && data.user) {
-  //   const { error: updateError } = await supabase
-  //     .from('users')
-  //     .update({ is_early_access: true })
-  //     .eq('id', data.user.id)
-
-  //   if (updateError) {
-  //     console.error('Failed to update is_early_access:', updateError)
-  //   }
-  // }
 
   let redirectPath: string
   if (error) {
@@ -240,7 +213,7 @@ export async function signUpEarlyAccess(
     redirectPath = getStatusRedirect(
       '/early-access',
       'Success!',
-      'Welcome to Early Access!'
+      'You are now on the early access list!'
     )
   } else {
     redirectPath = getStatusRedirect(

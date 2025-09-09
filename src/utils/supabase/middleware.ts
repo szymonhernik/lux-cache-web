@@ -50,7 +50,6 @@ export const updateSession = async (request: NextRequest) => {
     // Only allow access to early access routes and api/auth routes
     const allowedPaths = [
       '/early-access',
-      '/test',
       '/api/auth',
       '/auth' // For /auth/callback route
     ]
@@ -68,7 +67,7 @@ export const updateSession = async (request: NextRequest) => {
       // if (!isAllowedPath || request.nextUrl.pathname === '/early-access') {
       if (!isAllowedPath) {
         // Redirect to /test for any non-allowed paths
-        return NextResponse.redirect(new URL('/test', request.url))
+        return NextResponse.redirect(new URL('/early-access', request.url))
       }
     }
 

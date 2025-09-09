@@ -67,22 +67,3 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
     }
   })
 }
-
-export async function earlySignInWithOAuth(
-  e: React.FormEvent<HTMLFormElement>
-) {
-  // Prevent default form submission refresh
-  e.preventDefault()
-  const formData = new FormData(e.currentTarget)
-  const provider = String(formData.get('provider')).trim() as Provider
-  const supabase = createClient()
-  const redirectURL = getURL('/auth/callback')
-
-  await supabase.auth.signInWithOAuth({
-    provider: provider,
-    options: {
-      redirectTo: redirectURL,
-      queryParams: { is_early_access: 'true' }
-    }
-  })
-}

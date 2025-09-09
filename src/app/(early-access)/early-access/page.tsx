@@ -19,11 +19,7 @@ export default function Page() {
           Sign up now to secure your spot and receive a 40% discount plus a
           7-day free trial when we launch!
         </p>
-        <OAuthSignup
-          allowOauth={allowOauth}
-          disabled={true}
-          isEarlyAccess={true}
-        />
+        <OAuthSignup allowOauth={allowOauth} disabled={true} />
         <Separator text="or" />
         <Link
           href={`/early-access/email-signup`}
