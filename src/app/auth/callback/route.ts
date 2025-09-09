@@ -13,20 +13,41 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = createClient()
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const { error, data } = await supabase.auth.exchangeCodeForSession(code)
 
     if (error) {
+      // Determine error redirect path based on the redirect parameter
+      const errorRedirectPath =
+        redirect === '/early-access'
+          ? '/early-access'
+          : '/signin/password_signin'
+
       return NextResponse.redirect(
         getErrorRedirect(
-          `${requestUrl.origin}/signin/password_signin`,
+          `${requestUrl.origin}${errorRedirectPath}`,
           error.name,
           "Sorry, we weren't able to log you in. Please try again."
         )
       )
     }
+
+    // Handle early access OAuth flow
+    if (redirect === '/early-access') {
+      // The user is now authenticated and the database trigger has created their user record
+      // Now we sign them out immediately and show success message
+      await supabase.auth.signOut()
+
+      const redirectPath = getStatusRedirect(
+        '/early-access/success',
+        'Success!',
+        'You are now on the early access list! (with OAuth)'
+      )
+
+      return NextResponse.redirect(`${requestUrl.origin}${redirectPath}`)
+    }
   }
 
-  // Determine the redirect path
+  // Determine the redirect path for regular OAuth flows
   let redirectPath = '/account' // Default redirect
 
   // If redirect parameter is provided and it's a safe path, use it
@@ -42,7 +63,7 @@ export async function GET(request: NextRequest) {
     getStatusRedirect(
       `${requestUrl.origin}${redirectPath}`,
       'Success!',
-      'You are now signed in.'
+      'You are now signed in. (with email)'
     )
   )
 }

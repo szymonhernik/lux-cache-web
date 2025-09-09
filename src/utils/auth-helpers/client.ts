@@ -60,10 +60,14 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
   // Create client-side supabase client and call signInWithOAuth
   const supabase = createClient()
   const redirectURL = getURL('/auth/callback')
+
+  // Add redirect parameter to indicate this is from early access
+  const redirectURLWithParams = `${redirectURL}?redirect=/early-access`
+
   await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: redirectURL
+      redirectTo: redirectURLWithParams
     }
   })
 }
