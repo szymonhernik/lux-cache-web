@@ -845,7 +845,14 @@ CREATE OR REPLACE TRIGGER "on_auth_user_created" AFTER INSERT ON "auth"."users" 
 
 CREATE OR REPLACE TRIGGER "resend auth trigger email" AFTER INSERT OR DELETE ON "auth"."users" FOR EACH ROW EXECUTE FUNCTION "supabase_functions"."http_request"('https://hwzpbkwoekvubuzucxgo.supabase.co/functions/v1/resend', 'POST', '{"Content-type":"application/json"}', '{}', '1000');
 
-CREATE OR REPLACE TRIGGER "user-welcome-email-webhook" AFTER INSERT ON "auth"."users" FOR EACH ROW EXECUTE FUNCTION "supabase_functions"."http_request"('https://hwzpbkwoekvubuzucxgo.supabase.co/functions/v1/user-welcome-email', 'POST', '{"Content-type":"application/json","Authorization":"Bearer ***REMOVED***"}', '{}', '5000');
+CREATE OR REPLACE TRIGGER "user-welcome-email-webhook" AFTER INSERT ON "auth"."users" 
+FOR EACH ROW EXECUTE FUNCTION "supabase_functions"."http_request"(
+    'https://hwzpbkwoekvubuzucxgo.supabase.co/functions/v1/user-welcome-email', 
+    'POST', 
+    '{"Content-type":"application/json","Authorization":"Bearer ' || current_setting('app.supabase_service_role_key') || '"}', 
+    '{}', 
+    '5000'
+);
 
 ALTER TABLE ONLY "auth"."identities"
     ADD CONSTRAINT "identities_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
