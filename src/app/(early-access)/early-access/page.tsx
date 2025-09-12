@@ -15,8 +15,8 @@ export default function Page() {
         Get Early Access
       </h1>
       <p className="text-center text-gray-600 mb-8 ">
-        Sign up now to secure your spot and receive a 40% discount plus a 7-day
-        free trial when we launch!
+        For your first six months, you’ll enjoy full Premium access for the
+        price of a Regular Subscription.
       </p>
       <OAuthSignup allowOauth={allowOauth} disabled={true} />
       <Separator text="or" />
