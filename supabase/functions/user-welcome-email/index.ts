@@ -49,12 +49,14 @@ Deno.serve(async (req) => {
           to: [newUser.email],
           subject: 'Welcome to Lux Cache! 🎉',
           html: `
+           
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <h1 style="color: #333;">Welcome to Lux Cache!</h1>
-              <p>Hey ${newUser.email},</p>
-              <p>Thank you for joining Lux Cache! We're excited to have you on board.</p>
-              <p>You can now start exploring our platform and discovering amazing content.</p>
-              <p>Best regards,<br>The Lux Cache Team</p>
+              <p>Thanks for being one of the first to join the new Lux Cache website!</p>
+              <p>Our new website will be a bespoke platform designed from the ground up to support and inspire sonic innovation. This launch marks the beginning of our biggest chapter yet: Season X.</p>
+              <p>As a thank you for signing up early, you have a special offer. For your first six months, you'll get full Premium Subscription access for the price of a Regular Subscription. After that, your plan will convert to a standard Regular Subscription.</p>
+              <p>This offer will be a discount code available in your subscription checkout; with the code <strong>LXCINTRO2025</strong></p>
+              <p>Thanks again for your early support!</p>
             </div>
           `
         })
