@@ -45,7 +45,7 @@ Deno.serve(async (req) => {
           Authorization: `Bearer ${Deno.env.get('RESEND_API_KEY')}`
         },
         body: JSON.stringify({
-          from: 'Lux Cache <hello@szymonhernik.com>',
+          from: 'Lux Cache <no-reply@luxcache.com>',
           to: [newUser.email],
           subject: 'Welcome to Lux Cache! 🎉',
           html: `

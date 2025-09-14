@@ -101,7 +101,7 @@ export async function POST(req: Request) {
 
               // Send cancellation email
               await resend.emails.send({
-                from: 'Lux Cache <hello@szymonhernik.com>',
+                from: 'Lux Cache <no-reply@luxcache.com>',
                 to: [userEmail],
                 subject: '💟 Confirming the end of your Lux Cache Subscription',
                 react: SubscriptionCancelEmail(userEmail, userName)
@@ -127,7 +127,7 @@ export async function POST(req: Request) {
             } else {
               const userName = event.data.object.customer_details.name
               await resend.emails.send({
-                from: 'Lux Cache <hello@szymonhernik.com>',
+                from: 'Lux Cache <no-reply@luxcache.com>',
                 to: [userEmail],
                 subject: 'You successfully subscribed to Lux Cache',
                 react: SubscriptionCompletedEmail(userEmail, userName)
