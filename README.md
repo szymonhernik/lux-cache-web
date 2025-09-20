@@ -55,8 +55,3 @@ how to make sure only subscribers can get on early-access signup deal?
 # Development branch
 
 [ ] Create a dedicated “Trial plan” price at €0
-
-- You make a hidden Stripe price with unit_amount: 0.
-- Give it a trial_period_days: 14.
-- Auto-cancel at trial end via webhook.
-- After 14 days, subscription is canceled, and you prompt them to pick one of the real paid tiers.

@@ -23,7 +23,12 @@ const relevantEvents = new Set([
   'checkout.session.completed',
   'customer.subscription.created',
   'customer.subscription.updated',
-  'customer.subscription.deleted'
+  'customer.subscription.deleted',
+  'subscription_schedule.created',
+  'subscription_schedule.updated',
+  'subscription_schedule.completed',
+  'subscription_schedule.canceled',
+  'subscription_schedule.released'
 ])
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -114,6 +119,36 @@ export async function POST(req: Request) {
           const checkoutSession = event.data.object as Stripe.Checkout.Session
           if (checkoutSession.mode === 'subscription') {
             const subscriptionId = checkoutSession.subscription
+
+            // Check if this is a trial subscription that needs to be converted to a schedule
+            if (checkoutSession.metadata?.trial_to_paid_price_id) {
+              const trialToPaidPriceId =
+                checkoutSession.metadata.trial_to_paid_price_id
+              const userId = checkoutSession.metadata.user_id
+
+              try {
+                // Convert the trial subscription to a subscription schedule
+                const { createTrialToPaidSchedule } = await import(
+                  '@/utils/stripe/subscription-schedules'
+                )
+
+                const schedule = await createTrialToPaidSchedule({
+                  trialPriceId:
+                    checkoutSession.line_items?.data[0]?.price?.id || '',
+                  paidPriceId: trialToPaidPriceId,
+                  trialDays: 7,
+                  customerId: checkoutSession.customer as string,
+                  userId: userId
+                })
+
+                console.log(
+                  `Converted trial subscription to schedule: ${schedule.id}`
+                )
+              } catch (error) {
+                console.error('Error converting trial to schedule:', error)
+              }
+            }
+
             await manageSubscriptionStatusChange(
               subscriptionId as string,
               checkoutSession.customer as string,
@@ -137,6 +172,32 @@ export async function POST(req: Request) {
             const subscriptionId = checkoutSession.subscription
             console.log('data from checkout session', checkoutSession)
           }
+          break
+
+        case 'subscription_schedule.created':
+          console.log('Subscription schedule created:', event.data.object.id)
+          // Handle subscription schedule creation if needed
+          break
+
+        case 'subscription_schedule.updated':
+          console.log('Subscription schedule updated:', event.data.object.id)
+          // Handle subscription schedule updates if needed
+          break
+
+        case 'subscription_schedule.completed':
+          console.log('Subscription schedule completed:', event.data.object.id)
+          // This happens when the trial period ends and converts to paid
+          // The subscription is automatically created by Stripe
+          break
+
+        case 'subscription_schedule.canceled':
+          console.log('Subscription schedule canceled:', event.data.object.id)
+          // Handle trial cancellation if needed
+          break
+
+        case 'subscription_schedule.released':
+          console.log('Subscription schedule released:', event.data.object.id)
+          // Handle when a schedule is released (converted to regular subscription)
           break
         default:
           throw new Error('Unhandled relevant event!')

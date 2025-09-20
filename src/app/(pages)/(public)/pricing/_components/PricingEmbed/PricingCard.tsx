@@ -12,6 +12,15 @@ import SubmitButton from './SubmitButton'
 import { Button } from '@/components/shadcn/ui/button'
 import Link from 'next/link'
 
+// Helper function to get the default paid price ID for trial conversion
+function getDefaultPaidPriceId(product: ProductWithPrices): string {
+  // Find the first non-zero price as the default conversion target
+  const paidPrice = product.prices?.find(
+    (price) => price.unit_amount && price.unit_amount > 0
+  )
+  return paidPrice?.id || ''
+}
+
 interface PricingCardProps {
   product: ProductWithPrices
   price: ProductWithPrices['prices'][0]
@@ -72,6 +81,14 @@ export function PricingCard({
         {!hasActiveSubscription ? (
           <form action={onSubmit}>
             <input type="hidden" name="priceId" value={price.id} />
+            {/* For trial products, we need to specify which paid plan to convert to */}
+            {metadata.trial_allowed && price.unit_amount === 0 && (
+              <input
+                type="hidden"
+                name="targetPaidPriceId"
+                value={getDefaultPaidPriceId(product)}
+              />
+            )}
 
             <SubmitButton
               priceString={priceString}

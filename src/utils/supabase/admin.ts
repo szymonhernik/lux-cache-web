@@ -3,6 +3,11 @@ import { stripe } from '@/utils/stripe/config'
 import { createClient, User } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 import type { Database, Tables, TablesInsert } from 'types_db'
+import {
+  getSubscriptionSchedule,
+  updateSubscriptionSchedulePaidPlan,
+  cancelSubscriptionSchedule
+} from '../stripe/subscription-schedules'
 
 type Product = Tables<'products'>
 type Price = Tables<'prices'>
@@ -363,4 +368,86 @@ export const assignRoleToUser = async (email: string, role: string) => {
   console.log(
     `Role '${role}' assigned/confirmed for user with email '${email}'.`
   )
+}
+
+// ✅ Subscription Schedule Management Functions
+
+/**
+ * Updates a user's subscription schedule to change their paid plan
+ */
+export const updateUserSubscriptionPlan = async (
+  userId: string,
+  newPaidPriceId: string
+): Promise<void> => {
+  // Get user's subscription schedule
+  const { data: subscription, error: subError } = await supabaseAdmin
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('status', 'trialing')
+    .single()
+
+  if (subError || !subscription) {
+    throw new Error('No active trial subscription found')
+  }
+
+  // Get the subscription schedule from Stripe
+  const schedule = await getSubscriptionSchedule(subscription.id)
+
+  if (!schedule) {
+    throw new Error('Subscription schedule not found')
+  }
+
+  // Update the paid plan in the schedule
+  await updateSubscriptionSchedulePaidPlan(schedule.id, newPaidPriceId)
+
+  console.log(
+    `Updated subscription plan for user ${userId} to ${newPaidPriceId}`
+  )
+}
+
+/**
+ * Cancels a user's trial subscription
+ */
+export const cancelUserTrial = async (userId: string): Promise<void> => {
+  // Get user's subscription schedule
+  const { data: subscription, error: subError } = await supabaseAdmin
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('status', 'trialing')
+    .single()
+
+  if (subError || !subscription) {
+    throw new Error('No active trial subscription found')
+  }
+
+  // Cancel the subscription schedule
+  await cancelSubscriptionSchedule(subscription.id)
+
+  console.log(`Cancelled trial subscription for user ${userId}`)
+}
+
+/**
+ * Gets subscription schedule details for a user
+ */
+export const getUserSubscriptionSchedule = async (userId: string) => {
+  const { data: subscription, error: subError } = await supabaseAdmin
+    .from('subscriptions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('status', 'trialing')
+    .single()
+
+  if (subError || !subscription) {
+    return null
+  }
+
+  try {
+    const schedule = await getSubscriptionSchedule(subscription.id)
+    return schedule
+  } catch (error) {
+    console.error('Error fetching subscription schedule:', error)
+    return null
+  }
 }
