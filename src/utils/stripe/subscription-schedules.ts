@@ -10,6 +10,7 @@ export interface TrialToPaidConfig {
   trialDays: number
   customerId: string
   userId: string
+  defaultPaymentMethod?: string
 }
 
 /**
@@ -21,11 +22,12 @@ export async function createTrialToPaidSchedule({
   paidPriceId,
   trialDays,
   customerId,
-  userId
+  userId,
+  defaultPaymentMethod
 }: TrialToPaidConfig): Promise<Stripe.SubscriptionSchedule> {
   const trialEnd = Math.floor(Date.now() / 1000) + trialDays * 24 * 60 * 60
 
-  const schedule = await stripe.subscriptionSchedules.create({
+  const scheduleParams: Stripe.SubscriptionScheduleCreateParams = {
     customer: customerId,
     start_date: 'now',
     end_behavior: 'release',
@@ -63,7 +65,16 @@ export async function createTrialToPaidSchedule({
       trial_price_id: trialPriceId,
       paid_price_id: paidPriceId
     }
-  })
+  }
+
+  // Add default payment method if provided
+  if (defaultPaymentMethod) {
+    scheduleParams.default_settings = {
+      default_payment_method: defaultPaymentMethod
+    }
+  }
+
+  const schedule = await stripe.subscriptionSchedules.create(scheduleParams)
 
   return schedule
 }

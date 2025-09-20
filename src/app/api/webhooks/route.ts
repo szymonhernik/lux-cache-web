@@ -157,101 +157,108 @@ export async function POST(req: Request) {
                   return
                 }
 
-                // Set the default payment method for the customer
-                const customer = (await stripe.customers.retrieve(
-                  checkoutSession.customer as string
-                )) as Stripe.Customer
-                if (customer.invoice_settings?.default_payment_method) {
+                // Get the payment method from checkout session for the subscription schedule
+                // Debug: Log checkout session details
+                console.log('=== CHECKOUT SESSION DEBUG ===')
+                console.log(
+                  'checkoutSession.setup_intent:',
+                  checkoutSession.setup_intent
+                )
+                console.log(
+                  'checkoutSession.payment_intent:',
+                  checkoutSession.payment_intent
+                )
+                console.log(
+                  'checkoutSession.payment_method_types:',
+                  checkoutSession.payment_method_types
+                )
+                console.log('checkoutSession.mode:', checkoutSession.mode)
+                console.log(
+                  'checkoutSession.payment_status:',
+                  checkoutSession.payment_status
+                )
+
+                // Get the payment method from checkout session first (most reliable)
+                let paymentMethodId: string | null = null
+
+                // For subscription mode, check setup_intent first (most common)
+                if (checkoutSession.setup_intent) {
                   console.log(
-                    'Customer already has default payment method:',
-                    customer.invoice_settings.default_payment_method
+                    'Attempting to retrieve setup intent:',
+                    checkoutSession.setup_intent
                   )
-                } else {
-                  // Debug: Log checkout session details
-                  console.log('=== CHECKOUT SESSION DEBUG ===')
+                  try {
+                    const setupIntent = await stripe.setupIntents.retrieve(
+                      checkoutSession.setup_intent as string
+                    )
+                    console.log('Setup intent retrieved successfully:', {
+                      id: setupIntent.id,
+                      payment_method: setupIntent.payment_method,
+                      status: setupIntent.status
+                    })
+                    paymentMethodId = setupIntent.payment_method as string
+                    console.log(
+                      'Got payment method from setup intent:',
+                      paymentMethodId
+                    )
+                  } catch (error) {
+                    console.error('Error retrieving setup intent:', error)
+                  }
+                } else if (checkoutSession.payment_intent) {
                   console.log(
-                    'checkoutSession.payment_intent:',
+                    'Attempting to retrieve payment intent:',
                     checkoutSession.payment_intent
                   )
-                  console.log(
-                    'checkoutSession.payment_method_types:',
-                    checkoutSession.payment_method_types
-                  )
-                  console.log('checkoutSession.mode:', checkoutSession.mode)
-                  console.log(
-                    'checkoutSession.payment_status:',
-                    checkoutSession.payment_status
-                  )
-
-                  // Get the payment method from checkout session first (most reliable)
-                  let paymentMethodId: string | null = null
-
-                  if (checkoutSession.payment_intent) {
-                    console.log(
-                      'Attempting to retrieve payment intent:',
-                      checkoutSession.payment_intent
+                  try {
+                    const paymentIntent = await stripe.paymentIntents.retrieve(
+                      checkoutSession.payment_intent as string
                     )
-                    try {
-                      const paymentIntent =
-                        await stripe.paymentIntents.retrieve(
-                          checkoutSession.payment_intent as string
-                        )
-                      console.log('Payment intent retrieved successfully:', {
-                        id: paymentIntent.id,
-                        payment_method: paymentIntent.payment_method,
-                        status: paymentIntent.status
-                      })
-                      paymentMethodId = paymentIntent.payment_method as string
-                      console.log(
-                        'Got payment method from checkout session:',
-                        paymentMethodId
-                      )
-                    } catch (error) {
-                      console.error('Error retrieving payment intent:', error)
-                    }
-                  } else {
-                    console.log('No payment_intent found in checkout session')
+                    console.log('Payment intent retrieved successfully:', {
+                      id: paymentIntent.id,
+                      payment_method: paymentIntent.payment_method,
+                      status: paymentIntent.status
+                    })
+                    paymentMethodId = paymentIntent.payment_method as string
                     console.log(
-                      'Available checkout session fields:',
-                      Object.keys(checkoutSession)
-                    )
-
-                    // Alternative: Check if payment method is directly on the checkout session
-                    if ((checkoutSession as any).payment_method) {
-                      console.log(
-                        'Found payment_method directly on checkout session:',
-                        (checkoutSession as any).payment_method
-                      )
-                      paymentMethodId = (checkoutSession as any).payment_method
-                    }
-                  }
-
-                  // Fallback: get from subscription if not available from checkout
-                  if (!paymentMethodId) {
-                    paymentMethodId =
-                      subscription.default_payment_method as string
-                    console.log(
-                      'Fallback: got payment method from subscription:',
+                      'Got payment method from payment intent:',
                       paymentMethodId
                     )
+                  } catch (error) {
+                    console.error('Error retrieving payment intent:', error)
                   }
+                } else {
+                  console.log(
+                    'No setup_intent or payment_intent found in checkout session'
+                  )
+                  console.log(
+                    'Available checkout session fields:',
+                    Object.keys(checkoutSession)
+                  )
 
-                  if (paymentMethodId) {
-                    await stripe.customers.update(
-                      checkoutSession.customer as string,
-                      {
-                        invoice_settings: {
-                          default_payment_method: paymentMethodId
-                        }
-                      }
-                    )
+                  // Alternative: Check if payment method is directly on the checkout session
+                  if ((checkoutSession as any).payment_method) {
                     console.log(
-                      'Set default payment method for customer:',
-                      paymentMethodId
+                      'Found payment_method directly on checkout session:',
+                      (checkoutSession as any).payment_method
                     )
-                  } else {
-                    console.warn('No payment method found for customer')
+                    paymentMethodId = (checkoutSession as any).payment_method
                   }
+                }
+
+                // Fallback: get from subscription if not available from checkout
+                if (!paymentMethodId) {
+                  paymentMethodId =
+                    subscription.default_payment_method as string
+                  console.log(
+                    'Fallback: got payment method from subscription:',
+                    paymentMethodId
+                  )
+                }
+
+                if (!paymentMethodId) {
+                  console.warn(
+                    'No payment method found for subscription schedule'
+                  )
                 }
 
                 const schedule = await createTrialToPaidSchedule({
@@ -259,7 +266,8 @@ export async function POST(req: Request) {
                   paidPriceId: trialToPaidPriceId,
                   trialDays: 7,
                   customerId: checkoutSession.customer as string,
-                  userId: userId
+                  userId: userId,
+                  defaultPaymentMethod: paymentMethodId || undefined
                 })
 
                 console.log(
