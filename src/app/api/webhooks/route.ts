@@ -138,13 +138,6 @@ export async function POST(req: Request) {
                 )
                 const trialPriceId = subscription.items.data[0]?.price?.id
 
-                console.log('Webhook debug info:')
-                console.log('- trialToPaidPriceId:', trialToPaidPriceId)
-                console.log('- trialPriceId from subscription:', trialPriceId)
-                console.log('- customerId:', checkoutSession.customer)
-                console.log('- userId:', userId)
-                console.log('- subscription:', subscription.id)
-
                 if (!trialPriceId) {
                   console.error('Trial price ID is missing from subscription')
                   return
@@ -182,9 +175,9 @@ export async function POST(req: Request) {
                   defaultPaymentMethod: paymentMethodId || undefined
                 })
 
-                console.log(
-                  `Converted trial subscription to schedule: ${schedule.id}`
-                )
+                // console.log(
+                //   `Converted trial subscription to schedule: ${schedule.id}`
+                // )
               } catch (error) {
                 console.error('Error converting trial to schedule:', error)
               }
