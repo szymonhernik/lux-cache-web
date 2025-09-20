@@ -43,18 +43,17 @@ export function PricingCard({
       className={cn(
         'flex flex-col rounded-lg shadow-sm   divide-zinc-600 relative flex-1 basis-1/3 sm:max-w-xs sm',
         {
-          'border border-muted-foreground ':
-            product.name === 'Premium Subscriber'
+          'border border-muted-foreground ': product.name === 'Full Access'
           // product.name === 'Supporter'
         }
       )}
     >
-      {product.name === 'Premium Subscriber' && (
+      {product.name === 'Full Access' && (
         <div className="absolute top-0 uppercase italic left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary px-4 py-1 text-xs text-secondery-foreground">
           Most Popular
         </div>
       )}
-      {product.name === 'Supporter' && (
+      {product.name === 'Community' && (
         <div className="absolute top-0 uppercase italic left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface-brand px-4  py-1 text-xs ">
           Try with Free Trial
         </div>

@@ -3,7 +3,7 @@ import { decodeJwt } from 'jose'
 import { type NextRequest, NextResponse } from 'next/server'
 
 // Simple flag to control early access mode
-const EARLY_ACCESS_MODE = true // Set to false to disable early access restrictions
+const EARLY_ACCESS_MODE = false // Set to false to disable early access restrictions
 
 export const createClient = (request: NextRequest) => {
   // Create an unmodified response
