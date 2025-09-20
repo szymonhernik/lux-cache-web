@@ -157,6 +157,58 @@ export async function POST(req: Request) {
                   return
                 }
 
+                // Set the default payment method for the customer
+                const customer = (await stripe.customers.retrieve(
+                  checkoutSession.customer as string
+                )) as Stripe.Customer
+                if (customer.invoice_settings?.default_payment_method) {
+                  console.log(
+                    'Customer already has default payment method:',
+                    customer.invoice_settings.default_payment_method
+                  )
+                } else {
+                  // Get the payment method from checkout session first (most reliable)
+                  let paymentMethodId: string | null = null
+
+                  if (checkoutSession.payment_intent) {
+                    const paymentIntent = await stripe.paymentIntents.retrieve(
+                      checkoutSession.payment_intent as string
+                    )
+                    paymentMethodId = paymentIntent.payment_method as string
+                    console.log(
+                      'Got payment method from checkout session:',
+                      paymentMethodId
+                    )
+                  }
+
+                  // Fallback: get from subscription if not available from checkout
+                  if (!paymentMethodId) {
+                    paymentMethodId =
+                      subscription.default_payment_method as string
+                    console.log(
+                      'Fallback: got payment method from subscription:',
+                      paymentMethodId
+                    )
+                  }
+
+                  if (paymentMethodId) {
+                    await stripe.customers.update(
+                      checkoutSession.customer as string,
+                      {
+                        invoice_settings: {
+                          default_payment_method: paymentMethodId
+                        }
+                      }
+                    )
+                    console.log(
+                      'Set default payment method for customer:',
+                      paymentMethodId
+                    )
+                  } else {
+                    console.warn('No payment method found for customer')
+                  }
+                }
+
                 const schedule = await createTrialToPaidSchedule({
                   trialPriceId,
                   paidPriceId: trialToPaidPriceId,

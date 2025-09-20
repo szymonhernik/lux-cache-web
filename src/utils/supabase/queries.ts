@@ -35,16 +35,46 @@ export const getSubscriptionDetails = cache(async (subscriptionId: string) => {
 })
 
 export const getSubscription = cache(async (supabase: SupabaseClient) => {
-  const { data: subscription, error } = await supabase
+  const { data: subscriptions, error } = await supabase
     .from('subscriptions')
     .select('*, prices(*, products(*))')
     .in('status', ['trialing', 'active'])
-    .maybeSingle()
+    .order('created', { ascending: false }) // Get most recent first
+
   if (error) {
     console.error('Error fetching subscription:', error)
+    return null
   }
 
-  return subscription as SubscriptionWithPriceAndProduct
+  if (!subscriptions || subscriptions.length === 0) {
+    return null
+  }
+
+  // If user has multiple subscriptions, prioritize active over trialing
+  const activeSubscription = subscriptions.find(
+    (sub) => sub.status === 'active'
+  )
+  if (activeSubscription) {
+    return activeSubscription as SubscriptionWithPriceAndProduct
+  }
+
+  // Otherwise return the most recent trialing subscription
+  return subscriptions[0] as SubscriptionWithPriceAndProduct
+})
+
+export const getAllSubscriptions = cache(async (supabase: SupabaseClient) => {
+  const { data: subscriptions, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .in('status', ['trialing', 'active'])
+    .order('created', { ascending: false })
+
+  if (error) {
+    console.error('Error fetching subscriptions:', error)
+    return []
+  }
+
+  return subscriptions as SubscriptionWithPriceAndProduct[]
 })
 export const getUserTier = cache(async (supabase: SupabaseClient) => {
   const subscription = await getSubscription(supabase)
