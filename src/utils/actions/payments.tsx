@@ -70,13 +70,13 @@ export const checkoutAction = async (formData: FormData) => {
       )
     }
 
-    // Use the trial price ($0) and schedule conversion to paid later
+    // Use the paid price with trial period - Stripe will show correct messaging
     const createCheckoutSessionObject: Stripe.Checkout.SessionCreateParams = {
       ui_mode: 'embedded',
       customer,
       line_items: [
         {
-          price: priceId, // Trial price ($0) - gives limited access
+          price: targetPaidPriceId, // Use the paid price directly
           quantity: 1
         }
       ],
