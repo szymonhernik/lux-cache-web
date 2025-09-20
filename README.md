@@ -46,10 +46,17 @@ Based on the [Next.js Subscription Payments Template](https://github.com/vercel/
 [x] add option for users to resend the verification email -> it's enough to sign up again to the same email and you will receive a new confirmation email.
 
 [ ] research how to send email to all your users (for example in case you need to communicate something), it's not newsletter
-[ ] TODO: check if the redirects work correctly for oauth and for email signup.
+[x] TODO: check if the redirects work correctly for oauth and for email signup.
 NOT NEEDED:
 how to make sure only subscribers can get on early-access signup deal?
 
 <!--  -->
 
 # Development branch
+
+[ ] Create a dedicated “Trial plan” price at €0
+
+- You make a hidden Stripe price with unit_amount: 0.
+- Give it a trial_period_days: 14.
+- Auto-cancel at trial end via webhook.
+- After 14 days, subscription is canceled, and you prompt them to pick one of the real paid tiers.

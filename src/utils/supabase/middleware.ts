@@ -3,7 +3,7 @@ import { decodeJwt } from 'jose'
 import { type NextRequest, NextResponse } from 'next/server'
 
 // Simple flag to control early access mode
-const EARLY_ACCESS_MODE = true // Set to false to disable early access restrictions
+const EARLY_ACCESS_MODE = false // Set to false to disable early access restrictions
 
 export const createClient = (request: NextRequest) => {
   // Create an unmodified response
@@ -41,39 +41,39 @@ export const createClient = (request: NextRequest) => {
 export const updateSession = async (request: NextRequest) => {
   const { supabase, response } = createClient(request)
 
-  // Check if early access mode is enabled and we're on early access domain or localhost
-  const isEarlyAccessDomain =
-    request.nextUrl.hostname === 'early.luxcache.com' ||
-    (EARLY_ACCESS_MODE && request.nextUrl.hostname === 'localhost')
+  // // Check if early access mode is enabled and we're on early access domain or localhost
+  // const isEarlyAccessDomain =
+  //   request.nextUrl.hostname === 'early.luxcache.com' ||
+  //   (EARLY_ACCESS_MODE && request.nextUrl.hostname === 'localhost')
 
-  if (isEarlyAccessDomain) {
-    // Only allow access to early access routes and api/auth routes
-    const allowedPaths = [
-      '/early-access',
-      '/api/auth',
-      '/auth' // For /auth/callback route
-    ]
-    const isAllowedPath = allowedPaths.some((path) =>
-      request.nextUrl.pathname.startsWith(path)
-    )
-    // in local environment redirect to early access page, otherwise redirect to /test for all paths for now
+  // if (isEarlyAccessDomain) {
+  //   // Only allow access to early access routes and api/auth routes
+  //   const allowedPaths = [
+  //     '/early-access',
+  //     '/api/auth',
+  //     '/auth' // For /auth/callback route
+  //   ]
+  //   const isAllowedPath = allowedPaths.some((path) =>
+  //     request.nextUrl.pathname.startsWith(path)
+  //   )
+  //   // in local environment redirect to early access page, otherwise redirect to /test for all paths for now
 
-    if (request.nextUrl.hostname === 'localhost') {
-      if (!isAllowedPath) {
-        // Redirect to /test for any non-allowed paths
-        return NextResponse.redirect(new URL('/early-access', request.url))
-      }
-    } else {
-      // if (!isAllowedPath || request.nextUrl.pathname === '/early-access') {
-      if (!isAllowedPath) {
-        // Redirect to /test for any non-allowed paths
-        return NextResponse.redirect(new URL('/early-access', request.url))
-      }
-    }
+  //   if (request.nextUrl.hostname === 'localhost') {
+  //     if (!isAllowedPath) {
+  //       // Redirect to /test for any non-allowed paths
+  //       return NextResponse.redirect(new URL('/early-access', request.url))
+  //     }
+  //   } else {
+  //     // if (!isAllowedPath || request.nextUrl.pathname === '/early-access') {
+  //     if (!isAllowedPath) {
+  //       // Redirect to /test for any non-allowed paths
+  //       return NextResponse.redirect(new URL('/early-access', request.url))
+  //     }
+  //   }
 
-    // For early access domain, just return the response
-    return response
-  }
+  //   // For early access domain, just return the response
+  //   return response
+  // }
 
   // Normal flow when early access mode is disabled or on other domains
   const {
