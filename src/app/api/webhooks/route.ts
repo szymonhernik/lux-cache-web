@@ -157,103 +157,15 @@ export async function POST(req: Request) {
                   return
                 }
 
-                // Get the payment method from checkout session for the subscription schedule
-                // Debug: Log checkout session details
-                console.log('=== CHECKOUT SESSION DEBUG ===')
-                console.log(
-                  'checkoutSession.setup_intent:',
-                  checkoutSession.setup_intent
-                )
-                console.log(
-                  'checkoutSession.payment_intent:',
-                  checkoutSession.payment_intent
-                )
-                console.log(
-                  'checkoutSession.payment_method_types:',
-                  checkoutSession.payment_method_types
-                )
-                console.log('checkoutSession.mode:', checkoutSession.mode)
-                console.log(
-                  'checkoutSession.payment_status:',
-                  checkoutSession.payment_status
-                )
+                // Get the payment method from the subscription
 
-                // Get the payment method from checkout session first (most reliable)
-                let paymentMethodId: string | null = null
+                const paymentMethodId =
+                  subscription.default_payment_method as string
 
-                // For subscription mode, check setup_intent first (most common)
-                if (checkoutSession.setup_intent) {
-                  console.log(
-                    'Attempting to retrieve setup intent:',
-                    checkoutSession.setup_intent
-                  )
-                  try {
-                    const setupIntent = await stripe.setupIntents.retrieve(
-                      checkoutSession.setup_intent as string
-                    )
-                    console.log('Setup intent retrieved successfully:', {
-                      id: setupIntent.id,
-                      payment_method: setupIntent.payment_method,
-                      status: setupIntent.status
-                    })
-                    paymentMethodId = setupIntent.payment_method as string
-                    console.log(
-                      'Got payment method from setup intent:',
-                      paymentMethodId
-                    )
-                  } catch (error) {
-                    console.error('Error retrieving setup intent:', error)
-                  }
-                } else if (checkoutSession.payment_intent) {
-                  console.log(
-                    'Attempting to retrieve payment intent:',
-                    checkoutSession.payment_intent
-                  )
-                  try {
-                    const paymentIntent = await stripe.paymentIntents.retrieve(
-                      checkoutSession.payment_intent as string
-                    )
-                    console.log('Payment intent retrieved successfully:', {
-                      id: paymentIntent.id,
-                      payment_method: paymentIntent.payment_method,
-                      status: paymentIntent.status
-                    })
-                    paymentMethodId = paymentIntent.payment_method as string
-                    console.log(
-                      'Got payment method from payment intent:',
-                      paymentMethodId
-                    )
-                  } catch (error) {
-                    console.error('Error retrieving payment intent:', error)
-                  }
-                } else {
-                  console.log(
-                    'No setup_intent or payment_intent found in checkout session'
-                  )
-                  console.log(
-                    'Available checkout session fields:',
-                    Object.keys(checkoutSession)
-                  )
-
-                  // Alternative: Check if payment method is directly on the checkout session
-                  if ((checkoutSession as any).payment_method) {
-                    console.log(
-                      'Found payment_method directly on checkout session:',
-                      (checkoutSession as any).payment_method
-                    )
-                    paymentMethodId = (checkoutSession as any).payment_method
-                  }
-                }
-
-                // Fallback: get from subscription if not available from checkout
-                if (!paymentMethodId) {
-                  paymentMethodId =
-                    subscription.default_payment_method as string
-                  console.log(
-                    'Fallback: got payment method from subscription:',
-                    paymentMethodId
-                  )
-                }
+                // console.log(
+                //   'Got payment method from subscription:',
+                //   paymentMethodId
+                // )
 
                 if (!paymentMethodId) {
                   console.warn(
