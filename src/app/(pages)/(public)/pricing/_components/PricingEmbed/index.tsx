@@ -21,7 +21,9 @@ interface Props {
 
 export default function PricingEmbed({ data, products, subscription }: Props) {
   const { plansFeatures } = data ?? {}
-  const hasActiveSubscription = subscription?.status === 'active'
+  // active or trialing
+  const hasActiveSubscription =
+    subscription?.status === 'active' || subscription?.status === 'trialing'
   const intervals = Array.from(
     new Set(
       products.flatMap((product) =>
@@ -88,6 +90,7 @@ export default function PricingEmbed({ data, products, subscription }: Props) {
                     billingInterval={billingInterval}
                     planDescription={plansFeatures?.[index]?.planDescription}
                     hasActiveSubscription={hasActiveSubscription}
+                    products={products}
                   />
                 </React.Fragment>
               )

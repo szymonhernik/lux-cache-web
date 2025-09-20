@@ -11,13 +11,15 @@ export function PricingCardWrapper({
   price,
   billingInterval,
   planDescription,
-  hasActiveSubscription
+  hasActiveSubscription,
+  products
 }: {
   product: ProductWithPrices
   price: ProductWithPrices['prices'][0]
   billingInterval: BillingInterval
   planDescription?: any
   hasActiveSubscription: boolean
+  products: ProductWithPrices[]
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [clientSecret, setClientSecret] = useState<string | null>(null)
@@ -38,6 +40,7 @@ export function PricingCardWrapper({
         planDescription={planDescription}
         onSubmit={handleCheckout}
         hasActiveSubscription={hasActiveSubscription}
+        products={products}
       />
 
       <CheckoutModal

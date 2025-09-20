@@ -132,9 +132,33 @@ export async function POST(req: Request) {
                   '@/utils/stripe/subscription-schedules'
                 )
 
+                // Get the trial price ID from the subscription instead of checkout session
+                const subscription = await stripe.subscriptions.retrieve(
+                  subscriptionId as string
+                )
+                const trialPriceId = subscription.items.data[0]?.price?.id
+
+                console.log('Webhook debug info:')
+                console.log('- trialToPaidPriceId:', trialToPaidPriceId)
+                console.log('- trialPriceId from subscription:', trialPriceId)
+                console.log('- customerId:', checkoutSession.customer)
+                console.log('- userId:', userId)
+                console.log('- subscription:', subscription.id)
+
+                if (!trialPriceId) {
+                  console.error('Trial price ID is missing from subscription')
+                  return
+                }
+
+                if (!trialToPaidPriceId) {
+                  console.error(
+                    'Target paid price ID is missing from checkout session'
+                  )
+                  return
+                }
+
                 const schedule = await createTrialToPaidSchedule({
-                  trialPriceId:
-                    checkoutSession.line_items?.data[0]?.price?.id || '',
+                  trialPriceId,
                   paidPriceId: trialToPaidPriceId,
                   trialDays: 7,
                   customerId: checkoutSession.customer as string,

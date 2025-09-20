@@ -13,12 +13,32 @@ import { Button } from '@/components/shadcn/ui/button'
 import Link from 'next/link'
 
 // Helper function to get the default paid price ID for trial conversion
-function getDefaultPaidPriceId(product: ProductWithPrices): string {
-  // Find the first non-zero price as the default conversion target
-  const paidPrice = product.prices?.find(
-    (price) => price.unit_amount && price.unit_amount > 0
+function getDefaultPaidPriceId(
+  products: ProductWithPrices[],
+  billingInterval: BillingInterval
+): string {
+  // Find the price with default_paid_price: true metadata
+  for (const product of products) {
+    const price = product.prices?.find(
+      (p) =>
+        p.interval === billingInterval &&
+        (p.metadata as any)?.default_paid_price === 'true'
+    )
+    if (price) {
+      console.log(
+        'Found default paid price:',
+        price.id,
+        'for product:',
+        product.name
+      )
+      return price.id
+    }
+  }
+  console.log(
+    'No default paid price found for billing interval:',
+    billingInterval
   )
-  return paidPrice?.id || ''
+  return ''
 }
 
 interface PricingCardProps {
@@ -28,6 +48,7 @@ interface PricingCardProps {
   planDescription?: any
   onSubmit: (formData: FormData) => Promise<void>
   hasActiveSubscription: boolean
+  products: ProductWithPrices[]
 }
 
 export function PricingCard({
@@ -36,7 +57,8 @@ export function PricingCard({
   billingInterval,
   planDescription,
   onSubmit,
-  hasActiveSubscription
+  hasActiveSubscription,
+  products
 }: PricingCardProps) {
   const metadata = product.metadata as { trial_allowed?: boolean }
 
@@ -86,7 +108,7 @@ export function PricingCard({
               <input
                 type="hidden"
                 name="targetPaidPriceId"
-                value={getDefaultPaidPriceId(product)}
+                value={getDefaultPaidPriceId(products, billingInterval)}
               />
             )}
 
