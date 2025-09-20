@@ -86,7 +86,7 @@ export function PlansDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="underline sm:flex-1" asChild>
+      <DialogTrigger className=" sm:flex-1" asChild>
         <Button size={'lg'} variant={'outline'} className="w-full">
           Change plan
         </Button>
@@ -100,46 +100,49 @@ export function PlansDialog({
                 Switch from your current plan to:
               </DialogTitle>
               <ul className="mt-4 divide-y space-y-4">
-                {products.map((product) => (
-                  <li
-                    key={product.id}
-                    className="pt-4 flex items-center justify-between w-full"
-                  >
-                    <h2 className="font-semibold text-primary-foreground ">
-                      {product.name}
-                    </h2>
+                {/* dont show products you can trial */}
+                {products
+                  .filter((product) => !product.metadata?.trial_allowed)
+                  .map((product) => (
+                    <li
+                      key={product.id}
+                      className="pt-4 flex items-center justify-between w-full"
+                    >
+                      <h2 className="font-semibold text-primary-foreground ">
+                        {product.name}
+                      </h2>
 
-                    <div className=" flex gap-2 ">
-                      {product.prices.map((price) => (
-                        <div key={price.id} className="flex  items-center ">
-                          <Button
-                            variant={
-                              selectedPriceId === price.id
-                                ? 'default'
-                                : 'outline'
-                            }
-                            size={'sm'}
-                            disabled={isSubscribedTo(price.id)}
-                            onClick={() => {
-                              setSelectedPriceId(price.id)
-                              setSelectedProductName(product.name)
-                              setSelectedPriceInterval(price.interval)
-                            }}
-                          >
-                            <span className="text-xs">
-                              {new Intl.NumberFormat('en-US', {
-                                style: 'currency',
-                                currency: price.currency!,
-                                minimumFractionDigits: 0
-                              }).format((price?.unit_amount || 0) / 100)}{' '}
-                              / {price.interval}
-                            </span>
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  </li>
-                ))}
+                      <div className=" flex gap-2 ">
+                        {product.prices.map((price) => (
+                          <div key={price.id} className="flex  items-center ">
+                            <Button
+                              variant={
+                                selectedPriceId === price.id
+                                  ? 'default'
+                                  : 'outline'
+                              }
+                              size={'sm'}
+                              disabled={isSubscribedTo(price.id)}
+                              onClick={() => {
+                                setSelectedPriceId(price.id)
+                                setSelectedProductName(product.name)
+                                setSelectedPriceInterval(price.interval)
+                              }}
+                            >
+                              <span className="text-xs">
+                                {new Intl.NumberFormat('en-US', {
+                                  style: 'currency',
+                                  currency: price.currency!,
+                                  minimumFractionDigits: 0
+                                }).format((price?.unit_amount || 0) / 100)}{' '}
+                                / {price.interval}
+                              </span>
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </li>
+                  ))}
               </ul>
             </DialogHeader>
             <div className="grid gap-4 py-4"></div>
@@ -226,7 +229,7 @@ export function CancelSubscriptionDialog({
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="underline sm:flex-1" asChild>
+      <DialogTrigger className=" sm:flex-1" asChild>
         <Button size={'lg'} variant={'outline'} className=" w-full">
           Cancel current subscription
         </Button>

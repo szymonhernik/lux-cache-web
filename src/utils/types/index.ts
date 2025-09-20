@@ -3,8 +3,16 @@ import { Tables } from 'types_db'
 type Subscription = Tables<'subscriptions'>
 type Product = Tables<'products'>
 type Price = Tables<'prices'>
+
+interface ProductMetadata {
+  trial_allowed?: boolean
+  default_paid_price?: string
+  [key: string]: any
+}
+
 interface ProductWithPrices extends Product {
   prices: Price[]
+  metadata: ProductMetadata | null
 }
 interface PriceWithProduct extends Price {
   products: Product | null

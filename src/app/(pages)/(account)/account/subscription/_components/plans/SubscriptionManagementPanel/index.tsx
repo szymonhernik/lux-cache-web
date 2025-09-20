@@ -14,10 +14,11 @@ import { CalendarIcon, LightningBoltIcon } from '@radix-ui/react-icons'
 interface Props {
   products: ProductWithPrices[]
   subscription: SubscriptionWithProduct | null
+  allSubscriptions: SubscriptionWithProduct[]
 }
 
 export default async function SubscriptionManagementPanel(props: Props) {
-  const { products, subscription } = props
+  const { products, subscription, allSubscriptions } = props
   const isScheduledForCancellation = subscription?.cancel_at_period_end
   let discounts = null
   if (subscription?.id) {
@@ -45,6 +46,7 @@ export default async function SubscriptionManagementPanel(props: Props) {
         priceString={priceString}
         discounts={discounts}
         products={products}
+        allSubscriptions={allSubscriptions}
         isScheduledForCancellation={isScheduledForCancellation}
       />
     </Card>
@@ -56,6 +58,7 @@ interface SubscriptionCardProps {
   priceString: string | null
   discounts: Stripe.Discount[] | null
   products: ProductWithPrices[]
+  allSubscriptions: SubscriptionWithProduct[]
   isScheduledForCancellation: boolean | null | undefined
 }
 
@@ -64,19 +67,43 @@ function SubscriptionCard({
   priceString,
   discounts,
   products,
+  allSubscriptions,
   isScheduledForCancellation
 }: SubscriptionCardProps) {
+  // Find trial and active subscriptions
+  const trialSubscription = allSubscriptions.find(
+    (sub) => sub.status === 'trialing'
+  )
+  const activeSubscription = allSubscriptions.find(
+    (sub) => sub.status === 'active'
+  )
+
+  // Determine current state
+  const isOnTrial = trialSubscription && trialSubscription.status === 'trialing'
+  const hasUpcomingSubscription = activeSubscription && isOnTrial
+
+  // Get trial end date
+  const trialEndTimestamp = trialSubscription?.trial_end
+    ? new Date(trialSubscription.trial_end).getTime() / 1000
+    : 0
+  const currentTimestamp = Date.now() / 1000
+  const isTrialStillActive = trialEndTimestamp >= currentTimestamp
+
   return (
     <div className="border p-6 rounded-md space-y-4 bg-white">
       <div className="space-y-2">
         <div className="flex justify-between ">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-2">
-              <p className="font-semibold text-xl">
-                {subscription?.prices?.products?.name}
-              </p>
+              {isOnTrial && isTrialStillActive ? (
+                <p className="font-semibold text-xl">Free Trial</p>
+              ) : (
+                <p className="font-semibold text-xl">
+                  {subscription?.prices?.products?.name}
+                </p>
+              )}
               {!isScheduledForCancellation ? (
-                <TrialTag subscription={subscription} />
+                <TrialTag subscription={trialSubscription || null} />
               ) : (
                 <div className="text-xs border-secondary border flex gap-1 font-semibold px-2 py-[2px]  shadow-sm rounded-full text-secondary-foreground">
                   Cancelling
@@ -85,18 +112,38 @@ function SubscriptionCard({
             </div>
             {!isScheduledForCancellation && (
               <p className="text-sm text-secondary-foreground">
-                Next charge date:{` `}
-                {formatDate(subscription?.current_period_end)}
+                {isOnTrial && isTrialStillActive ? (
+                  <>
+                    Trial ends:{' '}
+                    {formatDate(trialSubscription?.trial_end || undefined)}
+                  </>
+                ) : (
+                  <>
+                    Next charge date:{' '}
+                    {formatDate(subscription?.current_period_end)}
+                  </>
+                )}
               </p>
             )}
           </div>
           <div className="text-right ">
-            <p className="font-semibold tracking-tighter text-xl">
-              {priceString}
-            </p>
-            <span className="font-normal text-sm text-secondary-foreground">
-              VAT incl.
-            </span>
+            {isOnTrial && isTrialStillActive ? (
+              <>
+                <p className="font-semibold tracking-tighter text-xl">Free</p>
+                <span className="font-normal text-sm text-secondary-foreground">
+                  During trial
+                </span>
+              </>
+            ) : (
+              <>
+                <p className="font-semibold tracking-tighter text-xl">
+                  {priceString}
+                </p>
+                <span className="font-normal text-sm text-secondary-foreground">
+                  VAT incl.
+                </span>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -105,6 +152,11 @@ function SubscriptionCard({
         <>
           <DiscountsTags discounts={discounts} />
           <TrialInfo subscription={subscription} />
+          <UpcomingSubscriptionInfo
+            trialSubscription={trialSubscription || null}
+            activeSubscription={activeSubscription || null}
+            products={products}
+          />
           <DiscountsInfo discounts={discounts} />
         </>
       )}
@@ -270,5 +322,62 @@ export const DiscountsTags = ({
         </div>
       ) : null}
     </>
+  )
+}
+
+export const UpcomingSubscriptionInfo = ({
+  trialSubscription,
+  activeSubscription,
+  products
+}: {
+  trialSubscription: SubscriptionWithProduct | null
+  activeSubscription: SubscriptionWithProduct | null
+  products: ProductWithPrices[]
+}) => {
+  // Only show if user has both trial and active subscriptions
+  if (!trialSubscription || !activeSubscription) {
+    return null
+  }
+
+  const isTrialActive =
+    trialSubscription.status === 'trialing' && trialSubscription.trial_end
+  const trialEndTimestamp = trialSubscription.trial_end
+    ? new Date(trialSubscription.trial_end).getTime() / 1000
+    : 0
+  const currentTimestamp = Date.now() / 1000
+  const isTrialStillActive = trialEndTimestamp >= currentTimestamp
+
+  // Only show if trial is still active
+  if (!isTrialActive || !isTrialStillActive) {
+    return null
+  }
+
+  // Get the price for the active subscription
+  const activePrice = activeSubscription.prices
+  const priceString = activePrice
+    ? new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: activePrice.currency!,
+        minimumFractionDigits: 0
+      }).format((activePrice.unit_amount || 0) / 100)
+    : 'N/A'
+
+  return (
+    <div className="text-sm flex flex-col gap-2 rounded-lg bg-blue-50 border border-blue-200 p-4">
+      <div className="font-semibold text-blue-900 flex items-center gap-2">
+        <CalendarIcon className="w-4 h-4" />
+        Upcoming Subscription
+      </div>
+      <div className="text-blue-800">
+        <div className="flex justify-between items-center">
+          <span>{activeSubscription.prices?.products?.name}</span>
+          <span className="font-semibold">{priceString}</span>
+        </div>
+        <div className="text-xs text-blue-700 mt-1">
+          Starts after trial ends on{' '}
+          {formatDate(trialSubscription.trial_end || undefined)}
+        </div>
+      </div>
+    </div>
   )
 }

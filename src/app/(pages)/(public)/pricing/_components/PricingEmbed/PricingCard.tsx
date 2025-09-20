@@ -85,7 +85,7 @@ export function PricingCard({
           Most Popular
         </div>
       )}
-      {product.name === 'Supporter' && (
+      {product.name === 'Free Trial' && (
         <div className="absolute top-0 uppercase italic left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-surface-brand px-4  py-1 text-xs ">
           Try with Free Trial
         </div>

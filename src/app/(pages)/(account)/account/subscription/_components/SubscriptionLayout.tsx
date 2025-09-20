@@ -6,6 +6,7 @@ import {
   getCachedProducts,
   getDiscordConnectionStatus,
   getSubscription,
+  getAllSubscriptions,
   getUser
 } from '@/utils/supabase/queries'
 
@@ -22,15 +23,21 @@ export const dynamic = 'force-dynamic'
 export default async function SubscriptionLayout() {
   const supabase = createClient()
 
-  const [user, products, subscription, discordConnectionStatusResult] =
-    await Promise.all([
-      getUser(supabase),
-      getCachedProducts(supabase),
-      getSubscription(supabase),
-      ENABLE_DISCORD_INTEGRATION
-        ? getDiscordConnectionStatus(supabase)
-        : Promise.resolve(null)
-    ])
+  const [
+    user,
+    products,
+    subscription,
+    allSubscriptions,
+    discordConnectionStatusResult
+  ] = await Promise.all([
+    getUser(supabase),
+    getCachedProducts(supabase),
+    getSubscription(supabase),
+    getAllSubscriptions(supabase),
+    ENABLE_DISCORD_INTEGRATION
+      ? getDiscordConnectionStatus(supabase)
+      : Promise.resolve(null)
+  ])
 
   return (
     <>
@@ -50,6 +57,7 @@ export default async function SubscriptionLayout() {
               <SubscriptionManagementPanel
                 products={products ?? []}
                 subscription={subscription}
+                allSubscriptions={allSubscriptions}
               />
             </Suspense>
             <Suspense fallback={<BillingInfoScheleton />}>
