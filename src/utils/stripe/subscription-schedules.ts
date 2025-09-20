@@ -38,7 +38,7 @@ export async function createTrialToPaidSchedule({
             quantity: 1
           }
         ],
-        trial_end: trialEnd,
+        end_date: trialEnd,
         metadata: {
           phase: 'trial',
           user_id: userId
