@@ -33,12 +33,19 @@ const SubscriptionCompletedEmail = (
       </Preview>
       <Body style={main}>
         <Link href="https://luxcache.com">
-          <Logo
+          <img
+            src={`${baseUrl}/lcRebrandLogo.webp`}
+            alt="Lux Cache logo"
+            width={140}
+            // height={60}
+            style={{ margin: '40px auto', display: 'block' }}
+          />
+          {/* <Logo
             width="120"
             height="80"
             alt="Lux Cache"
             style={{ margin: '0 auto', display: 'block' }}
-          />
+          /> */}
         </Link>
 
         <Container style={container}>

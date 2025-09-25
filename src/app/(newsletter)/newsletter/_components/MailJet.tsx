@@ -26,7 +26,14 @@ export default function MailJet() {
     <div className="h-auto w-auto mx-auto flex flex-col mt-24 gap-12 px-4">
       <div className="mx-auto ">
         <Link href="/">
-          <Logo width="120" height="80" alt="Lux Cache" />
+          {/* <Logo width="120" height="80" alt="Lux Cache" /> */}
+          <img
+            src={`/lcRebrandLogo.webp`}
+            alt="Lux Cache logo"
+            width={140}
+            // height={60}
+            // style={{ margin: '40px auto', display: 'block' }}
+          />
         </Link>
       </div>
       {mounted && (

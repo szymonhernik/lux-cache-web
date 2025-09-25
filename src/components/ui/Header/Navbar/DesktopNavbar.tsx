@@ -25,7 +25,13 @@ export default function DesktopNavbar({
           className="group flex w-fit mx-auto items-center justify-center gap-x-2.5 bg-secondary"
         >
           <div className="block">
-            <Logo width="140" height="50" />
+            {/* <Logo width="140" height="50" /> */}
+            <img
+              src="/lcRebrandLogo.webp"
+              alt="Lux Cache"
+              width={160}
+              height={60}
+            />
           </div>
         </Link>
       </div>

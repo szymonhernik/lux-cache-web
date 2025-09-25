@@ -44,7 +44,13 @@ export default function MobileNavbar({
           className="group flex items-center justify-center gap-x-2.5 bg-secondary"
         >
           <div className="block">
-            <Logo width="100" height="40" />
+            {/* <Logo width="100" height="40" /> */}
+            <img
+              src="/lcRebrandLogo.webp"
+              alt="Lux Cache"
+              width={120}
+              height={40}
+            />
           </div>
         </Link>
         <MobileAccountDrawer />
