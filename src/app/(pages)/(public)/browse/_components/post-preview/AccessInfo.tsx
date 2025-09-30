@@ -7,9 +7,9 @@ interface Props {
 
 const products = [
   { title: 'Free', value: '0' },
-  { title: 'Supporter', value: '1' },
-  { title: 'Subscriber', value: '2' },
-  { title: 'Premium Subscriber', value: '3' }
+  { title: 'Community', value: '1' },
+  { title: 'Regular Subscription', value: '2' },
+  { title: 'Full Access', value: '3' }
 ]
 
 export default function AccessInfo(props: Props) {
