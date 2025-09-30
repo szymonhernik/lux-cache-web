@@ -14,11 +14,7 @@ import {
 } from '@react-email/components'
 
 import Logo from '@/components/icons/Logo'
-
-const baseUrl =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://lc-local-development.vercel.app'
+import { getURL } from '@/utils/helpers'
 
 const SubscriptionCancelEmail = (
   userEmail: string,
@@ -29,22 +25,15 @@ const SubscriptionCancelEmail = (
       <Head />
       <Preview>
         Dear {userName ? `${userName},` : `${userEmail},`}
-        {` `}We’re sorry to see you go and hope that your time subscribed to Lux
+        {` `}We're sorry to see you go and hope that your time subscribed to Lux
         Cache has been both enriching and inspiring.
       </Preview>
       <Body style={main}>
-        <Link href="https://luxcache.com">
-          {/* <Logo
-            width="120"
-            height="80"
-            alt="Lux Cache"
-            style={{ margin: '0 auto', display: 'block' }}
-          /> */}
+        <Link href={getURL()}>
           <img
-            src={`${baseUrl}/lcRebrandLogo.webp`}
+            src={`${getURL()}/lcRebrandLogo.webp`}
             alt="Lux Cache logo"
             width={140}
-            // height={60}
             style={{ margin: '40px auto', display: 'block' }}
           />
         </Link>
@@ -55,7 +44,7 @@ const SubscriptionCancelEmail = (
               Dear {userName ? `${userName},` : `${userEmail},`}
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
-              We’re sorry to see you go and hope that your time subscribed to
+              We're sorry to see you go and hope that your time subscribed to
               Lux Cache has been both enriching and inspiring. Your presence and
               contributions to our community have been greatly valued, and we
               sincerely thank you for being part of the platform.
@@ -68,7 +57,7 @@ const SubscriptionCancelEmail = (
             </Text>
             <Text style={{ ...global.text, marginTop: 20 }}>
               Please take a moment to share your thoughts through our{' '}
-              <Link style={anchor} href="https://luxcache.com">
+              <Link style={anchor} href={getURL()}>
                 feedback form
               </Link>
               .
@@ -102,12 +91,10 @@ const SubscriptionCancelEmail = (
                 <br />
                 This email was sent to {`${userEmail}`}
                 <br />
-                <Link href="https://luxcache.com/account">
-                  Manage your email settings
-                </Link>
+                <Link href={getURL('account')}>Manage your email settings</Link>
                 <br />
                 Forwarded this email?{' '}
-                <Link href="https://luxcache.com">Subscribe here</Link> for more
+                <Link href={getURL()}>Subscribe here</Link> for more
               </Text>
             </Row>
             <Row>

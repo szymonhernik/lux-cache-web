@@ -14,11 +14,7 @@ import {
 } from '@react-email/components'
 
 import Logo from '@/components/icons/Logo'
-
-const baseUrl =
-  process.env.NODE_ENV === 'development'
-    ? 'http://localhost:3000'
-    : 'https://lc-local-development.vercel.app'
+import { getURL } from '@/utils/helpers'
 
 const SubscriptionCompletedEmail = (
   userEmail: string,
@@ -32,20 +28,13 @@ const SubscriptionCompletedEmail = (
         {userName ? `${userName}` : `${userEmail}`}!
       </Preview>
       <Body style={main}>
-        <Link href="https://luxcache.com">
+        <Link href={getURL()}>
           <img
-            src={`${baseUrl}/lcRebrandLogo.webp`}
+            src={`${getURL()}/lcRebrandLogo.webp`}
             alt="Lux Cache logo"
             width={140}
-            // height={60}
             style={{ margin: '40px auto', display: 'block' }}
           />
-          {/* <Logo
-            width="120"
-            height="80"
-            alt="Lux Cache"
-            style={{ margin: '0 auto', display: 'block' }}
-          /> */}
         </Link>
 
         <Container style={container}>
@@ -71,7 +60,7 @@ const SubscriptionCompletedEmail = (
             <Text style={{ ...global.text, marginTop: 20 }}>
               We invite you to start exploring our platform and begin
               participating in our vibrant Discord community. Visit{' '}
-              <Link style={anchor} href="https://luxcache.com">
+              <Link style={anchor} href={getURL()}>
                 LUXCACHE.COM
               </Link>{' '}
               to start exploring our resources and connect with like-minded
@@ -92,12 +81,10 @@ const SubscriptionCompletedEmail = (
                 <br />
                 This email was sent to {`${userEmail}`}
                 <br />
-                <Link href="https://luxcache.com/account">
-                  Manage your email settings
-                </Link>
+                <Link href={getURL('account')}>Manage your email settings</Link>
                 <br />
                 Forwarded this email?{' '}
-                <Link href="https://luxcache.com">Subscribe here</Link> for more
+                <Link href={getURL()}>Subscribe here</Link> for more
               </Text>
             </Row>
             <Row>
