@@ -90,11 +90,11 @@ const SubscriptionCancelEmail = (
                 Want to pitch us a guest or collaboration? → Email or DM us
                 <br />
                 This email was sent to {`${userEmail}`}
-                <br />
-                <Link href={getURL('account')}>Manage your email settings</Link>
-                <br />
+                {/* <br /> */}
+                {/* <Link href={getURL('account')}>Manage your email settings</Link> */}
+                {/* <br />
                 Forwarded this email?{' '}
-                <Link href={getURL()}>Subscribe here</Link> for more
+                <Link href={getURL()}>Subscribe here</Link> for more */}
               </Text>
             </Row>
             <Row>

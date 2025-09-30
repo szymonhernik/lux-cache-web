@@ -78,13 +78,13 @@ const SubscriptionCompletedEmail = (
                 style={{ ...footer.text, paddingTop: 10, paddingBottom: 10 }}
               >
                 Want to pitch us a guest or collaboration? → Email or DM us
-                <br />
+                {/* <br />
                 This email was sent to {`${userEmail}`}
                 <br />
                 <Link href={getURL('account')}>Manage your email settings</Link>
                 <br />
                 Forwarded this email?{' '}
-                <Link href={getURL()}>Subscribe here</Link> for more
+                <Link href={getURL()}>Subscribe here</Link> for more */}
               </Text>
             </Row>
             <Row>
