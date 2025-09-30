@@ -1,6 +1,6 @@
-import { loadStripe, Stripe } from '@stripe/stripe-js';
+import { loadStripe, Stripe } from '@stripe/stripe-js'
 
-let stripePromise: Promise<Stripe | null>;
+let stripePromise: Promise<Stripe | null>
 
 export const getStripe = () => {
   if (!stripePromise) {
@@ -11,8 +11,8 @@ export const getStripe = () => {
       {
         betas: ['custom_checkout_beta_2']
       }
-    );
+    )
   }
 
-  return stripePromise;
-};
+  return stripePromise
+}
