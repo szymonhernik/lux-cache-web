@@ -167,65 +167,6 @@ export async function signInWithPassword(
   return redirectPath
 }
 
-// USED FOR EARLY ACCESS
-
-export async function signUpEarlyAccess(
-  values: SignUpSchema,
-  captchaToken: string | undefined
-) {
-  // Server-side validation
-  const result = signUpSchema.safeParse(values)
-  if (!result.success) {
-    return getErrorRedirect(
-      '/signin/signup',
-      'Invalid input',
-      result.error.errors[0].message
-    )
-  }
-  // Rate limit signup attempts: allow 5 attempts per minute
-  await checkStrictRateLimit('auth:signup')
-
-  const callbackURL = getURL('/early-access/success')
-
-  const { email, password } = result.data
-
-  // Pass is_early_access in the signup metadata.
-  // Update your trigger to set is_early_access from the metadata.
-  // This avoids RLS issues and race conditions.
-  const supabase = createClient()
-  const { error, data } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: callbackURL,
-      captchaToken: captchaToken
-    }
-  })
-
-  let redirectPath: string
-  if (error) {
-    redirectPath = getErrorRedirect(
-      '/early-access',
-      'Sign up failed.',
-      error.message
-    )
-  } else if (data.session) {
-    redirectPath = getStatusRedirect(
-      '/early-access/success',
-      'Success!',
-      'You are now on the early access list!'
-    )
-  } else {
-    redirectPath = getStatusRedirect(
-      '/early-access/confirm-email',
-      'Success!',
-      'Check your email to confirm your early access spot!'
-    )
-  }
-
-  return redirectPath
-}
-
 // USED!
 // ✅ no authentication = public function
 // ✅ add rate limiting to the request
