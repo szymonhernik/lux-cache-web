@@ -30,7 +30,7 @@ const SubscriptionCompletedEmail = (
       <Body style={main}>
         <Link href={getURL()}>
           <img
-            src={`${getURL()}/lcRebrandLogo.webp`}
+            src={`${getURL()}/lcRebrandLogo-min.jpg`}
             alt="Lux Cache logo"
             width={140}
             style={{ margin: '40px auto', display: 'block' }}

@@ -28,7 +28,7 @@ export default function MailJet() {
         <Link href="/">
           {/* <Logo width="120" height="80" alt="Lux Cache" /> */}
           <img
-            src={`/lcRebrandLogo.webp`}
+            src={`/lcRebrandLogo-min.jpg`}
             alt="Lux Cache logo"
             width={140}
             // height={60}
