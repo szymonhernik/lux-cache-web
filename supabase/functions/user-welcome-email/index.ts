@@ -7,8 +7,6 @@
 
 type UserRecord = Database['auth']['Tables']['users']['Row']
 
-console.log('Hello from `user-welcome-email` function!')
-
 // @ts-ignore
 import { Database } from './types.ts'
 
@@ -27,16 +25,14 @@ Deno.serve(async (req) => {
     const newUser = payload.record
     const deletedUser = payload.old_record
 
-    console.log('Webhook payload received:', {
-      type: payload.type,
-      table: payload.table,
-      userEmail: newUser?.email || deletedUser?.email
-    })
+    // console.log('Webhook payload received:', {
+    //   type: payload.type,
+    //   table: payload.table,
+    //   userEmail: newUser?.email || deletedUser?.email
+    // })
 
     // Only send email for INSERT operations (new user registration)
     if (payload.type === 'INSERT' && newUser?.email) {
-      console.log('Sending welcome email to:', newUser.email)
-
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -47,23 +43,29 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           from: 'Lux Cache <no-reply@luxcache.com>',
           to: [newUser.email],
-          subject: 'Welcome to Lux Cache! 🎉',
+          subject: 'Welcome to Lux Cache!',
           html: `
            
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
               <h1 style="color: #333;">Welcome to Lux Cache!</h1>
-              <p>Thanks for being one of the first to join the new Lux Cache website!</p>
-              <p>Our new website will be a bespoke platform designed from the ground up to support and inspire sonic innovation. This launch marks the beginning of our biggest chapter yet: Season X.</p>
-              <p>As a thank you for signing up early, you have a special offer. For your first six months, you'll get full Premium Subscription access for the price of a Regular Subscription. After that, your plan will convert to a standard Regular Subscription.</p>
-              <p>This offer will be a discount code available in your subscription checkout; with the code <strong>LXCINTRO2025</strong></p>
-              <p>Thanks again for your early support!</p>
+              <p>Dear, ${newUser.email}</p>
+              <p>We are delighted to welcome you to Lux Cache, a platform dedicated to providing innovative tools, insights, and support in music production.</p>
+              <p>At Lux Cache, we collaborate with pioneering artists and producers to offer an unparalleled array of resources. Our commissioned articles, presentations, sample packs, features, and tutorials are designed to foster creativity and enhance your musical journey.</p>
+              <p>We invite you to start exploring our platform and begin participating in our vibrant Discord community. Visit LUXCACHE.COM to start exploring our resources and connect with like-minded innovators on our Discord server.</p>
+              <p>Best regards,</p>
+              <p>Lux Cache Staff</p>
+              <footer >
+              <p>Want to pitch us a guest or collaboration? → Email or DM us</p>
+              <p>This email was sent to ${newUser.email}</p>
+              </footer>
+              
             </div>
           `
         })
       })
 
       const data = await res.json()
-      console.log('Resend API response:', data)
+      // console.log('Resend API response:', data)
 
       if (!res.ok) {
         console.error('Failed to send email:', data)
@@ -85,7 +87,7 @@ Deno.serve(async (req) => {
         }
       )
     } else {
-      console.log('Skipping email send - not a new user registration')
+      // console.log('Skipping email send - not a new user registration')
       return new Response(
         JSON.stringify({
           message: 'Webhook received but no action taken'
@@ -97,7 +99,7 @@ Deno.serve(async (req) => {
       )
     }
   } catch (error) {
-    console.error('Error processing webhook:', error)
+    // console.error('Error processing webhook:', error)
     return new Response(
       JSON.stringify({
         error: 'Internal server error',
