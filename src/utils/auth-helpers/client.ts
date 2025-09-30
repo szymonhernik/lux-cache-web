@@ -27,30 +27,6 @@ export async function handleRequest(
   }
 }
 
-// export async function handlePaymentMethodChange(data, requestFunc, router) {
-//   const { paymentMethodId, subscriptionId, currentPath } = data; // Destruct
-
-//   // console.log('subscriptionId in handlePaymentMethodChange', subscriptionId);
-
-//   // console.log('redirectUrl in handlePaymentMethodChange', redirectUrl);
-//   const redirectUrl = await requestFunc(
-//     paymentMethodId,
-//     subscriptionId,
-//     currentPath
-//   );
-
-//   if (router) {
-//     // return await redirectToPath(redirectUrl);
-//     router.push(redirectUrl);
-//     router.refresh();
-//     // router.refresh();
-//     // window.history.pushState(null, '', redirectUrl);
-//   } else {
-//     // Otherwise, redirect server-side
-//     return await redirectToPath(redirectUrl);
-//   }
-// }
-
 export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
   // Prevent default form submission refresh
   e.preventDefault()
@@ -60,14 +36,10 @@ export async function signInWithOAuth(e: React.FormEvent<HTMLFormElement>) {
   // Create client-side supabase client and call signInWithOAuth
   const supabase = createClient()
   const redirectURL = getURL('/auth/callback')
-
-  // Add redirect parameter to indicate this is from early access
-  const redirectURLWithParams = `${redirectURL}?redirect=/early-access`
-
   await supabase.auth.signInWithOAuth({
     provider: provider,
     options: {
-      redirectTo: redirectURLWithParams
+      redirectTo: redirectURL
     }
   })
 }
