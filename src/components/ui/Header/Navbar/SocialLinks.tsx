@@ -15,7 +15,7 @@ export default function SocialLinks({
           </a>
         ))}
       {/* <Link href="/newsletter">↳ Newsletter</Link> */}
-      <a href="/newsletter">↳ Newsletter</a>
+      {/* <a href="/newsletter">↳ newsletter</a> */}
     </div>
   )
 }
