@@ -22,14 +22,14 @@ export default function SplashVideoStream() {
 
       hls.on(Hls.Events.MANIFEST_PARSED, () => {
         const levels = hls.levels
-        console.log('Available quality levels:', levels)
+        // console.log('Available quality levels:', levels)
 
         // Force highest quality level
         hls.currentLevel = levels.length - 1
 
         hls.on(Hls.Events.LEVEL_LOADED, (event, data) => {
           const currentLevel = hls.levels[data.level]
-          console.log('Current quality level:', currentLevel)
+          // console.log('Current quality level:', currentLevel)
 
           videoElement.play()
           setIsHDReady(true)
