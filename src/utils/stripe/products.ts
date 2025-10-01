@@ -2,9 +2,9 @@ export interface SubscriptionTiers {
   [key: string]: number
 }
 const subscriptionTiers = {
-  prod_T5fJN2hJGT69fl: 1, // Community
-  prod_T5fRl33IrLR18J: 2, // Regular Subscription
-  prod_T5fLqOI6ojjqhS: 3 // Full Access
+  prod_T9slHQQQERIuaC: 1, // Community
+  prod_T9sm5pPMRarp6j: 2, // Regular Subscription
+  prod_T9so7WbFMCS3q3: 3 // Full Access
 }
 
 export default subscriptionTiers
