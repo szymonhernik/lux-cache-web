@@ -17,7 +17,8 @@ export function CheckoutModal({
   setIsOpen: (isOpen: boolean) => void
 }) {
   const stripePromise = loadStripe(
-    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
+    process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY_LIVE ??
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
   )
 
   return (

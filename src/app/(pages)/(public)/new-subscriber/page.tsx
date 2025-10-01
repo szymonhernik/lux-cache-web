@@ -10,7 +10,7 @@ export default async function Page({
 }) {
   const { session_id } = await searchParams
   const stripe = new Stripe(
-    process.env.STRIPE_SECRET_KEY_LIVE ?? process.env.STRIPE_SECRET_KEY ?? '',
+    process.env.STRIPE_SECRET_KEY_LIVE ?? process.env.STRIPE_SECRET_KEY! ?? '',
     {
       apiVersion: '2023-10-16'
     }
