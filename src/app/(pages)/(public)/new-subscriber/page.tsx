@@ -1,6 +1,6 @@
 import Stripe from 'stripe'
 import { redirect } from 'next/navigation'
-import { stripe } from '@/utils/stripe/config'
+
 import { getErrorRedirect, getStatusRedirect } from '@/utils/helpers'
 
 export default async function Page({
@@ -9,6 +9,12 @@ export default async function Page({
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
   const { session_id } = await searchParams
+  const stripe = new Stripe(
+    process.env.STRIPE_SECRET_KEY_LIVE ?? process.env.STRIPE_SECRET_KEY ?? '',
+    {
+      apiVersion: '2023-10-16'
+    }
+  )
 
   if (session_id) {
     const session = await stripe.checkout.sessions.retrieve(

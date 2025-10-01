@@ -2,7 +2,7 @@
 
 import { isAuthenticated } from '../data/auth'
 import { checkRateLimit } from '../upstash/helpers'
-import { stripe } from '../stripe/config' // Import from config
+
 import Stripe from 'stripe' // Add this import
 import { getCanTrial, getUser } from '../supabase/queries'
 import { redirect } from 'next/navigation'
@@ -19,6 +19,12 @@ const isEmbeddedCheckoutEnabled =
   process.env.NEXT_PUBLIC_STRIPE_EMBEDDED_CHECKOUT_ENABLED === 'true'
 
 export const checkoutAction = async (formData: FormData) => {
+  const stripe = new Stripe(
+    process.env.STRIPE_SECRET_KEY_LIVE ?? process.env.STRIPE_SECRET_KEY ?? '',
+    {
+      apiVersion: '2023-10-16'
+    }
+  )
   await checkRateLimit('checkout')
   const supabase = createClient()
   const user = await getUser(supabase)
