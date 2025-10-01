@@ -224,7 +224,12 @@ export const DiscountsInfo = ({
         <>
           <div className="text-sm flex flex-col gap-2  rounded-lg bg-secondary/50  p-4 ">
             <p className="text-secondary-foreground">
-              You have active discounts on your subscription.
+              You have active discounts on your subscription. To see your final
+              discounted price, check your billing dashboard in the{' '}
+              <a href="#manage-billing-invoices" className="underline">
+                "Manage Billing & Invoices"
+              </a>{' '}
+              section.
             </p>
           </div>
         </>
