@@ -2,16 +2,18 @@
 
 import { isAuthenticated } from '../data/auth'
 import { checkRateLimit } from '../upstash/helpers'
-import Stripe from 'stripe'
+import { stripe } from '../stripe/config' // Import from config
+import Stripe from 'stripe' // Add this import
 import { getCanTrial, getUser } from '../supabase/queries'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import { createOrRetrieveCustomer } from '../supabase/admin'
 import { getStatusRedirect } from '../helpers'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2023-10-16'
-})
+// Remove this line:
+// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+//   apiVersion: '2023-10-16'
+// })
 
 const isEmbeddedCheckoutEnabled =
   process.env.NEXT_PUBLIC_STRIPE_EMBEDDED_CHECKOUT_ENABLED === 'true'
