@@ -19,7 +19,7 @@ export default async function PricingLayout() {
     },
     ['pricing-details'],
     {
-      tags: [`pricing-details`]
+      tags: [`pricing-details-v2`]
     }
   )
 
