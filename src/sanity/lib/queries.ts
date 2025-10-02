@@ -128,7 +128,7 @@ export const filterByTagsQuery = groq`
   }`
 export const searchQueryDefault = groq`
   {
-    "artists": *[_type == "artist" && name match "*a*" ][0..0]{
+    "artists": *[_type == "artist" && _id == "7f25d13e-3b5d-4e95-8384-cec63399ee60"][0..0]{
       _id,
       name,
       "slug": slug.current,
