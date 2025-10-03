@@ -4,7 +4,7 @@ export interface SubscriptionTiers {
 const subscriptionTiers = {
   prod_T9slHQQQERIuaC: 1, // Community
   prod_T9sm5pPMRarp6j: 2, // Regular Subscription
-  prod_T9so7WbFMCS3q3: 3 // Full Access
+  prod_T9tvcp8YmsO8Xw: 3 // Full Access
 }
 
 export default subscriptionTiers
